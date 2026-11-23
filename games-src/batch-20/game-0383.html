@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Recipe Mix #383</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#recipe{display:flex;gap:8px;margin:10px;font-size:1.6rem;min-height:44px}
+#recipe span{opacity:.4}
+#recipe span.done{opacity:1}
+#inv{display:flex;gap:8px;margin:10px;flex-wrap:wrap;justify-content:center}
+.ing{width:60px;height:60px;background:#4338ca;border:2px solid #4f46e5;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer}
+.ing:hover{border-color:#fbbf24}
+#pot{font-size:3rem;margin:8px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🍳 Royal Recipe Mix</h1><div class="sub">The royal chef demands exact recipes — add ingredients in the shown order!</div>
+<div id="hud"><span>Dish <b id="d">1</b></span><span>Score <b id="s">0</b></span><span>❤️ <b id="h">3</b></span></div>
+<div id="recipe"></div>
+<div id="pot">🍲</div>
+<div id="inv"></div>
+<div id="msg"></div>
+<button id="btn">👑 New Order</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const INGS=[{e:'🥕',n:'Carrot'},{e:'🧅',n:'Onion'},{e:'🧄',n:'Garlic'},{e:'🍅',n:'Tomato'},{e:'🧈',n:'Butter'},{e:'🌿',n:'Herb'},{e:'🥔',n:'Potato'},{e:'🍗',n:'Chicken'}];
+const DISHES=['🍲 Stew','🥧 Pie','🍝 Pasta','🥘 Curry','🍜 Soup'];
+let recipe=[],idx=0,dish=1,score=0,hp=3;
+function newOrder(){const n=Math.min(3+dish,6);
+recipe=[];const pool=INGS.slice().sort(()=>Math.random()-0.5);
+for(let i=0;i<n;i++)recipe.push(pool[i]);
+idx=0;document.getElementById('d').textContent=dish;
+const rd=document.getElementById('recipe');rd.innerHTML='';
+recipe.forEach((r,i)=>{const s=document.createElement('span');s.textContent=r.e;rd.appendChild(s);});
+document.getElementById('pot').textContent='🍲';
+msg('Dish '+dish+': '+DISHES[(dish-1)%DISHES.length]+' — follow the order!');}
+function buildInv(){const inv=document.getElementById('inv');inv.innerHTML='';
+INGS.forEach((ing,i)=>{const d=document.createElement('div');d.className='ing';
+d.textContent=ing.e;d.title=ing.n;
+d.onclick=()=>pick(i);inv.appendChild(d);});}
+function pick(i){const need=recipe[idx];
+if(!need)return;
+if(INGS[i]===need){idx++;
+document.querySelectorAll('#recipe span')[idx-1].classList.add('done');
+beep(400+idx*60,.08);
+if(idx>=recipe.length){score+=recipe.length*15;document.getElementById('s').textContent=score;
+document.getElementById('pot').textContent=DISHES[(dish-1)%DISHES.length];
+beep(880,.25,'triangle');msg('🍽️ '+DISHES[(dish-1)%DISHES.length]+' served! +'+recipe.length*15);
+dish++;setTimeout(newOrder,900);}}
+else{hp--;document.getElementById('h').textContent=hp;
+beep(150,.2,'sawtooth');msg('🤢 Wrong! Needs '+need.e+' next.');
+if(hp<=0){msg('💔 Kitchen disaster! Final score: '+score);buildInv();return;}}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{dish=1;score=0;hp=3;
+document.getElementById('s').textContent=0;document.getElementById('h').textContent=3;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();buildInv();newOrder();};
+buildInv();newOrder();
+</script></body></html>

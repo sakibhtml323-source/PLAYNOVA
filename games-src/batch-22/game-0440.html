@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Throne Path #440</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(6,54px);gap:3px;margin:12px}
+.c{width:54px;height:54px;background:#312e81;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer}
+.c.path{background:#4f46e5}
+.c.block{background:#1e1b4b;cursor:default}
+.c.me{background:#7c3aed;outline:2px solid #fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Throne Path</h1><div class="sub">Place carpet tiles to reach the throne — you have limited tiles and the old floor is broken!</div>
+<div id="hud"><span>Tiles <b id="t">12</b></span><span>Level <b id="l">1</b></span></div>
+<div id="grid"></div>
+<div id="msg"></div>
+<button id="btn">🏰 New Hall</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=6;let grid=[],me={r:0,c:0},throne={r:5,c:5},tiles=12,level=1,playing=true;
+function gen(){grid=[];me={r:0,c:0};throne={r:5,c:5};playing=true;
+for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(0);grid.push(row);}
+// random broken tiles (impassable until covered)
+const nb=6+level;
+for(let i=0;i<nb;i++){const r=(Math.random()*N)|0,c=(Math.random()*N)|0;
+if((r===0&&c===0)||(r===5&&c===5))continue;grid[r][c]=2;}
+tiles=14+level;document.getElementById('t').textContent=tiles;
+document.getElementById('l').textContent=level;
+render();msg('Lay carpet over the broken floor!');}
+function tap(r,c){if(!playing||grid[r][c]===1||grid[r][c]===2)return;
+// only adjacent to existing path or start
+const near=(r===0&&c===0)||[[r-1,c],[r+1,c],[r,c-1],[r,c+1]].some(([nr,nc])=>
+nr>=0&&nr<N&&nc>=0&&nc<N&&(grid[nr][nc]===1||(nr===0&&nc===0)));
+if(!near){beep(160,.06,'sawtooth');msg('Must extend from the path!');return;}
+if(tiles<=0){beep(160,.06,'sawtooth');msg('No carpet left!');return;}
+grid[r][c]=1;tiles--;document.getElementById('t').textContent=tiles;
+me={r,c};beep(400,.07);render();check();}
+function check(){if(me.r===throne.r&&me.c===throne.c){playing=false;beep(880,.3,'triangle');
+msg('👑 You reach the throne! Level '+(level+1));level++;
+setTimeout(gen,1000);return;}
+if(tiles<=0){const stuck=![[me.r-1,me.c],[me.r+1,me.c],[me.r,me.c-1],[me.r,me.c+1]].some(([nr,nc])=>
+nr>=0&&nr<N&&nc>=0&&nc<N&&grid[nr][nc]===0);
+if(stuck){playing=false;beep(130,.3,'sawtooth');msg('💔 Trapped! Level reset.');level=Math.max(1,level-1);
+setTimeout(gen,1200);}}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]===1?' path':grid[r][c]===2?' block':'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🤴';}
+else if(r===throne.r&&c===throne.c)d.textContent='👑';
+else if(grid[r][c]===1)d.textContent='🟪';
+else if(grid[r][c]===2)d.textContent='🕳️';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

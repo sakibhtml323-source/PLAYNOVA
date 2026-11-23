@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Music Versus #242</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#lanes{display:flex;flex-direction:column;gap:14px;margin:12px}
+.lane{display:flex;align-items:center;gap:8px;background:#1e293b;border-radius:12px;padding:8px 14px}
+.lane .who{font-size:1.5rem;width:36px}
+.track{position:relative;width:300px;height:40px;background:#0f172a;border-radius:8px;overflow:hidden}
+.target{position:absolute;left:14px;top:4px;width:32px;height:32px;border-radius:8px;background:#334155;border:2px solid #64748b;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.note{position:absolute;top:4px;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:#7c3aed}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎵 Music Versus</h1><div class="sub">2 players: P1 taps Q/W, P2 taps O/P when notes hit the white zone!</div>
+<div id="hud"><span>P1 <b id="s1">0</b></span><span>P2 <b id="s2">0</b></span><span>Time <b id="t">30</b>s</span></div>
+<div id="lanes">
+<div class="lane"><span class="who">🎤</span><div class="track"><div class="target">🎯</div></div></div>
+<div class="lane"><span class="who">🎸</span><div class="track"><div class="target">🎯</div></div></div>
+</div>
+<button id="btn">🎶 Start Battle</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const tracks=[...document.querySelectorAll('.track')];
+let notes=[[],[]],s1=0,s2=0,time=30,playing=false,timer=null;
+const KEYMAP={q:0,w:0,o:1,p:1};
+function spawn(p){const lane=tracks[p];const n=document.createElement('div');n.className='note';
+n.textContent=['🎵','🎶','⭐','🔥'][(Math.random()*4)|0];
+n.style.left='300px';lane.appendChild(n);
+notes[p].push({el:n,x:300,hit:false});}
+function tap(p){if(!playing)return;
+const zone=14;let bestN=null,bd=1e9;
+notes[p].forEach(n=>{const d=Math.abs(n.x-zone);if(d<bd){bd=d;bestN=n;}});
+if(bestN&&bd<26){const pts=Math.max(5,30-Math.round(bd));bestN.hit=true;
+if(p===0)s1+=pts;else s2+=pts;
+document.getElementById('s1').textContent=s1;document.getElementById('s2').textContent=s2;
+beep(p===0?620:440,.07,'triangle');bestN.el.remove();notes[p]=notes[p].filter(n=>n!==bestN);}
+else{beep(180,.08,'sawtooth');if(p===0)s1=Math.max(0,s1-4);else s2=Math.max(0,s2-4);
+document.getElementById('s1').textContent=s1;document.getElementById('s2').textContent=s2;}}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k in KEYMAP)tap(KEYMAP[k]);});
+function loop(){if(!playing)return;
+notes.forEach((arr,p)=>{arr.forEach(n=>{n.x-=2.6;n.el.style.left=n.x+'px';});
+notes[p]=arr.filter(n=>{if(n.x<-40){n.el.remove();return false;}return true;});});
+if(Math.random()<0.09)spawn((Math.random()*2)|0);
+requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{notes=[[],[]];s1=0;s2=0;time=30;
+document.getElementById('s1').textContent=0;document.getElementById('s2').textContent=0;document.getElementById('t').textContent=30;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;loop();
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);
+const w=s1>s2?'🎤 P1 wins!':s2>s1?'🎸 P2 wins!':'🤝 Tie!';alert(w+'  '+s1+'–'+s2);}},1000);};
+</script></body></html>

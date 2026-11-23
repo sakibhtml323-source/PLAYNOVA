@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Goblin Market #483</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(3,100px);gap:10px;margin:12px}
+.stall{background:#312e81;border:2px solid #4f46e5;border-radius:12px;padding:8px;text-align:center;cursor:pointer;transition:transform .1s}
+.stall .e{font-size:2rem}
+.stall .p{font-size:1.15rem;font-weight:800;color:#fbbf24}
+.stall .t{font-size:.65rem;color:#a5b4fc}
+.stall:active{transform:scale(.95)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👺 Royal Goblin Market</h1><div class="sub">Goblin prices change AND the stalls shuffle — track your goods as they move!</div>
+<div id="hud"><span>Gold <b id="g">100</b></span><span>Stock <b id="s">0</b></span><span>⏱️ <b id="t">60</b>s</span></div>
+<div id="board"></div>
+<div id="msg"></div>
+<button id="btn">🏪 New Market Day</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const GOODS=[['🍎','Apples',15],['🧀','Cheese',35],['💎','Gems',90]];
+let gold=100,stock=0,prices=[15,35,90],timer=null,time=60,playing=false;
+function render(){const b=document.getElementById('board');b.innerHTML='';
+GOODS.forEach(([e,n,base],i)=>{const d=document.createElement('div');d.className='stall';
+d.innerHTML='<div class="e">'+e+'</div><div>'+n+'</div><div class="p">'+prices[i]+'g</div><div class="t">tap to trade</div>';
+d.onclick=()=>trade(i);b.appendChild(d);});}
+function trade(i){if(!playing)return;
+// tap left half = sell, right half = buy? Simple: buy 1, long logic: alternate
+if(stock>0&&Math.random()<0.4){// sell
+gold+=prices[i];stock--;beep(700,.09,'triangle');
+document.getElementById('g').textContent=gold;document.getElementById('s').textContent=stock;
+msg('💰 Sold for '+prices[i]+'g!');return;}
+if(gold>=prices[i]){gold-=prices[i];stock++;beep(500,.07);
+document.getElementById('g').textContent=gold;document.getElementById('s').textContent=stock;
+msg('🛒 Bought at '+prices[i]+'g');}
+else beep(160,.08,'sawtooth');}
+function gen(){gold=100;stock=0;prices=GOODS.map(g=>g[2]);time=60;playing=true;
+document.getElementById('g').textContent=100;document.getElementById('s').textContent=0;
+document.getElementById('t').textContent=60;render();msg('Buy low, sell high!');
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();
+let shuffleT=0;
+clearInterval(timer);timer=setInterval(()=>{
+prices=prices.map(p=>Math.max(3,Math.round(p*(0.85+Math.random()*0.4))));
+shuffleT++;if(shuffleT>=5){shuffleT=0;prices.sort(()=>Math.random()-.5);beep(300,.12,'sawtooth');}
+render();time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);
+// liquidate
+gold+=stock*Math.round(prices[0]*0.5);
+beep(880,.3,'triangle');msg('🌇 Market closes! Final: '+gold+'g (+'+(gold-100)+')');}},1000);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{gen();};
+</script></body></html>

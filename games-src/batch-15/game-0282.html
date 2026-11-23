@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Memory Matrix #282</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,56px);gap:5px;margin:12px}
+.c{width:56px;height:56px;background:#1e293b;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px}
+.c.lit{background:#7c3aed}
+.c.done{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Crystal Memory Matrix</h1><div class="sub">Watch the crystals light up — repeat the pattern in order. It grows each round!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Best <b id="b">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">✨ Begin</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.12,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=25;let seq=[],idx=0,round=1,best=+localStorage.getItem('cmm_best')||0,accepting=false;
+document.getElementById('b').textContent=best;
+const cells=[...Array(N)].map((_,i)=>i);
+function build(){const g=document.getElementById('grid');g.innerHTML='';
+cells.forEach(i=>{const d=document.createElement('div');d.className='c';
+d.onclick=()=>pick(i);g.appendChild(d);});}
+function flash(i){return new Promise(res=>{const el=document.querySelectorAll('.c')[i];
+el.classList.add('lit');beep(300+i*20,.15);
+setTimeout(()=>{el.classList.remove('lit');setTimeout(res,150);},350);});}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+async function show(){accepting=false;msg('👀 Watch…');await wait(600);
+for(const i of seq)await flash(i);
+idx=0;accepting=true;msg('🫵 Your turn!');}
+function pick(i){if(!accepting)return;
+beep(300+i*20,.1);
+const el=document.querySelectorAll('.c')[i];
+el.classList.add('lit');setTimeout(()=>el.classList.remove('lit'),200);
+if(i!==seq[idx]){accepting=false;beep(130,.3,'sawtooth');
+msg('💥 Wrong! Reached round '+round);
+if(round>best){best=round;localStorage.setItem('cmm_best',best);document.getElementById('b').textContent=best;}
+return;}
+idx++;
+if(idx>=seq.length){accepting=false;msg('✅ Round '+round+' clear!');
+round++;document.getElementById('r').textContent=round;
+seq.push((Math.random()*N)|0);
+setTimeout(show,800);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{seq=[(Math.random()*N)|0];idx=0;round=1;
+document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();show();};
+build();
+</script></body></html>

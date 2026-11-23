@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Swift Neon Gunner</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#05050a;font-family:'Segoe UI',Arial,sans-serif;color:#22d3ee;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#f0abfc;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0a0a14;border-radius:10px;touch-action:none;box-shadow:0 0 40px #22d3ee22}
+#ov{position:fixed;inset:0;background:rgba(5,5,10,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#a5f3fc;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#05050a;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🔫 SWIFT NEON GUNNER</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Lives <b id="l">3</b></span><span>Combo <b id="cb">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#f0abfc">NEON GUNNER</h2><p id="od">The fastest gun in the neon grid! Move with ← → or A/D (or drag), tap/Space to fire plasma. Chain kills for combo multipliers. Don't let the neon bugs breach the bottom line!</p><button id="btn">ARM THE PLASMA</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let gun,foes,shots,playing,keys,score,lives,combo,frame,spawnT,best=+localStorage.getItem('sng_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){gun={x:W/2,cd:0};foes=[];shots=[];playing=true;keys={};score=0;lives=3;combo=0;frame=0;spawnT=0;
+document.getElementById('s').textContent=0;document.getElementById('l').textContent=3;document.getElementById('cb').textContent=0;}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();fire();}});
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.33)keys['l']=true;else if(x>W*0.66)keys['r']=true;else fire();});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointerup',()=>{keys['l']=false;keys['r']=false;});
+function fire(){if(!playing||gun.cd>0)return;gun.cd=9;shots.push({x:gun.x,y:H-46,vy:-8});beep(650,.05);}
+function step(){frame++;gun.cd--;
+if(keys['arrowleft']||keys['a']||keys['l'])gun.x-=5.4;if(keys['arrowright']||keys['d']||keys['r'])gun.x+=5.4;
+if(dragX!==null)gun.x=dragX;
+gun.x=Math.max(20,Math.min(W-20,gun.x));
+spawnT--;if(spawnT<=0){spawnT=Math.max(12,36-score/200);
+foes.push({x:20+Math.random()*(W-40),y:-16,vy:1.4+Math.random()+score/1500,wob:Math.random()*7,r:10+Math.random()*8,
+c:['#f472b6','#a78bfa','#4ade80','#fbbf24'][(Math.random()*4)|0]});}
+shots.forEach(s=>{s.y+=s.vy;foes.forEach(f=>{if(Math.hypot(f.x-s.x,f.y-s.y)<f.r+4){f.hp=(f.hp||1)-1;shots.splice(shots.indexOf(s),1);beep(300,.06,'triangle');
+if(f.hp<=0){foes.splice(foes.indexOf(f),1);combo++;score+=10+combo*2;
+document.getElementById('s').textContent=score;document.getElementById('cb').textContent=combo;beep(500+combo*20,.07);}}});});
+shots=shots.filter(s=>s.y>-10);
+foes.forEach(f=>{f.y+=f.vy;f.x+=Math.sin(f.y/30+f.wob)*0.9;
+if(f.y>H-40){lives--;combo=0;document.getElementById('l').textContent=lives;document.getElementById('cb').textContent=0;
+foes.splice(foes.indexOf(f),1);beep(140,.2,'sawtooth');
+if(lives<=0)die();}});
+foes=foes.filter(f=>f.y<H+30);}
+function die(){playing=false;if(score>best){best=score;localStorage.setItem('sng_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The neon bugs breach the grid…<br>Score: <b style="color:#f0abfc">'+score+'</b> · Max combo '+combo;
+document.getElementById('btn').textContent='REBOOT';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+for(let i=0;i<6;i++){const g2=ctx.createRadialGradient((i*173)%W,(i*97)%H,4,(i*173)%W,(i*97)%H,90);
+g2.addColorStop(0,['#22d3ee11','#f0abfc11','#4ade8011'][i%3]);g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);}
+ctx.strokeStyle='#22d3ee33';ctx.strokeRect(10,H-34,W-20,2);
+foes.forEach(f=>{const g2=ctx.createRadialGradient(f.x,f.y,2,f.x,f.y,f.r*2);
+g2.addColorStop(0,f.c);g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(f.x,f.y,f.r*2,0,7);ctx.fill();
+ctx.fillStyle=f.c;ctx.beginPath();ctx.arc(f.x,f.y,f.r/2,0,7);ctx.fill();});
+shots.forEach(s=>{ctx.fillStyle='#22d3ee';ctx.fillRect(s.x-2,s.y-10,4,14);
+ctx.fillStyle='#fff';ctx.fillRect(s.x-1,s.y-10,2,6);});
+// gun
+ctx.fillStyle='#22d3ee';ctx.fillRect(gun.x-5,H-34,10,20);
+ctx.fillStyle='#f0abfc';ctx.beginPath();ctx.arc(gun.x,H-38,6,0,7);ctx.fill();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

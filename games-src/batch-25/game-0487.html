@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Vault Heist #487</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(7,44px);gap:2px;margin:12px}
+.c{width:44px;height:44px;background:#312e81;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.c.vis{background:#eab30833}
+.c.me{background:#7c3aed;outline:2px solid #fbbf24}
+.c.guard{background:#7f1d1d}
+.c.goal{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Royal Vault Heist</h1><div class="sub">Guards sweep their lantern cones — slip through the shadows to the crown!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Spotted <b id="s">0</b>/3</span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🕶️ New Heist</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=7;let me={r:3,c:0},goal={r:3,c:6},guards=[],spotted=0,level=1,t=0,playing=true;
+function gen(){me={r:3,c:0};goal={r:3,c:6};spotted=0;playing=true;t=0;
+guards=[];const ng=Math.min(1+level,4);
+for(let i=0;i<ng;i++){guards.push({r:1+((Math.random()*5)|0),c:2+i,
+dr:[0,1,0,-1][i%4],dc:[1,0,-1,0][i%4],sweep:0});}
+document.getElementById('l').textContent=level;document.getElementById('s').textContent=0;
+render();msg('Steal the crown!');}
+function vision(){const cells=new Set();
+guards.forEach(g=>{for(let k=1;k<3;k++){
+const r=g.r+g.dr*k,c=g.c+g.dc*k;
+if(r>=0&&r<N&&c>=0&&c<N)cells.add(r*N+c);}});
+return cells;}
+function stepGuards(){t++;
+guards.forEach(g=>{g.sweep++;
+if(t%5===0){g.r+=g.dr;g.c+=g.dc;
+if(g.r<1||g.r>=N-1||g.c<1||g.c>=N-1){g.dr*=-1;g.dc*=-1;
+g.r=Math.max(1,Math.min(N-2,g.r));g.c=Math.max(1,Math.min(N-2,g.c));}}});}
+function tap(r,c){if(!playing||Math.abs(r-me.r)+Math.abs(c-me.c)!==1)return;
+me={r,c};
+const vis=vision();
+if(vis.has(r*N+c)){spotted++;document.getElementById('s').textContent=spotted;
+beep(150,.2,'sawtooth');me={r:3,c:0};msg('👁️ Spotted! Back to start.');
+if(spotted>=3){playing=false;msg('🚨 The guards seize you!');render();return;}}
+else beep(400,.04);
+if(r===goal.r&&c===goal.c){playing=false;beep(880,.3,'triangle');
+msg('👑 Crown stolen! Level '+(level+1));level++;
+setTimeout(gen,1000);return;}
+stepGuards();render();}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+const vis=vision();
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(vis.has(r*N+c)?' vis':'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🥷';}
+else if(r===goal.r&&c===goal.c){d.classList.add('goal');d.textContent='👑';}
+const gd=guards.find(x=>x.r===r&&x.c===c);
+if(gd){d.classList.add('guard');d.textContent='💂';}
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Stack Sort #346</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#stacks{display:flex;gap:12px;margin:14px;align-items:flex-end;flex-wrap:wrap;justify-content:center;max-width:94vw}
+.stk{display:flex;flex-direction:column-reverse;width:56px;min-height:32px;background:#1e293b;border-radius:0 0 12px 12px;padding:3px;cursor:pointer;border-bottom:4px solid #334155}
+.bk{width:48px;border-radius:4px;margin:1px auto}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Crystal Stack Sort</h1><div class="sub">Sort the gems big→small in each stack — only one gem moves at a time!</div>
+<div id="hud"><span>Moves <b id="m">0</b></span><span>Best <b id="b">—</b></span><span>Level <b id="l">1</b></span></div>
+<div id="stacks"></div><div id="msg"></div>
+<button id="btn">✨ New Sort</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const COLORS=['#7c3aed','#3b82f6','#22c55e','#eab308','#ef4444','#f97316'];
+let stacks=[],moves=0,best=+localStorage.getItem('css_best')||Infinity,level=1,sel=null;
+document.getElementById('b').textContent=best<Infinity?best:'—';
+function gen(){const nc=Math.min(3+level,6);
+stacks=[];
+/* FIX (PLAYNOVA repair): the original shuffled the gems randomly, but about 99% of such boards cannot be solved with the game's own rule (a gem may only be placed on a LARGER gem or on an empty stack; checked by exhaustive search: 396 of 400 random level-1 boards were unsolvable). Boards are now built from a solved layout by random REVERSE moves, so every board is guaranteed solvable. */
+for(let t=0;t<nc;t++){const s=[];for(let k=0;k<4;k++)s.push((t+k)%nc);s.sort((a,b)=>b-a);stacks.push(s);}
+stacks.push([]);
+{const scr=40+nc*12;let done=0,guard=0;
+while(done<scr&&guard++<5000){const j=(Math.random()*stacks.length)|0,a=stacks[j];if(!a.length)continue;const b=a[a.length-1];if(a.length>1&&a[a.length-2]<=b)continue;
+const i=(Math.random()*stacks.length)|0;if(i===j||stacks[i].length>=4)continue;stacks[i].push(a.pop());done++;}
+if(stacks.every(s=>!s.length||s.every((b,i)=>i===0||s[i-1]>b))){const x=stacks[0].pop();stacks[stacks.length-1].push(x);}}
+moves=0;sel=null;document.getElementById('m').textContent=0;
+document.getElementById('l').textContent=level;
+render();msg('Sort each stack largest (bottom) to smallest (top)!');}
+function tap(i){if(sel===null){if(!stacks[i].length){beep(160,.06,'sawtooth');return;}
+sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+const from=stacks[sel];
+if(stacks[i].length>=4){beep(160,.06,'sawtooth');return;}
+// rule: can only place on larger or empty (building big→small bottom-up)
+const b=from[from.length-1];
+if(stacks[i].length&&stacks[i][stacks[i].length-1]<=b){beep(160,.06,'sawtooth');
+msg('Only place on a LARGER gem or empty stack!');return;}
+stacks[i].push(from.pop());sel=null;moves++;document.getElementById('m').textContent=moves;
+beep(400+moves*15,.06);render();check();}
+function check(){// each stack sorted big→small and no mixed colors per stack
+const ok=stacks.every(s=>!s.length||s.every((b,i)=>i===0||s[i-1]>b));
+if(ok){beep(880,.3,'triangle');
+if(moves<best){best=moves;localStorage.setItem('css_best',best);document.getElementById('b').textContent=best;}
+msg('🎉 Sorted in '+moves+'! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(gen,1200);}}
+function render(){const w=document.getElementById('stacks');w.innerHTML='';
+stacks.forEach((st,i)=>{const d=document.createElement('div');d.className='stk';
+if(sel===i)d.style.borderColor='#facc15';
+st.forEach((b,k)=>{const blk=document.createElement('div');blk.className='bk';
+blk.style.background=COLORS[b];blk.style.height=(14+b*6)+'px';d.appendChild(blk);});
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+w.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

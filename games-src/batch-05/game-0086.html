@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Desert Math Challenge: Ocean Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fefce8,#fef9c3);font-family:Georgia,serif;color:#713f12;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#a16207;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#q{font-size:2rem;text-align:center;margin:20px 0;min-height:2em;color:#92400e}
+#ans{width:min(360px,90vw);padding:14px;border:3px solid #fde68a;border-radius:14px;font-size:1.6rem;text-align:center;font-family:inherit;color:#713f12;outline:none}
+#ans:focus{border-color:#a16207}
+#fb{text-align:center;min-height:1.6em;margin-top:12px;font-weight:700}
+#ov{position:fixed;inset:0;background:rgba(254,252,232,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#713f12;padding:20px;z-index:5}
+button{background:#a16207;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏜️ DESERT MATH: OCEAN #86</h1>
+<div id="hud"><span>Question <b id="n">1</b></span><span>Correct <b id="c">0</b></span><span>Streak <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="q">Press START</div>
+<input id="ans" placeholder="= ?" autocomplete="off" inputmode="numeric">
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#a16207">MATH ACROSS THE DUNES</h2><p id="od">Answer 20 math questions as fast as you can! No timer — but every question has a perfect-answer bonus that decays while you think. Streaks multiply. Find the oasis of numbers.</p><button id="btn">START THE CROSSING</button></div>
+<script>
+"use strict";
+let n,correct,streak,playing,cur,bestBonus,best=+localStorage.getItem('dm_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const ans=document.getElementById('ans');
+function mk(){const lv=Math.min(5,1+(n/4|0));
+const a=2+((Math.random()*8*lv)|0),b=2+((Math.random()*8*lv)|0);const t=(Math.random()*4)|0;
+if(t===0)return{q:a+' + '+b+' = ?',a:a+b};
+if(t===1)return{q:Math.max(a,b)+' − '+Math.min(a,b)+' = ?',a:Math.max(a,b)-Math.min(a,b)};
+if(t===2)return{q:a+' × '+b+' = ?',a:a*b};
+return{q:(a*b)+' ÷ '+b+' = ?',a:a};}
+function start(){n=1;correct=0;streak=0;playing=true;
+document.getElementById('c').textContent=0;document.getElementById('st').textContent=0;document.getElementById('n').textContent=1;
+ask();}
+function ask(){if(n>20)return end();cur=mk();bestBonus=100;
+document.getElementById('q').textContent='Q'+n+' — '+cur.q;ans.value='';ans.focus();}
+ans.addEventListener('keydown',e=>{if(e.key==='Enter'&&playing){audio.resume();
+if(+ans.value===cur.a){correct++;streak++;
+const pts=bestBonus+streak*5;
+document.getElementById('c').textContent=correct;document.getElementById('st').textContent=streak;
+document.getElementById('fb').textContent='✓ +'+pts;document.getElementById('fb').style.color='#16a34a';
+beep(600+streak*30,.07,'triangle');}
+else{streak=0;document.getElementById('st').textContent=0;
+document.getElementById('fb').textContent='✗ It was '+cur.a;document.getElementById('fb').style.color='#dc2626';
+beep(150,.15,'sawtooth');}
+n++;document.getElementById('n').textContent=n;ask();}});
+setInterval(()=>{if(playing&&bestBonus>20)bestBonus-=2;},200);
+function end(){playing=false;if(correct>best){best=correct;localStorage.setItem('dm_best',best);document.getElementById('b').textContent=best;}
+const r=correct>=18?'🏆 OASIS MASTER':correct>=14?'🌵 DUNE RUNNER':correct>=10?'🐪 CARAVANER':'🏜️ LOST';
+document.getElementById('od').innerHTML=r+'<br>Correct: <b style="font-size:1.5rem;color:#a16207">'+correct+'/20</b>';
+document.getElementById('btn').textContent='CROSS AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('fb').textContent='';start();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

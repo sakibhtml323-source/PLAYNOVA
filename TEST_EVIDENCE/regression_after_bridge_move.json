@@ -1,0 +1,45 @@
+{
+ "method": "re-run of the real-input level-1 tests after moving the integrated games into the isolated sandbox with bridge events (caps taken from game-capabilities.json, not test overrides)",
+ "results": {
+  "desert-reflection-232": {
+   "sandbox": "allow-scripts",
+   "level1_done": [
+    1
+   ],
+   "xp": 20,
+   "errors": []
+  },
+  "haunted-spot-shift-254": {
+   "sandbox": "allow-scripts",
+   "level1_done": [
+    1
+   ],
+   "xp": 20,
+   "errors": []
+  },
+  "ninja-maze-sprint-233": {
+   "sandbox": "allow-scripts",
+   "level1_done": [
+    1
+   ],
+   "xp": 20,
+   "errors": []
+  },
+  "haunted-pattern-shift-284": {
+   "sandbox": "allow-scripts",
+   "level1_done": [
+    1
+   ],
+   "xp": 20,
+   "errors": []
+  },
+  "crystal-puzzle-grid-355": {
+   "sandbox": "allow-scripts",
+   "level1_done": [
+    1
+   ],
+   "xp": 20,
+   "errors": []
+  }
+ }
+}

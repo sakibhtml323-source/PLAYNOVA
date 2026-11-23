@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Falling Blocks #279</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+canvas{background:#27272a;border-radius:10px;touch-action:none}
+#side{font-size:.85rem;color:#a1a1aa;margin:6px;text-align:center}
+#pad{display:flex;gap:6px;margin:6px}
+.pd{width:52px;height:42px;border-radius:10px;border:none;background:#3f3f46;color:#fff;font-size:1.1rem;cursor:pointer}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>👻 Haunted Falling Blocks</h1><div class="sub">Stack the haunted pieces — 👻 ghost shows where it lands!</div>
+<div id="side">Score <b id="s">0</b> · Lines <b id="l">0</b> · Best <b id="b">0</b></div>
+<canvas id="cv" width="240" height="440"></canvas>
+<div id="pad">
+<button class="pd" data-a="l">⬅</button><button class="pd" data-a="d">⬇</button>
+<button class="pd" data-a="r">➡</button><button class="pd" data-a="rot">⟳</button>
+</div>
+<div id="ov"><div style="font-size:3rem">🧱</div><p>Move/rotate with buttons or arrow keys.<br>Clear lines to score!</p><button id="btn">Drop In</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const COLS=10,ROWS=20,CS=22;
+const SHAPES=[[[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],[[1,1,0],[0,1,1]],[[0,1,1],[1,1,0]]];
+const COLORS=['#7c3aed','#fbbf24','#22d3ee','#ef4444','#22c55e','#f97316','#a78bfa'];
+let board=[],cur=null,score=0,lines=0,playing=false,tick=0,best=+localStorage.getItem('fb_best')||0;
+document.getElementById('b').textContent=best;
+function newPiece(){const i=(Math.random()*SHAPES.length)|0;
+cur={s:SHAPES[i],c:i,x:3,y:0};
+if(collide(0,0)){playing=false;beep(130,.35,'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='💀 Stack reached the top!<br>Score: <b style="color:#fbbf24">'+score+'</b> · Lines: '+lines;}}
+function collide(dx,dy,shape){const s=shape||cur.s;
+for(let r=0;r<s.length;r++)for(let c=0;c<s[r].length;c++){
+if(!s[r][c])continue;
+const nx=cur.x+c+dx,ny=cur.y+r+dy;
+if(nx<0||nx>=COLS||ny>=ROWS)return true;
+if(ny>=0&&board[ny][nx])return true;}return false;}
+function merge(){cur.s.forEach((row,r)=>row.forEach((v,c)=>{
+if(v){const y=cur.y+r,x=cur.x+c;if(y>=0)board[y][x]=cur.c+1;}}));
+// clear lines
+let cleared=0;
+for(let r=ROWS-1;r>=0;r--){
+if(board[r].every(v=>v)){board.splice(r,1);board.unshift(Array(COLS).fill(0));
+cleared++;r++;}}
+if(cleared){lines+=cleared;score+=[0,40,100,300,1200][cleared]*(1+Math.floor(lines/10));
+document.getElementById('s').textContent=score;document.getElementById('l').textContent=lines;
+beep(500+cleared*100,.15,'triangle');
+if(score>best){best=score;localStorage.setItem('fb_best',best);document.getElementById('b').textContent=best;}}
+newPiece();}
+function rotate(){const s=cur.s;const rot=s[0].map((_,i)=>s.map(row=>row[i]).reverse());
+if(!collide(0,0,rot))cur.s=rot;}
+function drop(){if(!collide(0,1))cur.y++;else merge();tick=0;}
+function act(a){if(!playing)return;
+if(a==='l'&&!collide(-1,0))cur.x--;
+if(a==='r'&&!collide(1,0))cur.x++;
+if(a==='d')drop();
+if(a==='rot')rotate();draw();}
+document.querySelectorAll('.pd').forEach(b=>b.addEventListener('pointerdown',()=>act(b.dataset.a)));
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='arrowleft')act('l');if(k==='arrowright')act('r');
+if(k==='arrowdown')act('d');if(k==='arrowup')act('rot');});
+function ghostY(){let gy=cur.y;while(!collide(0,gy-cur.y+1))gy++;return gy;}
+function draw(){ctx.fillStyle='#27272a';ctx.fillRect(0,0,COLS*CS,ROWS*CS);
+// ghost
+const gy=ghostY();
+cur.s.forEach((row,r)=>row.forEach((v,c)=>{
+if(v){const y=gy+r,x=cur.x+c;
+if(y>=0){ctx.fillStyle=COLORS[cur.c]+'33';ctx.fillRect(x*CS+1,y*CS+1,CS-2,CS-2);}}}));
+board.forEach((row,r)=>row.forEach((v,c)=>{
+if(v){ctx.fillStyle=COLORS[v-1];ctx.fillRect(c*CS+1,r*CS+1,CS-2,CS-2);}}));
+cur.s.forEach((row,r)=>row.forEach((v,c)=>{
+if(v){const y=cur.y+r,x=cur.x+c;
+if(y>=0){ctx.fillStyle=COLORS[cur.c];ctx.fillRect(x*CS+1,y*CS+1,CS-2,CS-2);
+ctx.strokeStyle='#fff3';ctx.strokeRect(x*CS+1,y*CS+1,CS-2,CS-2);}}}));
+if(playing){tick++;const max=Math.max(18,38-Math.floor(lines/5)*3);
+if(tick>=max){tick=0;if(!collide(0,1))cur.y++;else merge();}
+requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+score=0;lines=0;tick=0;
+document.getElementById('s').textContent=0;document.getElementById('l').textContent=0;
+document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newPiece();draw();};
+</script></body></html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Vault Spin #474</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#combo{display:flex;gap:10px;margin:10px;font-size:1.5rem;font-weight:800}
+#combo span{padding:6px 14px;background:#312e81;border-radius:8px;opacity:.35}
+#combo span.cur{opacity:1;outline:2px solid #fbbf24}
+#combo span.done{opacity:1;background:#14532d}
+canvas{background:#312e81;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🧭 Royal Vault Spin</h1><div class="sub">Spin the dial to each combination number — but release EXACTLY on it!</div>
+<div id="hud"><span>Combination <b id="ci">1</b>/3</span><span>Attempts <b id="a">5</b></span><span>Score <b id="s">0</b></span></div>
+<div id="combo"></div>
+<canvas id="cv" width="360" height="360"></canvas>
+<div id="msg"></div>
+<button id="btn">🏦 New Vault</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=360,CX=W/2,CY=W/2;let combo=[],ci=0,dialA=0,spinning=false,attempts=5,score=0,dir=1,holding=false,dragging=false,flick=null;
+function gen(){combo=[(Math.random()*12)|0,(Math.random()*12)|0,(Math.random()*12)|0];
+ci=0;attempts=5;dialA=0;spinning=false;
+document.getElementById('a').textContent=5;
+const cd=document.getElementById('combo');cd.innerHTML='';
+combo.forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;cd.appendChild(s);});
+document.getElementById('ci').textContent=1;
+draw();msg('Spin to '+combo[0]+'!');}
+let spinVel=0;
+cvs.addEventListener('pointerdown',e=>{if(spinning)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+flick={x,y,lx:x,ly:y,lt:Date.now()};});
+cvs.addEventListener('pointermove',e=>{if(!flick)return;const r=cvs.getBoundingClientRect();
+flick.lx=(e.clientX-r.left)*W/r.width;flick.ly=(e.clientY-r.top)*W/r.height;});
+cvs.addEventListener('pointerup',()=>{if(!flick)return;
+const dx=flick.lx-flick.x,dy=flick.ly-flick.y;
+spinVel=(dx+dy)*0.002;
+spinning=true;flick=null;
+spinLoop();});
+function spinLoop(){dialA+=spinVel;spinVel*=0.985;
+if(Math.abs(spinVel)<0.002){spinning=false;release();return;}
+draw();requestAnimationFrame(spinLoop);}
+function release(){if(ci>=3)return;
+dialA=((dialA%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+const target=combo[ci]/12*Math.PI*2-Math.PI/2;
+let d=Math.abs(dialA-target)%(Math.PI*2);d=Math.min(d,Math.PI*2-d);
+if(d<0.14){score+=100;document.getElementById('s').textContent=score;
+beep(880,.2,'triangle');
+document.querySelectorAll('#combo span')[ci].classList.add('done');
+ci++;document.getElementById('ci').textContent=Math.min(3,ci+1);
+if(ci>=3){msg('🔓 Vault open! +300');score+=300;
+document.getElementById('s').textContent=score;
+setTimeout(gen,1200);}
+else{msg('✅ Next: spin to '+combo[ci]+'!');
+document.querySelectorAll('#combo span').forEach((s,i)=>s.classList.toggle('cur',i===ci));}}
+else{attempts--;document.getElementById('a').textContent=attempts;
+beep(150,.18,'sawtooth');msg('🔒 Off by '+Math.round(d*180/Math.PI/Math.PI*12)+' numbers…');
+if(attempts<=0){msg('🚨 The vault seals! Score: '+score);
+setTimeout(gen,1500);}}}
+function draw(){ctx.fillStyle='#312e81';ctx.fillRect(0,0,W,W);
+// dial
+ctx.beginPath();ctx.arc(CX,CY,130,0,7);ctx.fillStyle='#4338ca';ctx.fill();
+ctx.strokeStyle='#6366f1';ctx.lineWidth=5;ctx.stroke();
+for(let n=0;n<12;n++){const a=n/12*Math.PI*2-Math.PI/2;
+ctx.fillStyle='#e0e7ff';ctx.font='14px serif';ctx.textAlign='center';
+ctx.fillText(n,CX+Math.cos(a)*105,CY+Math.sin(a)*105+5);}
+// target marker
+if(ci<3){const t=combo[ci]/12*Math.PI*2-Math.PI/2;
+ctx.strokeStyle='#22c55e';ctx.lineWidth=3;
+ctx.beginPath();ctx.arc(CX,CY,120,t-0.1,t+0.1);ctx.stroke();}
+// handle
+ctx.save();ctx.translate(CX,CY);ctx.rotate(dialA);
+ctx.strokeStyle='#fbbf24';ctx.lineWidth=6;ctx.lineCap='round';
+ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(80,0);ctx.stroke();
+ctx.beginPath();ctx.arc(0,0,10,0,7);ctx.fillStyle='#fbbf24';ctx.fill();
+ctx.restore();ctx.lineWidth=1;}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{score=0;document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

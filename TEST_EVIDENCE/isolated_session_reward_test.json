@@ -1,0 +1,59 @@
+{
+ "method": "Real mouse clicks + key presses on isolated (sandbox allow-scripts only) games; session thresholds lowered to 6s/6 inputs via test config only",
+ "results": {
+  "ninja-fog-walk-441": {
+   "xp_while_idle": 0,
+   "after_real_inputs": {
+    "xp": 10,
+    "played": 1,
+    "coins": 25
+   },
+   "errors": []
+  },
+  "royal-trumpet-call-443": {
+   "xp_while_idle": 0,
+   "after_real_inputs": {
+    "xp": 10,
+    "played": 1,
+    "coins": 25
+   },
+   "errors": []
+  },
+  "desert-scarab-push-445": {
+   "xp_while_idle": 0,
+   "after_real_inputs": {
+    "xp": 10,
+    "played": 1,
+    "coins": 25
+   },
+   "errors": []
+  },
+  "crystal-gem-grid-446": {
+   "xp_while_idle": 0,
+   "after_real_inputs": {
+    "xp": 10,
+    "played": 1,
+    "coins": 25
+   },
+   "errors": []
+  },
+  "royal-banner-weave-448": {
+   "xp_while_idle": 0,
+   "after_real_inputs": {
+    "xp": 10,
+    "played": 1,
+    "coins": 25
+   },
+   "errors": []
+  },
+  "desert-wind-ladder-447": {
+   "xp_while_idle": 0,
+   "after_real_inputs": {
+    "xp": 10,
+    "played": 1,
+    "coins": 25
+   },
+   "errors": []
+  }
+ }
+}

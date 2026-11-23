@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Retro 16-bit Quantum Dash</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#000;font-family:'Courier New',monospace;color:#4ade80;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.05rem;color:#facc15;padding:6px;letter-spacing:2px;text-shadow:2px 2px #7c3aed}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#q{font-size:2rem;text-align:center;margin:20px 0;min-height:2em;color:#67e8f9}
+#ans{width:min(360px,90vw);padding:14px;border:3px solid #7c3aed;border-radius:4px;font-size:1.6rem;text-align:center;font-family:inherit;color:#4ade80;background:#0a0a1a;outline:none}
+#ans:focus{border-color:#facc15}
+#fb{text-align:center;min-height:1.6em;margin-top:12px;font-weight:700}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#4ade80;padding:20px;z-index:5}
+button{background:#7c3aed;border:none;color:#fff;font-family:inherit;font-weight:800;padding:12px 36px;font-size:1rem;cursor:pointer;margin-top:14px;box-shadow:4px 4px #4c1d95}
+</style>
+</head>
+<body>
+<h1>🕹 RETRO 16-BIT QUANTUM DASH</h1>
+<div id="hud"><span>Wave <b id="n">1</b></span><span>Score <b id="sc">0</b></span><span>Streak <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="q">PRESS START</div>
+<input id="ans" placeholder="=?" autocomplete="off" inputmode="numeric">
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#facc15">16-BIT MATH DASH</h2><p id="od">45 seconds of CRT-green arithmetic! Solve before the wave collapses. Streaks boost your multiplier. INSERT COIN!</p><button id="btn">INSERT COIN</button></div>
+<script>
+"use strict";
+let n,score,streak,time,playing,timer,cur,best=+localStorage.getItem('rq_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const ans=document.getElementById('ans');
+function mk(){const a=1+((Math.random()*12)|0),b=1+((Math.random()*12)|0);const t=(Math.random()*4)|0;
+if(t===0)return{q:a+' + '+b+' =',a:a+b};
+if(t===1)return{q:Math.max(a,b)+' − '+Math.min(a,b)+' =',a:Math.max(a,b)-Math.min(a,b)};
+if(t===2)return{q:a+' × '+b+' =',a:a*b};
+return{q:a*b+' ÷ '+b+' =',a:a};}
+function start(){n=1;score=0;streak=0;time=45;playing=true;
+document.getElementById('sc').textContent=0;document.getElementById('st').textContent=0;document.getElementById('n').textContent=1;
+ask();clearInterval(timer);
+timer=setInterval(()=>{time--;if(time<=0)end();},1000);}
+function ask(){cur=mk();document.getElementById('q').textContent=cur.q;ans.value='';ans.focus();}
+ans.addEventListener('keydown',e=>{if(e.key==='Enter'&&playing){audio.resume();
+if(+ans.value===cur.a){streak++;const pts=(10+streak*3)*Math.min(5,1+(n/6|0));score+=pts;
+document.getElementById('sc').textContent=score;document.getElementById('st').textContent=streak;
+document.getElementById('fb').textContent='✓ +'+pts;document.getElementById('fb').style.color='#4ade80';
+beep(660+streak*40,.07,'triangle');n++;document.getElementById('n').textContent=n;}
+else{streak=0;document.getElementById('st').textContent=0;
+document.getElementById('fb').textContent='✗ '+cur.q+' '+cur.a;document.getElementById('fb').style.color='#f87171';
+beep(150,.15,'sawtooth');}
+ask();}});
+function end(){playing=false;clearInterval(timer);
+if(score>best){best=score;localStorage.setItem('rq_best',best);document.getElementById('b').textContent=best;}
+const r=score>=250?'🏆 16-BIT LEGEND':score>=150?'🥇 CRT CHAMPION':score>=70?'🕹 PLAYER TWO':'👾 GAME OVER';
+document.getElementById('od').innerHTML=r+'<br>Score: <b style="font-size:1.5rem;color:#facc15">'+score+'</b>';
+document.getElementById('btn').textContent='CONTINUE?';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('fb').textContent='';start();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

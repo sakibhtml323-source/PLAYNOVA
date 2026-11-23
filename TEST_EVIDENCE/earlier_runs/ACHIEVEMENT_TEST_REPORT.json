@@ -1,0 +1,40 @@
+{
+ "generated_by": "automated Playwright run against local build",
+ "tests": [
+  {
+   "test": "First Game unlocks after 1 verified session",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "10 Games not unlocked early",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "achievement timestamp not overwritten / no duplicate unlock",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "achievement coins paid once",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "10 Games unlocks at 10 sessions",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "Explorer unlocks at 10 different games",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "Win-based achievements locked (no verified wins)",
+   "result": "PASS",
+   "detail": ""
+  }
+ ]
+}

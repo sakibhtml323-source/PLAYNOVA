@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Attic Sort #419</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#attic{display:flex;gap:8px;margin:14px;flex-wrap:wrap;justify-content:center;max-width:94vw}
+.item{width:78px;padding:8px;background:#27272a;border:2px solid #3f3f46;border-radius:12px;text-align:center;cursor:pointer;transition:transform .1s;font-size:.75rem}
+.item .e{font-size:1.9rem}
+.item.sel{transform:translateY(-12px);border-color:#facc15}
+.item .w{display:none;color:#fbbf24;font-weight:800}
+.item.reveal .w{display:block}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🕸️ Haunted Attic Sort</h1><div class="sub">Attic objects hide their weight — tap an object to reveal it (limited reveals), then sort lightest→heaviest!</div>
+<div id="hud"><span>Reveals <b id="r">5</b></span><span>Round <b id="rd">1</b></span><span>Score <b id="s">0</b></span></div>
+<div id="attic"></div>
+<div id="msg"></div>
+<button id="btn">👻 New Attic</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const OBJECTS=[{e:'🪶',n:'Feather',w:1},{e:'📕',n:'Book',w:3},{e:'🏺',n:'Vase',w:5},{e:'🗿',n:'Statue',w:8},{e:'🧸',n:'Doll',w:2},{e:'⚱️',n:'Urn',w:6}];
+let items=[],sel=null,reveals=5,round=1,score=0;
+function gen(){const n=Math.min(3+round,6);
+items=OBJECTS.slice(0,n).map(o=>({...o,revealed:false})).sort(()=>Math.random()-.5);
+sel=null;reveals=n+2;
+document.getElementById('r').textContent=reveals;
+document.getElementById('rd').textContent=round;
+render();msg('Tap to reveal weights — then sort lightest first!');}
+function tap(i){const it=items[i];
+if(!it.revealed){if(reveals<=0){beep(160,.08,'sawtooth');msg('No reveals left!');return;}
+it.revealed=true;reveals--;document.getElementById('r').textContent=reveals;
+beep(500,.08);render();return;}
+if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[items[sel],items[i]]=[items[i],items[sel]];
+sel=null;beep(400,.06);render();check();}
+function check(){const sorted=items.every((it,i)=>i===0||items[i-1].w<=it.w);
+if(sorted){score+=items.length*20;document.getElementById('s').textContent=score;
+beep(880,.3,'triangle');msg('🕸️ Attic organized! Round '+(round+1));round++;
+setTimeout(gen,1200);}}
+function render(){const a=document.getElementById('attic');a.innerHTML='';
+items.forEach((it,i)=>{const d=document.createElement('div');
+d.className='item'+(it.revealed?' reveal':'')+(sel===i?' sel':'');
+d.innerHTML='<div class="e">'+it.e+'</div><div>'+it.n+'</div><div class="w">'+it.w+'kg</div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+a.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;score=0;
+document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

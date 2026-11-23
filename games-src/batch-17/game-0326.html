@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Oasis Match #326</title><style>
+body{margin:0;font-family:system-ui;background:#0c4a6e;color:#e0f2fe;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#7dd3fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(4,70px);gap:8px;margin:12px}
+.card{width:70px;height:70px;background:#075985;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;user-select:none;transition:transform .15s}
+.card.open{background:#38bdf833;transform:rotateY(180deg)}
+.card.done{background:#166534;opacity:.8;cursor:default}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#38bdf8;color:#0c4a6e;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🌊 Desert Oasis Match</h1><div class="sub">Flip cards to find matching oasis creatures — fewest flips wins!</div>
+<div id="hud"><span>Flips <b id="f">0</b></span><span>Pairs <b id="p">0</b>/8</span><span>Best <b id="b">—</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🐫 New Game</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const ICONS=['🐪','🐍','🦂','🦅','🐫','🦎','🦉','🐢'];
+let cards=[],open=[],pairs=0,flips=0,lock=false,best=+localStorage.getItem('dom_best')||Infinity;
+document.getElementById('b').textContent=best<Infinity?best:'—';
+function deal(){const deck=ICONS.concat(ICONS).sort(()=>Math.random()-.5);
+cards=deck.map((e,i)=>({e,i,open:false,done:false}));open=[];pairs=0;flips=0;lock=false;
+document.getElementById('f').textContent=0;document.getElementById('p').textContent=0;msg('');render();}
+function tap(i){if(lock||cards[i].open||cards[i].done)return;
+cards[i].open=true;open.push(i);flips++;document.getElementById('f').textContent=flips;beep(400+i*30,.06);render();
+if(open.length===2){lock=true;const[a,b]=open;
+if(cards[a].e===cards[b].e){cards[a].done=cards[b].done=true;pairs++;
+document.getElementById('p').textContent=pairs;beep(600,.12,'triangle');open=[];lock=false;
+if(pairs>=8){if(flips<best){best=flips;localStorage.setItem('dom_best',best);document.getElementById('b').textContent=best;}
+msg('🎉 Cleared in '+flips+' flips!'+(flips<=20?' Perfect memory!':''));}}
+else{setTimeout(()=>{cards[a].open=cards[b].open=false;open=[];lock=false;
+beep(180,.1,'sawtooth');render();},650);}}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+cards.forEach((c,i)=>{const d=document.createElement('div');
+d.className='card'+(c.open?' open':'')+(c.done?' done':'');
+d.textContent=(c.open||c.done)?c.e:'🌴';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();deal();};
+deal();
+</script></body></html>

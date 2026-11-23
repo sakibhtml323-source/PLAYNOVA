@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Star Link #486</title><style>
+body{margin:0;font-family:system-ui;background:#0c1445;color:#e0e7ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#93c5fd;font-size:.78rem}
+canvas{background:#111936;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#0c1445;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⭐ Desert Star Link</h1><div class="sub">Connect every star pair AND fill the sky — paths WRAP around the edges!</div>
+<div id="hud"><span>Pairs <b id="p">0</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">✨ New Sky</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5,CELL=400/N;const PAIRS=[['🔴','#ef4444'],['🔵','#3b82f6'],['🟢','#22c55e'],['🟡','#eab308']];
+let endpoints=[],grid=[],paths={},drawing=null,level=1;
+function gen(){grid=Array.from({length:N},()=>Array(N).fill(null));
+paths={};endpoints=[];drawing=null;
+const n=Math.min(2+Math.floor(level/2),4);
+const cells=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)cells.push([r,c]);
+cells.sort(()=>Math.random()-.5);
+for(let p=0;p<n;p++){
+const a=cells[p*2],b=cells[p*2+1];
+endpoints.push({p,r:a[0],c:a[1]},{p,r:b[0],c:b[1]});
+grid[a[0]][a[1]]=p;grid[b[0]][b[1]]=p;}
+document.getElementById('l').textContent=level;
+document.getElementById('p').textContent=0;
+draw();msg('Fill the whole grid!');}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*N),rr=Math.floor((e.clientY-r.top)/r.height*N);
+const p=grid[rr]&&grid[rr][c];
+if(p===null)return;
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();
+drawing={p,cells:[[rr,c]],r:rr,c:c};
+delete paths[p];beep(400,.05);draw();});
+cvs.addEventListener('pointermove',e=>{if(!drawing)return;const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*N),rr=Math.floor((e.clientY-r.top)/r.height*N);
+if(rr<0||rr>=N||c<0||c>=N)return;
+const last=drawing.cells[drawing.cells.length-1];
+if(last[0]===rr&&last[1]===c)return;
+const dR=Math.min(Math.abs(last[0]-rr),N-Math.abs(last[0]-rr));
+const dC=Math.min(Math.abs(last[1]-c),N-Math.abs(last[1]-c));
+if(dR+dC!==1)return;
+// backtrack
+if(drawing.cells.length>1){const prev=drawing.cells[drawing.cells.length-2];
+if(prev[0]===rr&&prev[1]===c){drawing.cells.pop();draw();return;}}
+// hit endpoint of same pair?
+if(grid[rr][c]===drawing.p&&!(rr===drawing.cells[0][0]&&c===drawing.cells[0][1])){
+drawing.cells.push([rr,c]);paths[drawing.p]=drawing.cells.slice();
+beep(600,.1,'triangle');drawing=null;draw();check();return;}
+// occupied?
+if(grid[rr][c]!==null)return;
+for(const k in paths){if(paths[k].some(([pr,pc])=>pr===rr&&pc===c))return;}
+drawing.cells.push([rr,c]);draw();});
+cvs.addEventListener('pointerup',()=>{if(drawing){
+if(drawing.cells.length>1){paths[drawing.p]=drawing.cells.slice();
+document.getElementById('p').textContent=Object.keys(paths).length;check();}
+drawing=null;draw();}});
+function check(){const filled=Object.values(paths).reduce((a,p)=>a+p.length,0);
+const need=N*N-endpoints.length+endpoints.length;
+// all endpoints + all paths = N*N means full grid
+if(Object.keys(paths).length>=Math.min(2+Math.floor(level/2),4)){
+const allCells=new Set();
+endpoints.forEach(e=>allCells.add(e.r*N+e.c));
+Object.values(paths).forEach(p=>p.forEach(([r,c])=>allCells.add(r*N+c)));
+if(allCells.size>=N*N){beep(880,.3,'triangle');msg('🌌 The sky is complete! Level '+(level+1));level++;
+setTimeout(gen,1000);}}}
+function draw(){ctx.fillStyle='#111936';ctx.fillRect(0,0,400,400);
+for(let i=0;i<20;i++){ctx.fillStyle='#ffffff15';ctx.fillRect((i*83)%400,(i*47)%400,2,2);}
+// grid
+ctx.strokeStyle='#1e3a8a';
+for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,400);ctx.stroke();
+ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(400,i*CELL);ctx.stroke();}
+// paths
+for(const k in paths){const col=PAIRS[k][1];
+ctx.strokeStyle=col;ctx.lineWidth=6;ctx.lineCap='round';
+ctx.beginPath();paths[k].forEach(([r,c],i)=>{const x=c*CELL+CELL/2,y=r*CELL+CELL/2;
+i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();}
+if(drawing&&drawing.cells.length>1){ctx.strokeStyle=PAIRS[drawing.p][1]+'aa';ctx.lineWidth=6;
+ctx.beginPath();drawing.cells.forEach(([r,c],i)=>{const x=c*CELL+CELL/2,y=r*CELL+CELL/2;
+i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();}
+ctx.lineWidth=1;
+endpoints.forEach(e=>{ctx.font='22px serif';ctx.textAlign='center';
+ctx.fillText(PAIRS[e.p][0],e.c*CELL+CELL/2,e.r*CELL+CELL/2+8);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

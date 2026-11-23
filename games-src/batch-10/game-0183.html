@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ball Bounce: Glassmorphism Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#a5b4fc,#c4b5fd,#f0abfc);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#312e81;padding:8px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px;color:#312e81}
+canvas{background:rgba(255,255,255,.35);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.6);touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(224,231,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#312e81;padding:20px;z-index:5}
+button{background:#6366f1;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🔮 GLASS BALL BOUNCE</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Lives <b id="l">3</b></span><span>Level <b id="lv">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2>GLASS PADDLE</h2><p id="od">Keep the glass orb alive! Move the frosted paddle with ← → / A D or drag. Bounce to smash the prisms. Don't let the orb fall through the glass floor!</p><button id="btn">BOUNCE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=520;cvs.width=W;cvs.height=H;
+let ball,pad,bricks,playing,keys,score,lives,level,dragX,frame,best=+localStorage.getItem('gbb_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+const COLS=['#818cf8','#a78bfa','#f0abfc','#67e8f9'];
+function build(lv){bricks=[];const rows=Math.min(3+lv,7);for(let r=0;r<rows;r++)for(let c=0;c<7;c++)bricks.push({x:12+c*58,y:44+r*24,w:54,h:18,col:COLS[r%4]});}
+function init(lv){pad={x:W/2,w:76};ball={x:W/2,y:H-60,vx:3,vy:-4.6,stuck:true};score=0;lives=3;level=lv;keys={};frame=0;playing=true;
+build(lv);document.getElementById('s').textContent=0;document.getElementById('l').textContent=3;document.getElementById('lv').textContent=lv;}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();ball.stuck=false;}});
+cvs.addEventListener('pointerdown',e=>{audio.resume();ball.stuck=false;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+window.addEventListener('pointerup',()=>dragX=null);
+function step(){frame++;
+if(keys['arrowleft']||keys['a'])pad.x-=6;if(keys['arrowright']||keys['d'])pad.x+=6;
+if(dragX!==null&&!isFinite(dragX))dragX=null;
+if(dragX!==null)pad.x=dragX;
+if(!isFinite(pad.x))pad.x=W/2;
+pad.x=Math.max(pad.w/2,Math.min(W-pad.w/2,pad.x));
+if(ball.stuck){ball.x=pad.x;ball.y=H-34;return;}
+ball.x+=ball.vx;ball.y+=ball.vy;
+if(ball.x<8||ball.x>W-8){ball.vx*=-1;beep(220);}
+if(ball.y<26){ball.vy*=-1;beep(220);}
+if(ball.vy>0&&ball.y>H-38&&ball.y<H-26&&Math.abs(ball.x-pad.x)<pad.w/2+6){
+const a=(ball.x-pad.x)/(pad.w/2);ball.vx=a*5;ball.vy=-Math.abs(ball.vy)-0.12;beep(330);}
+bricks.forEach(br=>{if(ball.x>br.x&&ball.x<br.x+br.w&&ball.y>br.y&&ball.y<br.y+br.h){
+bricks.splice(bricks.indexOf(br),1);ball.vy*=-1;score+=10;
+document.getElementById('s').textContent=score;beep(520,.08,'triangle');}});
+if(ball.y>H+12){lives--;document.getElementById('l').textContent=lives;
+if(lives<=0)over();else ball={x:pad.x,y:H-60,vx:3,vy:-4.6,stuck:true};}
+if(!bricks.length){level++;document.getElementById('lv').textContent=level;build(level);
+ball={x:pad.x,y:H-60,vx:3,vy:-4.6,stuck:true};}}
+function draw(){if(!isFinite(ball.x)||!isFinite(ball.y)||!isFinite(pad.x))return;ctx.clearRect(0,0,W,H);
+bricks.forEach(br=>{ctx.fillStyle='rgba(255,255,255,.5)';ctx.fillRect(br.x,br.y,br.w,br.h);
+ctx.fillStyle=br.col;ctx.fillRect(br.x+3,br.y+3,br.w-6,br.h-6);});
+ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillRect(pad.x-pad.w/2,H-28,pad.w,12);
+ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillRect(pad.x-pad.w/2,H-28,pad.w,4);
+const g2=ctx.createRadialGradient(ball.x,ball.y,2,ball.x,ball.y,16);
+g2.addColorStop(0,'rgba(255,255,255,.95)');g2.addColorStop(1,'rgba(199,210,254,.3)');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(ball.x,ball.y,12,0,7);ctx.fill();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+function over(){playing=false;if(score>best){best=score;localStorage.setItem('gbb_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The glass orb shatters…<br>Score: <b style="color:#6366f1">'+score+'</b>';
+document.getElementById('btn').textContent='REBLOW GLASS';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+document.getElementById('btn').onclick=()=>{audio.resume();init(1);document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

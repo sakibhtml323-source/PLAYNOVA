@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Resource Management: Robot Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0f172a;font-family:'Courier New',monospace;color:#67e8f9;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#22d3ee;padding:6px;letter-spacing:2px}
+#res{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.85rem;margin-bottom:6px}
+#res span{background:#164e63;border-radius:8px;padding:4px 10px}
+main{width:min(600px,96vw);display:grid;gap:10px;padding-bottom:60px}
+.card{background:#082f49;border:1px solid #164e63;border-radius:12px;padding:12px}
+.card h3{color:#a5f3fc;font-size:.85rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#0c4a6e;border-radius:8px;padding:8px;margin-bottom:6px;font-size:.8rem}
+.row button{background:#0891b2;color:#fff;border:1px solid #22d3ee;border-radius:6px;padding:6px 12px;cursor:pointer;font-family:inherit}
+.row button:disabled{opacity:.35}
+#log{min-height:44px;font-size:.75rem;color:#a5f3fc;padding:6px}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button.big{background:#22d3ee;color:#082f49;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:480px){#res{font-size:.7rem}.row{font-size:.7rem}}
+</style>
+</head>
+<body>
+<h1>🤖 RESOURCE MANAGEMENT: ROBOT EDITION</h1>
+<div id="res"><span>🔩 Scrap <b id="sc">12</b></span><span>🔋 Cells <b id="ce">12</b></span><span>🧠 Cores <b id="co">12</b></span><span>🤖 Bots <b id="bo">3</b></span><span>🛡️ Integrity <b id="in">100</b></span><span>⏱ Cycle <b id="cy">1</b></span></div>
+<main>
+<div class="card"><h3>⚙️ FACTORY MODULES</h3><div id="mods"></div></div>
+<div class="card"><h3>📟 SYSTEM LOG</h3><div id="log">Factory AI online. Survive 15 cycles.</div></div>
+</main>
+<div id="ov"><h2 style="color:#22d3ee">ROBOT FACTORY</h2><p id="od">Run the automated factory for 15 cycles! Harvest scrap, charge cells, compile cores. Rogue virus waves corrupt your systems — build firewalls. Bots consume cells; unfed bots power down.</p><button class="big" id="btn">BOOT FACTORY</button></div>
+<script>
+"use strict";
+let S;let rb=+localStorage.getItem('rm_best')||0;
+function fresh(){S={sc:12,ce:12,co:12,bo:3,in:100,cy:1,harv:1,chg:0,comp:0,wall:0,over:false};}
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(S.over)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function log(t){const el=document.getElementById('log');el.innerHTML='» '+t+'<br>'+el.innerHTML;}
+const MODS=[
+{n:'Scrap Harvester',d:'+5 scrap/cycle',c:{sc:0,ce:0,co:0},k:'harv',max:5},
+{n:'Cell Charger',d:'converts 2 scrap → 3 cells/cycle',c:{sc:8,ce:0,co:0},k:'chg',max:4},
+{n:'Core Compiler',d:'consumes 2 cells → 2 cores/cycle',c:{sc:6,ce:4,co:0},k:'comp',max:4},
+{n:'Firewall Node',d:'-25 virus damage',c:{sc:10,ce:2,co:2},k:'wall',max:4}];
+function can(c){return S.sc>=c.sc&&S.ce>=c.ce&&S.co>=c.co;}
+function render(){['sc','ce','co','bo','in'].forEach(k=>document.getElementById(k).textContent=Math.floor(S[k]));
+document.getElementById('cy').textContent=S.cy;
+const m=document.getElementById('mods');m.innerHTML='';
+MODS.forEach(md=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+md.n+'</b> <span style="color:#67e8f9">×'+S[md.k]+' · '+md.d+'</span></div>';
+const b=document.createElement('button');
+b.textContent=S[md.k]>=md.max?'MAX':'Build ('+(md.c.sc?md.c.sc+'🔩 ':'')+(md.c.ce?md.c.ce+'🔋 ':'')+(md.c.co?md.c.co+'🧠':'')+')';
+b.disabled=S[md.k]>=md.max||!can(md.c);
+b.onclick=()=>{if(can(md.c)&&S[md.k]<md.max){S.sc-=md.c.sc;S.ce-=md.c.ce;S.co-=md.c.co;S[md.k]++;beep(600,.09);log(md.n+' online.');render();}};row.appendChild(b);m.appendChild(row);});}
+function nextCycle(){S.cy++;
+S.sc+=S.harv*5;S.ce+=S.chg*3;S.sc-=S.chg*2;S.co+=S.comp*2;S.ce-=S.comp*2;
+if(S.sc<0){S.sc=0;}
+// bots consume
+S.ce-=S.bo;if(S.ce<0){const dead=Math.min(S.bo,Math.ceil(-S.ce/4));S.bo-=dead;S.ce=0;log('⚠️ '+dead+' bot(s) powered down from empty cells!');if(S.bo<1)return end(false,'All bots offline. The factory falls silent.');}
+// virus waves
+if(S.cy%3===0){const dmg=Math.max(5,40-S.wall*25);S.in-=dmg;log('☣️ VIRUS WAVE! Integrity -'+dmg+'.');beep(140,.25,'sawtooth');
+if(S.in<=0)return end(false,'Corrupted beyond recovery at cycle '+S.cy+'.');}
+if(Math.random()<0.15){S.co+=4;log('🎁 Backup core cache found! +4 cores.');}
+if(S.cy>15)return end(true,'');
+render();beep(440,.05);}
+function end(win,why){S.over=true;
+if(win||S.cy>rb){rb=Math.max(rb,S.cy);localStorage.setItem('rm_best',rb);log('🏅 Best cycle: '+rb);}const ov=document.getElementById('ov');
+document.getElementById('od').innerHTML=win?'🏆 <b style="color:#22d3ee">15 CYCLES COMPLETE — FACTORY SOVEREIGN!</b><br>The robot empire acknowledges its maker.':'💀 '+why;
+document.getElementById('btn').textContent='REBOOT';ov.style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();fresh();log('Factory initialized.');render();document.getElementById('ov').style.display='none';};
+const nb=document.createElement('button');nb.className='big';nb.textContent='NEXT CYCLE ⏭';nb.style.cssText='position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:4';
+nb.onclick=()=>{audio.resume();if(S&&!S.over)nextCycle();};
+document.body.appendChild(nb);
+window.addEventListener('keydown',e=>{if(e.key==='n'||e.key==='N'){if(S&&!S.over)nextCycle();}});
+</script>
+</body>
+</html>

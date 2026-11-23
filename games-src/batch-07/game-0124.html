@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Robot Intense Dash</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050505;font-family:'Courier New',monospace;color:#4ade80;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#22d3ee;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{image-rendering:pixelated;background:#0a0a0a;border:3px solid #164e63;border-radius:6px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(5,5,5,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#4ade80;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#050505;font-weight:800;padding:12px 34px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;box-shadow:4px 4px #0c4a6e}
+</style>
+</head>
+<body>
+<h1>🤖 ROBOT INTENSE DASH</h1>
+<div id="hud"><span>Distance <b id="d">0</b>m</span><span>⚡ Charge <b id="ch">100</b>%</span><span>Best <b id="b">0</b>m</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#22d3ee">INTENSE DASH</h2><p id="od">Overclocked running robot! Auto-dash — tap/Space to JUMP, hold ↓/swipe-down to SLIDE. Batteries ⚡ drain — grab cells to recharge. One hit and you short-circuit!</p><button id="btn">BOOT SEQUENCE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=520,H=260;cvs.width=W;cvs.height=H;const GY=H-40;
+let bot,obs,cells2,playing,speed,dist,charge,frame,duck,best=+localStorage.getItem('rid_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){bot={x:80,y:GY,vy:0,w:24,h:28,onG:true};obs=[];cells2=[];dist=0;speed=5;charge=100;frame=0;duck=0;playing=true;
+document.getElementById('d').textContent=0;document.getElementById('ch').textContent=100;}
+function jump(){if(bot.onG){bot.vy=-11.5;bot.onG=false;beep(520,.05);}}
+window.addEventListener('keydown',e=>{if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();jump();}if(e.key==='ArrowDown'||e.key==='s')duck=20;});
+let touchY=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();touchY=e.clientY;jump();});
+cvs.addEventListener('pointerup',e=>{if(touchY!==null&&e.clientY-touchY>40)duck=20;touchY=null;});
+function step(){frame++;dist+=speed/18;speed=5+dist/240;
+document.getElementById('d').textContent=Math.floor(dist);
+charge=Math.max(0,charge-0.08);document.getElementById('ch').textContent=Math.round(charge);
+if(charge<=0)return die('BATTERY EMPTY');
+bot.vy+=0.6;bot.y+=bot.vy;if(duck>0)duck--;
+if(bot.y>=GY){bot.y=GY;bot.vy=0;bot.onG=true;}
+if(frame%Math.max(24,50-dist/50|0)===0){const r=Math.random();
+if(r<0.35)obs.push({x:W+20,y:GY-20,w:22,h:20,t:'crate'});
+else if(r<0.6)obs.push({x:W+20,y:GY-52,w:16,h:32,t:'drone'});
+else if(r<0.78)cells2.push({x:W+20,y:GY-56});
+else obs.push({x:W+20,y:GY-12,w:30,h:12,t:'spike'});}
+obs.forEach(o=>o.x-=speed);cells2.forEach(c2=>c2.x-=speed);
+obs=obs.filter(o=>o.x>-60);cells2=cells2.filter(c2=>c2.x>-30);
+const hh=duck>0?14:bot.h;
+cells2.forEach(c2=>{if(Math.abs(c2.x-bot.x)<24&&Math.abs(c2.y-bot.y)<30){charge=Math.min(100,charge+25);
+document.getElementById('ch').textContent=Math.round(charge);cells2.splice(cells2.indexOf(c2),1);beep(900,.07);}});
+obs.forEach(o=>{if(bot.x+bot.w/2>o.x&&bot.x-bot.w/2<o.x+o.w&&bot.y-hh<o.y+o.h&&bot.y>o.y)die('SYSTEM CRASH');});}
+function die(why){if(!playing)return;playing=false;const d=Math.floor(dist);
+if(d>best){best=d;localStorage.setItem('rid_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='💥 '+why+' at <b style="color:#22d3ee">'+d+'m</b>!';
+document.getElementById('btn').textContent='REBOOT';document.getElementById('ov').style.display='flex';beep(120,.4,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#14532d33';for(let i=0;i<W;i+=20)ctx.strokeRect(i,0,20,20);
+ctx.fillStyle='#052e16';ctx.fillRect(0,GY,W,H-GY);
+obs.forEach(o=>{if(o.t==='crate'){ctx.fillStyle='#164e63';ctx.fillRect(o.x,o.y,o.w,o.h);ctx.fillStyle='#22d3ee';ctx.fillRect(o.x+3,o.y+3,o.w-6,4);}
+else if(o.t==='drone'){ctx.fillStyle='#dc2626';ctx.fillRect(o.x,o.y+Math.sin(frame/5)*3,o.w,o.h);}
+else{ctx.fillStyle='#f87171';for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(o.x+i*10,GY);ctx.lineTo(o.x+i*10+5,GY-14);ctx.lineTo(o.x+i*10+10,GY);ctx.fill();}}});
+cells2.forEach(c2=>{ctx.fillStyle='#22d3ee';ctx.fillRect(c2.x-5,c2.y-8,10,16);ctx.fillStyle='#fff';ctx.fillRect(c2.x-2,c2.y-5,4,4);});
+const hh=duck>0?14:bot.h;
+ctx.fillStyle='#22d3ee';ctx.fillRect(bot.x-bot.w/2,bot.y-hh,bot.w,hh);
+ctx.fillStyle='#f8fafc';ctx.fillRect(bot.x-bot.w/2,bot.y-hh,bot.w,7);
+ctx.fillStyle='#111';ctx.fillRect(bot.x+3,bot.y-hh+11,4,4);
+if(bot.onG&&frame%6<3){ctx.fillStyle='#164e63';ctx.fillRect(bot.x-10,bot.y,6,4);}}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

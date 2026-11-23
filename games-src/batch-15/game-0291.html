@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Caravan Trade #291</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#goods{display:flex;gap:8px;margin:10px;flex-wrap:wrap;justify-content:center}
+.good{background:#292524;border-radius:12px;padding:10px 14px;text-align:center;min-width:100px}
+.good .e{font-size:2rem}
+.good .p{font-size:1.1rem;font-weight:800;color:#fbbf24}
+.good .ch{font-size:.75rem}
+.up{color:#22c55e}.down{color:#ef4444}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#log{max-height:100px;overflow-y:auto;width:340px;font-size:.75rem;color:#a8a29e;margin:6px}
+button{padding:8px 16px;border-radius:8px;border:none;background:#57534e;color:#fff;font-weight:700;cursor:pointer;margin:2px}
+.msg{min-height:1.3em;font-weight:600}
+</style></head><body>
+<h1>🐪 Desert Caravan Trade</h1><div class="sub">Buy low, sell high! Prices change each day — maximize your gold in 20 days.</div>
+<div id="hud"><span>Gold <b id="g">100</b></span><span>Day <b id="d">1</b>/20</span><span>Inventory <b id="i">0</b></span></div>
+<div id="goods"></div>
+<div class="msg" id="msg"></div>
+<div id="log"></div>
+<button id="btn" style="padding:11px 26px;border-radius:999px;background:#fbbf24;color:#1c1917;font-size:1rem;margin-top:10px">🌅 Next Day</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const GOODS=[{e:'🏺',n:'Pottery',base:15},{e:'🌾',n:'Grain',base:8},{e:'🧂',n:'Salt',base:25},{e:'👘',n:'Silk',base:45},{e:'💎',n:'Gems',base:80}];
+let gold=100,day=1,prices=[0,0,0,0,0],inv=[0,0,0,0,0];
+function newPrices(){prices=GOODS.map(g=>Math.max(1,Math.round(g.base*(0.5+Math.random()))));}
+function render(){const gd=document.getElementById('goods');gd.innerHTML='';
+GOODS.forEach((g,i)=>{const prev=prices[i]||g.base;
+const ch=prices[i]-prev;const pct=Math.round(ch/prev*100);
+const d=document.createElement('div');d.className='good';
+d.innerHTML='<div class="e">'+g.e+'</div><div>'+g.n+'</div>'
++'<div class="p">'+prices[i]+'g</div>'
++'<div class="ch '+(ch>=0?'up':'down')+'">'+(ch>=0?'▲':'▼')+' '+Math.abs(pct)+'% · own '+inv[i]+'</div>';
+const bb=document.createElement('button');bb.textContent='Buy';
+bb.onclick=()=>{if(gold>=prices[i]){gold-=prices[i];inv[i]++;beep(500,.07);render();}
+else beep(160,.08,'sawtooth');};
+const sb=document.createElement('button');sb.textContent='Sell';
+sb.onclick=()=>{if(inv[i]>0){gold+=prices[i];inv[i]--;beep(700,.07);render();}
+else beep(160,.08,'sawtooth');};
+d.appendChild(bb);d.appendChild(sb);gd.appendChild(d);});
+document.getElementById('g').textContent=gold;
+document.getElementById('d').textContent=day;
+document.getElementById('i').textContent=inv.reduce((a,b)=>a+b,0);}
+document.getElementById('btn').onclick=()=>{day++;
+if(day>20){const total=gold+inv.reduce((a,c,i)=>a+c*prices[i],0);
+document.getElementById('msg').textContent='🏁 Journey over! Final wealth: '+total+'g ('+(total>=300?'Caravan Master!':total>=200?'Trader':'Novice')+')';
+beep(total>=200?880:400,.3,total>=200?'triangle':'sawtooth');return;}
+newPrices();beep(400,.06);render();
+document.getElementById('log').innerHTML='<div>Day '+(day-1)+' prices updated.</div>'+document.getElementById('log').innerHTML;};
+function msg(t){document.getElementById('msg').textContent=t;}
+newPrices();render();
+</script></body></html>

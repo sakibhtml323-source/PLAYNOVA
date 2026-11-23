@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Halloween Hyper Portal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0c0a09;font-family:Georgia,serif;color:#fdba74;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#f97316;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#18181b;border-radius:10px;border:2px solid #7c2d12;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(12,10,9,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fdba74;padding:20px;z-index:5}
+button{background:#f97316;border:none;color:#0c0a09;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🌀 HALLOWEEN HYPER PORTAL</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Combo <b id="cb">0</b></span><span>Speed <b id="v">1.0</b>x</span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#f97316">HYPER PORTAL</h2><p id="od">Ride the hyper-lanes! Steer your witch with ← → / A D or drag. Blast pumpkins with Space/tap. Chain portals 🌀 for combo speed — but the lanes get FAST.</p><button id="btn">ENTER HYPER</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=520;cvs.width=W;cvs.height=H;
+let witch,objs,shots,playing,speed,score,combo,frame,best=+localStorage.getItem('hp_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){witch={x:W/2,y:H-70,cd:0};objs=[];shots=[];score=0;combo=0;speed=3;frame=0;playing=true;keys={};
+document.getElementById('s').textContent=0;document.getElementById('cb').textContent=0;document.getElementById('v').textContent='1.0';}
+let keys={};
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();fire();}});
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.4)keys['arrowleft']=true;else if(x>W*0.6)keys['arrowright']=true;else fire();});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointerup',()=>{keys['arrowleft']=false;keys['arrowright']=false;});
+function fire(){if(!playing||witch.cd>0)return;witch.cd=12;shots.push({x:witch.x,y:witch.y-14,vy:-7.5});beep(650,.05);}
+function step(){frame++;score+=0.12;speed=3+score/250;document.getElementById('s').textContent=Math.floor(score);document.getElementById('v').textContent=(speed/3).toFixed(1);
+const sp=4.6;
+if(keys['arrowleft']||keys['a'])witch.x-=sp;if(keys['arrowright']||keys['d'])witch.x+=sp;
+if(dragX!==null)witch.x=dragX;
+witch.x=Math.max(20,Math.min(W-20,witch.x));witch.cd--;
+if(frame%Math.max(14,34-score/30|0)===0){const r=Math.random();
+if(r<0.4)objs.push({x:20+Math.random()*(W-40),y:-20,t:'pump'});
+else if(r<0.62)objs.push({x:20+Math.random()*(W-40),y:-20,t:'portal'});
+else if(r<0.8)objs.push({x:20+Math.random()*(W-40),y:-20,t:'candy'});}
+objs.forEach(o=>{o.y+=speed;
+if(o.t!=='portal'&&Math.abs(o.x-witch.x)<26&&Math.abs(o.y-witch.y)<26){die();}});
+shots.forEach(s=>{s.y+=s.vy;objs.forEach(o=>{if(o.t==='pump'&&Math.abs(o.x-s.x)<20&&Math.abs(o.y-s.y)<20){objs.splice(objs.indexOf(o),1);shots.splice(shots.indexOf(s),1);combo++;document.getElementById('cb').textContent=combo;score+=10+combo;document.getElementById('s').textContent=Math.floor(score);beep(500+combo*20,.06,'triangle');}
+else if(o.t==='portal'&&Math.abs(o.x-s.x)<20&&Math.abs(o.y-s.y)<20){objs.splice(objs.indexOf(o),1);shots.splice(shots.indexOf(s),1);combo++;score+=25;beep(900,.08,'triangle');}});});
+objs.forEach(o=>{if(o.t==='portal'&&!o.used&&Math.abs(o.x-witch.x)<30&&Math.abs(o.y-witch.y)<30){o.used=true;score+=40;speed+=0.3;combo+=2;document.getElementById('cb').textContent=combo;beep(1000,.1,'triangle');}
+if(o.t==='candy'&&Math.abs(o.x-witch.x)<22&&Math.abs(o.y-witch.y)<22){objs.splice(objs.indexOf(o),1);score+=15;document.getElementById('s').textContent=Math.floor(score);beep(800,.06);}});
+objs=objs.filter(o=>o.y<H+30);
+shots=shots.filter(s=>s.y>-10);}
+function die(){playing=false;const sc=Math.floor(score);if(sc>best){best=sc;localStorage.setItem('hp_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The hyper-lane claimed you at <b style="color:#fde047">'+sc+'</b> points!';
+document.getElementById('btn').textContent='HYPER AGAIN';document.getElementById('ov').style.display='flex';beep(130,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#18181b';ctx.fillRect(0,0,W,H);
+for(let i=0;i<6;i++){const y=(i*100+frame*speed*2)%(H+100)-50;
+ctx.strokeStyle='#7c2d1244';ctx.beginPath();ctx.moveTo(W/2,y);ctx.lineTo(W/2,y+40);ctx.stroke();}
+objs.forEach(o=>{ctx.font='22px serif';ctx.textAlign='center';
+if(o.t==='pump')ctx.fillText('🎃',o.x,o.y+6);
+else if(o.t==='portal'){ctx.fillStyle='#f97316';ctx.beginPath();ctx.ellipse(o.x,o.y,14,20,frame/10,0,7);ctx.strokeStyle='#fdba74';ctx.stroke();}
+else ctx.fillText('🍬',o.x,o.y+6);});
+shots.forEach(s=>{ctx.fillStyle='#fde047';ctx.fillRect(s.x-2,s.y-8,4,12);});
+ctx.fillStyle='#a855f7';ctx.beginPath();ctx.moveTo(witch.x,witch.y-14);ctx.lineTo(witch.x+12,witch.y+10);ctx.lineTo(witch.x-12,witch.y+10);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(witch.x-4,witch.y-6,3,3);ctx.fillRect(witch.x+1,witch.y-6,3,3);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

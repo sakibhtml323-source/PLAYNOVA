@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Rain Catch #477</title><style>
+body{margin:0;font-family:system-ui;background:#0c4a6e;color:#e0f2fe;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#7dd3fc;font-size:.78rem}
+canvas{background:#075985;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#38bdf8;color:#0c4a6e;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🌧️ Desert Rain Catch</h1><div class="sub">Stack buckets to catch more rain — but the tower wobbles!</div>
+<div id="hud"><span>Water <b id="w">0</b></span><span>Buckets <b id="b">1</b></span><span>Best <b id="be">0</b></span></div>
+<canvas id="cv" width="400" height="420"></canvas>
+<div id="ov"><div style="font-size:3rem">🪣</div><p>Move the bucket tower to catch raindrops.<br>Press S or tap twice to add a bucket (more catch, more wobble)!</p><button id="btn">Catch</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,H=420;let tower={x:W/2,buckets:1},drops=[],water=0,playing=false,spawnT=0,sway=0,best=+localStorage.getItem('drc_best')||0;
+document.getElementById('be').textContent=best;
+cvs.addEventListener('pointermove',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+tower.x=(e.clientX-r.left)*W/r.width;});
+let lastTap=0;
+cvs.addEventListener('pointerdown',()=>{if(!playing)return;
+const now=Date.now();
+if(now-lastTap<300){tower.buckets=Math.min(5,tower.buckets+1);
+document.getElementById('b').textContent=tower.buckets;beep(500,.1);}
+lastTap=now;});
+document.addEventListener('keydown',e=>{if(e.key==='s'&&playing){tower.buckets=Math.min(5,tower.buckets+1);
+document.getElementById('b').textContent=tower.buckets;beep(500,.1);}});
+function spawn(){drops.push({x:20+Math.random()*(W-40),y:-10,vy:2.5+Math.random()*1.5});}
+function gen(){tower={x:W/2,buckets:1};drops=[];water=0;playing=true;spawnT=0;sway=0;
+document.getElementById('w').textContent=0;document.getElementById('b').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();}
+function step(){spawnT++;if(spawnT>Math.max(14,30-tower.buckets*2)){spawnT=0;spawn();}
+sway+=0.03;
+drops.forEach(d=>d.y+=d.vy);
+const tw=tower.buckets*14;
+drops=drops.filter(d=>{if(d.y>H-50&&Math.abs(d.x-tower.x)<tw){
+water+=tower.buckets;document.getElementById('w').textContent=water;
+beep(600+water*2,.05);return false;}
+return d.y<H+20;});
+if(water>best){best=water;localStorage.setItem('drc_best',best);document.getElementById('be').textContent=best;}}
+function draw(){ctx.fillStyle='#075985';ctx.fillRect(0,0,W,H);
+// rain
+drops.forEach(d=>{ctx.strokeStyle='#38bdf8';
+ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-2,d.y+10);ctx.stroke();});
+// bucket tower
+const wob=Math.sin(sway)*tower.buckets*2;
+for(let i=0;i<tower.buckets;i++){const y=H-30-i*16;
+ctx.fillStyle='#64748b';
+ctx.fillRect(tower.x-28+wob*(i+1)*0.4,y,56,14);
+ctx.strokeStyle='#334155';ctx.strokeRect(tower.x-28+wob*(i+1)*0.4,y,56,14);}
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('ov').style.display='none';};
+</script></body></html>

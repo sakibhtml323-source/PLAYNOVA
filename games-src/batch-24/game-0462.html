@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Camel Market #462</title><style>
+body{margin:0;font-family:system-ui;background:#451a03;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+#deal{background:#92400e;border-radius:14px;padding:14px;margin:12px;text-align:center;max-width:340px}
+#deal .item{font-size:2.6rem}
+#mood{font-size:1.2rem;margin:6px}
+#offer{display:flex;gap:8px;margin:10px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:94vw}
+#offer input{width:90px;padding:10px;border-radius:8px;border:2px solid #b45309;background:#78350f;color:#fef3c7;font-size:1.1rem;font-weight:800;text-align:center}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#451a03;font-weight:800;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🐪 Desert Camel Market</h1><div class="sub">Haggle with the trader! Too low angers him, fair deals earn gold.</div>
+<div id="hud"><span>Gold <b id="g">100</b></span><span>Deals <b id="d">0</b></span><span>Anger <b id="a">0</b>/3</span></div>
+<div id="deal"><div class="item">🏺</div><div id="itemName">Ancient Vase</div><div id="mood">🙂</div></div>
+<div id="offer">
+<button id="minus">−10</button>
+<input id="price" value="50">
+<button id="plus">+10</button>
+<button id="make">🤝 Offer</button>
+</div>
+<div id="msg"></div>
+<button id="btn">🏜️ New Day</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const ITEMS=[['🏺','Ancient Vase',80],['🗡️','Curved Dagger',120],['🧿','Evil Eye Charm',45],['👑','Tin Crown',200],['🦜','Talking Parrot',150]];
+let gold=100,deals=0,anger=0,cur=null;
+function newItem(){cur=ITEMS[(Math.random()*ITEMS.length)|0];
+document.querySelector('#deal .item').textContent=cur[0];
+document.getElementById('itemName').textContent=cur[1]+' (worth ~'+Math.round(cur[2]*0.9)+'–'+Math.round(cur[2]*1.3)+')';
+document.getElementById('price').value=50;
+document.getElementById('mood').textContent='🙂';msg('Make an offer!');}
+document.getElementById('minus').onclick=()=>{const p=document.getElementById('price');
+p.value=Math.max(10,+p.value-10);beep(300,.05);};
+document.getElementById('plus').onclick=()=>{const p=document.getElementById('price');
+p.value=Math.min(300,+p.value+10);beep(400,.05);};
+document.getElementById('make').onclick=()=>{const offer=+document.getElementById('price').value;
+const fair=cur[2];
+if(offer>=fair*0.9&&offer<=fair*1.15){// deal!
+const cost=Math.min(offer,gold);
+gold-=cost;deals++;document.getElementById('g').textContent=gold;
+document.getElementById('d').textContent=deals;
+document.getElementById('mood').textContent='🤝';
+beep(880,.25,'triangle');msg('🤝 Deal! Bought for '+cost+'g');
+setTimeout(newItem,1000);}
+else if(offer<fair*0.6){anger++;document.getElementById('a').textContent=anger;
+document.getElementById('mood').textContent='😡';
+beep(150,.2,'sawtooth');msg('😡 "Insulting!" The trader fumes…');
+if(anger>=3){msg('🐪 The trader banishes you! Final: '+deals+' deals, '+gold+'g');
+setTimeout(newGame,1500);}}
+else{document.getElementById('mood').textContent=offer>fair*1.3?'🤨':'🤔';
+beep(400,.1,'triangle');
+msg(offer>fair?'🤨 He hesitates… try a bit lower.':'🤔 "Higher…" he counters.');
+// counter hint
+cur[2]=Math.round(cur[2]*0.98);}};
+function newGame(){gold=100;deals=0;anger=0;
+document.getElementById('g').textContent=100;document.getElementById('d').textContent=0;
+document.getElementById('a').textContent=0;newItem();}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newGame();};
+newItem();
+</script></body></html>

@@ -1,0 +1,54 @@
+{
+ "mobile": {
+  "errors": [],
+  "overflow": false,
+  "profile": "Profile\nWallet\nShop\nAchievements\nDaily\nLeaderboard\nSettings\n",
+  "logic": {
+   "xp": 10,
+   "bal": 25,
+   "buyFail": "INSUFFICIENT",
+   "bal2": 255,
+   "buy": "OK",
+   "dup": "OWNED_OR_INVALID",
+   "balAfter": 205,
+   "claim1": true,
+   "claim2": false,
+   "imp": false,
+   "ach": [
+    "first_game",
+    "g10",
+    "explorer"
+   ],
+   "fake": "REJECT_UNSUPPORTED",
+   "wrongSender": "REJECT_SENDER"
+  }
+ },
+ "desktop": {
+  "errors": [],
+  "overflow": false,
+  "profile": "Profile\nWallet\nShop\nAchievements\nDaily\nLeaderboard\nSettings\n",
+  "logic": {
+   "xp": 10,
+   "bal": 25,
+   "buyFail": "INSUFFICIENT",
+   "bal2": 255,
+   "buy": "OK",
+   "dup": "OWNED_OR_INVALID",
+   "balAfter": 205,
+   "claim1": true,
+   "claim2": false,
+   "imp": false,
+   "ach": [
+    "first_game",
+    "g10",
+    "explorer"
+   ],
+   "fake": "REJECT_UNSUPPORTED",
+   "wrongSender": "REJECT_SENDER"
+  }
+ },
+ "gamepage": {
+  "errors": [],
+  "iframe": true
+ }
+}

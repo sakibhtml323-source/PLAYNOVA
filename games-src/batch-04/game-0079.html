@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Hyper Tile Puzzle: Watercolor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fdf4ff,#fae8ff);font-family:Georgia,serif;color:#701a75;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#a21caf;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#board{display:grid;gap:5px;touch-action:none}
+.tile{width:66px;height:66px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;text-shadow:0 1px 4px #0007;cursor:pointer;transition:transform .1s;box-shadow:0 3px 8px rgba(162,28,175,.25)}
+.tile:active{transform:scale(.93)}
+#msg{text-align:center;font-size:.85rem;color:#a21caf;margin-top:8px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#701a75;padding:20px;z-index:5}
+button{background:#d946ef;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:400px){.tile{width:54px;height:54px;font-size:1.1rem}}
+</style>
+</head>
+<body>
+<h1>🌊 HYPER TILE: WATERCOLOR</h1>
+<div id="hud"><span>Canvas <b id="l">1</b></span><span>Taps <b id="m">0</b></span><span>Time <b id="t">0</b>s</span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div>
+<div id="msg">Tap a tile to flip its color and its neighbors — paint the whole canvas ONE color!</div>
+<div id="ov"><h2 style="color:#a21caf">HYPER TILES</h2><p id="od">A hyper-fast lights-out puzzle! Tapping flips a plus-shape of tiles. Unify the whole canvas into a single hue before the timer runs out — canvases get bigger and timers shorter!</p><button id="btn">PRIME THE BRUSH</button></div>
+<script>
+"use strict";
+const PALS=[['#e879f9','#67e8f9'],['#fb923c','#4ade80'],['#a78bfa','#facc15'],['#f472b6','#38bdf8']];
+let size,grid,cols,playing,level,taps,timer,timeLeft,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function build(){size=Math.min(3+level,6);cols=PALS[level%PALS.length];
+grid=[];const total=size*size;
+for(let i=0;i<total;i++)grid.push(Math.random()<0.5?0:1);
+taps=0;timeLeft=Math.max(12,30-level*2);
+document.getElementById('l').textContent=level;document.getElementById('m').textContent=0;document.getElementById('t').textContent=timeLeft;
+best=+localStorage.getItem('ht_best_'+size)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+render();clearInterval(timer);
+timer=setInterval(()=>{timeLeft--;document.getElementById('t').textContent=timeLeft;
+if(timeLeft<=0){playing=false;clearInterval(timer);beep(130,.4,'sawtooth');
+document.getElementById('od').innerHTML='⏰ The paint dried! Canvas '+level+' unmixed.';
+document.getElementById('btn').textContent='REHYDRATE';document.getElementById('ov').style.display='flex';}},1000);}
+function neigh(i){const r=(i/size)|0,c=i%size,o=[i];if(r>0)o.push(i-size);if(r<size-1)o.push(i+size);if(c>0)o.push(i-1);if(c<size-1)o.push(i+1);return o;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+size+',66px)';b.innerHTML='';
+grid.forEach((v,i)=>{const t=document.createElement('div');t.className='tile';
+t.style.background=cols[v];t.textContent=v===0?'☀':'☾';
+t.onclick=()=>{if(!playing)return;audio.resume();
+neigh(i).forEach(j=>grid[j]=1-grid[j]);
+taps++;document.getElementById('m').textContent=taps;beep(400+v*200,.05);render();
+if(grid.every(x=>x===grid[0])){playing=false;clearInterval(timer);
+if(taps<best){best=taps;localStorage.setItem('ht_best_'+size,best);}
+beep(800,.15,'triangle');setTimeout(()=>beep(1000,.15,'triangle'),140);
+document.getElementById('od').innerHTML='🌊 Canvas unified in <b>'+taps+'</b> taps with '+timeLeft+'s spare!'+(size<6?'<br>Next: '+(size+1)+'×'+(size+1)+' canvas':'<br>The grand canvas bows to you!');
+document.getElementById('btn').textContent=size<6?'NEXT CANVAS':'PAINT AGAIN';if(size>=6)level=0;level++;document.getElementById('ov').style.display='flex';}};
+b.appendChild(t);});}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;const t=document.querySelectorAll('.tile')[i];if(t)t.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

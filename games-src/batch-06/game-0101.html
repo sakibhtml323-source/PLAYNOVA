@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Western Physics Sandbox Empire</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#d97706,#92400e);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#fff7ed;padding:8px}
+#tools{display:flex;gap:6px;margin:6px;flex-wrap:wrap;justify-content:center}
+#tools button{border:1px solid #fed7aa;background:#92400ecc;color:#fff7ed;border-radius:16px;padding:6px 12px;cursor:pointer;font-size:.8rem}
+#tools button.sel{background:#fed7aa;color:#7c2d12}
+canvas{background:linear-gradient(#fdba74cc,#d97706cc);touch-action:none;border-top:4px solid #78350f}
+#tip{font-size:.72rem;color:#ffedd9;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(146,64,14,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff7ed;padding:20px;z-index:5}
+button.big{background:#fff7ed;color:#7c2d12;border:none;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🤠 WESTERN PHYSICS EMPIRE</h1>
+<div id="tools">
+<button class="sel" data-m="barrel">🛢️ Barrel</button><button data-m="cactus">🌵 Cactus</button>
+<button data-m="tnt">🧨 TNT</button><button data-m="horse">🐎 Horse</button><button data-m="erase">✖ Erase</button>
+<button id="gravity">🌍 Gravity: ON</button><button id="clear">↺ Clear</button>
+</div>
+<canvas id="c"></canvas>
+<div id="tip">Tap to place. TNT blasts everything nearby! Saves your frontier town automatically.</div>
+<div id="ov"><h2 style="color:#fff7ed">FRONTIER PHYSICS</h2><p id="od">Build a wild-west town of barrels, cacti and dynamite — then blow it up and watch the physics! Gravity, explosions, rolling barrels. Your empire autosaves.</p><button class="big" id="btn">STAKE YOUR CLAIM</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+let W=innerWidth,H=innerHeight-100;cvs.width=W;cvs.height=H;
+let bodies=[],mode='barrel',gravity=true;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.05){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.07;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+document.querySelectorAll('#tools [data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('#tools [data-m]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');});
+document.getElementById('gravity').onclick=e=>{gravity=!gravity;e.target.textContent='🌍 Gravity: '+(gravity?'ON':'OFF');};
+document.getElementById('clear').onclick=()=>{bodies=[];localStorage.removeItem('wp_save');};
+function resize(){W=innerWidth;H=Math.max(200,innerHeight-100);cvs.width=W;cvs.height=H;}
+window.addEventListener('resize',resize);
+function pos(e){const r=cvs.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
+cvs.addEventListener('pointerdown',e=>{audio.resume();const p=pos(e);
+if(mode==='erase'){bodies=bodies.filter(b=>Math.hypot(b.x-p.x,b.y-p.y)>36);save();return;}
+const b={t:mode,x:p.x,y:p.y,vx:0,vy:0};
+if(mode==='barrel'){b.r=14;b.col='#b45309';}
+if(mode==='cactus'){b.r=12;b.col='#15803d';b.static=true;}
+if(mode==='horse'){b.r=16;b.col='#78350f';b.vx=(Math.random()-.5)*3;}
+if(mode==='tnt'){b.r=11;b.col='#dc2626';b.fuse=45;}
+bodies.push(b);beep(300+Math.random()*300);save();});
+function explode(b){beep(90,.4,'sawtooth');
+bodies.forEach(o=>{if(o===b||o.static)return;const d=Math.hypot(o.x-b.x,o.y-b.y);
+if(d<120){const a=Math.atan2(o.y-b.y,o.x-b.x);const f=(120-d)/120*9;
+o.vx+=Math.cos(a)*f;o.vy+=Math.sin(a)*f-3;}});
+bodies.splice(bodies.indexOf(b),1);}
+function save(){try{localStorage.setItem('wp_save',JSON.stringify(bodies.slice(-100)));}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('wp_save'));if(d)bodies=d;}catch(e){}}
+load();
+function step(){bodies.forEach(b=>{
+if(b.static)return;
+if(b.t==='tnt'){b.fuse--;if(b.fuse<=0){explode(b);return;}}
+b.vy+=gravity?0.35:0;b.x+=b.vx;b.y+=b.vy;b.vx*=0.995;
+const r=b.r;
+if(b.x<r){b.x=r;b.vx*=-0.7;}if(b.x>W-r){b.x=W-r;b.vx*=-0.7;}
+if(b.y>H-r){b.y=H-r;b.vy*=-0.6;b.vx*=0.95;if(Math.abs(b.vy)<0.5)b.vy=0;}
+// barrel-barrel collision
+bodies.forEach(o=>{if(o===b||o.static)return;
+const d=Math.hypot(o.x-b.x,o.y-b.y);const min=b.r+o.r;
+if(d<min&&d>0){const a=Math.atan2(b.y-o.y,b.x-o.x);
+const push=(min-d)/2;b.x+=Math.cos(a)*push;b.y+=Math.sin(a)*push;
+o.x-=Math.cos(a)*push;o.y-=Math.sin(a)*push;
+const sp=(b.vx-o.vx)*0.5;b.vx-=Math.cos(a)*sp;o.vx+=Math.cos(a)*sp;}});});}
+function draw(){ctx.clearRect(0,0,W,H);
+ctx.fillStyle='#92400e';ctx.fillRect(0,H-6,W,6);
+// cacti background
+ctx.fillStyle='#b4530933';for(let i=0;i<6;i++)ctx.fillRect((i*173)%W,H-30,10,30);
+bodies.forEach(b=>{
+if(b.t==='barrel'){ctx.fillStyle=b.col;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fill();
+ctx.strokeStyle='#78350f';ctx.beginPath();ctx.arc(b.x,b.y,b.r*0.6,0,7);ctx.stroke();}
+else if(b.t==='cactus'){ctx.fillStyle=b.col;ctx.fillRect(b.x-4,b.y-b.r*1.8,8,b.r*1.8);ctx.fillRect(b.x-b.r,b.y-b.r,6,b.r*0.8);ctx.fillRect(b.x+b.r-6,b.y-b.r,6,b.r*0.8);}
+else if(b.t==='tnt'){ctx.fillStyle=Math.floor(b.fuse/5)%2?'#fbbf24':b.col;ctx.fillRect(b.x-8,b.y-10,16,20);
+ctx.fillStyle='#111';ctx.font='bold 8px Arial';ctx.textAlign='center';ctx.fillText('TNT',b.x,b.y+3);}
+else if(b.t==='horse'){ctx.font='22px serif';ctx.textAlign='center';ctx.fillText('🐎',b.x,b.y+7);}});}
+let fc=0;
+function loop(){step();draw();if(++fc%150===0)save();requestAnimationFrame(loop);}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='b')document.querySelector('[data-m=barrel]').click();
+if(k==='c')document.querySelector('[data-m=cactus]').click();
+if(k==='t')document.querySelector('[data-m=tnt]').click();
+if(k==='h')document.querySelector('[data-m=horse]').click();
+if(k==='e')document.querySelector('[data-m=erase]').click();
+if(k==='g')document.getElementById('gravity').click();
+if(k==='x')document.getElementById('clear').click();});
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

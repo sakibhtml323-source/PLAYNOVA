@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Simon Duel #224</title><style>
+body{margin:0;font-family:system-ui;background:#0c0a09;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:12px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(2,120px);gap:12px;margin:16px}
+.pane{width:120px;height:120px;border-radius:16px;background:#292524;border:3px solid #44403c;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:44px;transition:background .15s}
+.pane.lit{background:#7c3aed;border-color:#a78bfa}
+#msg{margin:8px;min-height:1.4em;font-weight:600}
+#hud{display:flex;gap:16px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+button{padding:11px 24px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Simon Duel</h1><div class="sub">Watch the ghosts light up — repeat the sequence. Wrong pane loses a life!</div>
+<div id="hud"><span>You ❤️ <b id="h1">3</b></span><span>Ghost ❤️ <b id="h2">3</b></span><span>Round <b id="r">1</b></span></div>
+<div id="board">
+<div class="pane" data-i="0">🎃</div><div class="pane" data-i="1">👻</div>
+<div class="pane" data-i="2">🕷️</div><div class="pane" data-i="3">🦇</div>
+</div>
+<div id="msg"></div>
+<button id="btn">Summon the Duel</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.12,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.12,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const panes=[...document.querySelectorAll('.pane')];
+let seq=[],idx=0,turn='show',h1=3,h2=3,round=1,accepting=false;
+function flash(i,ms=380){return new Promise(res=>{panes[i].classList.add('lit');beep(330*Math.pow(1.25,i),.15);setTimeout(()=>{panes[i].classList.remove('lit');setTimeout(res,120);},ms);});}
+async function showSeq(){accepting=false;msg('👀 Watch…');await wait(700);
+for(const i of seq)await flash(i);turn='play';idx=0;accepting=true;msg('🫵 Your turn!');}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function msg(t){document.getElementById('msg').textContent=t;}
+async function aiTurn(){
+ msg('👻 Ghost repeats…');await wait(800);
+ for(let k=0;k<seq.length;k++){const wrong=Math.random()<0.14;
+  const pick=wrong?(seq[k]+1+((Math.random()*3)|0))%4:seq[k];
+  await flash(pick);
+  if(wrong){h2--;document.getElementById('h2').textContent=h2;msg('👻 Ghost slipped! Your point!');beep(880,.2,'triangle');
+   if(h2<=0){msg('🏆 You banished the ghost!');accepting=false;return;}
+   await wait(900);nextRound();return;}}
+ msg('👻 Ghost matched it…');await wait(700);nextRound();}
+function nextRound(){round++;document.getElementById('r').textContent=round;
+ seq.push((Math.random()*4)|0);showSeq();}
+panes.forEach((p,i)=>p.addEventListener('pointerdown',async()=>{
+ if(!accepting||turn!=='play')return;beep(330*Math.pow(1.25,i),.12);
+ p.classList.add('lit');setTimeout(()=>p.classList.remove('lit'),200);
+ if(i!==seq[idx]){h1--;document.getElementById('h1').textContent=h1;beep(150,.25,'sawtooth');
+  if(h1<=0){msg('💀 The ghost claims you…');accepting=false;return;}
+  msg('💥 Wrong pane! Ghost attacks!');await wait(900);turn='ai';aiTurn();return;}
+ idx++;
+ if(idx>=seq.length){msg('✅ Perfect!');turn='ai';await wait(600);aiTurn();}}));
+document.getElementById('btn').onclick=()=>{seq=[];idx=0;h1=3;h2=3;round=1;
+document.getElementById('h1').textContent=3;document.getElementById('h2').textContent=3;document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();nextRound();};
+</script></body></html>

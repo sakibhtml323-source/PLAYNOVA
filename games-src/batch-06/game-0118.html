@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Overheat Clicker #118</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#0c0a09);font-family:Georgia,serif;color:#fde68a;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#fbbf24;padding:6px;letter-spacing:1px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.9rem}
+#stats span{background:#292524;border:1px solid #44403c;border-radius:12px;padding:4px 12px}
+#scarab{font-size:3.8rem;cursor:pointer;user-select:none;display:inline-block;margin:10px 0;transition:transform .08s}
+#scarab:active{transform:scale(.88)}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#1c1917;border:1px solid #44403c;border-radius:14px;padding:12px}
+.card h3{color:#fbbf24;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#0c0a09;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row small{color:#a8a29e;display:block}
+.row button{background:#b45309;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.row button:disabled{opacity:.35}
+.f{position:fixed;color:#fbbf24;font-weight:800;pointer-events:none;transition:all .8s;z-index:9;text-shadow:0 2px 6px #000}
+</style>
+</head>
+<body>
+<h1>🪲 EPIC PHARAOHS</h1>
+<div id="stats"><span>☀️ Gold <b id="c">0</b></span><span>📈 /s <b id="r">0</b></span><span>🐾 Per tap <b id="pc">1</b></span><span>📜 Dynasties <b id="d">0</b></span><span>🌡️ Heat <b id="ht">0%</b></span></div>
+<div style="text-align:center"><span id="scarab">🪲</span><div style="font-size:.75rem;color:#78716c">tap the golden scarab — or press SPACE</div></div>
+<main>
+<div class="card"><h3>🏺 MONUMENTS (auto gold)</h3><div id="shop"></div></div>
+<div class="card"><h3>👑 ROYAL DECREES</h3><div id="ups"></div>
+<div style="display:flex;gap:8px;margin-top:8px"><button id="save" style="background:#44403c;color:#fde68a;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">💾 Save</button><button id="reset" style="background:#44403c;color:#fde68a;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">🗑️ Reset</button></div></div>
+</main>
+<script>
+"use strict";
+const MON=[{n:'Grain Silo',e:'🌾',c:20,r:0.5},{n:'Artisan Quarter',e:'🏺',c:110,r:2.4},{n:'Temple of Ra',e:'🛕',c:500,r:9},{n:'Great Pyramid',e:'🔺',c:2200,r:32},{n:'Valley of Kings',e:'⚰️',c:9000,r:120}];
+const UPS=[{n:'Royal Bloodline',d:'+3 per tap',c:100,f:S=>S.pc+=3},{n:'Sacred Cattle',d:'+12 per tap',c:800,f:S=>S.pc+=12},{n:'Divine Mandate',d:'+50 per tap',c:5000,f:S=>S.pc+=50}];
+let S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0],dyn:0},heat=0,overheated=false;
+function load(){try{const d=JSON.parse(localStorage.getItem('ep_save'));if(d)Object.assign(S,d);}catch(e){}}
+function save(){localStorage.setItem('ep_save',JSON.stringify(S));}
+load();
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function rate(){return MON.reduce((a,m,i)=>a+m.r*S.own[i],0)*(1+S.dyn*0.5);}
+function fl(x,y,t){const s=document.createElement('div');s.className='f';s.textContent=t;s.style.cssText='left:'+x+'px;top:'+y+'px';document.body.appendChild(s);
+requestAnimationFrame(()=>{s.style.top=(y-70)+'px';s.style.opacity=0;});setTimeout(()=>s.remove(),850);}
+document.getElementById('scarab').addEventListener('pointerdown',e=>{audio.resume();
+if(overheated){beep(110,.15,'sawtooth');fl(e.clientX,e.clientY,'🔥 TOO HOT!');return;}
+heat=Math.min(100,heat+8+Math.random()*6);S.c+=S.pc;beep(250+Math.random()*150);fl(e.clientX,e.clientY,'+'+S.pc+' ☀️');
+if(heat>=100){overheated=true;document.getElementById('c').style.color='#dc2626';document.getElementById('ht').textContent='🔥 OVERHEATED — cooling…';
+const cool=setInterval(()=>{heat=Math.max(0,heat-7);document.getElementById('ht').textContent=Math.round(heat)+'%';
+if(heat<=0){clearInterval(cool);overheated=false;document.getElementById('c').style.color='';document.getElementById('ht').textContent='0%';}},300);}
+else document.getElementById('ht').textContent=Math.round(heat)+'%';
+render();});
+window.addEventListener('keydown',e=>{const k=e.key;if(k===' '){e.preventDefault();document.getElementById('scarab').dispatchEvent(new PointerEvent('pointerdown',{clientX:innerWidth/2,clientY:innerHeight/2}));}if(k>='1'&&k<='5'){const b=document.querySelectorAll('#shop button')[+k-1];if(b&&!b.disabled)b.click();}});
+function render(){document.getElementById('c').textContent=Math.floor(S.c);document.getElementById('r').textContent=rate().toFixed(1);
+document.getElementById('pc').textContent=S.pc;document.getElementById('d').textContent=S.dyn;
+const sh=document.getElementById('shop');sh.innerHTML='';
+MON.forEach((m,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+m.e+' '+m.n+'</b> <small>×'+S.own[i]+' · '+m.r+'/s</small></div>';
+const b=document.createElement('button');b.textContent=m.c+' ☀️';b.disabled=S.c<m.c;
+b.onclick=()=>{if(S.c>=m.c){S.c-=m.c;S.own[i]++;beep(500+i*70,.09);render();save();}};row.appendChild(b);sh.appendChild(row);});
+const up=document.getElementById('ups');up.innerHTML='';
+UPS.forEach((u,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+u.n+'</b> <small>'+u.d+(S.up[i]?' · ✓':'')+'</small></div>';
+const b=document.createElement('button');b.textContent=S.up[i]?'OWNED':u.c+' ☀️';b.disabled=S.up[i]||S.c<u.c;
+b.onclick=()=>{if(!S.up[i]&&S.c>=u.c){S.c-=u.c;S.up[i]=1;u.f(S);beep(700,.12);render();save();}};row.appendChild(b);up.appendChild(row);});
+// dynasty prestige button
+const pd=document.createElement('button');pd.textContent='👑 New Dynasty (reset, +50% forever — needs 10k)';
+pd.style.cssText='background:#92400e;color:#fde047;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;margin-top:6px;font-size:.8rem';
+pd.disabled=S.c<10000;
+pd.onclick=()=>{if(S.c>=10000&&confirm('Found a new dynasty? Buildings reset, +50% income forever.')){const dyn=S.dyn+1;
+S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0],dyn};save();render();}};
+up.appendChild(pd);}
+setInterval(()=>{S.c+=rate()/10;if(!overheated&&heat>0){heat=Math.max(0,heat-2);const h=document.getElementById('ht');if(h)h.textContent=Math.round(heat)+'%';}render();},100);
+document.getElementById('save').onclick=()=>{save();beep(880);};
+document.getElementById('reset').onclick=()=>{if(confirm('Bury the dynasty?')){S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0],dyn:0};localStorage.removeItem('ep_save');render();}};
+window.addEventListener('beforeunload',save);
+render();
+</script>
+</body>
+</html>

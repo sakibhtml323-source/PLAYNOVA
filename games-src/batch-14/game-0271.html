@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Anagram Arena #271</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#scramble{font-size:2rem;font-weight:800;letter-spacing:6px;color:#facc15;margin:14px}
+input{font-size:1.3rem;padding:10px 16px;border-radius:10px;border:2px solid #3f3f46;background:#27272a;color:#fafafa;text-align:center;width:200px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Anagram Arena</h1><div class="sub">Unscramble the haunted words — streaks shrink your timer!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Streak <b id="c">0</b></span><span>⏱️ <b id="t">20</b>s</span><span>Score <b id="s">0</b></span></div>
+<div id="scramble">?</div>
+<input id="in" placeholder="UNSCRAMBLE" maxlength="10">
+<div id="msg"></div>
+<button id="btn">🌀 New Word</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const WORDS=['SPECTER','WRAITH','PHANTOM','GHOUL','POLTERGEIST','APPARITION','SHADOW','CURSE','HAUNTING','POSSESS','SEANCE','SPIRIT'];
+let target='',scramble='',round=1,streak=0,score=0,timer=null,time=20;
+function newWord(){target=WORDS[(Math.random()*WORDS.length)|0];
+// scramble ensuring different
+do{scramble=target.split('').sort(()=>Math.random()-.5).join('');}while(scramble===target);
+document.getElementById('scramble').textContent=scramble;
+document.getElementById('r').textContent=round;
+document.getElementById('in').value='';
+time=Math.max(6,20-streak);document.getElementById('t').textContent=time;
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);beep(130,.3,'sawtooth');msg('⏰ Time! Word was: '+target);streak=0;
+document.getElementById('c').textContent=0;setTimeout(newWord,1400);}},1000);}
+function submit(){const v=document.getElementById('in').value.toUpperCase().trim();
+if(!v)return;
+if(v===target){streak++;score+=streak*50;
+document.getElementById('c').textContent=streak;document.getElementById('s').textContent=score;
+beep(500+streak*60,.12,'triangle');msg('✅ ×'+streak+'! +'+streak*50);
+round++;setTimeout(newWord,600);}
+else{beep(180,.12,'sawtooth');msg('❌ Not quite…');}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('in').addEventListener('keydown',e=>{if(e.key==='Enter'){AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();submit();}});
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newWord();};
+newWord();
+</script></body></html>

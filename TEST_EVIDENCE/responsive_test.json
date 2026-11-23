@@ -1,0 +1,357 @@
+{
+ "method": "Playwright, 4 viewports x 11 pages; checks HTTP status, horizontal overflow, JS page errors, count of tap targets <32px height (informational)",
+ "results": [
+  {
+   "viewport": "small_mobile_360",
+   "page": "home",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 106,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "games",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "category",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "new",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "popular",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "profile",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "game_integrated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "game_isolated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "favorites",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "recent",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "small_mobile_360",
+   "page": "about",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "home",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 106,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "games",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "category",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "new",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "popular",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "profile",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "game_integrated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "game_isolated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "favorites",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "recent",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "android_412",
+   "page": "about",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "home",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 106,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "games",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "category",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "new",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "popular",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "profile",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "game_integrated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 6,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "game_isolated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 6,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "favorites",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "recent",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "tablet_768",
+   "page": "about",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "home",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 106,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "games",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "category",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "new",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "popular",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 48,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "profile",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "game_integrated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 6,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "game_isolated",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 6,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "favorites",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "recent",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  },
+  {
+   "viewport": "desktop_1366",
+   "page": "about",
+   "http": 200,
+   "horizontal_overflow_px": 0,
+   "small_tap_targets_lt32px": 0,
+   "page_errors": []
+  }
+ ]
+}

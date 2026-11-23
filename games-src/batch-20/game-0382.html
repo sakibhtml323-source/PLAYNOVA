@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Gear Puzzle #382</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⚙️ Desert Gear Puzzle</h1><div class="sub">Drag gears onto the board — mesh them so the water wheel spins the mill!</div>
+<div id="hud"><span>Gears placed <b id="g">0</b></span><span>Max <b id="m">5</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">🔧 New Puzzle</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;const RADII=[26,34,42];
+let source={x:60,y:200,r:38},target={x:380,y:200,r:38},gears=[],maxGears=5,level=1,spin=0;
+function gen(){gears=[];maxGears=Math.max(3,6-level);spin=0;
+document.getElementById('m').textContent=maxGears;
+document.getElementById('g').textContent=0;
+document.getElementById('l').textContent=level;
+draw();msg('Connect the water wheel to the mill!');}
+cvs.addEventListener('pointerdown',e=>{if(gears.length>=maxGears)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+// too close to source/target/existing
+if(Math.hypot(x-source.x,y-source.y)<60)return;
+if(Math.hypot(x-target.x,y-target.y)<60)return;
+if(gears.some(g=>Math.hypot(g.x-x,g.y-y)<40))return;
+const rad=RADII[(Math.random()*3)|0];
+gears.push({x,y,r:rad,ph:Math.random()*6});
+document.getElementById('g').textContent=gears.length;
+beep(500,.08);draw();check();});
+function meshed(a,b){return Math.hypot(a.x-b.x,a.y-b.y)<a.r+b.r+8;}
+function connected(){// BFS from source through meshed gears to target
+const all=[source,...gears,target];
+const seen=new Set([0]);const q=[0];
+while(q.length){const i=q.pop();
+all.forEach((g,j)=>{if(!seen.has(j)&&meshed(all[i],g)){seen.add(j);q.push(j);}});}
+return seen.has(all.length-1);}
+function check(){if(connected()){spin=0.05+level*0.01;beep(880,.3,'triangle');
+msg('🌾 The mill grinds! Level '+(level+1));level++;
+document.getElementById('l').textContent=level;
+setTimeout(()=>{spin=0;},2000);}}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,H);
+// connections highlight
+const all=[source,...gears,target];
+if(connected()){ctx.strokeStyle='#22c55e55';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(source.x,source.y);ctx.lineTo(target.x,target.y);ctx.stroke();ctx.lineWidth=1;}
+// source (water wheel)
+ctx.beginPath();ctx.arc(source.x,source.y,source.r,0,7);
+ctx.strokeStyle='#38bdf8';ctx.lineWidth=5;ctx.stroke();ctx.lineWidth=1;
+for(let i=0;i<8;i++){const a=spin*4+i*Math.PI/4;
+ctx.beginPath();ctx.moveTo(source.x,source.y);
+ctx.lineTo(source.x+Math.cos(a)*(source.r-4),source.y+Math.sin(a)*(source.r-4));ctx.stroke();}
+ctx.font='18px serif';ctx.textAlign='center';ctx.fillText('💧',source.x,source.y+6);
+// target (mill)
+ctx.beginPath();ctx.arc(target.x,target.y,target.r,0,7);
+ctx.strokeStyle=connected()?'#22c55e':'#f59e0b';ctx.lineWidth=5;ctx.stroke();ctx.lineWidth=1;
+ctx.font='18px serif';ctx.fillText('🌾',target.x,target.y+6);
+// gears
+gears.forEach(g=>{g.ph+=spin;
+ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,7);
+ctx.strokeStyle='#a8a29e';ctx.lineWidth=4;ctx.stroke();ctx.lineWidth=1;
+for(let i=0;i<6;i++){const a=g.ph*2+i*Math.PI/3;
+ctx.fillStyle='#d6d3d1';
+ctx.beginPath();ctx.arc(g.x+Math.cos(a)*(g.r-6),g.y+Math.sin(a)*(g.r-6),3,0,7);ctx.fill();}});
+requestAnimationFrame(draw);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();draw();
+</script></body></html>

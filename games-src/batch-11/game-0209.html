@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Cyberpunk Sky</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#05050a;font-family:'Segoe UI',Arial,sans-serif;color:#22d3ee;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#f0abfc;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0a0a14;border-radius:10px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(5,5,10,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#a5f3fc;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#05050a;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🌃 CYBERPUNK SKY</h1>
+<div id="hud"><span>Credits <b id="s">0</b></span><span>⛽ Fuel <b id="f">100</b>%</span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#f0abfc">SKY-DRONE</h2><p id="od">Pilot the neon delivery drone! Steer with ← → / A D or drag. Collect credit-chips 💾, dodge the billboards and antennae. Fuel drains — grab ⛽ canisters to stay airborne!</p><button id="btn">LAUNCH</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=520;cvs.width=W;cvs.height=H;
+let me,chips,foes,fuel,playing,keys,score,frame,dragX,best=+localStorage.getItem('cps_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-70,r:12};chips=[];foes=[];playing=true;keys={};fuel=100;score=0;frame=0;dragX=null;
+document.getElementById('s').textContent=0;document.getElementById('f').textContent=100;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+window.addEventListener('pointerup',()=>dragX=null);
+function step(){frame++;
+if(keys['arrowleft']||keys['a'])me.x-=4.8;if(keys['arrowright']||keys['d'])me.x+=4.8;
+if(dragX!==null)me.x=dragX;
+me.x=Math.max(16,Math.min(W-16,me.x));
+fuel-=0.12;document.getElementById('f').textContent=Math.max(0,Math.round(fuel));
+if(fuel<=0)return crash();
+if(frame%18===0){const r=Math.random();
+if(r<0.5)chips.push({x:20+Math.random()*(W-40),y:-14,got:false,fuel:Math.random()<0.12});
+else foes.push({x:20+Math.random()*(W-40),y:-20,w:20+Math.random()*24,h:14+Math.random()*20,wob:Math.random()*7});}
+chips.forEach(o=>o.y+=2.7);foes.forEach(f2=>{f2.y+=2.5;f2.x+=Math.sin(f2.y/30+f2.wob)*0.8;});
+chips=chips.filter(o=>o.y<H+20&&!o.got);foes=foes.filter(f2=>f2.y<H+30);
+chips.forEach(o=>{if(!o.got&&Math.hypot(o.x-me.x,o.y-me.y)<22){o.got=true;
+if(o.fuel){fuel=Math.min(100,fuel+30);beep(500,.08,'triangle');}
+else{score+=10;beep(700+score%5*40,.06,'triangle');}
+document.getElementById('s').textContent=score;document.getElementById('f').textContent=Math.round(fuel);}});
+foes.forEach(f2=>{if(Math.abs(f2.x-me.x)<f2.w/2+me.r-2&&Math.abs(f2.y-me.y)<f2.h/2+me.r-2){fuel-=15;
+document.getElementById('f').textContent=Math.max(0,Math.round(fuel));
+foes.splice(foes.indexOf(f2),1);beep(140,.2,'sawtooth');
+if(fuel<=0)crash();}});}
+function crash(){playing=false;if(score>best){best=score;localStorage.setItem('cps_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='💥 The drone falls at <b style="color:#f0abfc">'+score+'</b> credits!';
+document.getElementById('btn').textContent='RELAUNCH';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+// neon city silhouette
+ctx.fillStyle='#14141f';for(let i=0;i<9;i++){const bw=50;const bx=i*bw;
+const bh=80+(i*67)%180;ctx.fillRect(bx,H-bh,bw-4,bh);
+ctx.fillStyle=['#22d3ee33','#f0abfc33','#4ade8033'][i%3];
+for(let wy=0;wy<bh-20;wy+=18)ctx.fillRect(bx+8,H-bh+8+wy,6,8),ctx.fillRect(bx+26,H-bh+8+wy,6,8);
+ctx.fillStyle='#14141f';}
+chips.forEach(o=>{if(o.fuel){ctx.font='14px serif';ctx.textAlign='center';ctx.fillText('⛽',o.x,o.y+5);}
+else{ctx.fillStyle='#22d3ee';ctx.fillRect(o.x-6,o.y-4,12,8);ctx.fillStyle='#0a0a14';ctx.fillRect(o.x-3,o.y-2,6,4);}});
+foes.forEach(f2=>{ctx.fillStyle='#1f1f2e';ctx.fillRect(f2.x-f2.w/2,f2.y-f2.h/2,f2.w,f2.h);
+ctx.strokeStyle='#22d3ee';ctx.strokeRect(f2.x-f2.w/2,f2.y-f2.h/2,f2.w,f2.h);
+ctx.fillStyle='#22d3ee';ctx.font='8px monospace';ctx.textAlign='center';ctx.fillText('AD',f2.x,f2.y+3);});
+// drone
+ctx.fillStyle='#22d3ee';ctx.fillRect(me.x-10,me.y-6,20,12);
+ctx.fillStyle='#f0abfc';ctx.fillRect(me.x-4,me.y-10,8,6);
+ctx.fillStyle='#fff';ctx.fillRect(me.x-2,me.y-2,4,4);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Egyptian Math Pyramid #264</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#pyramid{display:flex;flex-direction:column-reverse;align-items:center;margin:12px;min-height:180px}
+.layer{width:280px;height:34px;background:#57534e;border:2px solid #44403c;border-radius:6px;margin:2px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.05rem}
+.layer.done{background:#a16207;border-color:#fbbf24;color:#1c1917}
+#q{font-size:1.5rem;font-weight:800;margin:8px;color:#fbbf24}
+#ans{display:flex;gap:10px;margin:8px;flex-wrap:wrap;justify-content:center}
+.ans{padding:12px 22px;border-radius:10px;border:2px solid #57534e;background:#292524;color:#fafaf9;font-size:1.1rem;font-weight:800;cursor:pointer}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔺 Egyptian Math Pyramid</h1><div class="sub">Solve each layer's equation — build the pyramid to the sky!</div>
+<div id="hud"><span>Layer <b id="l">0</b>/8</span><span>Streak <b id="c">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="pyramid"></div>
+<div id="q">?</div>
+<div id="ans"></div>
+<div id="msg"></div>
+<button id="btn">🏗️ New Pyramid</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const LAYERS=8;let layer=0,streak=0,best=+localStorage.getItem('pmp_best')||0;
+document.getElementById('b').textContent=best;
+let curQ=null;
+function newGame(){layer=0;streak=0;renderP();ask();msg('Lay the foundation!');}
+function ask(){const ops=['+','−','×'];const op=ops[(Math.random()*3)|0];
+const a=2+((Math.random()*(8+layer))|0),b=2+((Math.random()*(8+layer))|0);
+let q,ans;
+if(op==='+'){q=a+' + '+b;ans=a+b;}
+else if(op==='−'){q=Math.max(a,b)+' − '+Math.min(a,b);ans=Math.max(a,b)-Math.min(a,b);}
+else{q=a+' × '+b;ans=a*b;}
+curQ={q,ans};
+document.getElementById('q').textContent='Layer '+(layer+1)+': '+q+' = ?';
+const opts=new Set([ans]);
+while(opts.size<4){const d=ans+((Math.random()*9)|0)-4;if(d>=0)opts.add(d);}
+const arr=[...opts].sort(()=>Math.random()-.5);
+const box=document.getElementById('ans');box.innerHTML='';
+arr.forEach(v=>{const bt=document.createElement('button');bt.className='ans';bt.textContent=v;
+bt.onclick=()=>answer(v===ans);box.appendChild(bt);});}
+function answer(ok){if(!ok){streak=0;document.getElementById('c').textContent=0;
+beep(150,.2,'sawtooth');msg('💥 Crumbled! Try again.');
+if(layer>0){layer--;renderP();}ask();return;}
+streak++;document.getElementById('c').textContent=streak;
+beep(500+layer*40,.1,'triangle');
+layer++;renderP();
+if(layer>=LAYERS){beep(880,.3,'triangle');
+if(streak>best){best=streak;localStorage.setItem('pmp_best',best);document.getElementById('b').textContent=best;}
+msg('👑 Pyramid complete! Peak streak ×'+streak);
+document.getElementById('q').textContent='🏆';document.getElementById('ans').innerHTML='';return;}
+msg('');ask();}
+function renderP(){const p=document.getElementById('pyramid');p.innerHTML='';
+for(let i=0;i<LAYERS;i++){const d=document.createElement('div');
+d.className='layer'+(i<layer?' done':'');
+d.style.width=(280-i*24)+'px';
+d.textContent=i<layer?'🔺':'❔';p.appendChild(d);}
+document.getElementById('l').textContent=layer;}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newGame();};
+newGame();
+</script></body></html>

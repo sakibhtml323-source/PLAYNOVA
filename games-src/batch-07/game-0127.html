@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Eternal Egyptian Dungeon</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#292524;font-family:Georgia,serif;color:#fde68a;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#44403c;border-radius:10px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#a8a29e;min-height:1.6em;margin-top:6px;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(41,37,36,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fde68a;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#292524;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🏺 ETERNAL EGYPTIAN DUNGEON</h1>
+<div id="hud"><span>Chamber <b id="d">1</b></span><span>❤️ <b id="h">3</b></span><span>🔑 <b id="k">0</b></span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Grab the 🔑, avoid the mummies 💀, reach the sarcophagus ⚰.</div>
+<div id="ov"><h2 style="color:#fbbf24">ETERNAL TOMB</h2><p id="od">Descend the endless tomb! Move with WASD/arrows or tap a direction. Find the key, dodge the cursed mummies, escape through the sarcophagus. Each chamber is deadlier…</p><button id="btn">DESCEND</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+const W=440,H=440;cvs.width=W;cvs.height=H;
+let depth,playing,px,py,grid,key,sarc,traps,hp,hasKey,best=+localStorage.getItem('ed_best')||1;
+document.getElementById('b').textContent=best;
+const TS=40,N=11;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){grid=[];for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=Math.random()<0.2?1:0;}
+let r=0,c=0;grid[0][0]=0;grid[N-1][N-1]=0;
+while(r<N-1||c<N-1){if(r<N-1&&(c>=N-1||Math.random()<0.5))r++;else c++;grid[r][c]=0;}
+px=0;py=0;
+const free=[];for(let rr=0;rr<N;rr++)for(let cc=0;cc<N;cc++)if(!grid[rr][cc]&&!(rr===0&&cc===0)&&!(rr===N-1&&cc===N-1))free.push([rr,cc]);
+free.sort(()=>Math.random()-.5);
+key=free[0];sarc=[N-1,N-1];
+traps=free.slice(1,1+Math.min(2+depth,7));
+hasKey=false;draw();}
+function move(dx,dy){if(!playing)return;
+const nx=px+dx,ny=py+dy;
+if(nx<0||ny<0||nx>=N||ny>=N||grid[ny][nx]){beep(180,.06,'square');return;}
+px=nx;py=ny;beep(360,.04);
+if(px===key[1]&&py===key[0]){hasKey=true;document.getElementById('k').textContent=1;
+document.getElementById('msg').textContent='🔑 Key of the Nile acquired! Now find the sarcophagus.';beep(700,.1,'triangle');}
+if(traps.some(t=>t[0]===py&&t[1]===px)){hp--;document.getElementById('h').textContent=hp;beep(130,.25,'sawtooth');
+document.getElementById('msg').textContent='💀 A mummy\'s curse bites you! -1 ❤️';
+if(hp<=0)return die();}
+if(px===sarc[1]&&py===sarc[0]){if(hasKey){depth++;document.getElementById('d').textContent=depth;
+if(depth>best){best=depth;localStorage.setItem('ed_best',best);document.getElementById('b').textContent=best;}
+beep(880,.15,'triangle');document.getElementById('msg').textContent='⚰ Deeper into eternity…';
+hasKey=false;document.getElementById('k').textContent=0;build();}
+else{document.getElementById('msg').textContent='🚫 Sealed shut — the key is required!';beep(200,.1,'square');}}
+draw();}
+function draw(){ctx.fillStyle='#44403c';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*TS,y=r*TS;
+if(grid[r][c]){ctx.fillStyle='#292524';ctx.fillRect(x,y,TS,TS);ctx.fillStyle='#1c1917';ctx.fillRect(x+4,y+4,TS-8,TS-8);
+// hieroglyph
+ctx.fillStyle='#57534e';ctx.font='14px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText(['𓂀','𓆣','𓅓'][ (r*7+c)%3],x+TS/2,y+TS/2);}
+else{ctx.fillStyle=(r+c)%2?'#57534e':'#525252';ctx.fillRect(x+1,y+1,TS-2,TS-2);}}
+ctx.font='22px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+if(!hasKey)ctx.fillText('🔑',key[1]*TS+TS/2,key[0]*TS+TS/2+2);
+ctx.fillText('⚰',sarc[1]*TS+TS/2,sarc[0]*TS+TS/2+2);
+traps.forEach(t=>{if(t[0]!==py||t[1]!==px)ctx.fillText('💀',t[1]*TS+TS/2,t[0]*TS+TS/2+2);});
+ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(px*TS+TS/2,py*TS+TS/2,13,0,7);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(px*TS+TS/2-5,py*TS+TS/2-3,3,4);ctx.fillRect(px*TS+TS/2+2,py*TS+TS/2-3,3,4);}
+function die(){playing=false;beep(100,.5,'sawtooth');
+document.getElementById('od').innerHTML='☠️ The curse claims you at chamber <b style="color:#fde047">'+depth+'</b>.';
+document.getElementById('btn').textContent='RISE AGAIN';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='w'||k==='ArrowUp')move(0,-1);else if(k==='s'||k==='ArrowDown')move(0,1);
+else if(k==='a'||k==='ArrowLeft')move(-1,0);else if(k==='d'||k==='ArrowRight')move(1,0);});
+let t0=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();t0={x:e.clientX,y:e.clientY};});
+cvs.addEventListener('pointerup',e=>{if(!t0)return;const dx=e.clientX-t0.x,dy=e.clientY-t0.y;
+if(Math.abs(dx)<18&&Math.abs(dy)<18){const r=cvs.getBoundingClientRect();
+const tx=Math.floor((e.clientX-r.left)/r.width*N),ty=Math.floor((e.clientY-r.top)/r.height*N);
+move(Math.sign(tx-px),Math.sign(ty-py));}
+else if(Math.abs(dx)>Math.abs(dy))move(Math.sign(dx),0);else move(0,Math.sign(dy));t0=null;});
+document.getElementById('btn').onclick=()=>{audio.resume();depth=1;hp=3;playing=true;
+document.getElementById('d').textContent=1;document.getElementById('h').textContent=3;document.getElementById('k').textContent=0;
+document.getElementById('msg').textContent='Grab the 🔑, avoid the mummies 💀, reach the sarcophagus ⚰.';
+build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

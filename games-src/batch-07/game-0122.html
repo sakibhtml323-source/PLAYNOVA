@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Eternal Number Merge</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#e0e5ec;font-family:'Segoe UI',Arial,sans-serif;color:#4a5568;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;letter-spacing:2px;padding:6px;color:#2d3748}
+#hud{display:flex;gap:16px;font-size:.9rem;margin-bottom:10px}
+#grid{display:grid;grid-template-columns:repeat(4,74px);gap:8px;touch-action:none}
+.tile{width:74px;height:74px;border-radius:14px;background:#e0e5ec;box-shadow:6px 6px 12px #b8bec7,-6px -6px 12px #fff;display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:700;color:#5a67d8;cursor:pointer;transition:transform .1s}
+.tile:active{transform:scale(.94)}
+#msg{text-align:center;font-size:.85rem;color:#718096;margin-top:10px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(224,229,236,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#2d3748;padding:20px;z-index:5}
+button{background:#e0e5ec;border:none;color:#5a67d8;font-weight:700;padding:13px 36px;border-radius:20px;font-size:1rem;cursor:pointer;box-shadow:6px 6px 12px #b8bec7,-6px -6px 12px #fff;font-family:inherit}
+@media(max-width:360px){#grid{grid-template-columns:repeat(4,60px)}.tile{width:60px;height:60px;font-size:1.3rem}}
+</style>
+</head>
+<body>
+<h1>🔢 ETERNAL NUMBER MERGE</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Top tile <b id="tp">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="grid"></div>
+<div id="msg">Tap an empty cell to spawn a 1 or 2 — merge equal neighbors to climb the eternal ladder!</div>
+<div id="ov"><h2 style="letter-spacing:2px">ETERNAL MERGE</h2><p id="od">A calm neumorphic merge board. Place numbers, merge equals into doubles, chase the 512 tile. The board is finite — eternity is not!</p><button id="btn">BEGIN ETERNITY</button></div>
+<script>
+"use strict";
+let grid,playing,score,topT,best=+localStorage.getItem('en_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=Array(16).fill(null);playing=true;score=0;topT=0;
+spawn();spawn();document.getElementById('s').textContent=0;document.getElementById('tp').textContent=0;render();}
+function spawn(){const empty=grid.map((v,i)=>v===null?i:-1).filter(i=>i>=0);
+if(!empty.length)return false;
+grid[empty[(Math.random()*empty.length)|0]]=Math.random()<0.7?1:2;return true;}
+function neigh(i){const r=(i/4)|0,c=i%4,o=[];if(r>0)o.push(i-4);if(r<3)o.push(i+4);if(c>0)o.push(i-1);if(c<3)o.push(i+1);return o;}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+grid.forEach((v,i)=>{const t=document.createElement('div');t.className='tile';
+t.textContent=v||'+';
+if(v){const hue=Math.min(300,180+v*12);t.style.color='hsl('+hue+',50%,50%)';}
+t.onclick=()=>tap(i);g.appendChild(t);});}
+function tap(i){if(!playing||grid[i]!==null)return;audio.resume();
+grid[i]=Math.random()<0.7?1:2;beep(400,.05);render();
+let changed=true;
+while(changed){changed=false;
+for(let j=0;j<16;j++){if(grid[j]===null)continue;
+const same=neigh(j).filter(k=>grid[k]===grid[j]);
+if(same.length){const k=same[0];grid[k]*=2;grid[j]=null;score+=grid[k];
+topT=Math.max(topT,grid[k]);changed=true;break;}}}
+document.getElementById('s').textContent=score;document.getElementById('tp').textContent=topT;render();
+if(topT>=512)return win();
+if(!grid.includes(null))return over();}
+function win(){playing=false;if(score>best){best=score;localStorage.setItem('en_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),180);
+document.getElementById('od').innerHTML='🔢 <b style="color:#5a67d8">THE 512 TILE ETERNALS!</b><br>Score: '+score;
+document.getElementById('btn').textContent='ETERNITY AGAIN';document.getElementById('ov').style.display='flex';}
+function over(){playing=false;if(score>best){best=score;localStorage.setItem('en_best',best);document.getElementById('b').textContent=best;}
+beep(120,.4,'sawtooth');
+document.getElementById('od').innerHTML='🌫️ <b>The board is full.</b><br>Final score: '+score+' · Top tile '+topT;
+document.getElementById('btn').textContent='REBIRTH';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;const t=document.querySelectorAll('.tile')[i];if(t)t.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

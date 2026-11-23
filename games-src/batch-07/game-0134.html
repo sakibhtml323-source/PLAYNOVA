@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Golden Neon Forest</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050505;font-family:Georgia,serif;color:#fbbf24;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+#field{display:grid;gap:4px;touch-action:none;max-width:96vw}
+.node{width:52px;height:52px;border-radius:10px;background:#111;border:2px solid #fbbf2433;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;transition:border-color .2s}
+.node small{font-size:.5rem;color:#fbbf24}
+.node.sel{border-color:#fbbf24;box-shadow:0 0 12px #fbbf2466}
+#msg{text-align:center;font-size:.85rem;color:#a16207;margin-top:8px;min-height:1.6em;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(5,5,5,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fbbf24;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#050505;font-family:inherit;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:420px){.node{width:42px;height:42px;font-size:.9rem}}
+</style>
+</head>
+<body>
+<h1>🌲 GOLDEN NEON FOREST</h1>
+<div id="hud"><span>Network <b id="l">1</b></span><span>Roots <b id="rt">0</b></span><span>⚡ Energy <b id="e">3</b></span><span>Best <b id="b">1</b></span></div>
+<div id="field"></div>
+<div id="msg">Grow the golden network! Tap a node to claim it, then tap a connected node to spread roots. The corrupted nodes fight back.</div>
+<div id="ov"><h2 style="color:#fbbf24">NEON ROOTS</h2><p id="od">A strategy of glowing roots! Claim nodes, spread through the network, outgrow the corruption 🔴. Each move the corruption spreads too. Control 70% of the forest to win!</p><button id="btn">PLANT THE FIRST ROOT</button></div>
+<script>
+"use strict";
+const N=7;let grid,playing,level,energy,best=+localStorage.getItem('gnf_best')||1;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function build(){grid=[];const total=N*N;
+const mine=(Math.random()*total)|0;
+let corr=(Math.random()*total)|0;while(corr===mine)corr=(Math.random()*total)|0;
+for(let i=0;i<total;i++)grid.push({o:i===mine?1:i===corr?2:0,r:Math.random()*7});
+energy=3;level=(level||0)+1;
+document.getElementById('l').textContent=level;document.getElementById('e').textContent=energy;render();}
+function neigh(i){const r=(i/N)|0,c=i%N,o=[];if(r>0)o.push(i-N);if(r<N-1)o.push(i+N);if(c>0)o.push(i-1);if(c<N-1)o.push(i+1);return o;}
+function render(){const f=document.getElementById('field');
+f.style.gridTemplateColumns='repeat('+N+',minmax(0,1fr))';f.style.width='min('+(N*52+26)+'px,94vw)';f.innerHTML='';
+let mine=0,corr=0;
+grid.forEach((g,i)=>{if(g.o===1)mine++;if(g.o===2)corr++;
+const d=document.createElement('div');d.className='node';
+d.style.borderColor=g.o===1?'#fbbf24':g.o===2?'#ef4444':'#fbbf2433';
+d.style.boxShadow=g.o===1?'0 0 12px #fbbf2466':g.o===2?'0 0 12px #ef444466':'none';
+d.innerHTML=(g.o===1?'🟡':g.o===2?'🔴':'⚫')+'<small>'+i+'</small>';
+d.onclick=()=>{if(!playing)return;audio.resume();
+if(g.o===1){d.classList.add('sel');setTimeout(()=>d.classList.remove('sel'),400);
+// select: mark neighbors
+neigh(i).forEach(j=>{if(grid[j].o!==1){const t2=f.children[j];t2.style.borderColor='#fff';}});
+selected=i;beep(600,.05);return;}
+if(selected!==null&&neigh(selected).includes(i)&&g.o!==1){g.o=1;energy--;document.getElementById('e').textContent=energy;
+beep(700,.09,'triangle');selected=null;corruption();render();
+if(mineCount()/grid.length>=0.7)return win();
+if(energy<=0)return energyOut();}
+else beep(180,.08);};
+f.appendChild(d);});
+document.getElementById('rt').textContent=mine;}
+let selected=null;
+function mineCount(){return grid.filter(g=>g.o===1).length;}
+function corruption(){ // spread one random corruption
+const corr=grid.map((g,i)=>g.o===2?i:-1).filter(i=>i>=0);
+if(!corr.length)return;
+const c=corr[(Math.random()*corr.length)|0];
+const opts=neigh(c).filter(j=>grid[j].o===0);
+if(opts.length){grid[opts[(Math.random()*opts.length)|0]].o=2;beep(160,.1,'sawtooth');}}
+function win(){playing=false;if(level+1>best){best=level+1;localStorage.setItem('gnf_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🌟 <b style="color:#fde047">FOREST 70% GOLDEN!</b><br>Network '+level+' purified.';
+document.getElementById('btn').textContent='DEEPER FOREST';document.getElementById('ov').style.display='flex';}
+function energyOut(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='⚡ <b>Roots exhausted on network '+level+'.</b><br>The corruption creeps…';
+document.getElementById('btn').textContent='REPLANT';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;if(i<grid.length){const t=document.querySelectorAll('.node')[i];if(t)t.click();}}});
+document.getElementById('btn').onclick=()=>{audio.resume();selected=null;playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

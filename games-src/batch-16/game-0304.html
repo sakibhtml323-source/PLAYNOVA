@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Joust #304</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#arena{position:relative;width:360px;height:200px;background:#312e81;border-radius:14px;margin:12px;overflow:hidden}
+#lance{position:absolute;left:50%;top:100px;width:4px;height:80px;background:#fbbf24;transform-origin:top center}
+#zone{position:absolute;right:30px;top:80px;width:50px;height:50px;border:3px dashed #fbbf24;border-radius:50%}
+canvas{background:#4338ca;border-radius:8px;margin:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🐎 Royal Joust</h1><div class="sub">The lance swings — tap/click exactly when it points at the target zone!</div>
+<div id="hud"><span>You <b id="s1">0</b></span><span>AI <b id="s2">0</b></span><span>Round <b id="r">1</b>/5</span></div>
+<div id="arena">
+<div id="lance"></div>
+<div id="zone"></div>
+</div>
+<div id="msg"></div>
+<button id="btn">⚔️ Joust</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let angle=0,dir=1,speed=0.02,s1=0,s2=0,round=1,playing=false,raf=null;
+function zoneAngle(){const z=document.getElementById('zone');
+const rect=z.getBoundingClientRect();const ar=document.getElementById('arena').getBoundingClientRect();
+const dx=rect.left+rect.width/2-(ar.left+ar.width/2);
+const dy=rect.top+rect.height/2-(ar.top+100);
+return Math.atan2(dx,-dy);}
+function loop(){angle+=dir*speed;
+if(angle>1.2||angle<-1.2)dir*=-1;
+document.getElementById('lance').style.transform='rotate('+angle+'rad)';
+if(playing)raf=requestAnimationFrame(loop);}
+function strike(){if(!playing)return;
+const target=zoneAngle();
+const diff=Math.abs(angle-target);
+if(diff<0.15){s1++;beep(760,.15,'triangle');msg('🎯 Perfect hit!');}
+else if(diff<0.35){s1++;beep(500,.1);msg('👍 Grazing hit!');}
+else{beep(200,.12,'sawtooth');msg('💨 Missed!');}
+document.getElementById('s1').textContent=s1;
+// AI strikes with random accuracy
+setTimeout(()=>{if(Math.random()<0.5+round*0.08){s2++;beep(300,.12,'sawtooth');msg('🤖 AI hits back!');}
+document.getElementById('s2').textContent=s2;
+round++;document.getElementById('r').textContent=round;
+if(round>5){playing=false;cancelAnimationFrame(raf);
+const w=s1>s2?'👑 You win the joust!':s2>s1?'🤖 AI unseats you…':'🤝 Draw!';
+msg(w+'  '+s1+'–'+s2);beep(s1>=s2?880:400,.3,s1>=s2?'triangle':'sawtooth');return;}
+speed+=0.006;msg(msg.textContent+' Next round — faster!');},700);}
+document.getElementById('arena').onclick=strike;
+document.addEventListener('keydown',e=>{if(e.code==='Space')strike();});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{s1=0;s2=0;round=1;speed=0.02;
+document.getElementById('s1').textContent=0;document.getElementById('s2').textContent=0;
+document.getElementById('r').textContent=1;msg('');
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;loop();};
+</script></body></html>

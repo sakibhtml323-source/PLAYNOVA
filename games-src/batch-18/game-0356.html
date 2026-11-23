@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Star Throw #356</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+canvas{background:#1f2937;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🌟 Ninja Star Throw</h1><div class="sub">Drag to aim & throw — wind curves your star!</div>
+<div id="hud"><span>Stars <b id="s">8</b></span><span>Hits <b id="h">0</b></span><span>Wind <b id="w">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">✨ New Round</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let stars=[],targets=[],wind=0,hits=0,starsLeft=8,playing=true,drag=null;
+function gen(){targets=[];const nt=3;
+for(let i=0;i<nt;i++)targets.push({x:120+Math.random()*300,y:60+Math.random()*220,r:18,hit:false});
+wind=(Math.random()*2-1)*0.15;
+document.getElementById('w').textContent=wind.toFixed(2);
+starsLeft=8;hits=0;playing=true;
+document.getElementById('s').textContent=8;document.getElementById('h').textContent=0;
+draw();msg('Drag & release to throw!');}
+cvs.addEventListener('pointerdown',e=>{if(!playing||starsLeft<=0)return;const r=cvs.getBoundingClientRect();
+drag={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};});
+cvs.addEventListener('pointerup',e=>{if(!drag||!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+const vx=(drag.x-x)*0.09,vy=(drag.y-y)*0.09;
+stars.push({x:50,y:H-40,vx,vy,rot:0});
+starsLeft--;document.getElementById('s').textContent=starsLeft;
+beep(500,.07);drag=null;
+if(starsLeft<=0)setTimeout(()=>{playing=false;beep(880,.3,'triangle');
+msg('🏁 Done! Hits: '+hits);},2500);});
+function step(){stars.forEach(s=>{s.vy+=0.08;s.vx+=wind;s.x+=s.vx;s.y+=s.vy;s.rot+=0.3;
+targets.forEach(t=>{if(!t.hit&&Math.hypot(s.x-t.x,s.y-t.y)<t.r+8){
+t.hit=true;hits++;document.getElementById('h').textContent=hits;beep(700,.12,'triangle');}});});
+stars=stars.filter(s=>s.x>-20&&s.x<W+20&&s.y<H+20);}
+function draw(){ctx.fillStyle='#1f2937';ctx.fillRect(0,0,W,H);
+// wind indicator
+ctx.fillStyle='#93c5fd';ctx.font='20px serif';
+ctx.fillText(wind>0?'→':'←',20,30);
+targets.forEach(t=>{ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,7);
+ctx.fillStyle=t.hit?'#14532d':'#dc2626';ctx.fill();
+ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;ctx.stroke();
+if(!t.hit){ctx.beginPath();ctx.arc(t.x,t.y,4,0,7);ctx.fillStyle='#fbbf24';ctx.fill();}});
+// ninja
+ctx.font='32px serif';ctx.textAlign='center';ctx.fillText('🥷',50,H-30);
+stars.forEach(s=>{ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
+ctx.font='20px serif';ctx.fillText('🌟',0,0);ctx.restore();});
+if(drag){ctx.strokeStyle='#fbbf2455';ctx.setLineDash([4,4]);
+ctx.beginPath();ctx.moveTo(50,H-40);ctx.lineTo(drag.x,drag.y);ctx.stroke();ctx.setLineDash([]);}
+if(playing){step();requestAnimationFrame(draw);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{stars=[];AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

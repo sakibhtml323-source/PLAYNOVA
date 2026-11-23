@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Shadow Match #296</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+#sil{font-size:5rem;margin:10px;filter:brightness(0) drop-shadow(0 0 12px #7c3aed)}
+#opts{display:flex;gap:10px;margin:10px;flex-wrap:wrap;justify-content:center}
+.opt{font-size:3rem;width:80px;height:80px;background:#1f2937;border:2px solid #374151;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.opt:hover{border-color:#facc15}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🥷 Ninja Shadow Match</h1><div class="sub">A silhouette appears — pick the matching object. Fast rounds, growing streaks!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Streak <b id="c">0</b></span><span>⏱️ <b id="t">5</b>s</span><span>Score <b id="s">0</b></span></div>
+<div id="sil">?</div>
+<div id="opts"></div>
+<div id="msg"></div>
+<button id="btn">🎭 New Round</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const OBJECTS=['🗡️','🍥','🏯','🌸','🎎','🍵','⛩️','🎏','🥋','🍱'];
+let target='',round=1,streak=0,score=0,timer=null,time=5;
+function newRound(){target=OBJECTS[(Math.random()*OBJECTS.length)|0];
+document.getElementById('sil').textContent=target;
+document.getElementById('r').textContent=round;
+const opts=new Set([target]);
+while(opts.size<4){opts.add(OBJECTS[(Math.random()*OBJECTS.length)|0]);}
+const box=document.getElementById('opts');box.innerHTML='';
+[...opts].sort(()=>Math.random()-.5).forEach(e=>{
+const d=document.createElement('div');d.className='opt';d.textContent=e;
+d.onclick=()=>pick(e===target,d);box.appendChild(d);});
+time=Math.max(2,5-Math.floor(streak/3));
+document.getElementById('t').textContent=time;
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);streak=0;document.getElementById('c').textContent=0;
+beep(130,.2,'sawtooth');msg('⏰ Too slow! Streak lost.');setTimeout(newRound,800);}},1000);}
+function pick(ok,el){clearInterval(timer);
+if(ok){streak++;score+=streak*10;
+document.getElementById('c').textContent=streak;document.getElementById('s').textContent=score;
+beep(500+streak*50,.1,'triangle');el.style.borderColor='#22c55e';
+msg('✅ ×'+streak+'!');}
+else{streak=0;document.getElementById('c').textContent=0;
+beep(150,.15,'sawtooth');el.style.borderColor='#ef4444';msg('❌ Streak lost!');}
+round++;setTimeout(newRound,600);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+newRound();
+</script></body></html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Vault #286</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#pegs{display:flex;gap:10px;margin:10px}
+.peg{width:52px;height:52px;border-radius:50%;background:#292524;border:3px solid #44403c;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center}
+#history{margin:8px;max-height:180px;overflow-y:auto;width:300px}
+.row{display:flex;gap:6px;align-items:center;margin:3px;font-size:.85rem}
+.dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800}
+.fb{display:flex;gap:3px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+#msg{min-height:1.3em;font-weight:600}
+</style></head><body>
+<h1>🏺 Desert Vault</h1><div class="sub">Crack the 4-symbol code! 🟢 = right symbol right spot, 🟡 = right symbol wrong spot.</div>
+<div id="hud"><span>Attempts <b id="a">10</b></span><span>Level <b id="l">1</b></span></div>
+<div id="pegs"></div>
+<button id="try">🔓 Try Code</button>
+<div id="history"></div><div id="msg"></div>
+<button id="btn">🎲 New Vault</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const SYMBOLS=['🌵','🏺','🔺','🐪','👑','🦂','🌙','⭐'];
+let secret=[],cur=[0,0,0,0],attempts=10,level=1;
+function newVault(){secret=[];for(let i=0;i<4;i++)secret.push((Math.random()*SYMBOLS.length)|0);
+cur=[0,0,0,0];attempts=10;
+document.getElementById('a').textContent=10;
+document.getElementById('l').textContent=level;
+document.getElementById('history').innerHTML='';
+buildPegs();msg('Crack the vault!');}
+function buildPegs(){const p=document.getElementById('pegs');p.innerHTML='';
+cur.forEach((v,i)=>{const d=document.createElement('div');d.className='peg';
+d.textContent=SYMBOLS[v];
+d.onclick=()=>{cur[i]=(cur[i]+1)%SYMBOLS.length;d.textContent=SYMBOLS[cur[i]];beep(400+i*50,.05);};
+p.appendChild(d);});}
+document.getElementById('try').onclick=()=>{if(attempts<=0)return;
+let exact=0,partial=0;const sCount={},gCount={};
+for(let i=0;i<4;i++){if(cur[i]===secret[i])exact++;
+else{sCount[secret[i]]=(sCount[secret[i]]||0)+1;
+gCount[cur[i]]=(gCount[cur[i]]||0)+1;}}
+Object.keys(gCount).forEach(k=>{partial+=Math.min(gCount[k],sCount[k]||0);});
+attempts--;document.getElementById('a').textContent=attempts;
+const row=document.createElement('div');row.className='row';
+cur.forEach(v=>{const d=document.createElement('div');d.className='dot';d.style.background='#44403c';
+d.textContent=SYMBOLS[v];row.appendChild(d);});
+const fb=document.createElement('div');fb.className='fb';
+for(let i=0;i<exact;i++){const d=document.createElement('div');d.className='dot';d.style.background='#22c55e';d.textContent='✓';fb.appendChild(d);}
+for(let i=0;i<partial;i++){const d=document.createElement('div');d.className='dot';d.style.background='#eab308';d.textContent='~';fb.appendChild(d);}
+row.appendChild(fb);
+document.getElementById('history').prepend(row);
+if(exact===4){beep(880,.3,'triangle');msg('🔓 Vault cracked! Level '+(level+1));level++;
+setTimeout(newVault,1000);return;}
+beep(200,.1,'sawtooth');
+if(attempts<=0){msg('🔒 Sealed! Code: '+secret.map(i=>SYMBOLS[i]).join(' '));
+level=Math.max(1,level-1);setTimeout(newVault,1600);}};
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newVault();};
+newVault();
+</script></body></html>

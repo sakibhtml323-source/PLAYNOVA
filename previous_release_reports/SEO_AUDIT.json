@@ -1,0 +1,15 @@
+{
+ "base": "https://sakibhtml323-source.github.io/PLAYNOVA",
+ "games": 500,
+ "unique_titles": true,
+ "unique_descriptions": true,
+ "generic_descriptions_remaining": 0,
+ "canonicals_valid": true,
+ "jsonld_valid": true,
+ "h1_present": true,
+ "noindex": false,
+ "games_src_noindex": true,
+ "og_twitter_all_pages": true,
+ "sitemap_urls": 521,
+ "robots_ok": true
+}

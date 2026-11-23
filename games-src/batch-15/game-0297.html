@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Path Finder #297</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(7,44px);gap:3px;margin:12px}
+.c{width:44px;height:44px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
+.c.me{background:#7c3aed;outline:2px solid #facc15}
+.c.wall{background:#475569;cursor:default}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Crystal Path Finder</h1><div class="sub">Collect every gem within the step limit — plan your route!</div>
+<div id="hud"><span>Gems <b id="g">0</b></span><span>Steps <b id="s">0</b>/<b id="sl">20</b></span><span>Level <b id="l">1</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🗺️ New Maze</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=7;let grid=[],me={r:0,c:0},gems=[],stepLimit=20,steps=0,level=1,playing=true;
+function gen(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(0);grid.push(row);}
+// walls
+const nw=4+level;
+for(let i=0;i<nw;i++){const r=(Math.random()*N)|0,c=(Math.random()*N)|0;
+if((r===0&&c===0))continue;grid[r][c]=1;}
+me={r:0,c:0};grid[0][0]=0;
+gems=[];const ng=2+level;
+for(let i=0;i<ng;i++){let r,c;do{r=(Math.random()*N)|0;c=(Math.random()*N)|0;}while(grid[r][c]||gems.some(g=>g.r===r&&g.c===c)||(r===0&&c===0));
+gems.push({r,c,got:false});}
+stepLimit=15+level*3;steps=0;playing=true;
+document.getElementById('s').textContent=0;
+document.getElementById('sl').textContent=stepLimit;
+document.getElementById('l').textContent=level;
+document.getElementById('g').textContent=gems.length;
+render();msg('Grab all the gems!');}
+function tap(r,c){if(!playing)return;
+if(Math.abs(r-me.r)+Math.abs(c-me.c)!==1){beep(160,.06,'sawtooth');return;}
+if(grid[r][c]){beep(160,.06,'sawtooth');return;}
+me={r,c};steps++;document.getElementById('s').textContent=steps;
+const g=gems.find(x=>!x.got&&x.r===r&&x.c===c);
+if(g){g.got=true;beep(600,.12,'triangle');
+const left=gems.filter(x=>!x.got).length;
+document.getElementById('g').textContent=left;
+if(left===0){playing=false;beep(880,.3,'triangle');
+msg('🎉 All gems collected! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(gen,1000);return;}}
+else beep(380,.04);
+render();
+if(steps>=stepLimit){playing=false;beep(130,.3,'sawtooth');
+msg('💨 Step limit reached!');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]?' wall':'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🥷';}
+else{const gm=gems.find(x=>!x.got&&x.r===r&&x.c===c);
+if(gm)d.textContent='💎';else if(grid[r][c])d.textContent='🪨';}
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

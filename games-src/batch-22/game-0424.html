@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Portrait Row #424</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#rule{background:#27272a;border-radius:10px;padding:8px 16px;margin:8px;font-size:.85rem;max-width:330px;text-align:center;color:#fbbf24;font-weight:700}
+#row{display:flex;gap:8px;margin:14px;flex-wrap:wrap;justify-content:center}
+.port{width:78px;padding:8px;background:#27272a;border:2px solid #3f3f46;border-radius:12px;text-align:center;cursor:pointer;font-size:.72rem}
+.port .e{font-size:1.9rem}
+.port .st{color:#a1a1aa;font-size:.7rem}
+.port.sel{outline:3px solid #facc15}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🖼️ Haunted Portrait Row</h1><div class="sub">The ghost demands an order — swap portraits to satisfy its spectral rule!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>⏱️ <b id="t">40</b>s</span><span>Score <b id="s">0</b></span></div>
+<div id="rule"></div><div id="ruleTimer" style="font-size:.75rem;color:#a1a1aa"></div>
+<div id="row"></div>
+<div id="msg"></div>
+<button id="btn">👻 New Gallery</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const PORTS=[{e:'🧛',n:'Vampire',a:300,w:70},{e:'👻',n:'Ghost',a:150,w:1},{e:'🧟',n:'Zombie',a:200,w:80},
+{e:'🦇',n:'Bat',a:50,w:3},{e:'🐺',n:'Werewolf',a:35,w:90},{e:'🎃',n:'Pumpkin',a:1,w:10}];
+const RULES=[{txt:'Oldest spirit first (age ↑)',k:p=>p.a},{txt:'Youngest first (age ↓)',k:p=>-p.a},
+{txt:'Heaviest first (weight ↓)',k:p=>-p.w},{txt:'Lightest first (weight ↑)',k:p=>p.w}];
+let row=[],rule=RULES[0],sel=null,round=1,score=0,time=40,timer=null,playing=false,ruleShow=0;
+function newRound(){rule=RULES[(round-1)%RULES.length];
+document.getElementById('rule').textContent='👻 Rule: '+rule.txt;
+ruleShow=Math.max(60,160-round*10);
+row=PORTS.slice().sort(()=>Math.random()-.5);
+sel=null;time=40;playing=true;
+document.getElementById('r').textContent=round;document.getElementById('t').textContent=40;
+// hide rule after countdown
+const iv=setInterval(()=>{ruleShow--;
+document.getElementById('ruleTimer').textContent='rule visible: '+Math.ceil(ruleShow/10)+'s';
+if(ruleShow<=0){clearInterval(iv);
+document.getElementById('rule').textContent='👻 Rule: ❓ (from memory!)';
+document.getElementById('ruleTimer').textContent='';
+beep(300,.1);}},100);
+render();msg('Satisfy the ghost!');
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);beep(130,.3,'sawtooth');msg('👻 The ghost is displeased! Score: '+score);}},1000);}
+function tap(i){if(!playing)return;
+if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[row[sel],row[i]]=[row[i],row[sel]];
+sel=null;beep(400,.06);render();check();}
+function check(){const sorted=row.slice().sort((a,b)=>rule.k(a)-rule.k(b));
+if(row.every((p,i)=>p===sorted[i])){score+=row.length*15;document.getElementById('s').textContent=score;
+beep(880,.3,'triangle');msg('👻 The ghost nods! Round '+(round+1));round++;
+setTimeout(newRound,1000);}}
+function render(){const g=document.getElementById('row');g.innerHTML='';
+row.forEach((p,i)=>{const d=document.createElement('div');d.className='port'+(sel===i?' sel':'');
+d.innerHTML='<div class="e">'+p.e+'</div><div>'+p.n+'</div><div class="st">'+p.a+'y · '+p.w+'kg</div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;score=0;
+document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+newRound();
+</script></body></html>

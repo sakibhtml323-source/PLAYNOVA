@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dark Mode Anagram Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0b0b0f;font-family:Georgia,serif;color:#d4d4d8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.1rem;color:#a78bfa;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:12px}
+#word{font-size:2rem;letter-spacing:14px;color:#a78bfa;margin:16px 0;min-height:2.4rem;text-align:center}
+#slots{display:flex;gap:8px;justify-content:center;min-height:52px;margin-bottom:14px}
+.slot{width:44px;height:52px;border:1px solid #3f3f46;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff;background:#18181b}
+.slot.cur{border-color:#a78bfa}
+#letters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.letter{width:44px;height:52px;border:1px solid #27272a;border-radius:8px;background:#18181b;color:#e4e4e7;font-size:1.4rem;cursor:pointer}
+.letter:hover{border-color:#a78bfa}
+.letter.used{opacity:.25}
+#fb{text-align:center;min-height:1.6em;font-weight:600}
+#ov{position:fixed;inset:0;background:rgba(11,11,15,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#a78bfa;border:none;color:#0b0b0f;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+#kbhint{font-size:.7rem;color:#52525b;margin-top:10px}
+@media(max-width:400px){.slot,.letter{width:36px;height:44px;font-size:1.1rem}#word{letter-spacing:8px;font-size:1.4rem}}
+</style>
+</head>
+<body>
+<h1>🔤 DARK ANAGRAM</h1>
+<div id="hud"><span>Word <b id="n">1</b>/10</span><span>Solved <b id="c">0</b></span><span>⏱ <b id="t">30</b>s</span><span>Best <b id="b">0</b></span></div>
+<div id="word"></div>
+<div id="slots"></div>
+<div id="letters"></div>
+<div id="fb"></div>
+<div id="kbhint">⌨️ Type letters · Backspace removes · Enter submits</div>
+<div id="ov"><h2 style="color:#a78bfa">DARK ANAGRAM</h2><p id="od">Unscramble the word before the clock dies. 10 words, 30 seconds each. Every solve banks points — longer words, more points.</p><button id="btn">DESCEND</button></div>
+<script>
+"use strict";
+const WORDS=['shadow','lantern','midnight','puzzle','ember','crypt','velvet','omen','static','mirror','hollow','glimmer'];
+let idx,solved,score,answer,guess,playing,timer,timeLeft,best=+localStorage.getItem('an_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function scramble(w){const a=w.split('');let s=a.slice();
+do{for(let i=s.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[s[i],s[j]]=[s[j],s[i]];}}while(s.join('')===w&&w.length>1);
+return s;}
+function ask(){if(idx>=10)return end();
+answer=WORDS[(idx*7+3)%WORDS.length];guess=[];timeLeft=30;
+document.getElementById('n').textContent=idx+1;
+document.getElementById('word').textContent=scramble(answer).join(' ');
+render();clearInterval(timer);
+timer=setInterval(()=>{timeLeft--;document.getElementById('t').textContent=timeLeft;
+if(timeLeft<=0){clearInterval(timer);skip();}},1000);}
+function render(){const s=document.getElementById('slots');s.innerHTML='';
+for(let i=0;i<answer.length;i++){const d=document.createElement('div');d.className='slot'+(i===guess.length?' cur':'');
+d.textContent=guess[i]||'';s.appendChild(d);}
+const l=document.getElementById('letters');l.innerHTML='';
+const counts={};answer.split('').forEach(ch=>counts[ch]=(counts[ch]||0)+1);
+guess.forEach(ch=>counts[ch]--);
+[...new Set(answer.split(''))].forEach(ch=>{const d=document.createElement('button');d.className='letter';
+d.textContent=ch;if(counts[ch]<=0)d.classList.add('used');
+d.onclick=()=>add(ch);l.appendChild(d);});}
+function add(ch){if(!playing||guess.length>=answer.length)return;audio.resume();
+guess.push(ch);beep(440,.04);render();if(guess.length===answer.length)submit();}
+function back(){guess.pop();beep(300,.04);render();}
+function submit(){clearInterval(timer);
+if(guess.join('')===answer){solved++;score+=answer.length*10+timeLeft;document.getElementById('c').textContent=solved;
+document.getElementById('fb').textContent='✓ '+answer.toUpperCase()+' — +'+(answer.length*10+timeLeft);document.getElementById('fb').style.color='#4ade80';beep(700,.12,'triangle');}
+else{document.getElementById('fb').textContent='✗ It was '+answer.toUpperCase();document.getElementById('fb').style.color='#f87171';beep(150,.2,'sawtooth');}
+idx++;setTimeout(ask,1200);}
+function skip(){document.getElementById('fb').textContent='⏰ Time! It was '+answer.toUpperCase();document.getElementById('fb').style.color='#f87171';
+beep(140,.15,'sawtooth');idx++;setTimeout(ask,1200);}
+function end(){playing=false;if(score>best){best=score;localStorage.setItem('an_best',best);document.getElementById('b').textContent=best;}
+const r=solved>=9?'👁️ SEER':solved>=7?'🌘 SHARP':solved>=5?'🕯️ LIT':'🌑 DIM';
+document.getElementById('od').innerHTML=r+'<br>Solved <b style="font-size:1.4rem;color:#a78bfa">'+solved+'/10</b> · Score '+score;
+document.getElementById('btn').textContent='AGAIN';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;
+const k=e.key.toLowerCase();
+if(k==='backspace'){back();}
+else if(k==='enter'){if(guess.length===answer.length)submit();}
+else if(/^[a-z]$/.test(k)&&answer.includes(k))add(k);});
+document.getElementById('btn').onclick=()=>{audio.resume();idx=0;solved=0;score=0;playing=true;
+document.getElementById('c').textContent=0;document.getElementById('fb').textContent='';
+document.getElementById('ov').style.display='none';ask();};
+</script>
+</body>
+</html>

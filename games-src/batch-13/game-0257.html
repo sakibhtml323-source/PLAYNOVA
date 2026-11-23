@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Pipe Connect #257</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(5,56px);gap:4px;margin:12px}
+.tile{width:56px;height:56px;background:#312e81;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tile svg{width:48px;height:48px}
+.tile.lit{background:#4338ca}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Pipe Connect</h1><div class="sub">Connect throne to treasury — each rotation spends gold. Run out and the kingdom falls!</div>
+<div id="hud"><span>Gold <b id="g">25</b></span><span>Level <b id="l">1</b></span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">🏰 New Kingdom</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5,SIZE=25;
+const STRAIGHT=[0,2],ELBOW=[[2,3],[3,0],[0,1],[1,2]];
+function dirType(a,b){const r=(a/N)|0,c=a%N,r2=(b/N)|0,c2=b%N;
+if(r===r2)return c<c2?[1,3]:[3,1];return r<r2?[2,0]:[0,2];}
+function twoDir(a,b,c2){const r=(a/N)|0,cc=a%N;
+if((b/N)|0===r)return b<cc?[0,1]:[1,0];if((c2/N)|0===r)return c2<cc?[0,3]:[3,0];
+return b<cc?[2,1]:[1,2];}
+let cells=[],gold=25,level=1,playing=true,best=Infinity;
+function opens(c){return c.t==='straight'?(c.r%2?STRAIGHT:STRAIGHT).slice():ELBOW[c.r];}
+function build(){cells=[];const size=Math.min(5,N);
+const src=(Math.random()*size)|0;const path=[src];const used=new Set([src]);
+while(path.length<Math.min(size*size,8+level*2)){const last=path[path.length-1];const r=(last/N)|0,c=last%N;const opts=[];
+if(r>0&&!used.has(last-N))opts.push(last-N);if(r<size-1&&!used.has(last+N))opts.push(last+N);
+if(c>0&&!used.has(last-1))opts.push(last-1);if(c<size-1&&!used.has(last+1))opts.push(last+1);
+if(!opts.length)break;const nx=opts[(Math.random()*opts.length)|0];used.add(nx);path.push(nx);}
+for(let i=0;i<SIZE;i++){const pi=path.indexOf(i);let t='none';
+if(pi>=0){if(pi===0)t=dirType(i,path[1]);else if(pi===path.length-1)t=dirType(i,path[pi-1]);
+else t=twoDir(i,path[pi-1],path[pi+1]);}
+cells.push({t,r:(Math.random()*4)|0,src:i===src,lit:false});}
+gold=25;playing=true;document.getElementById('g').textContent=gold;light();render();function msg(t){document.getElementById('msg').textContent=t;}
+msg('Connect with ≤25 rotations!');}
+function light(){cells.forEach(c=>c.lit=false);
+const q=[cells.findIndex(c=>c.src)];if(q[0]<0)return;cells[q[0]].lit=true;
+while(q.length){const cur=q.pop();const c=cells[cur];
+opens(c).forEach(d=>{let n=-1;const r=(cur/N)|0,cc=cur%N;
+if(d===0&&r>0)n=cur-N;if(d===1&&cc<N-1)n=cur+1;if(d===2&&r<N-1)n=cur+N;if(d===3&&cc>0)n=cur-1;
+if(n>=0&&opens(cells[n]).includes((d+2)%4)&&!cells[n].lit){cells[n].lit=true;q.push(n);}});}}
+function check(){if(cells.every(c=>c.lit||c.t==='none')){playing=false;beep(880,.25,'triangle');
+const spent=25-gold;
+if(spent<best){best=spent;localStorage.setItem('rpc_best',best);document.getElementById('b').textContent=best;}
+msg('🎉 Connected! Gold left: '+gold+' → Level '+(level+1));
+level++;document.getElementById('l').textContent=level;
+setTimeout(build,1000);return;}
+if(gold<=0){playing=false;beep(130,.3,'sawtooth');msg('💸 Treasury empty! Kingdom falls…');}}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+cells.forEach((c,i)=>{const d=document.createElement('div');d.className='tile'+(c.lit?' lit':'');
+let svg='';
+const col=c.lit?'#fbbf24':'#818cf8';
+if(c.t==='straight')svg='<svg viewBox="0 0 40 40"><line x1="20" y1="0" x2="20" y2="40" stroke="'+col+'" stroke-width="8" stroke-linecap="round"/></svg>';
+else if(c.t!=='none')svg='<svg viewBox="0 0 40 40"><path d="M 20 0 Q 20 20 40 20" fill="none" stroke="'+col+'" stroke-width="8" stroke-linecap="round"/></svg>';
+if(c.src)svg='<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="10" fill="#fbbf24"/><text x="20" y="25" font-size="11" text-anchor="middle">👑</text></svg>';
+d.innerHTML=svg;
+d.onclick=()=>{if(!playing)return;cells[i].r=(cells[i].r+1)%4;gold--;document.getElementById('g').textContent=gold;
+beep(400+(i%5)*60,.05);light();render();check();};
+b.appendChild(d);});}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();};
+build();
+</script></body></html>

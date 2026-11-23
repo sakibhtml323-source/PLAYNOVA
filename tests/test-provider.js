@@ -1,0 +1,1 @@
+/* PLAYNOVA test-only ad stub: no network, no ads */ window.__P5_TEST_AD__=true;

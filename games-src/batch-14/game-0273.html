@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Logic Gates #273</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem;max-width:330px;text-align:center}
+#truthtable{border-collapse:collapse;margin:10px;font-size:.9rem}
+#truthtable td,#truthtable th{border:1px solid #334155;padding:6px 12px;text-align:center}
+#truthtable th{background:#1e293b}
+#truthtable td.tgt{color:#facc15;font-weight:800}
+#gate{margin:8px;font-size:1.3rem;font-weight:800}
+#inputs{display:flex;gap:10px;margin:8px}
+.tog{padding:10px 18px;border-radius:10px;border:2px solid #334155;background:#1e293b;color:#e2e8f0;font-weight:800;font-size:1rem;cursor:pointer}
+.tog.on{border-color:#22c55e;background:#14532d}
+#out{font-size:2rem;font-weight:800;margin:6px}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⚡ Ninja Logic Gates</h1>
+<div class="sub">Pick the gate that produces the target output for ALL input combinations!</div>
+<div id="gate">🚪 ?</div>
+<table id="truthtable"></table>
+<div id="inputs">
+<button class="tog" id="i0">A = 0</button>
+<button class="tog" id="i1">B = 0</button>
+</div>
+<div id="out">OUT = ?</div>
+<div id="msg"></div>
+<button id="btn">🎛️ New Puzzle</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const GATES=[{n:'AND',e:'∧',f:(a,b)=>a&&b},{n:'OR',e:'∨',f:(a,b)=>a||b},{n:'XOR',e:'⊕',f:(a,b)=>a!==b},
+{n:'NAND',e:'⊼',f:(a,b)=>!(a&&b)},{n:'NOR',e:'⊽',f:(a,b)=>!(a||b)},{n:'XNOR',e:'⊙',f:(a,b)=>a===b}];
+let cur=null,inputs=[false,false],level=1,score=0;
+function newPuzzle(){cur=GATES[(Math.random()*GATES.length)|0];
+document.getElementById('gate').textContent='Which gate: A '+cur.e+' B ?';
+inputs=[false,false];render();msg('Toggle A & B — find the gate!');}
+function render(){const tt=document.getElementById('truthtable');
+tt.innerHTML='<tr><th>A</th><th>B</th><th>Target</th><th>Current</th></tr>';
+const curOut=cur?cur.f(inputs[0],inputs[1]):null;
+[[0,0],[0,1],[1,0],[1,1]].forEach(([a,b])=>{
+const tgt=cur.f(!!a,!!b);
+const isCur=inputs[0]===!!a&&inputs[1]===!!b;
+tt.innerHTML+='<tr><td>'+a+'</td><td>'+b+'</td><td class="tgt">'+(tgt?1:0)+'</td><td>'+(isCur&&curOut!==null?(curOut?1:0):'—')+'</td></tr>';});
+document.getElementById('i0').textContent='A = '+(inputs[0]?1:0);
+document.getElementById('i0').classList.toggle('on',inputs[0]);
+document.getElementById('i1').textContent='B = '+(inputs[1]?1:0);
+document.getElementById('i1').classList.toggle('on',inputs[1]);
+document.getElementById('out').textContent='OUT = '+(curOut?1:0);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('i0').onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();inputs[0]=!inputs[0];beep(400,.05);render();};
+document.getElementById('i1').onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();inputs[1]=!inputs[1];beep(500,.05);render();};
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();
+// check: player identified gate? Actually gameplay: they guess — simplified: after toggling both inputs, they guess gate
+const guess=prompt('Which gate? (AND/OR/XOR/NAND/NOR/XNOR)','');
+if(!guess)return;
+if(guess.toUpperCase()===cur.n){score+=100;beep(880,.25,'triangle');msg("🎉 Correct — it is "+cur.n+"! Score "+score);
+level++;setTimeout(newPuzzle,900);}
+else{beep(180,.15,'sawtooth');msg('❌ It was '+cur.n+'. Try the next one!');setTimeout(newPuzzle,1200);}};
+newPuzzle();
+</script></body></html>

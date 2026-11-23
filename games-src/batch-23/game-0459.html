@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Moon Jump #459</title><style>
+body{margin:0;font-family:system-ui;background:#0c1445;color:#e0e7ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#93c5fd;font-size:.78rem}
+canvas{background:#111936;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#0c1445;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🌙 Desert Moon Jump</h1><div class="sub">The moon platforms DRIFT apart — jump before the gap grows too wide!</div>
+<div id="hud"><span>Jumps <b id="j">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="ov"><div style="font-size:3rem">🌙</div><p>Tap/Space to jump to the next moon.<br>Platforms drift — don't wait too long!</p><button id="btn">Leap</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let cur={x:60,y:300},next={x:0,y:0},gap=120,jumps=0,playing=false,drift=0.4,best=+localStorage.getItem('dmj_best')||0;
+document.getElementById('b').textContent=best;
+function newMoon(){const a=Math.random()*Math.PI*2;
+next={x:Math.min(W-50,Math.max(60,cur.x+Math.cos(a)*130)),
+y:Math.min(H-50,Math.max(80,cur.y+Math.sin(a)*90))};
+gap=Math.hypot(next.x-cur.x,next.y-cur.y);drift=0.35+jumps*0.02;}
+function gen(){cur={x:60,y:300};jumps=0;playing=true;
+document.getElementById('j').textContent=0;newMoon();draw();}
+cvs.addEventListener('pointerdown',jump);
+document.addEventListener('keydown',e=>{if(e.code==='Space')jump();});
+function jump(){if(!playing)return;
+const d=Math.hypot(next.x-cur.x,next.y-cur.y);
+if(d<52){cur={...next};jumps++;document.getElementById('j').textContent=jumps;
+beep(500+jumps*30,.08);
+if(jumps>best){best=jumps;localStorage.setItem('dmj_best',best);document.getElementById('b').textContent=best;}
+newMoon();draw();}
+else{beep(200,.1,'sawtooth');}}
+function step(){// drift apart
+const dx=next.x-cur.x,dy=next.y-cur.y,d=Math.hypot(dx,dy)||1;
+next.x+=dx/d*drift;next.y+=dy/d*drift;
+// clamp
+next.x=Math.max(40,Math.min(W-40,next.x));
+next.y=Math.max(60,Math.min(H-40,next.y));
+if(d>200){playing=false;beep(130,.35,'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🌌 Lost in space!<br>Jumps: <b style="color:#fbbf14">'+jumps+'</b>';}}
+function draw(){ctx.fillStyle='#111936';ctx.fillRect(0,0,W,H);
+for(let i=0;i<30;i++){ctx.fillStyle='#ffffff22';ctx.fillRect((i*83)%W,(i*47)%W,2,2);}
+// moons
+[[cur.x,cur.y,20,'#fde68a'],[next.x,next.y,16,'#e0e7ff']].forEach(([x,y,r,c])=>{
+ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=c;ctx.fill();});
+// gap line
+ctx.strokeStyle='#fbbf2433';ctx.setLineDash([4,6]);
+ctx.beginPath();ctx.moveTo(cur.x,cur.y);ctx.lineTo(next.x,next.y);ctx.stroke();ctx.setLineDash([]);
+ctx.font='22px serif';ctx.textAlign='center';ctx.fillText('🧑‍🚀',cur.x,cur.y-24);
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('ov').style.display='none';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();};
+</script></body></html>

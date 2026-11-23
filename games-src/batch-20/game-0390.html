@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Throne Sort #390</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#rule{background:#4338ca;border-radius:10px;padding:8px 16px;margin:8px;font-weight:700;font-size:.9rem;max-width:320px;text-align:center}
+#court{display:flex;gap:8px;margin:12px;flex-wrap:wrap;justify-content:center}
+.noble{width:76px;padding:8px;background:#312e81;border:2px solid #4f46e5;border-radius:12px;text-align:center;cursor:pointer;font-size:.75rem}
+.noble .e{font-size:1.8rem}
+.noble .rank{color:#fbbf24;font-weight:800}
+.noble.sel{outline:3px solid #fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Throne Sort</h1><div class="sub">Tap two nobles to swap them — arrange the court by the CURRENT rule (it changes!)</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>⏱️ <b id="t">30</b>s</span><span>Score <b id="s">0</b></span></div>
+<div id="rule"></div>
+<div id="court"></div>
+<div id="msg"></div>
+<button id="btn">🏰 New Court</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const NOBLES=[{e:'🫅',n:'King',a:80,w:8},{e:'👸',n:'Queen',a:75,w:6},{e:'🤴',n:'Prince',a:40,w:7},
+{e:'🧙',n:'Wizard',a:60,w:3},{e:'🛡️',n:'Knight',a:45,w:5},{e:'👵',n:'Duchess',a:65,w:4}];
+const RULES=[{txt:'Oldest first (age ↑)',key:n=>n.a},{txt:'Youngest first (age ↓)',key:n=>-n.a},
+{txt:'Heaviest first (weight ↓)',key:n=>-n.w},{txt:'Lightest first (weight ↑)',key:n=>n.w}];
+let court=[],rule=RULES[0],sel=null,round=1,score=0,time=30,timer=null,playing=false;
+function newRound(){rule=RULES[(round-1)%RULES.length];
+document.getElementById('rule').textContent='📜 Rule: '+rule.txt;
+court=NOBLES.slice().sort(()=>Math.random()-.5);
+sel=null;time=30;playing=true;
+document.getElementById('r').textContent=round;document.getElementById('t').textContent=30;
+render();msg('Sort the court!');
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);beep(130,.3,'sawtooth');msg('⏰ The court dismisses you! Score: '+score);}},1000);}
+function tap(i){if(!playing)return;
+if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[court[sel],court[i]]=[court[i],court[sel]];
+sel=null;beep(400,.06);render();check();}
+function check(){const sorted=court.slice().sort((a,b)=>rule.key(a)-rule.key(b));
+const ok=court.every((n,i)=>n===sorted[i]);
+if(ok){score+=court.length*10;document.getElementById('s').textContent=score;
+beep(880,.3,'triangle');msg('👑 Court in order! Round '+(round+1));round++;
+setTimeout(newRound,1000);}}
+function render(){const c=document.getElementById('court');c.innerHTML='';
+court.forEach((n,i)=>{const d=document.createElement('div');d.className='noble'+(sel===i?' sel':'');
+d.innerHTML='<div class="e">'+n.e+'</div><div>'+n.n+'</div><div class="rank">'+n.a+'y · '+n.w+'kg</div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+c.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;score=0;
+document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+newRound();
+</script></body></html>

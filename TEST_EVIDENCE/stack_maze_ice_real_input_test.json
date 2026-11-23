@@ -1,0 +1,42 @@
+{
+ "royal-number-maze-283": {
+  "attempts": 1,
+  "real_inputs": 20,
+  "level1_completed": true,
+  "xp": 20,
+  "errors": [],
+  "method": "real clicks following a solver computed from the game's own state (run 1 of the harness; the harness crashed afterwards on 308 due to a wrong selector, then 308/346/367 were rerun)"
+ },
+ "crystal-path-finder-297": {
+  "attempts": 1,
+  "real_inputs": 11,
+  "level1_completed": true,
+  "xp": 20,
+  "errors": [],
+  "method": "real clicks following a solver computed from the game's own state (run 1 of the harness; the harness crashed afterwards on 308 due to a wrong selector, then 308/346/367 were rerun)"
+ },
+ "ninja-stack-sort-308": {
+  "method": "real clicks/keys following a solver computed from the game's own state; unsolvable/over-limit random boards are regenerated with the game's own button",
+  "attempts": 1,
+  "real_inputs": 26,
+  "level1_completed": true,
+  "xp": 20,
+  "errors": []
+ },
+ "crystal-stack-sort-346": {
+  "method": "real clicks/keys following a solver computed from the game's own state; unsolvable/over-limit random boards are regenerated with the game's own button",
+  "attempts": 12,
+  "real_inputs": 0,
+  "level1_completed": false,
+  "xp": 0,
+  "errors": []
+ },
+ "ninja-ice-flow-367": {
+  "method": "real clicks/keys following a solver computed from the game's own state; unsolvable/over-limit random boards are regenerated with the game's own button",
+  "attempts": 1,
+  "real_inputs": 5,
+  "level1_completed": true,
+  "xp": 20,
+  "errors": []
+ }
+}

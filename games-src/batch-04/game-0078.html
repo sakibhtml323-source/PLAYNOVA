@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Endless Strategy: Greek Myth</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#44403c);font-family:Georgia,serif;color:#e7e5e4;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:6px;flex-wrap:wrap;justify-content:center}
+#map{display:grid;gap:3px;touch-action:none}
+.cell{width:38px;height:38px;border-radius:6px;background:#292524;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer}
+@media(max-width:400px){.cell{width:32px;height:32px;font-size:.85rem}}
+.cell.p1{background:#7c2d12}.cell.p2{background:#1e3a8a}.cell.sel{outline:3px solid #fbbf24}
+#msg{text-align:center;font-size:.82rem;color:#a8a29e;margin-top:8px;min-height:2.2em;padding:0 8px}
+#ov{position:fixed;inset:0;background:rgba(28,25,23,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e7e5e4;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#1c1917;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏛️ ENDLESS STRATEGY: GREEK MYTH</h1>
+<div id="hud"><span style="color:#f87171">SPARTA <b id="a1">0</b></span><span>Era <b id="t">1</b></span><span style="color:#60a5fa">ATHENS <b id="a2">0</b></span></div>
+<div id="map"></div>
+<div id="msg"></div>
+<div id="ov"><h2 style="color:#fbbf24">AGE OF MYTH</h2><p id="od">An endless hotseat war of city-states! Tap your polis, then an adjacent tile to expand. Each era (round) every city grows. The weaker side gets divine favor (bonus troops). Play forever — or until one side is erased.</p><button id="btn">FOUND THE POLIS</button></div>
+<script>
+"use strict";
+const S=8;let grid,cur,sel,era,playing;let egw=+localStorage.getItem('eg_w1')||0,egw2=+localStorage.getItem('eg_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=[];for(let i=0;i<S*S;i++)grid.push({o:0,n:0});
+grid[0]={o:1,n:10};grid[1]={o:1,n:7};grid[S]={o:1,n:7};
+grid[S*S-1]={o:2,n:10};grid[S*S-2]={o:2,n:7};grid[S*S-1-S]={o:2,n:7};
+cur=1;era=1;sel=null;playing=true;document.getElementById('t').textContent=1;render();}
+function neigh(i){const r=(i/S)|0,c=i%S,o=[];if(r>0)o.push(i-S);if(r<S-1)o.push(i+S);if(c>0)o.push(i-1);if(c<S-1)o.push(i+1);return o;}
+function render(){const m=document.getElementById('map');m.style.gridTemplateColumns='repeat('+S+',38px)';m.innerHTML='';
+grid.forEach((g,i)=>{const c=document.createElement('div');c.className='cell'+(g.o===1?' p1':g.o===2?' p2':'')+(sel===i?' sel':'');
+c.textContent=g.o?('🏛'+g.n):(g.n||'');
+c.onclick=()=>tap(i);m.appendChild(c);});
+document.getElementById('a1').textContent=grid.filter(g=>g.o===1).reduce((a,g)=>a+g.n,0);
+document.getElementById('a2').textContent=grid.filter(g=>g.o===2).reduce((a,g)=>a+g.n,0);
+document.getElementById('msg').textContent=playing?(cur===1?'🔴 SPARTA':'🔵 ATHENS')+' — expand your city-state. The endless war continues.':'The age ends.';}
+function tap(i){if(!playing)return;const g=grid[i];
+if(g.o===cur){sel=i;beep(600,.05);render();return;}
+if(sel!==null&&neigh(sel).includes(i)){const send=Math.floor(grid[sel].n/2);
+if(send<1){render();return;}
+grid[sel].n-=send;
+if(g.o===cur){g.n+=send;}
+else if(g.n<send){g.o=cur;g.n=send-g.n;beep(500,.1,'triangle');}
+else g.n-=send;
+sel=null;render();check();if(playing){cur=cur===1?2:1;if(cur===1){era++;document.getElementById('t').textContent=era;
+// growth + divine favor for weaker side
+grid.forEach((c,j)=>{if(c.o)grid[j].n+=1;});
+const s1=grid.filter(g=>g.o===1).reduce((a,g)=>a+g.n,0),s2=grid.filter(g=>g.o===2).reduce((a,g)=>a+g.n,0);
+const fav=s1<s2?1:2;grid.forEach((c,j)=>{if(c.o===fav)grid[j].n+=2;});
+document.getElementById('msg').textContent='🌩️ Era '+era+' — divine favor blesses '+(fav===1?'SPARTA':'ATHENS')+' (+2)!';
+render();}}}
+else{sel=null;render();}}
+function check(){const a=grid.some(g=>g.o===1),b=grid.some(g=>g.o===2);
+if(!a||!b){playing=false;
+localStorage.setItem('eg_w'+(a?1:2),(a?egw:egw2)+1);
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">'+(a?'SPARTA':'ATHENS')+' ERASES THE RIVAL</b> in era '+era+'!<br>The strategy ends — but you can go endless next time.';
+document.getElementById('btn').textContent='NEW AGE';document.getElementById('ov').style.display='flex';beep(880,.3,'triangle');}}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;const own=grid.map((g,i)=>g.o===cur?i:-1).filter(i=>i>=0);if(!own.length)return;
+if(e.key==='Enter'||e.key===' '){e.preventDefault();if(sel===null){sel=own[0];render();}else{const nb=neigh(sel).find(j=>grid[j].o!==cur);if(nb!==undefined)tap(nb);}}});
+</script>
+</body>
+</html>

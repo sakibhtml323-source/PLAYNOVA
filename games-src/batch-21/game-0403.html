@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Sword Pull #403</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#bar{width:320px;max-width:90vw;height:26px;background:#312e81;border-radius:13px;margin:14px;position:relative;overflow:hidden}
+#zone{position:absolute;top:0;height:100%;background:#fbbf2455;border-left:2px solid #fbbf24;border-right:2px solid #fbbf24}
+#fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);width:0}
+#sword{font-size:4rem;margin:16px;transition:transform .2s}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⚔️ Royal Sword Pull</h1><div class="sub">Hold to build pull strength — release inside the gold zone to free the sword!</div>
+<div id="hud"><span>Attempt <b id="a">3</b></span><span>Score <b id="s">0</b></span></div>
+<div id="bar"><div id="zone"></div><div id="fill"></div></div>
+<div id="sword">🗡️</div>
+<div id="msg"></div>
+<button id="btn">👑 New Sword</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let power=0,holding=false,zs=0.3,zw=0.25,attempts=3,score=0,animating=false;
+function newSword(){zs=0.15+Math.random()*0.6;zw=Math.max(0.1,0.28-score*0.002);
+document.getElementById('zone').style.left=zs*100+'%';
+document.getElementById('zone').style.width=zw*100+'%';
+power=0;document.getElementById('fill').style.width='0%';
+document.getElementById('sword').style.transform='translateY(0)';
+msg('Hold to pull — release in the gold zone!');}
+document.addEventListener('pointerdown',()=>{if(animating||attempts<=0)return;holding=true;});
+document.addEventListener('pointerup',()=>{if(!holding)return;holding=false;release();});
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!animating&&attempts>0)holding=true;});
+document.addEventListener('keyup',e=>{if(e.code==='Space'&&holding){holding=false;release();}});
+function loop(){if(holding){power=Math.min(1,power+0.012);
+document.getElementById('fill').style.width=power*100+'%';}
+requestAnimationFrame(loop);}
+function release(){if(power>=zs&&power<=zs+zw){score+=Math.round(100*(1-(power-zs)/zw))+50;
+document.getElementById('s').textContent=score;
+animating=true;beep(880,.3,'triangle');
+document.getElementById('sword').style.transform='translateY(-40px) rotate(45deg)';
+msg('⚔️ The sword is free! +'+Math.round(100*(1-(power-zs)/zw)+50));
+setTimeout(()=>{animating=false;newSword();},1200);}
+else{attempts--;document.getElementById('a').textContent=attempts;
+beep(150,.2,'sawtooth');
+msg(power<zs?'💪 Too weak!':'😤 Overshot!');
+power=0;document.getElementById('fill').style.width='0%';
+if(attempts<=0){msg('🪨 The sword stays… Final score: '+score);
+setTimeout(()=>{attempts=3;score=0;
+document.getElementById('a').textContent=3;document.getElementById('s').textContent=0;newSword();},1500);}}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{attempts=3;score=0;
+document.getElementById('a').textContent=3;document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newSword();};
+loop();newSword();
+</script></body></html>

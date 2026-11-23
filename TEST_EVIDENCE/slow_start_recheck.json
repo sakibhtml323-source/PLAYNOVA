@@ -1,0 +1,77 @@
+{
+ "desert-frog-leap-417": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "crystal-comet-catch-420": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "desert-sun-dial-422": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "ninja-leaf-sweep-461": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "ninja-wall-run-485": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "desert-star-link-486": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "haunted-chime-order-0489": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "royal-crown-slide-0492": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "haunted-attic-climb-0493": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "desert-windmill-spin-0494": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "ninja-scroll-chase-0497": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "pirate-fruit-ninja-farm": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "wrap-pipes-102": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "quantum-samurai-coloring-book": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ },
+ "iron-gunner": {
+  "ready_after_s": 1,
+  "state": "ready",
+  "errors": []
+ }
+}

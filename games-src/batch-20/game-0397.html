@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Mask Match #397</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(3,92px);gap:5px;margin:12px}
+.m{width:92px;height:92px;background:#1f2937;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s}
+.m .top{font-size:30px}
+.m .bot{font-size:30px}
+.m.sel{outline:3px solid #facc15;transform:scale(1.04)}
+.m.ok{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎭 Ninja Mask Match</h1><div class="sub">The masks are mixed up — swap tiles so top and bottom halves match!</div>
+<div id="hud"><span>Matched <b id="c">0</b>/6</span><span>Moves <b id="m">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🥷 New Masks</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const TOPS=['🦊','🐱','🐯','🦉','🐸','🐺'];
+const BOTS=['🦊','🐱','🐯','🦉','🐸','🐺'];
+let tiles=[],sel=null,moves=0;
+function gen(){tiles=[];sel=null;moves=0;
+const t=TOPS.slice().sort(()=>Math.random()-.5);
+const b=BOTS.slice().sort(()=>Math.random()-.5);
+for(let i=0;i<6;i++)tiles.push({top:t[i],bot:b[i]});
+// ensure not all matched
+if(tiles.every((x,i)=>x.top===x.bot)){[tiles[0].bot,tiles[1].bot]=[tiles[1].bot,tiles[0].bot];}
+document.getElementById('m').textContent=0;
+render();msg('Match the mask halves!');}
+function tap(i){if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[tiles[sel].top,tiles[i].top]=[tiles[i].top,tiles[sel].top];
+sel=null;moves++;document.getElementById('m').textContent=moves;
+beep(400,.06);render();check();}
+function check(){const n=tiles.filter(t=>t.top===t.bot).length;
+document.getElementById('c').textContent=n;
+if(n>=6){beep(880,.3,'triangle');msg('🎭 All masks complete in '+moves+'!');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+tiles.forEach((t,i)=>{const d=document.createElement('div');
+d.className='m'+(t.top===t.bot?' ok':'');
+d.innerHTML='<div class="top">'+t.top+'</div><div class="bot">'+t.bot+'</div>';
+if(sel===i)d.classList.add('sel');
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

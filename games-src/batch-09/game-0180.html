@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Halloween Intense Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#0c0a09);font-family:Georgia,serif;color:#fdba74;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#f97316;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#18181b;border-radius:12px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#a8a29e;min-height:1.6em;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(28,25,23,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fdba74;padding:20px;z-index:5}
+button{background:#f97316;border:none;color:#0c0a09;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🎃 HALLOWEEN INTENSE PUZZLE</h1>
+<div id="hud"><span>Round <b id="r">1</b></span><span>⏱ <b id="t">0</b>s</span><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Slash the pumpkins in the ORDER they glow! Speed matters!</div>
+<div id="ov"><h2 style="color:#f97316">PUMPKIN ORDER</h2><p id="od">An intense memory-speed puzzle! Pumpkins flash in sequence — slash them back IN ORDER, fast. Each round adds a pumpkin and shrinks the timer. Three wrong slashes end the ritual!</p><button id="btn">BEGIN THE RITUAL</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+const SPOTS=[[110,110],[330,110],[110,330],[330,330],[220,220],[110,220],[330,220],[220,110],[220,330]];
+let seq,inp,playing,round,score,timeLeft,timer,lit,phase,best=+localStorage.getItem('hip_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-170)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function newRound(){seq=[];const n=Math.min(2+round,9);
+const idx=[...SPOTS.keys()].sort(()=>Math.random()-.5).slice(0,n);
+for(let i=0;i<n;i++)seq.push(idx[i]);
+timeLeft=Math.max(4,10-round);inp=[];phase='show';lit=-1;
+document.getElementById('r').textContent=round;document.getElementById('t').textContent=timeLeft;
+let i=0;const iv=setInterval(()=>{
+if(!playing){clearInterval(iv);return;}
+if(i>=seq.length){clearInterval(iv);lit=-1;phase='input';
+document.getElementById('msg').textContent='NOW — slash them in order! ('+seq.length+' pumpkins)';
+return;}
+lit=seq[i];beep(400+i*70,.15,'triangle');
+setTimeout(()=>{lit=-1;},350);
+i++;},620);
+clearInterval(timer);timer=setInterval(()=>{
+if(phase!=='input'||!playing)return;
+timeLeft--;document.getElementById('t').textContent=timeLeft;
+if(timeLeft<=0){clearInterval(timer);die('⏰ Time\'s up!');}},1000);}
+function draw(){ctx.fillStyle='#18181b';ctx.fillRect(0,0,W,H);
+// spooky bg
+ctx.strokeStyle='#7c2d1233';for(let i=0;i<6;i++){ctx.beginPath();ctx.arc(W/2,H/2,40+i*36,0,7);ctx.stroke();}
+SPOTS.forEach((s,i)=>{const on=lit===i;
+const g2=ctx.createRadialGradient(s[0],s[1],4,s[0],s[1],36);
+g2.addColorStop(0,on?'#fbbf24':'#f9731644');g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(s[0],s[1],36,0,7);ctx.fill();
+ctx.fillStyle=on?'#fde047':'#f97316';
+ctx.beginPath();ctx.arc(s[0],s[1],on?26:22,0,7);ctx.fill();
+ctx.fillStyle='#111';
+ctx.beginPath();ctx.moveTo(s[0]-10,s[1]-6);ctx.lineTo(s[0]-4,s[1]);ctx.lineTo(s[0]-10,s[1]+6);ctx.fill();
+ctx.beginPath();ctx.moveTo(s[0]+10,s[1]-6);ctx.lineTo(s[0]+4,s[1]);ctx.lineTo(s[0]+10,s[1]+6);ctx.fill();
+ctx.fillRect(s[0]-6,s[1]+9,12,3);});
+// input progress
+if(phase==='input'){seq.forEach((s,i)=>{const done=i<inp.length;
+ctx.fillStyle=done?'#4ade80':'#44403c';
+ctx.beginPath();ctx.arc(20+i*18,20,6,0,7);ctx.fill();});}}
+cvs.addEventListener('pointerdown',e=>{if(!playing||phase!=='input')return;audio.resume();
+const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+let hit=-1;SPOTS.forEach((s,i)=>{if(Math.hypot(s[0]-x,s[1]-y)<30)hit=i;});
+if(hit<0)return;
+if(hit===seq[inp.length]){inp.push(hit);beep(600+inp.length*40,.08,'triangle');lit=hit;setTimeout(()=>lit=-1,150);
+if(inp.length>=seq.length){score+=seq.length*10+timeLeft*5;document.getElementById('s').textContent=score;
+beep(880,.15,'triangle');round++;setTimeout(newRound,700);}}
+else{die('🗡 Wrong pumpkin!');}});
+function die(why){if(!playing)return;playing=false;clearInterval(timer);
+if(score>best){best=score;localStorage.setItem('hip_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=why+'<br>Final score: <b style="color:#fde047">'+score+'</b>';
+document.getElementById('btn').textContent='RETRY THE RITUAL';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+window.addEventListener('keydown',e=>{if(!playing||phase!=='input')return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;
+const r=cvs.getBoundingClientRect();const ev={clientX:r.left+SPOTS[i][0]/W*r.width,clientY:r.top+SPOTS[i][1]/H*r.height};
+cvs.dispatchEvent(new PointerEvent('pointerdown',ev));}});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;round=1;score=0;
+document.getElementById('s').textContent=0;document.getElementById('msg').textContent='Watch the pumpkins glow…';
+document.getElementById('ov').style.display='none';newRound();};
+function loop(){draw();requestAnimationFrame(loop);}
+loop();
+</script>
+</body>
+</html>

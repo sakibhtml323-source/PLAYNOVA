@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>IQ Test: Samurai Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(160deg,#450a0a,#7f1d1d);font-family:Georgia,serif;color:#fef2f2;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px}
+h1{font-size:1.2rem;color:#fca5a5;padding:6px;letter-spacing:1px;text-align:center}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:8px}
+#qbox{width:min(540px,96vw);background:#450a0a;border:1px solid #991b1b;border-radius:14px;padding:18px;text-align:center}
+#q{font-size:1.15rem;min-height:60px;margin-bottom:14px;line-height:1.5}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts button{background:#7f1d1d;color:#fff;border:1px solid #b91c1c;border-radius:10px;padding:12px;font-size:1rem;cursor:pointer;font-family:inherit}
+.opts button:hover{background:#991b1b}
+.opts button.ok{background:#15803d}.opts button.bad{background:#1f2937;opacity:.5}
+@media(max-width:480px){#q{font-size:1rem}.opts button{padding:10px 6px;font-size:.9rem}}
+#timer{height:8px;background:#7f1d1d;border-radius:4px;overflow:hidden;margin-bottom:12px}
+#timer i{display:block;height:100%;background:#fbbf24;width:100%;transition:width .1s linear}
+#ov{position:fixed;inset:0;background:rgba(69,10,10,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+button.big{background:#dc2626;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:10px;font-size:1rem;cursor:pointer;margin-top:14px}
+#rank{font-size:2rem;margin:8px}
+</style>
+</head>
+<body>
+<h1>⚔️ IQ TEST: SAMURAI EDITION</h1>
+<div id="hud"><span>Question <b id="n">1</b>/12</span><span>Correct <b id="c">0</b></span><span>Streak <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="qbox">
+<div id="timer"><i id="tb"></i></div>
+<div id="q">Press START to begin your trial, warrior.</div>
+<div class="opts" id="opts"></div>
+</div>
+<div id="ov"><h2 style="color:#fca5a5">THE SAMURAI TRIAL</h2><p id="od">12 questions. 15 seconds each. Prove your mind is as sharp as your katana.</p><button class="big" id="btn">BEGIN TRIAL</button></div>
+<script>
+"use strict";
+const QS=[
+{q:"A samurai cuts a log in 4 strokes. How many strokes to cut into 8 pieces?",o:["6","7","8","4"],a:1},
+{q:"Continue: 2, 6, 12, 20, 30, ?",o:["36","40","42","44"],a:2},
+{q:"Which is heaviest: 1kg iron, 2kg cotton, 1.5kg hay?",o:["Iron","Cotton","Hay","Equal"],a:1},
+{q:"If all Bloods are Reds and some Reds are Warriors, then…",o:["All Warriors are Bloods","Some Bloods may be Warriors","No Bloods are Warriors","All Reds are Bloods"],a:1},
+{q:"A dojo has 12 corners. How many corners remain after 4 are cut off?",o:["8","16","12","20"],a:1},
+{q:"BUSHIDO is to SAMURAI as CHIVALRY is to…",o:["Ninja","Knight","Monk","Emperor"],a:1},
+{q:"Which number is the odd one out: 3, 5, 7, 9, 11?",o:["3","5","7","9"],a:3},
+{q:"Sword + Sword = 10, Sword + Helm = 7, Helm = ?",o:["2","3","4","5"],a:0},
+{q:"A train leaves Kyoto at 60mph, another leaves Tokyo at 40mph…",o:["60mph apart","100mph apart","Cannot tell","20mph apart"],a:1},
+{q:"Which shape has the most sides: hexagon, octagon, pentagon, decagon?",o:["Hexagon","Octagon","Pentagon","Decagon"],a:3},
+{q:"1=5, 2=10, 3=15, 4=20, 5=?",o:["25","5","20","15"],a:1},
+{q:"A samurai faces north, turns 90° left, then 180°, then 90° left. Facing?",o:["North","South","East","West"],a:1}];
+let idx,score,streak,timerInt,timeLeft,best=+localStorage.getItem('iq_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.1,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.1;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function start(){idx=0;score=0;streak=0;ask();}
+function ask(){if(idx>=QS.length)return finish();const q=QS[idx];document.getElementById('n').textContent=idx+1;
+document.getElementById('q').textContent=q.q;
+const box=document.getElementById('opts');box.innerHTML='';
+q.o.forEach((opt,i)=>{const b=document.createElement('button');b.textContent=opt;
+b.onclick=()=>pick(i,b);box.appendChild(b);});
+timeLeft=15;updBar();clearInterval(timerInt);
+timerInt=setInterval(()=>{timeLeft--;updBar();if(timeLeft<=0){clearInterval(timerInt);reveal(-1);}},1000);}
+function updBar(){document.getElementById('tb').style.width=(timeLeft/15*100)+'%';}
+function pick(i,btn){clearInterval(timerInt);
+const q=QS[idx];const ok=i===q.a;
+if(ok){score++;streak++;beep(660,.15,'triangle');}else{streak=0;beep(160,.25,'sawtooth');}
+document.getElementById('c').textContent=score;document.getElementById('st').textContent=streak;
+[...document.getElementById('opts').children].forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('ok');else if(j===i&&!ok)b.classList.add('bad');});
+setTimeout(()=>{idx++;ask();},900);}
+function finish(){const ranks=[[12,'SHOGUN GENIUS 👑'],[10,'MASTER SAMURAI ⚔️'],[7,'SKILLED RONIN 🗡️'],[4,'APPRENTICE 🎋'],[0,'NOVICE 🍵']];
+const r=ranks.find(x=>score>=x[0])[1];
+if(score>best){best=score;localStorage.setItem('iq_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='You answered <b style="color:#fde047">'+score+'/12</b> correctly.<br><span id="rank">'+r+'</span><br>Best: '+best;
+document.getElementById('btn').textContent='RETRY TRIAL';document.getElementById('ov').style.display='flex';beep(880,.3,'triangle');setTimeout(()=>beep(1100,.3,'triangle'),200);}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;const k=e.key;if(k>='1'&&k<='4'){const b=document.querySelectorAll('#opts button')[+k-1];if(b&&!b.disabled)b.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('ov').style.display='none';start();};
+</script>
+</body>
+</html>

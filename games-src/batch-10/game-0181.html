@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Turbo Christmas Legend</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#052e16,#064e3b);font-family:Georgia,serif;color:#dcfce7;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#4ade80;padding:6px;letter-spacing:1px}
+#stats{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#stats span{background:#064e3b;border:1px solid #166534;border-radius:10px;padding:4px 10px}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:60px}
+.card{background:#052e16;border:1px solid #166534;border-radius:14px;padding:12px}
+.card h3{color:#4ade80;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#064e3b;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row small{color:#86efac;display:block}
+.row button{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.row button:disabled{opacity:.35}
+#log{font-size:.8rem;color:#86efac;min-height:2.4em;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(5,46,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#dcfce7;padding:20px;z-index:5}
+button.big{background:#4ade80;color:#052e16;border:none;font-family:inherit;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🎁 TURBO CHRISTMAS LEGEND</h1>
+<div id="stats"><span>🎄 Days to Christmas <b id="dc">12</b></span><span>🧸 Toys <b id="ty">0</b></span><span>🪵 Wood <b id="wd">20</b></span><span>⭐ Cheer <b id="ch">50</b></span><span>🛷 Best <b id="b">0</b></span></div>
+<main>
+<div class="card"><h3>🏭 WORKSHOP STATIONS</h3><div id="mods"></div></div>
+<div class="card"><h3>📜 SANTA'S LEDGER</h3><div id="log">Run Santa's turbo workshop for 12 days! Craft toys before the big night.</div></div>
+</main>
+<div id="ov"><h2 style="color:#4ade80">SANTA'S TURBO WORKSHOP</h2><p id="od">Christmas is 12 days away! Manage the legendary workshop: cut wood, craft toys, keep the elves cheerful. Deliver 60+ toys for a legendary Christmas!</p><button class="big" id="btn">RING THE BELLS</button></div>
+<script>
+"use strict";
+let S;
+function fresh(){S={dc:12,ty:0,wd:20,ch:50,axe:1,bench:0,oven:0,stable:0,over:false};}
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(S.over)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function log(t){const el=document.getElementById('log');el.innerHTML='» '+t+'<br>'+el.innerHTML;}
+const MODS=[
+{n:'Woodcutters',d:'+6 wood/day',c:{wd:0,ty:0},k:'axe',max:5},
+{n:'Toy Benches',d:'converts 3 wood → 4 toys',c:{wd:10,ty:0},k:'bench',max:4},
+{n:'Toy Ovens',d:'converts 2 wood → 3 toys (fast)',c:{wd:14,ty:0},k:'oven',max:4},
+{n:'Reindeer Stable',d:'+3 cheer/day',c:{wd:12,ty:4},k:'stable',max:3}];
+function can(c){return S.wd>=c.wd&&S.ty>=c.ty;}
+function render(){['ty','wd','ch'].forEach(k=>document.getElementById(k).textContent=Math.floor(S[k]));
+document.getElementById('dc').textContent=S.dc;
+const m=document.getElementById('mods');m.innerHTML='';
+MODS.forEach(md=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+md.n+'</b> <small>×'+S[md.k]+' · '+md.d+'</small></div>';
+const b=document.createElement('button');
+b.textContent=S[md.k]>=md.max?'MAX':'Build ('+(md.c.wd?md.c.wd+'🪵 ':'')+(md.c.ty?md.c.ty+'🧸':'')+')';
+b.disabled=S[md.k]>=md.max||!can(md.c);
+b.onclick=()=>{if(can(md.c)&&S[md.k]<md.max){S.wd-=md.c.wd;S.ty-=md.c.ty;S[md.k]++;beep(600,.09);log(md.n+' built.');render();}};row.appendChild(b);m.appendChild(row);});}
+function nextDay(){S.dc--;
+S.wd+=S.axe*6;S.ty+=S.bench*4;S.wd-=S.bench*3;S.ty+=S.oven*3;S.wd-=S.oven*2;S.ch+=S.stable*3;
+if(S.wd<0){S.wd=0;}
+// cheer drains with demand
+const demand=4+Math.floor((12-S.dc)/2);S.ch-=demand;
+log('Day '+(12-S.dc)+' — elves demand '+demand+' cheer.');
+if(S.ch<=0)return end(false,'The elves go on strike! Christmas is cancelled.');
+if(Math.random()<0.15){S.wd+=10;log('🌲 Snowed-in lumber delivery! +10 wood.');}
+if(Math.random()<0.12){S.ch+=8;log('🎅 Cocoa break! Cheer +8.');}
+if(S.dc<=0)return end(S.ty>=60,'');
+render();beep(440,.05);}
+function end(win,why){S.over=true;
+if(win&&S.ty>(+localStorage.getItem('tc_best')||0)){localStorage.setItem('tc_best',S.ty);}
+document.getElementById('b').textContent=+localStorage.getItem('tc_best')||0;
+document.getElementById('od').innerHTML=win?'🎄 <b style="color:#fde047">LEGENDARY CHRISTMAS!</b><br>'+S.ty+' toys delivered with '+Math.floor(S.ch)+' cheer to spare!':(why||'Only '+S.ty+' toys… Santa needed 60. The children weep.');
+document.getElementById('btn').textContent='NEXT CHRISTMAS';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();fresh();log('The workshop roars to life.');render();document.getElementById('ov').style.display='none';};
+const nb=document.createElement('button');nb.className='big';nb.textContent='NEXT DAY ⏭';
+nb.style.cssText='position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:4';
+nb.onclick=()=>{audio.resume();if(S&&!S.over)nextDay();};
+document.body.appendChild(nb);
+window.addEventListener('keydown',e=>{if(e.key==='n'||e.key==='N'){if(S&&!S.over)nextDay();}});
+</script>
+</body>
+</html>

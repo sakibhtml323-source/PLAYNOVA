@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Graveyard #465</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+canvas{background:#0f0f0f;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🪦 Haunted Graveyard</h1><div class="sub">The graves glow one by one — tap them in the order they lit. Faster each round!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="420" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">🕯️ New Night</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=420,H=400;let graves=[],seq=[],idx=0,round=1,best=+localStorage.getItem('hg_best')||0,accepting=false,lit=-1;
+document.getElementById('b').textContent=best;
+function msg(t){document.getElementById('msg').textContent=t;}
+function gen(){graves=[];const n=6;
+for(let i=0;i<n;i++){graves.push({x:50+Math.random()*(W-100),y:50+Math.random()*(H-100),lit:false});}
+seq=[];const m=Math.min(2+round,6);
+for(let i=0;i<m;i++)seq.push((Math.random()*n)|0);
+idx=0;document.getElementById('r').textContent=round;
+show();}
+async function show(){accepting=false;msg('👻 The spirits rise…');
+const speed=Math.max(220,480-round*20);
+for(const g of seq){await wait(speed);lit=g;beep(300+g*60,.12);draw();
+await wait(200);lit=-1;draw();}
+idx=0;accepting=true;msg('🫵 Tap in order!');}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+cvs.addEventListener('pointerdown',e=>{if(!accepting)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+let bi=-1,bd=1e9;
+graves.forEach((g,i)=>{const d=Math.hypot(g.x-x,g.y-y);if(d<bd){bd=d;bi=i;}});
+if(bi<0)return;
+if(bi!==seq[idx]){accepting=false;beep(130,.3,'sawtooth');
+msg('💀 The spirits scatter! Round '+round);
+if(round>best){best=round;localStorage.setItem('hg_best',best);document.getElementById('b').textContent=best;}
+return;}
+beep(300+bi*60,.1);idx++;
+if(idx>=seq.length){accepting=false;msg('🕯️ Rest in peace! Round '+(round+1));round++;
+document.getElementById('r').textContent=round;
+setTimeout(gen,900);}});
+function draw(){ctx.fillStyle='#0f0f0f';ctx.fillRect(0,0,W,H);
+// fog
+for(let i=0;i<8;i++){ctx.fillStyle='#1f293744';
+ctx.beginPath();ctx.arc((i*67+Date.now()/50)%W,(i*91)%H,50,0,7);ctx.fill();}
+graves.forEach((g,i)=>{const on=lit===i;
+ctx.font='30px serif';ctx.textAlign='center';
+ctx.globalAlpha=on?1:0.55;
+ctx.fillText(on?'🕯️':'🪦',g.x,g.y+10);ctx.globalAlpha=1;});}
+document.getElementById('btn').onclick=()=>{round=1;document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

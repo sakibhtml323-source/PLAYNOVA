@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Hospital Tycoon: Fantasy Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fdf4ff,#fae8ff);font-family:Georgia,serif;color:#701a75;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#a21caf;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#fff;border:1px solid #e9d5ff;border-radius:10px;padding:4px 10px}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#fff;border:1px solid #e9d5ff;border-radius:14px;padding:12px}
+.card h3{color:#a21caf;font-size:.9rem;margin-bottom:8px}
+.pt{display:flex;align-items:center;gap:8px;background:#fdf4ff;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.pt .bar{flex:1;height:8px;background:#e9d5ff;border-radius:4px;overflow:hidden}
+.pt .bar i{display:block;height:100%;background:#a21caf}
+.pt button{background:#a21caf;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap}
+.pt button:disabled{opacity:.4}
+#log{font-size:.8rem;color:#a855f7;min-height:2.2em;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#701a75;padding:20px;z-index:5}
+button.big{background:#a21caf;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏥 FANTASY HOSPITAL TYCOON</h1>
+<div id="hud"><span>🌙 Day <b id="day">1</b>/8</span><span>🪙 Coins <b id="co">30</b></span><span>⭐ Renown <b id="rn">10</b></span><span>🛏 Wards <b id="wd">2</b></span><span>Best <b id="b">0</b></span></div>
+<main>
+<div class="card"><h3>🧙 PATIENTS</h3><div id="pts"></div></div>
+<div class="card"><h3>🏗 EXPANSIONS</h3>
+<div id="shop"></div>
+<div id="log">Treat fantasy folk for 8 days! Potion-brewing earns coins, renown grows with happy patients.</div></div>
+</main>
+<div id="ov"><h2 style="color:#a21caf">HEALING HALL</h2><p id="od">Run the realm's only hospital! Patients arrive with curses, dragon burns and hexes. Brew potions (tap Treat) to cure them before patience runs out. Earn coins, buy wards, build renown for 8 days!</p><button class="big" id="btn">OPEN THE WARDS</button></div>
+<script>
+"use strict";
+const AIL=['🐉 Dragon Burn','🧙 Hex','🧌 Troll Flu','🧚 Fairy Fracture','👻 Haunting','🧛 Sun Sickness'];
+let S,playing,timer;
+let best=+localStorage.getItem('ht_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function load(){try{const d=JSON.parse(localStorage.getItem('ht_save'));if(d){S=d;return;}}catch(e){}
+S={day:1,co:30,rn:10,wards:2,brew:1,npc:1,pts:[],over:false};}
+function save(){localStorage.setItem('ht_save',JSON.stringify(S));}
+load();
+function log(t){document.getElementById('log').textContent='» '+t;}
+function newPatient(){if(S.pts.length>=S.wards*2)return;
+S.pts.push({a:AIL[(Math.random()*AIL.length)|0],hp:40+((Math.random()*40)|0),pat:100});}
+function render(){document.getElementById('day').textContent=S.day;document.getElementById('co').textContent=Math.floor(S.co);
+document.getElementById('rn').textContent=Math.floor(S.rn);document.getElementById('wd').textContent=S.wards;
+const p=document.getElementById('pts');p.innerHTML='';
+if(!S.pts.length)p.innerHTML='<div style="color:#c084fc;font-size:.85rem">No patients — the realm is healthy… for now.</div>';
+S.pts.forEach((pt,i)=>{const row=document.createElement('div');row.className='pt';
+row.innerHTML='<span>'+['🧙','🧌','🧝','🧚'][i%4]+'</span><b>'+pt.a+'</b><div class="bar"><i style="width:'+pt.hp+'%;background:'+(pt.hp>60?'#16a34a':pt.hp>30?'#eab308':'#ef4444')+'"></i></div><small>'+Math.floor(pt.hp)+'</small>';
+const b=document.createElement('button');b.textContent='Treat ('+(4-S.brew)+'s)';
+b.disabled=S.brew>=4;b.onclick=()=>{audio.resume();S.brew++;setTimeout(()=>{S.brew--;
+if(!playing)return;
+pt.hp+=30+S.npc*8;if(pt.hp>=100){S.pts.splice(S.pts.indexOf(pt),1);
+S.co+=12;S.rn+=2;beep(700,.1,'triangle');log('Patient cured! +12 coins, +2 renown.');}
+beep(500,.07);render();},(4-S.brew)*800);};
+row.appendChild(b);p.appendChild(row);});
+const sh=document.getElementById('shop');sh.innerHTML='';
+[['New Ward (+2 beds)',50,'wards',1],['Elixir Still (+heal)',40,'npc',1]].forEach(([n,c,k])=>{
+const row=document.createElement('div');row.className='pt';
+row.innerHTML='<b>'+n+'</b>';
+const b=document.createElement('button');b.textContent=c+' 🪙';b.disabled=S.co<c;
+b.onclick=()=>{audio.resume();S.co-=c;S[k]++;beep(600,.1);render();save();};
+row.appendChild(b);sh.appendChild(row);});}
+function nextDay(){S.day++;
+S.pts.forEach(p=>{p.hp-=8;p.pat-=20;});
+S.pts.filter(p=>p.pat<=0).forEach(p=>{S.rn-=4;S.pts.splice(S.pts.indexOf(p),1);
+log('😡 A patient left angry! Renown -4.');});
+newPatient();newPatient();
+if(Math.random()<0.4)newPatient();
+if(S.rn<=0)return end(false,'The realm loses faith in your healing…');
+if(S.day>8)return end(true,'');
+render();save();beep(440,.06);}
+function end(win,why){playing=false;clearInterval(timer);S.over=true;
+if(S.rn>best){best=Math.floor(S.rn);localStorage.setItem('ht_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=win?'🏆 <b style="color:#a21caf">RENOwnED HEALER!</b><br>8 days of miracles with '+Math.floor(S.rn)+' renown!':'💔 '+why;
+document.getElementById('btn').textContent='NEW HOSPITAL';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW HOSPITAL'){S={day:1,co:30,rn:10,wards:2,brew:1,npc:1,pts:[],over:false};}
+playing=true;newPatient();newPatient();render();
+clearInterval(timer);timer=setInterval(nextDay,9000);
+document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='9'){const b=document.querySelectorAll('.pt button')[+e.key-1];if(b&&!b.disabled)b.click();}});
+</script>
+</body>
+</html>

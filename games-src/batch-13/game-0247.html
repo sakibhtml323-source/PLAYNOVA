@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Court Word Duel #247</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem;max-width:320px;text-align:center}
+#chain{display:flex;flex-wrap:wrap;gap:6px;margin:10px;justify-content:center;max-width:360px}
+.word{background:#312e81;border:2px solid #4f46e5;border-radius:8px;padding:6px 12px;font-weight:700;letter-spacing:1px}
+.word.cur{border-color:#fbbf24;background:#4338ca}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+input{padding:10px 16px;border-radius:10px;border:2px solid #4f46e5;background:#312e81;color:#eef2ff;font-size:1rem;font-weight:700;text-transform:uppercase;text-align:center;width:150px}
+#msg{min-height:1.4em;font-weight:600;margin:4px;max-width:320px;text-align:center}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Court Word Duel</h1>
+<div class="sub">Hotseat 2P: say a word starting with the last letter. 10s per turn or you lose a crown!</div>
+<div id="hud"><span>🫅 <b id="h1">3</b></span><span>👸 <b id="h2">3</b></span><span>Turn <b id="t">King</b></span><span id="tm" style="color:#f87171">10s</span></div>
+<div id="chain"></div>
+<input id="in" placeholder="WORD" maxlength="10">
+<div id="msg"></div>
+<button id="btn">🏰 New Duel</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const STARTERS=['CASTLE','KNIGHT','DRAGON','QUEEN','SWORD','MAGIC','ROYAL','CROWN','EMPIRE','THRONE'];
+let chain=[],turn=1,h1=3,h2=3,time=10,timer=null,playing=true;
+function newDuel(){chain=[STARTERS[(Math.random()*STARTERS.length)|0]];turn=1;h1=3;h2=3;time=10;playing=true;
+document.getElementById('h1').textContent=3;document.getElementById('h2').textContent=3;
+document.getElementById('t').textContent='King';startTimer();render();msg('King starts — "'+chain[chain.length-1]+'" → word starting with "'+chain[chain.length-1].slice(-1)+'"');}
+function startTimer(){clearInterval(timer);
+document.getElementById('tm').textContent=time+'s';
+timer=setInterval(()=>{time--;document.getElementById('tm').textContent=time+'s';
+if(time<=0){timeout();}},1000);}
+function timeout(){if(!playing)return;beep(150,.2,'sawtooth');
+if(turn===1)h1--;else h2--;
+document.getElementById('h1').textContent=h1;document.getElementById('h2').textContent=h2;
+msg('⏰ '+(turn===1?'King':'Queen')+' ran out of time! Crown lost.');
+if(h1<=0||h2<=0){end();return;}
+switchTurn();}
+function submit(){if(!playing)return;const w=document.getElementById('in').value.toUpperCase().trim();
+document.getElementById('in').value='';
+if(w.length<3){beep(160,.08,'sawtooth');msg('At least 3 letters!');return;}
+const last=chain[chain.length-1];
+if(w[0]!==last.slice(-1)){beep(160,.08,'sawtooth');msg('"'+w+'" must start with '+last.slice(-1)+'!');return;}
+if(chain.includes(w)){beep(160,.08,'sawtooth');msg('Already used!');return;}
+chain.push(w);beep(500+chain.length*30,.08,'triangle');
+if(chain.length>=15){msg('👑 Epic chain! '+chain.length+' words!');}
+render();switchTurn();}
+function switchTurn(){turn=turn===1?2:1;time=10;
+document.getElementById('t').textContent=turn===1?'King':'Queen';
+msg((turn===1?'🫅 King':'👸 Queen')+' — word starting with "'+chain[chain.length-1].slice(-1)+'"');
+startTimer();}
+function end(){playing=false;clearInterval(timer);
+const w=h1>h2?'🫅 King rules the court!':'👸 Queen rules the court!';
+msg(w);beep(880,.25,'triangle');}
+function render(){const c=document.getElementById('chain');c.innerHTML='';
+chain.forEach((w,i)=>{const d=document.createElement('div');
+d.className='word'+(i===chain.length-1?' cur':'');d.textContent=w;c.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('in').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newDuel();};
+newDuel();
+</script></body></html>

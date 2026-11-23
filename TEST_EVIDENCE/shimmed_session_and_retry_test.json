@@ -1,0 +1,61 @@
+{
+ "method": "real clicks/keys on shimmed isolated games; thresholds lowered via test config; Retry button clicked programmatically",
+ "results": {
+  "haunted-organ-444": {
+   "xp_idle": 0,
+   "xp_after_inputs": 10,
+   "errors": [],
+   "retry_src_restored": true,
+   "state_after_retry": "iframe-loaded"
+  },
+  "desert-star-fall-442": {
+   "xp_idle": 0,
+   "xp_after_inputs": 10,
+   "errors": [],
+   "retry_src_restored": true,
+   "state_after_retry": "iframe-loaded"
+  },
+  "haunted-tower-stack-449": {
+   "xp_idle": 0,
+   "xp_after_inputs": 10,
+   "errors": [],
+   "retry_src_restored": true,
+   "state_after_retry": "iframe-loaded"
+  }
+ },
+ "after_handshake_fix": {
+  "haunted-organ-444": {
+   "state_after_retry": "iframe-loaded",
+   "xp_after_inputs_post_retry": 0,
+   "errors": []
+  },
+  "desert-star-fall-442": {
+   "state_after_retry": "iframe-loaded",
+   "xp_after_inputs_post_retry": 0,
+   "errors": []
+  }
+ },
+ "after_retry_cachebust_fix": {
+  "haunted-organ-444": {
+   "kind": "shimmed",
+   "state_after_retry": "ready",
+   "src": "me-0444.html?r=1793894093416#pnls=%7B%7D",
+   "xp_after_inputs_post_retry": 10,
+   "errors": []
+  },
+  "ninja-fog-walk-441": {
+   "kind": "isolated",
+   "state_after_retry": "ready",
+   "src": "/batch-23/game-0441.html?r=1793894112392",
+   "xp_after_inputs_post_retry": 10,
+   "errors": []
+  },
+  "air-hockey-pirate-theme": {
+   "kind": "same-origin legacy",
+   "state_after_retry": "ready",
+   "src": "me-0138.html?r=1793894131511#pnls=%7B%7D",
+   "xp_after_inputs_post_retry": 10,
+   "errors": []
+  }
+ }
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wild Greek Myth Shooter</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#292524;font-family:Georgia,serif;color:#fde68a;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:linear-gradient(#fde68a,#f59e0b);border-radius:10px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(41,37,36,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fde68a;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#292524;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>⚡ WILD GREEK SHOOTER</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Lives <b id="l">3</b></span><span>God-level <b id="gl">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#fbbf24">WRATH OF OLYMPUS</h2><p id="od">Zeus needs a wild shooter! ← → or A/D to move (or tap-screen-halves), Space/↑/center-tap to hurl lightning. Slay the monsters of myth, catch ⚡ to level up your god-tier damage!</p><button id="btn">TAKE THE THUNDERBOLT</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let me,foes,shots,pickups,score,lives,god,playing,keys,frame,spawnT,best=+localStorage.getItem('wg3_best')||0;
+document.getElementById('b').textContent=best;
+const MOBS=[['🐍','hydra'],['🦁','nemean'],['🐗','calydon'],['👹','cyclops']];
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-48,cd:0};foes=[];shots=[];pickups=[];score=0;lives=3;god=1;keys={};frame=0;spawnT=0;playing=true;
+document.getElementById('s').textContent=0;document.getElementById('l').textContent=3;document.getElementById('gl').textContent=1;}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();shoot();}});
+let touchX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.33)touchX=-1;else if(x>W*0.66)touchX=1;else shoot();});
+cvs.addEventListener('pointerup',()=>touchX=null);
+function shoot(){if(!playing||me.cd>0)return;me.cd=Math.max(6,16-god);
+shots.push({x:me.x,y:me.y-16,vy:-7.5,dmg:god});
+beep(700+god*60,.05);}
+function step(){frame++;me.cd--;
+if(keys['arrowleft']||keys['a']||touchX===-1)me.x-=4.6;
+if(keys['arrowright']||keys['d']||touchX===1)me.x+=4.6;
+me.x=Math.max(20,Math.min(W-20,me.x));
+spawnT--;if(spawnT<=0){spawnT=Math.max(16,44-god*3);
+const m=MOBS[(Math.random()*MOBS.length)|0];
+foes.push({x:20+Math.random()*(W-40),y:-24,vy:1.1+god*0.3+Math.random()*0.6,hp:1+((god/2)|0),e:m[0]});}
+shots.forEach(s=>{s.y+=s.vy;foes.forEach(f=>{if(Math.abs(s.x-f.x)<f.r+3&&Math.abs(s.y-f.y)<f.r+4){f.hp-=s.dmg;shots.splice(shots.indexOf(s),1);beep(300,.07,'triangle');
+if(f.hp<=0){foes.splice(foes.indexOf(f),1);score+=15*god;document.getElementById('s').textContent=score;
+if(Math.random()<0.13)pickups.push({x:f.x,y:f.y});}}});});
+shots=shots.filter(s=>s.y>-12);
+foes.forEach(f=>{f.y+=f.vy;
+if(f.y+f.r>me.y-14&&Math.abs(f.x-me.x)<28&&f.y<me.y+8){lives--;document.getElementById('l').textContent=lives;foes.splice(foes.indexOf(f),1);beep(120,.25,'sawtooth');
+if(lives<=0)die();}});
+foes=foes.filter(f=>f.y<H+40);
+pickups.forEach(p=>{p.y+=2.4;
+if(Math.abs(p.x-me.x)<26&&Math.abs(p.y-me.y)<28){god=Math.min(10,god+1);document.getElementById('gl').textContent=god;
+document.getElementById('s').textContent=score;pickups.splice(pickups.indexOf(p),1);beep(1000,.08,'triangle');}});
+pickups=pickups.filter(p=>p.y<H+12);}
+function die(){playing=false;if(score>best){best=score;localStorage.setItem('wg3_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The Fates cut your thread at god-level <b>'+god+'</b>.<br>Score: <b style="color:#fde047">'+score+'</b>';
+document.getElementById('btn').textContent='CHALLENGE THE FATES';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.clearRect(0,0,W,H);
+// columns
+ctx.fillStyle='#92400e55';for(let i=0;i<5;i++)ctx.fillRect(30+i*80,0,18,H);
+ctx.fillStyle='#fef3c7';ctx.fillRect(0,H-6,W,6);
+foes.forEach(f=>{ctx.font=(f.r*2.4)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(f.e,f.x,f.y);});
+pickups.forEach(p=>{ctx.font='16px serif';ctx.fillText('⚡',p.x,p.y+5);});
+shots.forEach(s=>{ctx.fillStyle='#fef08a';ctx.beginPath();ctx.arc(s.x,s.y,4,0,7);ctx.fill();});
+ctx.fillStyle='#fde047';ctx.fillRect(me.x-14,me.y-16,28,20);
+ctx.fillStyle='#fbbf24';ctx.fillRect(me.x-6,me.y-28,12,12);
+ctx.fillStyle='#111';ctx.fillRect(me.x+3,me.y-25,4,4);
+ctx.fillStyle='#fde047';ctx.font='bold 10px Georgia';ctx.textAlign='center';ctx.fillText('Ζ',me.x-4,me.y-2);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

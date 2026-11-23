@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Fighting: Robot Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0c0a09;font-family:'Segoe UI',Arial,sans-serif;color:#e7e5e4;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#22d3ee;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:8px 16px;font-size:.85rem;margin-bottom:4px;align-items:center;flex-wrap:wrap;max-width:100vw}
+.bar{width:120px;height:12px;background:#292524;border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%}
+#mybar{background:#22d3ee}#ebar{background:#f87171}
+canvas{background:#1c1917;border-radius:10px;border:1px solid #44403c;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(12,10,9,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#0c0a09;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+#ctrl{position:fixed;bottom:10px;display:flex;gap:10px;width:100%;justify-content:space-between;padding:0 14px;z-index:4}
+.cbtn{width:64px;height:64px;border-radius:50%;background:#292524cc;border:1px solid #57534e;color:#fff;font-size:1.3rem;display:flex;align-items:center;justify-content:center;user-select:none;touch-action:none}
+</style>
+</head>
+<body>
+<h1>🤖 FIGHTING: ROBOT EDITION</h1>
+<div id="hud"><span>YOU</span><div class="bar"><i id="mybar" style="width:100%"></i></div><span>ROUND <b id="r">1</b></span><div class="bar"><i id="ebar" style="width:100%"></i></div><span>CPU</span></div>
+<canvas id="c"></canvas>
+<div id="ctrl"><div style="display:flex;gap:10px"><div class="cbtn" id="l">◀</div><div class="cbtn" id="rr">▶</div></div><div style="display:flex;gap:10px"><div class="cbtn" id="blk">🛡</div><div class="cbtn" id="atk">👊</div></div></div>
+<div id="ov"><h2 style="color:#22d3ee">ROBOT FIGHTING CHAMPIONSHIP</h2><p id="od">A/D or ◀▶ to move, W to jump, J or 👊 to punch, K or 🛡 to block. Beat the CPU robot — it learns your habits!</p><button id="btn">FIGHT!</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=520,H=300;cvs.width=W;cvs.height=H;const G=H-50;
+let me,foe,keys,playing,round,touch={l:0,r:0,a:0,b:0};
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.1;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mk(x,dir,col){return{x,y:G,vx:0,vy:0,dir,hp:100,col,w:26,h:40,cd:0,blk:false,onG:true,flash:0};}
+let paused=false,bestr=+localStorage.getItem('rf_best')||0;
+function init(r){me=mk(120,1,'#22d3ee');foe=mk(W-120,-1,'#f87171');keys={};playing=true;paused=false;round=r;document.getElementById('r').textContent=r;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+[['l','l'],['rr','r'],['atk','a'],['blk','b']].forEach(([id,k])=>{const el=document.getElementById(id);
+el.addEventListener('pointerdown',e=>{e.preventDefault();audio.resume();touch[k]=1;});
+el.addEventListener('pointerup',()=>touch[k]=0);el.addEventListener('pointerleave',()=>touch[k]=0);});
+function phys(k,ct,other){k.flash=Math.max(0,k.flash-1);k.cd--;
+k.blk=ct.b&&(k.onG);
+if(ct.l){k.vx=-3.2;k.dir=-1;}else if(ct.r){k.vx=3.2;k.dir=1;}else k.vx*=0.7;
+if(ct.j&&k.onG){k.vy=-10;k.onG=false;}
+k.vy+=0.5;k.x+=k.vx;k.y+=k.vy;
+if(k.y>=G){k.y=G;k.vy=0;k.onG=true;}
+k.x=Math.max(30,Math.min(W-30,k.x));
+if(ct.a&&k.cd<=0){k.cd=18;k.flash=8;beep(200,.06,'sawtooth');
+const dx=other.x-k.x;
+if(Math.abs(dx)<60&&Math.abs(other.y-k.y)<44&&!other.blk){other.hp-=8;beep(90,.14,'sawtooth');upd();if(other.hp<=0)ko(k);}
+else if(Math.abs(dx)<60&&other.blk){beep(500,.05);}}}
+function upd(){document.getElementById('mybar').style.width=Math.max(0,me.hp)+'%';
+document.getElementById('ebar').style.width=Math.max(0,foe.hp)+'%';}
+window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='p')paused=!paused;});
+function step(){if(paused)return;
+const c={l:!!(keys['a']||keys['arrowleft']||touch.l),r:!!(keys['d']||keys['arrowright']||touch.r),j:!!(keys['w']||keys['arrowup']),a:!!(keys['j']||touch.a),b:!!(keys['k']||touch.b)};
+// CPU AI
+const dist=Math.abs(foe.x-me.x);let ec={l:0,r:0,j:0,a:0,b:0};
+if(me.cd>10&&dist<80&&Math.random()<0.5)ec.b=1;
+else if(dist>70){if(foe.x>me.x)ec.l=1;else ec.r=1;}
+else{if(Math.random()<0.06)ec.a=1;if(Math.random()<0.01)ec.j=1;}
+phys(me,c,foe);phys(foe,ec,me);
+// face each other
+me.dir=foe.x>me.x?1:-1;foe.dir=-me.dir;}
+function ko(k){playing=false;if(k===me&&round>bestr){bestr=round;localStorage.setItem('rf_best',bestr);}const meWin=k===me;beep(meWin?880:120,.4,meWin?'triangle':'sawtooth');
+document.getElementById('od').innerHTML=meWin?'🤖 <b style="color:#22d3ee">K.O.! YOU WIN ROUND '+round+'!</b>':'💀 <b style="color:#f87171">YOU GOT SCRAPPED.</b> Round '+round;
+document.getElementById('btn').textContent=meWin?'NEXT ROUND':'REMATCH';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#1c1917';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#292524';for(let x=0;x<W;x+=26)ctx.strokeRect(x,G+14,26,14);
+ctx.fillStyle='#44403c';ctx.fillRect(0,G+10,W,4);
+[me,foe].forEach(k=>{ctx.fillStyle=k.flash>0?'#fff':k.col;
+ctx.fillRect(k.x-k.w/2,k.y-k.h,k.w,k.h);
+ctx.fillStyle='#a8a29e';ctx.fillRect(k.x-k.w/2+4,k.y-k.h+8,k.w-8,8);
+ctx.fillStyle='#111';const ex=k.dir>0?k.x+6:k.x-9;ctx.fillRect(ex,k.y-k.h+10,4,4);
+if(k.blk){ctx.strokeStyle='#e7e5e4';ctx.lineWidth=3;ctx.strokeRect(k.x+k.dir*10-10,k.y-k.h+6,20,26);}
+if(k.flash>4){ctx.strokeStyle='#fff';ctx.beginPath();ctx.moveTo(k.x+k.dir*8,k.y-k.h+16);ctx.lineTo(k.x+k.dir*34,k.y-k.h+22);ctx.stroke();}});}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init(round||1);document.getElementById('ov').style.display='none';upd();};
+loop();
+</script>
+</body>
+</html>

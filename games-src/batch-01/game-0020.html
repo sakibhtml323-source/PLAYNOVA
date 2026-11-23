@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Halloween Epic Arena</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0c0a09;font-family:Georgia,serif;color:#fdba74;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#f97316;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#18181b;border-radius:10px;border:2px solid #7c2d12;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(12,10,9,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button{background:#f97316;border:none;color:#0c0a09;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🎃 HALLOWEEN EPIC ARENA</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>HP <b id="h">100</b></span><span>Wave <b id="w">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#f97316">EPIC ARENA</h2><p id="od">Survive the monster arena! Move with WASD/arrows or drag. Your pumpkin lantern auto-fires at the nearest ghoul. Grab 🍬 candy for score, 💜 hearts for HP!</p><button id="btn">ENTER ARENA</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=480,H=440;cvs.width=W;cvs.height=H;
+let me,ghouls,shots,candies,score,hp,wave,playing,keys,spawnT,frame,best=+localStorage.getItem('ha_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H/2,r:13,cd:0};ghouls=[];shots=[];candies=[];score=0;hp=100;wave=1;keys={};spawnT=0;frame=0;playing=true;document.getElementById('s').textContent=0;document.getElementById('h').textContent=100;document.getElementById('w').textContent=1;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+window.addEventListener('pointerup',()=>drag=null);
+function spawnWave(){const n=2+wave;for(let i=0;i<n;i++){const a=Math.random()*7;ghouls.push({x:W/2+Math.cos(a)*290,y:H/2+Math.sin(a)*290,r:12,hp:1+((wave/3)|0),sp:0.8+wave*0.09,k:['👻','🧟','🦇','🎃'][(Math.random()*4)|0]});}}
+function step(){frame++;const sp=3;
+if(keys['w']||keys['arrowup'])me.y-=sp;if(keys['s']||keys['arrowdown'])me.y+=sp;
+if(keys['a']||keys['arrowleft'])me.x-=sp;if(keys['d']||keys['arrowright'])me.x+=sp;
+if(drag){const dx=drag.x-me.x,dy=drag.y-me.y,d=Math.hypot(dx,dy);if(d>5){me.x+=dx/d*sp;me.y+=dy/d*sp;}}
+me.x=Math.max(16,Math.min(W-16,me.x));me.y=Math.max(16,Math.min(H-16,me.y));
+me.cd--;
+if(me.cd<=0){let ng=null,nd=1e9;ghouls.forEach(g=>{const d=Math.hypot(g.x-me.x,g.y-me.y);if(d<nd){nd=d;ng=g;}});
+if(ng&&nd<240){me.cd=18;const a=Math.atan2(ng.y-me.y,ng.x-me.x);shots.push({x:me.x,y:me.y,vx:Math.cos(a)*5.2,vy:Math.sin(a)*5.2});beep(560,.04);}}
+shots.forEach(s=>{s.x+=s.vx;s.y+=s.vy;ghouls.forEach(g=>{if(Math.hypot(g.x-s.x,g.y-s.y)<g.r+4){g.hp--;shots.splice(shots.indexOf(s),1);beep(280,.07,'triangle');
+if(g.hp<=0){ghouls.splice(ghouls.indexOf(g),1);score+=20;document.getElementById('s').textContent=score;
+if(Math.random()<0.25)candies.push({x:g.x,y:g.y,t:Math.random()<0.3?'❤':'🍬'});}}});});
+shots=shots.filter(s=>s.x>-10&&s.x<W+10&&s.y>-10&&s.y<H+10);
+ghouls.forEach(g=>{const a=Math.atan2(me.y-g.y,me.x-g.x);g.x+=Math.cos(a)*g.sp;g.y+=Math.sin(a)*g.sp;
+if(Math.hypot(g.x-me.x,g.y-me.y)<g.r+me.r-4){hp-=0.6;if(hp<=0){hp=0;die();}document.getElementById('h').textContent=Math.round(hp);}});
+candies.forEach(cd=>{if(Math.hypot(cd.x-me.x,cd.y-me.y)<20){if(cd.t==='❤')hp=Math.min(100,hp+25);else score+=15;
+document.getElementById('s').textContent=score;document.getElementById('h').textContent=Math.round(hp);
+candies.splice(candies.indexOf(cd),1);beep(880,.06);}});
+if(!ghouls.length){wave++;document.getElementById('w').textContent=wave;hp=Math.min(100,hp+15);document.getElementById('h').textContent=Math.round(hp);spawnWave();beep(440,.15,'triangle');}}
+function die(){playing=false;if(score>best){best=score;localStorage.setItem('ha_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='You fell on wave <b>'+wave+'</b>.<br>Score: <b style="color:#fde047">'+score+'</b>';
+document.getElementById('btn').textContent='REVENGE';document.getElementById('ov').style.display='flex';beep(120,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#18181b';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#292524';for(let x=0;x<W;x+=40){ctx.strokeRect(x,0,40,40);ctx.strokeRect(x,H-40,40,40);}
+// arena floor
+ctx.strokeStyle='#7c2d1244';ctx.beginPath();ctx.arc(W/2,H/2,150,0,7);ctx.stroke();ctx.beginPath();ctx.arc(W/2,H/2,90,0,7);ctx.stroke();
+candies.forEach(cd=>{ctx.font='16px serif';ctx.textAlign='center';ctx.fillText(cd.t,cd.x,cd.y+5);});
+shots.forEach(s=>{ctx.fillStyle='#fb923c';ctx.beginPath();ctx.arc(s.x,s.y,4,0,7);ctx.fill();});
+ghouls.forEach(g=>{ctx.font=(g.r*2)+'px serif';ctx.fillText(g.k,g.x,g.y+g.r/2);});
+// player pumpkin knight
+ctx.fillStyle='#f97316';ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(me.x-6,me.y-4,4,5);ctx.fillRect(me.x+3,me.y-4,4,5);
+ctx.strokeStyle='#14532d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(me.x,me.y-me.r);ctx.lineTo(me.x,me.y-me.r-8);ctx.stroke();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();spawnWave();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

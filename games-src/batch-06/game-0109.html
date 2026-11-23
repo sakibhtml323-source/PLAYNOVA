@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Epic Arctic Versus Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+body{background:linear-gradient(#e0f2fe,#f0f9ff);font-family:Georgia,serif;color:#0c4a6e;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#0369a1;padding:6px}
+#hud{display:flex;gap:16px;font-size:.85rem;margin-bottom:6px}
+#boards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.pb{background:#fff;border:2px solid #7dd3fc;border-radius:12px;padding:10px}
+.pb h3{font-size:.7rem;margin-bottom:6px;text-align:center}
+.pb.p1 h3{color:#dc2626}.pb.p2 h3{color:#2563eb}
+.grid{display:grid;gap:3px;touch-action:none}
+.cell{width:24px;height:24px;border-radius:5px;background:#e0f2fe;cursor:pointer;font-size:.75rem;display:flex;align-items:center;justify-content:center}
+@media(max-width:560px){.cell{width:19px;height:19px}}
+.cell.f1{background:#fecaca}.cell.f2{background:#bfdbfe}
+.cell.tgt{box-shadow:inset 0 0 0 2px #f59e0b}
+#ov{position:fixed;inset:0;background:rgba(240,249,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#0c4a6e;padding:20px;z-index:5}
+button{background:#0284c7;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🧊 EPIC ARCTIC VERSUS</h1>
+<div id="hud"><span>🔴 <b id="s1">0</b></span><span>First to 7 — identical frozen grids</span><span>🔵 <b id="s2">0</b></span></div>
+<div id="boards">
+<div class="pb p1"><h3>PLAYER 1 — QWE/ASD · tap grid</h3><div class="grid" id="g1"></div></div>
+<div class="pb p2"><h3>PLAYER 2 — UIO/JKL · tap grid</h3><div class="grid" id="g2"></div></div>
+</div>
+<div id="ov"><h2 style="color:#0369a1">ARCTIC DUEL</h2><p id="od">2 players race on identical ice grids! Find the 7 sun-marked targets before your rival. P1 taps the left grid (or QWE/ASD keys). P2 taps the right grid (or UIO/JKL). First to 7 takes the round!</p><button id="btn">FREEZE FRAME</button></div>
+<script>
+"use strict";
+const N=7,TGT=7;
+let boards,wins,round,playing;let ea9=+localStorage.getItem('arv_w1')||0,eb9=+localStorage.getItem('arv_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function mk(){const t=new Set();while(t.size<TGT)t.add((Math.random()*N*N)|0);return{t:[...t],found:[]};}
+function buildRound(){const a=mk();boards=[a,JSON.parse(JSON.stringify(a))];render();}
+function render(){boards.forEach((bd,p)=>{const g=document.getElementById('g'+(p+1));
+g.style.gridTemplateColumns='repeat('+N+',24px)';g.innerHTML='';
+for(let i=0;i<N*N;i++){const c=document.createElement('div');c.className='cell';
+const isT=bd.t.includes(i),isF=bd.found.includes(i);
+if(isF)c.classList.add('done');
+if(isT&&isF)c.classList.add('tgt'),c.textContent='☀';
+if(isT&&isF)c.classList.add(p===0?'f1':'f2');
+c.onclick=()=>tap(p,i);g.appendChild(c);}});
+document.getElementById('s1').textContent=boards[0].found.length;
+document.getElementById('s2').textContent=boards[1].found.length;}
+function tap(p,i){if(!playing)return;audio.resume();const bd=boards[p];
+if(bd.found.includes(i))return;
+if(bd.t.includes(i)){bd.found.push(i);beep(p===0?520:700,.08,'triangle');
+if(bd.found.length>=TGT)return roundEnd(p);}
+else beep(140,.1,'sawtooth');
+render();}
+function roundEnd(p){playing=false;
+if(wins===undefined)wins=[0,0];
+wins[p]++;
+if(wins[p]>=2){if(p===0){ea9++;localStorage.setItem('arv_w1',ea9);}else{eb9++;localStorage.setItem('arv_w2',eb9);}
+document.getElementById('od').innerHTML='🏆 <b style="color:#f59e0b">PLAYER '+(p+1)+' CONQUERS THE ARCTIC '+wins[0]+'—'+wins[1]+'!</b>';
+document.getElementById('btn').textContent='REMATCH';wins=[0,0];round=0;}
+else{document.getElementById('od').innerHTML='☀ Player '+(p+1)+' melts through round '+round+'!<br>Score: '+wins[0]+' — '+wins[1];
+document.getElementById('btn').textContent='NEXT ROUND';}
+document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+const map1={q:0,w:1,e:2,a:7,s:8,d:9,z:14,x:15,c:16},map2={u:0,i:1,o:2,j:7,k:8,l:9,m:14,',':15,'.':16};
+if(k in map1){const el=document.querySelectorAll('#g1 .cell')[map1[k]];if(el)el.click();}
+if(k in map2&&map2[k]!==undefined){const el=document.querySelectorAll('#g2 .cell')[map2[k]];if(el)el.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();round=(round||0)+1;playing=true;buildRound();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Masked Dancer #435</title><style>
+body{margin:0;font-family:system-ui;background:#451a03;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+#stage{display:flex;gap:14px;margin:14px;flex-wrap:wrap;justify-content:center}
+.move{width:88px;height:88px;background:#92400e;border:3px solid #b45309;border-radius:16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;transition:transform .1s}
+.move .n{font-size:.7rem;margin-top:2px}
+.move.lit{transform:scale(1.1);border-color:#fbbf24;background:#b45309}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#451a03;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💃 Desert Masked Dancer</h1><div class="sub">The dancer performs a ritual — repeat the moves in order!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Best <b id="b">0</b></span></div>
+<div id="stage"></div>
+<div id="msg"></div>
+<button id="btn">🎭 New Ritual</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const MOVES=[['🙌','Clap'],['🔄','Spin'],['🦵','Stomp'],['🙏','Bow'],['👏','Snap'],['🤸','Leap']];
+const N=6;let seq=[],idx=0,round=1,best=+localStorage.getItem('dmd_best')||0,accepting=false;
+document.getElementById('b').textContent=best;
+function build(){const s=document.getElementById('stage');s.innerHTML='';
+MOVES.forEach(([e,n],i)=>{const d=document.createElement('div');d.className='move';
+d.innerHTML=e+'<span class="n">'+n+'</span>';
+d.onclick=()=>pick(i);s.appendChild(d);});}
+function flash(i){const el=document.querySelectorAll('.move')[i];
+el.classList.add('lit');beep(300+i*80,.12);
+setTimeout(()=>el.classList.remove('lit'),350);}
+async function show(){accepting=false;msg('👀 Watch the ritual…');
+for(const i of seq){await wait(460);flash(i);}
+idx=0;accepting=true;msg('🫵 Your turn!');}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function pick(i){if(!accepting)return;beep(300+i*80,.08);
+if(i!==seq[idx]){accepting=false;beep(130,.3,'sawtooth');
+msg('🎭 The dancer frowns! Round '+round);
+if(round>best){best=round;localStorage.setItem('dmd_best',best);document.getElementById('b').textContent=best;}
+return;}
+idx++;
+if(idx>=seq.length){accepting=false;msg('✅ Flawless! Round '+(round+1));round++;
+document.getElementById('r').textContent=round;
+seq.push((Math.random()*N)|0);
+setTimeout(show,900);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{seq=[(Math.random()*N)|0];idx=0;round=1;
+document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();show();};
+build();
+</script></body></html>

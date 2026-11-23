@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Pattern Shift #284</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#wrap{display:flex;gap:16px;margin:10px;flex-wrap:wrap;justify-content:center}
+.pan{display:flex;flex-direction:column;align-items:center}
+.pan .t{font-size:.8rem;color:#a1a1aa;margin-bottom:4px}
+#grid{display:grid;grid-template-columns:repeat(3,58px);gap:4px}
+#g2{display:grid;grid-template-columns:repeat(3,58px);gap:4px}
+.c{width:58px;height:58px;background:#27272a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer}
+.c.ok{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Pattern Shift</h1><div class="sub">Tap two tiles to swap them — match the target pattern within the move limit!</div>
+<div id="hud"><span>Moves <b id="m">12</b></span><span>Level <b id="l">1</b></span></div>
+<div id="wrap">
+<div class="pan"><div class="t">TARGET</div><div id="g2"></div></div>
+<div class="pan"><div class="t">YOURS</div><div id="grid"></div></div>
+</div>
+<div id="msg"></div>
+<button id="btn">🎭 New Pattern</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const ICONS=['🎃','👻','🦇','🕷️','💀','🧛','⚰️','🕯️','🌙'];
+const N=9;let target=[],grid=[],sel=null,moves=12,level=1,playing=true;
+function gen(){target=ICONS.slice(0,9).sort(()=>Math.random()-.5);
+grid=target.slice();
+// shuffle by random swaps
+const sh=6+level;
+for(let i=0;i<sh;i++){const a=(Math.random()*N)|0,b=(Math.random()*N)|0;
+[grid[a],grid[b]]=[grid[b],grid[a]];}
+// ensure not already solved
+if(grid.every((v,i)=>v===target[i])){[grid[0],grid[1]]=[grid[1],grid[0]];}
+moves=8+level;sel=null;playing=true;
+document.getElementById('m').textContent=moves;
+document.getElementById('l').textContent=level;
+render();msg('Match the target!');}
+function tap(i){if(!playing)return;
+if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[grid[sel],grid[i]]=[grid[i],grid[sel]];
+sel=null;moves--;document.getElementById('m').textContent=moves;
+beep(440,.06);render();
+if(grid.every((v,k)=>v===target[k])){playing=false;beep(880,.25,'triangle');
+msg('🎉 Pattern matched! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(gen,1000);return;}
+if(moves<=0){playing=false;beep(130,.3,'sawtooth');msg('💀 Out of moves!');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+grid.forEach((v,i)=>{const d=document.createElement('div');
+d.className='c'+(grid[i]===target[i]?' ok':'');
+d.textContent=v;if(sel===i)d.style.outline='2px solid #facc15';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});
+const g2=document.getElementById('g2');g2.innerHTML='';
+target.forEach(v=>{const d=document.createElement('div');d.className='c';
+d.style.cursor='default';d.textContent=v;g2.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

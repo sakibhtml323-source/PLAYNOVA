@@ -1,0 +1,36 @@
+{
+ "visited_games_tested_offline": {
+  "jungle-farm-puzzle": "PASS",
+  "greek-myth-endless-runner-fury": "PASS",
+  "watercolor-tales": "PASS",
+  "time-killer-pirates": "PASS",
+  "western-physics-sandbox-empire": "PASS",
+  "intense-sports-rush": "PASS",
+  "intense-samurai-vehicle-combat": "PASS",
+  "golden-watercolor-portal": "PASS",
+  "comic-book-chronicles": "PASS",
+  "desert-forge-idle-226": "PASS",
+  "crystal-balance-251": "PASS",
+  "crystal-dot-link-276": "PASS",
+  "ninja-spell-chain-301": "PASS",
+  "desert-oasis-match-326": "PASS",
+  "crystal-flow-351": "PASS",
+  "desert-scorpion-sting-376": "PASS",
+  "ninja-sand-sprint-401": "PASS",
+  "royal-fan-fare-426": "PASS",
+  "royal-bell-tower-451": "PASS",
+  "haunted-mirror-hall-476": "PASS"
+ },
+ "unvisited_games_offline": {
+  "thunder-retro-chronicles": "shows offline page",
+  "desert-legendary-galaxy": "shows offline page",
+  "focus-trainer-comic-book-edition": "shows offline page",
+  "simulation-norse": "shows offline page",
+  "pirate-idle-clicker-fury": "shows offline page"
+ },
+ "reconnect_unvisited_game_loads_ready": true,
+ "cache_names": [
+  "playnova-v4"
+ ],
+ "method": "Chromium, service worker + context offline mode; each game was opened once online, then reopened offline"
+}

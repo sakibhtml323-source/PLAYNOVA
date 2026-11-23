@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense Horror Rise</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0a0a0a;font-family:Georgia,serif;color:#a1a1aa;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.1rem;color:#dc2626;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#scene{width:min(520px,96vw);background:#111;border:1px solid #27272a;border-radius:12px;padding:18px;min-height:300px;display:flex;flex-direction:column;justify-content:space-between}
+#story{font-size:1.1rem;line-height:1.7;min-height:8em}
+#story b{color:#dc2626}
+#opts{display:grid;gap:8px}
+#opts button{background:#18181b;border:1px solid #3f3f46;color:#d4d4d8;border-radius:10px;padding:12px;font-family:inherit;font-size:.95rem;cursor:pointer;text-align:left}
+#opts button:hover{border-color:#dc2626}
+#opts button.dead{opacity:.35;pointer-events:none}
+#dread{margin-top:12px}
+#dread .bar{height:8px;background:#27272a;border-radius:4px;overflow:hidden}
+#dread .bar i{display:block;height:100%;background:linear-gradient(90deg,#7f1d1d,#dc2626);width:0}
+#dlbl{font-size:.7rem;color:#71717a;display:flex;justify-content:space-between;margin-bottom:4px}
+#ov{position:fixed;inset:0;background:rgba(10,10,10,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button.big{background:#dc2626;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⛓️ INTENSE HORROR RISE</h1>
+<div id="hud"><span>Floor <b id="f">1</b>/8</span><span>Sanity <b id="s">100</b></span><span>Dread <b id="d">0</b>%</span><span>Best <b id="b">0</b></span></div>
+<div id="scene">
+<div id="story">The elevator doors creak open…</div>
+<div>
+<div id="dread"><div id="dlbl"><span>DREAD</span><span id="dpct">0%</span></div><div class="bar"><i id="db"></i></div></div>
+<div id="opts" style="margin-top:12px"></div>
+</div>
+</div>
+<div id="ov"><h2 style="color:#dc2626">THE RISING</h2><p id="od">Escape the haunted tower floor by floor! Each choice changes your story — some doors feed the Dread. At 100% Dread… something rises with you. Reach floor 8 to escape.</p><button class="big" id="btn">STEP IN</button></div>
+<script>
+"use strict";
+const FLOORS=[
+{t:'A hallway of doors. One hums. One whispers your name. One bleeds.',o:[['Take the humming door',15,'The hum becomes a lullaby. You feel… safer.'],['Take the whispering door',30,'It knew your name. It knows more now.'],['Take the bleeding door',5,'Just paint. Old, red paint. Probably.']]},
+{t:'The stairs spiral up — or down. The up stairs are cold. The down stairs breathe.',o:[['Climb the cold stairs',10,'Cold is just absence. You can carry absence.'],['Descend the breathing stairs',40,'It inhaled as you passed. You felt counted.'],['Wait and listen',25,'Listening is a door you open from both sides.']]},
+{t:'A mirror shows you <b>smiling</b>. You are not smiling.',o:[['Smile back',20,'The mirror is satisfied. For now.'],['Break the mirror',10,'Seven years of bad luck is a price. You pay it gladly.'],['Cover it with your coat',35,'The coat is heavier when you look away.']]},
+{t:'A telephone rings in the dark. The cord has been cut for years.',o:[['Answer it',35,'A dial tone. Then your own voice: "don\'t go up."'],['Let it ring',15,'It stops. That is somehow worse.'],['Unplug it — it has no plug',5,'You unplug nothing. The ringing respects the gesture.']]},
+{t:'The walls are soft here. Warm. Almost kind.',o:[['Rest against the wall',45,'It holds you the way the ground holds the fallen.'],['Keep walking, fast',5,'Kind walls are still walls.'],['Touch the wall',30,'It pulses. Once. Like a thank-you.']]},
+{t:'A child\'s laughter from the vent. The building has no children. Never had.',o:[['Call out "hello?"',30,'The laughter stops mid-note. It heard you.'],['Hum a lullaby',10,'The laughter joins in. It almost sounds happy.'],['Keep moving',15,'It follows you to the next floor. Slower.']]},
+{t:'A vending machine glows. It sells only one thing: <b>memories of daylight</b>.',o:[['Buy one',20,'It tastes like 3pm in July. Worth it.'],['Smash the glass',40,'The glass was a picture frame all along.'],['Walk past',10,'The glow follows you a few steps. Then gives up.']]},
+{t:'The roof door. The sky above is the wrong color of morning.',o:[['Open it — ESCAPE',0,'You rise into the wrong-colored dawn. You are out. You are OUT.'],[],[]]}];
+let floor,sanity,dread,playing,best=+localStorage.getItem('ih_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function upd(){document.getElementById('f').textContent=floor+1;document.getElementById('s').textContent=sanity;
+document.getElementById('d').textContent=dread;document.getElementById('dpct').textContent=dread+'%';
+document.getElementById('db').style.width=dread+'%';}
+function show(){const F=FLOORS[floor];
+document.getElementById('story').innerHTML='FLOOR '+(floor+1)+' — '+F.t;
+const o=document.getElementById('opts');o.innerHTML='';
+F.o.forEach(([txt,dread2,after])=>{if(!txt)return;
+const b=document.createElement('button');b.textContent=txt;
+b.onclick=()=>{audio.resume();
+if(floor===7){escape();return;}
+sanity-=Math.floor(dread2/3);dread+=dread2;upd();
+document.getElementById('story').innerHTML='<i style="color:#71717a">'+after+'</i>';
+beep(dread2>25?150:500,dread2>25?.2:.08,dread2>25?'sawtooth':'sine');
+if(dread>=100)return rise();
+if(sanity<=0)return shatter();
+floor++;setTimeout(show,1400);[...o.children].forEach(x=>x.classList.add('dead'));};
+o.appendChild(b);});
+upd();}
+function escape(){playing=false;if(floor>best){best=floor;localStorage.setItem('ih_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),200);
+document.getElementById('od').innerHTML='🌅 <b style="color:#fde047">YOU ESCAPED THE RISE.</b><br>Floor 8. Dread '+dread+'%. The morning is the right color now.';
+document.getElementById('btn').textContent='DESCEND AGAIN';document.getElementById('ov').style.display='flex';}
+function rise(){playing=false;beep(80,.6,'sawtooth');
+document.getElementById('od').innerHTML='⛓️ <b style="color:#dc2626">AT 100% DREAD, IT ROSE WITH YOU.</b><br>You reached floor '+(floor+1)+'.';
+document.getElementById('btn').textContent='TRY ONCE MORE';document.getElementById('ov').style.display='flex';}
+function shatter(){playing=false;beep(100,.5,'sawtooth');
+document.getElementById('od').innerHTML='🧠 <b>Your sanity gave out on floor '+(floor+1)+'.</b><br>The tower keeps what breaks.';
+document.getElementById('btn').textContent='WAKE UP';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;
+if(e.key>='1'&&e.key<='3'){const b=document.querySelectorAll('#opts button')[+e.key-1];if(b)b.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();floor=0;sanity=100;dread=0;playing=true;
+document.getElementById('ov').style.display='none';show();};
+</script>
+</body>
+</html>

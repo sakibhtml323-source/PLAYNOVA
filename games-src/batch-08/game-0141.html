@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Minimalist Vehicle Combat Rush</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#fff;font-family:'Helvetica Neue',Arial,sans-serif;color:#111;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-weight:100;letter-spacing:6px;font-size:.95rem;color:#999;padding:10px}
+#hud{display:flex;gap:20px;font-size:.85rem;color:#666;margin-bottom:4px}
+canvas{background:#fafafa;border:1px solid #eee;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(255,255,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#333;padding:20px;z-index:5}
+button{background:#111;color:#fff;border:none;font-weight:100;letter-spacing:4px;padding:13px 40px;font-size:.95rem;cursor:pointer;margin-top:16px}
+</style>
+</head>
+<body>
+<h1>MINIMAL VEHICLE RUSH</h1>
+<div id="hud"><span>SCORE <b id="s">0</b></span><span>ARMOR <b id="a">3</b></span><span>WAVE <b id="w">1</b></span><span>BEST <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="font-weight:100;letter-spacing:6px">VEHICLE COMBAT</h2><p id="od">Pure lines. Pure speed. Your triangle-vehicle auto-drives — steer with ← → / A D or drag. Tap/Space fires. Destroy the squares, avoid the walls.</p><button id="btn">DRIVE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=360,H=520;cvs.width=W;cvs.height=H;
+let me,foes,shots,playing,keys,score,armor,wave,frame,best=+localStorage.getItem('mvr_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-60,cd:0};foes=[];shots=[];playing=true;keys={};score=0;armor=3;wave=1;frame=0;
+document.getElementById('s').textContent=0;document.getElementById('a').textContent=3;document.getElementById('w').textContent=1;}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();fire();}});
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.4)keys['l']=true;else if(x>W*0.6)keys['r']=true;else fire();});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointerup',()=>{keys['l']=false;keys['r']=false;});
+function fire(){if(!playing||me.cd>0)return;me.cd=10;shots.push({x:me.x,y:me.y-14,vy:-8});beep(600,.05);}
+function step(){frame++;me.cd--;
+if(keys['arrowleft']||keys['a']||keys['l'])me.x-=5;if(keys['arrowright']||keys['d']||keys['r'])me.x+=5;
+if(dragX!==null)me.x=dragX;
+me.x=Math.max(18,Math.min(W-18,me.x));
+if(frame%Math.max(20,40-wave*2)===0){const r=Math.random();
+if(r<0.6)foes.push({x:20+Math.random()*(W-40),y:-20,w:16+Math.random()*10,h:16+Math.random()*10,vy:2+wave*0.3,hp:wave>3&&Math.random()<0.3?2:1});
+else foes.push({x:Math.random()<0.5?-20:W+20,y:Math.random()*(H*0.5),w:14,h:14,vx:Math.random()<0.5?3:-3,vy:1.5,hp:1});}
+shots.forEach(s=>{s.y+=s.vy;foes.forEach(f=>{if(Math.abs(s.x-f.x-f.w/2)<f.w/2+3&&Math.abs(s.y-f.y-f.h/2)<f.h/2+4){f.hp--;shots.splice(shots.indexOf(s),1);beep(300,.07,'triangle');
+if(f.hp<=0){foes.splice(foes.indexOf(f),1);score+=10*wave;document.getElementById('s').textContent=score;}}});});
+shots=shots.filter(s=>s.y>-10);
+foes.forEach(f=>{f.y+=f.vy;if(f.vx)f.x+=f.vx;
+if(f.x+f.w>me.x-10&&f.x<me.x+10&&f.y+f.h>me.y-12&&f.y<me.y+12){foes.splice(foes.indexOf(f),1);armor--;document.getElementById('a').textContent=armor;beep(140,.25,'sawtooth');
+if(armor<=0)die();}});
+foes=foes.filter(f=>f.y<H+40&&f.x>-40&&f.x<W+40);
+if(frame%480===0){wave++;document.getElementById('w').textContent=wave;beep(500,.12,'triangle');}}
+function die(){playing=false;if(score>best){best=score;localStorage.setItem('mvr_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='CRASHED at wave <b style="font-size:1.5rem">'+wave+'</b> · Score '+score;
+document.getElementById('btn').textContent='REBUILD';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#fafafa';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#eee';for(let i=0;i<W;i+=24)ctx.strokeRect(i,0,24,24);
+foes.forEach(f=>{ctx.strokeStyle='#111';ctx.lineWidth=1.5;ctx.strokeRect(f.x,f.y,f.w,f.h);
+if(f.hp>1){ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(f.x+f.w,f.y+f.h);ctx.stroke();}});
+shots.forEach(s=>{ctx.fillStyle='#111';ctx.fillRect(s.x-1.5,s.y-6,3,8);});
+// vehicle: triangle
+ctx.fillStyle='#111';ctx.beginPath();ctx.moveTo(me.x,me.y-14);ctx.lineTo(me.x+10,me.y+10);ctx.lineTo(me.x-10,me.y+10);ctx.closePath();ctx.fill();
+ctx.strokeStyle='#111';ctx.beginPath();ctx.moveTo(me.x-12,me.y+10);ctx.lineTo(me.x-14,me.y+16);ctx.stroke();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

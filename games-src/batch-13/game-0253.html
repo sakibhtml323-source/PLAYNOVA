@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Idle Kingdom #253</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#c{font-size:2rem;font-weight:800;color:#fbbf24;margin:8px}
+#r{color:#a5b4fc;font-size:.85rem}
+#tap{font-size:72px;cursor:pointer;user-select:none;margin:10px;transition:transform .08s}
+#tap:active{transform:scale(.92)}
+#shop{display:flex;flex-direction:column;gap:6px;width:310px;max-width:92vw;margin:8px}
+.row{display:flex;justify-content:space-between;align-items:center;background:#312e81;border-radius:10px;padding:8px 12px}
+.row button{padding:6px 14px;border-radius:8px;border:none;background:#57534e;color:#fff;font-weight:700;cursor:pointer}
+.row button:disabled{opacity:.4}
+.row small{color:#a5b4fc;display:block}
+#quest{background:#312e81;border:2px dashed #fbbf24;border-radius:10px;padding:8px 12px;width:286px;max-width:88vw;margin:6px;text-align:center}
+#qbar{height:8px;background:#1e1b4b;border-radius:4px;overflow:hidden;margin-top:6px}
+#qbar i{display:block;height:100%;background:#fbbf24;width:0}
+</style></head><body>
+<h1>👑 Royal Idle Kingdom</h1><div class="sub">Earn gold — send knights on quests that complete while you idle!</div>
+<div id="c">0</div><div id="r">0 per second</div>
+<div id="tap">🪙</div>
+<div id="shop"></div>
+<div id="quest">⚔️ <b>No quest</b><div id="qbar"><i></i></div></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.1,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let S={c:0,own:[0,0,0,0],pc:1,quest:null,qprog:0};
+const IT=[{n:'🧑‍🌾 Farmer',r:.6,c:18},{n:'🪵 Woodcutter',r:3,c:75},{n:'⚒️ Blacksmith',r:14,c:320},{n:'🏰 Knight Order',r:60,c:1500}];
+const QUESTS=[{n:'Slay the Dragon',t:20,r:150},{n:'Rescue the Princess',t:35,r:400},{n:'Defend the Castle',t:60,r:1000},{n:'Find the Grail',t:90,r:2500}];
+function rate(){return IT.reduce((a,v,i)=>a+v.r*S.own[i],0);}
+function render(){document.getElementById('c').textContent=Math.floor(S.c);
+document.getElementById('r').textContent=rate().toFixed(1)+' per second';
+const q=document.getElementById('quest');
+if(S.quest){const Q=QUESTS[S.quest];
+q.innerHTML='⚔️ <b>'+Q.n+'</b><div id="qbar"><i style="width:'+Math.min(100,S.qprog/Q.t*100)+'%"></i></div>';}
+else{q.innerHTML='⚔️ <b>Send a quest!</b><div id="qbar"><i></i></div>';}
+const sh=document.getElementById('shop');sh.innerHTML='';
+IT.forEach((it,i)=>{const row=document.createElement('div');row.className='row';
+const info=document.createElement('div');info.innerHTML='<b>'+it.n+'</b> <small>'+it.r+'/s each</small>';
+const b=document.createElement('button');const cost=Math.round(it.c*Math.pow(1.17,S.own[i]));
+b.textContent=cost+' 🪙';b.disabled=S.c<cost;
+b.onclick=()=>{if(S.c>=cost){S.c-=cost;S.own[i]++;beep(660,.09);render();}};
+row.appendChild(info);row.appendChild(b);sh.appendChild(row);});
+QUESTS.forEach((Q,i)=>{if(S.quest===i)return;
+const row=document.createElement('div');row.className='row';
+const info=document.createElement('div');info.innerHTML='<b>⚔️ '+Q.n+'</b> <small>'+Q.t+'s → +'+Q.r+' 🪙</small>';
+const b=document.createElement('button');b.textContent='Send';
+b.disabled=S.quest!==null;
+b.onclick=()=>{if(S.quest===null){S.quest=i;S.qprog=0;beep(500,.1);render();}};
+row.appendChild(info);row.appendChild(b);sh.appendChild(row);});}
+document.getElementById('tap').addEventListener('pointerdown',()=>{S.c+=S.pc;beep(500+Math.random()*200,.05);render();});
+setInterval(()=>{const earn=rate()/10;S.c+=earn;
+if(S.quest!==null){S.qprog+=0.1;
+const Q=QUESTS[S.quest];
+if(S.qprog>=Q.t){S.c+=Q.r;S.quest=null;beep(880,.2,'triangle');}}
+render();},100);
+render();
+</script></body></html>

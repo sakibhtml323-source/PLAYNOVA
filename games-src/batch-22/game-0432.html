@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Camel Bell #432</title><style>
+body{margin:0;font-family:system-ui;background:#451a03;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+#camels{display:flex;gap:12px;margin:16px;flex-wrap:wrap;justify-content:center}
+.camel{width:90px;padding:10px;background:#92400e;border:3px solid #b45309;border-radius:14px;text-align:center;cursor:pointer;transition:transform .1s}
+.camel .e{font-size:2.4rem}
+.camel.ringing{animation:shake .4s infinite}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+.camel.silent{outline:3px solid transparent}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#451a03;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔔 Desert Camel Bell</h1><div class="sub">All camels' bells ring — except one. Tap the silent camel!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>⏱️ <b id="t">8</b>s</span><span>Best <b id="b">0</b></span></div>
+<div id="camels"></div>
+<div id="msg"></div>
+<button id="btn">🐪 New Caravan</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function bell(i){const F=[330,392,494,587,659];
+try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();
+os.type='sine';os.frequency.value=F[i];
+g.gain.setValueAtTime(.14,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+.3);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+.3);}catch(e){}}
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let silent=0,round=1,time=8,timer=null,ringing=false,best=+localStorage.getItem('dcb_best')||0;
+document.getElementById('b').textContent=best;
+function newRound(){const n=Math.min(3+Math.round(round/2),6);
+silent=(Math.random()*n)|0;
+const c=document.getElementById('camels');c.innerHTML='';
+for(let i=0;i<n;i++){const d=document.createElement('div');d.className='camel';
+d.innerHTML='<div class="e">🐪</div><small>'+(i+1)+'</small>';
+d.onclick=()=>pick(i);
+c.appendChild(d);}
+document.getElementById('r').textContent=round;
+time=Math.max(4,9-round);document.getElementById('t').textContent=time;
+ringing=true;
+document.querySelectorAll('.camel').forEach((d,i)=>{if(i!==silent)d.classList.add('ringing');});
+// ring sounds periodically
+let k=0;const iv=setInterval(()=>{
+document.querySelectorAll('.camel').forEach((d,i)=>{if(i!==silent&&Math.random()<0.6)bell(i);});
+if(++k>20)clearInterval(iv);},300);
+clearInterval(timer);
+timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);clearInterval(iv);
+document.querySelectorAll('.camel').forEach(d=>d.classList.remove('ringing'));
+beep(130,.3,'sawtooth');
+msg('⏰ Caravan moved on! Round '+round);ringing=false;}},1000);}
+function pick(i){if(!ringing)return;ringing=false;
+clearInterval(timer);
+document.querySelectorAll('.camel').forEach(d=>d.classList.remove('ringing'));
+if(i===silent){round++;beep(880,.25,'triangle');
+if(round>best){best=round;localStorage.setItem('dcb_best',best);document.getElementById('b').textContent=best;}
+msg('🔔 Found it! Round '+round);setTimeout(newRound,800);}
+else{beep(150,.2,'sawtooth');
+msg('🐪 That one rings! It was #'+(silent+1));
+setTimeout(newRound,1200);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+</script></body></html>

@@ -1,0 +1,232 @@
+{
+ "method": "pixel-based: each text element is measured against the real rendered background (page screenshot with text made transparent), WCAG AA 4.5:1 (3:1 for large text); estimates, translucent/gradient backgrounds are sampled by median",
+ "pages": {
+  "home": {
+   "text_elements_measured": 84,
+   "below_AA": 27,
+   "samples": [
+    [
+     "A",
+     "Ninja Maze Sprint #233",
+     1.2,
+     13.6
+    ],
+    [
+     "A",
+     "Desert Oasis Rope #466",
+     1.75,
+     13.6
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd25",
+     1.3,
+     17.6
+    ],
+    [
+     "A",
+     "Iron Gunner",
+     2.21,
+     13.6
+    ],
+    [
+     "A",
+     "Thunder Sports Zombie Surviv",
+     4.12,
+     13.6
+    ],
+    [
+     "SPAN",
+     "\ud83e\udde9",
+     1.3,
+     17.6
+    ],
+    [
+     "A",
+     "Jungle Farm - Puzzle",
+     2.16,
+     13.6
+    ],
+    [
+     "A",
+     "Neumorphism Phantom Rush",
+     2.21,
+     13.6
+    ]
+   ]
+  },
+  "games": {
+   "text_elements_measured": 86,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.64,
+     14.72
+    ]
+   ]
+  },
+  "categories": {
+   "text_elements_measured": 50,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.35,
+     14.72
+    ]
+   ]
+  },
+  "game page": {
+   "text_elements_measured": 11,
+   "below_AA": 0,
+   "samples": []
+  },
+  "profile": {
+   "text_elements_measured": 57,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.5,
+     14.72
+    ]
+   ]
+  },
+  "cookies": {
+   "text_elements_measured": 53,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.58,
+     14.72
+    ]
+   ]
+  },
+  "privacy": {
+   "text_elements_measured": 59,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.58,
+     14.72
+    ]
+   ]
+  },
+  "about": {
+   "text_elements_measured": 52,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.55,
+     14.72
+    ]
+   ]
+  },
+  "terms": {
+   "text_elements_measured": 56,
+   "below_AA": 2,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.58,
+     14.72
+    ],
+    [
+     "BUTTON",
+     "\ud83d\udd0a",
+     1.22,
+     18.4
+    ]
+   ]
+  },
+  "disclaimer": {
+   "text_elements_measured": 42,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.54,
+     14.72
+    ]
+   ]
+  },
+  "contact": {
+   "text_elements_measured": 40,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.5,
+     14.72
+    ]
+   ]
+  },
+  "popular": {
+   "text_elements_measured": 85,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.62,
+     14.72
+    ]
+   ]
+  },
+  "category page": {
+   "text_elements_measured": 86,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.62,
+     14.72
+    ]
+   ]
+  },
+  "favorites": {
+   "text_elements_measured": 37,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.35,
+     14.72
+    ]
+   ]
+  },
+  "new": {
+   "text_elements_measured": 85,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.62,
+     14.72
+    ]
+   ]
+  }
+ },
+ "summary": {
+  "text_elements_measured": 883,
+  "below_AA_total": 41,
+  "emoji_only_glyphs_not_applicable": 3,
+  "note": "sample lists are truncated to 8 per page"
+ }
+}

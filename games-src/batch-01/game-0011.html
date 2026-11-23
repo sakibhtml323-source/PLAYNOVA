@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Watercolor Galaxy</title>
+<script>window.__pnNoPad=true;</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:#2a2438;font-family:'Segoe UI',system-ui,Arial,sans-serif;color:#2b2233;display:flex;flex-direction:column;align-items:center;overflow:hidden;padding:max(6px,env(safe-area-inset-top)) 6px max(6px,env(safe-area-inset-bottom))}
+#hud{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;font-size:.82rem;margin:2px 0 6px;color:#f4ead8}
+#hud span{background:rgba(255,255,255,.12);border:1px solid rgba(255,235,200,.3);border-radius:999px;padding:3px 12px;white-space:nowrap}
+#hud b{color:#ffd98a;font-variant-numeric:tabular-nums}
+#box{position:relative;touch-action:none}
+canvas{display:block;border-radius:14px;touch-action:none}
+#tools{display:flex;gap:7px;margin-top:8px;align-items:center;color:#f4ead8;font-size:.8rem}
+#tools button{background:rgba(255,255,255,.14);color:#f4ead8;border:1px solid rgba(255,235,200,.35);border-radius:12px;padding:9px 13px;font-size:.82rem;font-weight:700;cursor:pointer}
+#tools button.on{background:#ffd98a;color:#3a2a10}#tools button:disabled{opacity:.4}
+#msg{font-size:.8rem;color:#f4ead8;opacity:.85;margin-top:6px;text-align:center;min-height:1.3em}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(244,234,216,.96);border-radius:14px;text-align:center;padding:14px;z-index:5;gap:6px;color:#2b2233}
+.ov.hide{display:none}.ov h2{font-size:1.45rem;color:#a8452a}.ov p{font-size:.86rem;line-height:1.45;max-width:320px}
+.btn{background:linear-gradient(180deg,#e8845a,#b8452a);color:#fff;border:none;padding:11px 28px;border-radius:24px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:6px;min-width:180px}
+.btn.alt{background:rgba(0,0,0,.1);color:#2b2233;font-weight:600;font-size:.84rem;padding:7px 16px;min-width:0}
+.stars{font-size:2.2rem;letter-spacing:6px}
+</style>
+</head>
+<body>
+<div id="hud"><span>Level <b id="lv">1</b></span><span>Round <b id="rd">1</b></span><span>🔵 <b id="np">1</b></span><span>🔴 <b id="na">1</b></span><span>Best L<b id="bs">1</b></span></div>
+<div id="box"><canvas id="c"></canvas><div class="ov" id="ov"></div></div>
+<div id="tools"><span>Send:</span><button data-p="25">25%</button><button data-p="50" class="on">50%</button><button data-p="75">75%</button><button data-p="100">100%</button><button id="skip">⏭ Pass</button></div>
+<div id="msg"></div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const W=360,H=500,cvs=$('c'),ctx=cvs.getContext('2d');
+function emit(t,x){try{if(typeof pnEmit==='function')pnEmit(t,x||{})}catch(e){}}
+let SV={lvl:1,best:1,stars:{}};
+try{Object.assign(SV,JSON.parse(localStorage.getItem('wg_save')||'{}'))}catch(e){}
+function save(){try{localStorage.setItem('wg_save',JSON.stringify(SV))}catch(e){}}
+/* ---------- audio ---------- */
+let AC=null;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended'){try{AC.resume()}catch(e){}}return AC}
+function tone(f,d,type,v,delay,slide){const a=ac();if(!a)return;try{const t=a.currentTime+(delay||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.07,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+const sfx={sel(){tone(520,.06,'triangle',.06)},send(){tone(300,.25,'sine',.07,0,500)},cap(){[523,659,784].forEach((f,i)=>tone(f,.14,'triangle',.09,i*.06))},lost(){[392,311,233].forEach((f,i)=>tone(f,.18,'triangle',.08,i*.08))},hit(){tone(180,.12,'square',.06,0,-60)},err(){tone(140,.1,'square',.05)},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.22,'triangle',.1,i*.08))},lose(){[330,262,196].forEach((f,i)=>tone(f,.3,'sawtooth',.08,i*.15))}};
+/* ---------- state ---------- */
+const rnd=(a,b)=>a+Math.random()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1));
+const OC=['#9aa89a','#4a86d8','#d85a5a'],OC2=['#c8d4c8','#9cc4f4','#f4a8a8'];
+let planets=[],edges=[],fleets=[],pct=.5,sel=-1,state='menu',lvl=1,round=1,busy=false,parts=[],floats=[],time=0,shake=0,lines=[];
+function css2(){return Math.max(.45,Math.min((innerWidth-12)/W,(innerHeight-150)/H))}
+let css=1,dprR=1;
+function resize(){css=css2();dprR=Math.min(devicePixelRatio||1,2)*css;cvs.width=Math.round(W*dprR);cvs.height=Math.round(H*dprR);cvs.style.width=Math.round(W*css)+'px';cvs.style.height=Math.round(H*css)+'px'}
+addEventListener('resize',resize);resize();
+function gen(l){const n=Math.min(14,7+Math.floor(l*.8)),pts=[];let tries=0;while(pts.length<n&&tries++<4000){const r=ri(1,3),x=rnd(44,W-44),y=rnd(70,H-50);if(pts.every(p=>Math.hypot(p.x-x,p.y-y)>(60+(p.r+r)*5)))pts.push({x,y,r,owner:0,ships:ri(4,10+l),prod:r,id:pts.length,ph:Math.random()*6})}
+planets=pts;edges=[];const has=(a,b)=>edges.some(e=>(e[0]===a&&e[1]===b)||(e[0]===b&&e[1]===a));
+planets.forEach((p,i)=>{const d=planets.map((q,j)=>({j,d:Math.hypot(p.x-q.x,p.y-q.y)})).filter(o=>o.j!==i).sort((a,b)=>a.d-b.d).slice(0,2+(Math.random()<.4?1:0));d.forEach(o=>{if(!has(i,o.j))edges.push([i,o.j])})});
+/* connect components */const comp=planets.map((_,i)=>i);const find=i=>comp[i]===i?i:(comp[i]=find(comp[i]));edges.forEach(([a,b])=>{comp[find(a)]=find(b)});
+for(let k=0;k<20;k++){const roots=[...new Set(planets.map((_,i)=>find(i)))];if(roots.length<=1)break;let best=null;for(let i=0;i<planets.length;i++)for(let j=i+1;j<planets.length;j++){if(find(i)===find(j))continue;const d=Math.hypot(planets[i].x-planets[j].x,planets[i].y-planets[j].y);if(!best||d<best.d)best={i,j,d}}if(best){edges.push([best.i,best.j]);comp[find(best.i)]=find(best.j)}}
+/* start positions: farthest pair */let bp=[0,1],bd=-1;for(let i=0;i<planets.length;i++)for(let j=i+1;j<planets.length;j++){const d=Math.hypot(planets[i].x-planets[j].x,planets[i].y-planets[j].y);if(d>bd){bd=d;bp=[i,j]}}
+const a=planets[bp[0]],b=planets[bp[1]];a.owner=1;a.r=3;a.prod=3;a.ships=24;b.owner=2;b.r=3;b.prod=3;b.ships=15+l;
+if(l>=4){const ex=planets.filter(p=>p.owner===0).sort((p,q)=>Math.hypot(q.x-b.x,q.y-b.y)-Math.hypot(p.x-b.x,p.y-b.y))[0];if(ex){ex.owner=2;ex.ships=8+l}}
+fleets=[];lines=edges.map(([a,b])=>{const pa=planets[a],pb=planets[b],mx=(pa.x+pb.x)/2+rnd(-8,8),my=(pa.y+pb.y)/2+rnd(-8,8);return{a,b,mx,my}})}
+const nb=i=>edges.filter(e=>e[0]===i||e[1]===i).map(e=>e[0]===i?e[1]:e[0]);
+/* ---------- flow ---------- */
+function start(l){ac();lvl=l;SV.lvl=l;gen(l);round=1;sel=-1;busy=false;parts=[];floats=[];state='play';$('ov').classList.add('hide');setMsg('Tap one of your 🔵 planets, then a connected planet.');hud()}
+function counts(){let p=0,a=0;planets.forEach(q=>{if(q.owner===1)p++;else if(q.owner===2)a++});return[p,a]}
+function hud(){const[p,a]=counts();$('lv').textContent=lvl;$('rd').textContent=round;$('np').textContent=p;$('na').textContent=a;$('bs').textContent=SV.best}
+function setMsg(t){$('msg').textContent=t}
+function sendFleet(from,to,owner,frac){const src=planets[from];const n=Math.max(1,Math.floor(src.ships*frac));if(src.ships<2||n>=src.ships&&frac<1&&src.ships<2)return false;const send=Math.min(src.ships,frac>=1?src.ships:Math.min(n,src.ships-1));if(send<1)return false;src.ships-=send;const a=src,b=planets[to],d=Math.hypot(a.x-b.x,a.y-b.y);fleets.push({from,to,n:send,owner,t:0,dur:Math.max(.5,d/260),ships:Math.min(8,Math.ceil(send/5))});sfx.send();return true}
+function arrive(f){const p=planets[f.to];if(p.owner===f.owner){p.ships=Math.min(99,p.ships+f.n);return}
+if(f.n>p.ships){const was=p.owner;p.ships=Math.max(1,f.n-p.ships);p.owner=f.owner;ring(p,OC[f.owner]);if(f.owner===1){sfx.cap();floats.push({x:p.x,y:p.y-24,t:'Captured!',c:'#1f5fb8',l:1})}else if(was===1){sfx.lost();floats.push({x:p.x,y:p.y-24,t:'Lost!',c:'#a82828',l:1});shake=5}}
+else{p.ships-=f.n;sfx.hit();ring(p,'#555')}}
+function ring(p,c){for(let i=0;i<18;i++){const a=Math.random()*6.283,s=rnd(30,110);parts.push({x:p.x,y:p.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,r:rnd(2,5),c})}}
+async function playerMove(from,to){if(busy||state!=='play')return;if(!sendFleet(from,to,1,pct)){sfx.err();return}busy=true;sel=-1;await flush();if(checkEnd())return;await aiTurn();if(checkEnd())return;produce();round++;busy=false;hud()}
+function flush(){return new Promise(res=>{(function chk(){if(fleets.length)requestAnimationFrame(chk);else res()})()})}
+function produce(){planets.forEach(p=>{if(p.owner>0)p.ships=Math.min(99,p.ships+p.prod)})}
+async function aiTurn(){const mine=planets.filter(p=>p.owner===2&&p.ships>=4);let best=null;const aggr=Math.min(.75,.42+lvl*.03),err=Math.max(0,.4-lvl*.025);
+for(const p of mine){const send=Math.floor(p.ships*aggr);for(const j of nb(p.id)){const q=planets[j];let sc=-1;if(q.owner===2){const exposed=nb(j).some(k=>planets[k].owner===1);sc=exposed&&q.ships<p.ships*.6?3:.2}else{const need=q.ships+1+(q.owner===1?2:0);if(send>need)sc=(q.owner===1?9:6)+q.r*1.5-(need/Math.max(1,send))*3;else if(q.owner===1&&send>need*.7)sc=.5}
+sc+=Math.random()*(1+err*6);if(!best||sc>best.sc)best={sc,from:p.id,to:j,frac:aggr}}}
+if(best&&best.sc>0){sendFleet(best.from,best.to,2,best.frac);await flush()}else{/* nothing worthwhile */}}
+function checkEnd(){const[p,a]=counts();const flying=fleets.some(f=>f.owner===1);if(p===planets.length){win();return true}if(p===0&&!flying){lose();return true}return false}
+function win(){state='over';busy=true;sfx.win();const st=round<=planets.length*2.2?3:round<=planets.length*3.5?2:1;SV.stars[lvl]=Math.max(SV.stars[lvl]||0,st);if(lvl>=SV.best)SV.best=lvl+1;SV.lvl=lvl+1;save();emit('GAME_SCORE_UPDATED',{score:lvl*100+st*50});emit('GAME_LEVEL_COMPLETED',{level:lvl});for(const p of planets)ring(p,'#ffd98a');hud();setTimeout(()=>{$('ov').innerHTML='<h2>🌌 Galaxy conquered!</h2><p class="stars">'+'⭐'.repeat(st)+'☆'.repeat(3-st)+'</p><p>Level '+lvl+' in '+round+' rounds.</p><button class="btn" id="nx">NEXT GALAXY ▶</button>';$('ov').classList.remove('hide');$('nx').onclick=()=>start(lvl+1)},1000)}
+function lose(){state='over';busy=true;sfx.lose();emit('GAME_LOST',{});save();setTimeout(()=>{$('ov').innerHTML='<h2>🔴 The red empire won</h2><p>You lost your last planet in round '+round+'.</p><button class="btn" id="rt">TRY AGAIN</button><button class="btn alt" id="mn">Menu</button>';$('ov').classList.remove('hide');$('rt').onclick=()=>start(lvl);$('mn').onclick=menu},1000)}
+function menu(){state='menu';const l=SV.lvl;$('ov').innerHTML='<h2>🎨 WATERCOLOR GALAXY</h2><p>Tap one of your <b style="color:#2a6ac0">blue</b> planets, then a <b>connected</b> planet to send ships. Ships grow every round — bigger planets grow faster.</p><p>Conquer <b>every</b> planet to win. The <b style="color:#c03a3a">red empire</b> strikes back after each of your moves!</p><button class="btn" id="go">'+(l>1?'CONTINUE — LEVEL '+l:'START')+'</button>'+(l>1?'<button class="btn alt" id="n1">From level 1</button>':'');$('ov').classList.remove('hide');$('go').onclick=()=>start(l);if($('n1'))$('n1').onclick=()=>start(1);planets=[];fleets=[]}
+$('tools').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;ac();if(b.dataset.p){pct=+b.dataset.p/100;document.querySelectorAll('#tools [data-p]').forEach(x=>x.classList.toggle('on',x===b));sfx.sel()}else if(b.id==='skip'&&state==='play'&&!busy){busy=true;(async()=>{await aiTurn();if(checkEnd())return;produce();round++;busy=false;hud()})()}});
+/* ---------- draw ---------- */
+function draw(dt){time+=dt;ctx.setTransform(dprR,0,0,dprR,0,0);ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake=Math.max(0,shake-dt*20);
+const g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,360);g.addColorStop(0,'#fbf3e2');g.addColorStop(1,'#e6d6b4');ctx.fillStyle=g;ctx.fillRect(-10,-10,W+20,H+20);
+ctx.fillStyle='rgba(120,90,50,.05)';for(let i=0;i<120;i++)ctx.fillRect((i*131)%W,(i*79)%H,2,1.5);
+if(!planets.length){ctx.restore();return}
+ctx.lineCap='round';lines.forEach(l=>{const a=planets[l.a],b=planets[l.b];ctx.strokeStyle='rgba(90,70,50,.38)';ctx.lineWidth=2.4;ctx.setLineDash([2,7]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(l.mx,l.my,b.x,b.y);ctx.stroke()});ctx.setLineDash([]);
+if(sel>=0){const s=planets[sel];nb(sel).forEach(j=>{const q=planets[j];ctx.strokeStyle='rgba(255,170,40,'+(.5+.4*Math.sin(time*6))+')';ctx.lineWidth=3;ctx.beginPath();ctx.arc(q.x,q.y,q.r*7+14,0,6.283);ctx.stroke()})}
+planets.forEach(p=>{const R=9+p.r*6.5,c=OC[p.owner],c2=OC2[p.owner];ctx.save();ctx.translate(p.x,p.y);const wob=Math.sin(time*1.2+p.ph)*.8;
+for(let k=0;k<4;k++){ctx.globalAlpha=.2;ctx.fillStyle=k%2?c:c2;ctx.beginPath();ctx.ellipse(Math.sin(p.ph+k)*2,Math.cos(p.ph*2+k)*2,R+k*1.6+wob,R*(.92+k*.02)+wob*.5,k*.7,0,6.283);ctx.fill()}ctx.globalAlpha=1;
+const gr=ctx.createRadialGradient(-R*.3,-R*.35,2,0,0,R);gr.addColorStop(0,c2);gr.addColorStop(1,c);ctx.fillStyle=gr;ctx.beginPath();ctx.arc(0,0,R-1,0,6.283);ctx.fill();ctx.strokeStyle='rgba(60,40,30,.45)';ctx.lineWidth=1.6;ctx.stroke();
+if(sel===p.id){ctx.strokeStyle='#ffb020';ctx.lineWidth=3.5;ctx.beginPath();ctx.arc(0,0,R+5+Math.sin(time*8)*1.5,0,6.283);ctx.stroke()}
+ctx.fillStyle=p.owner?'#fff':'#3a3a3a';ctx.font='800 '+(11+p.r*1.5)+'px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle=p.owner?'rgba(40,30,50,.55)':'rgba(255,255,255,.7)';ctx.strokeText(p.ships,0,1);ctx.fillText(p.ships,0,1);
+ctx.fillStyle='rgba(50,40,60,.65)';ctx.font='700 8px system-ui';ctx.fillText('+'+p.prod,0,R+9);ctx.restore()});
+fleets.forEach(f=>{f.t+=dt;const a=planets[f.from],b=planets[f.to],l=lines.find(l=>(l.a===f.from&&l.b===f.to)||(l.a===f.to&&l.b===f.from)),u=Math.min(1,f.t/f.dur),rev=l&&l.a===f.to;const uu=rev?1-u:u,pa=l?planets[l.a]:a,pb=l?planets[l.b]:b;
+for(let k=0;k<f.ships;k++){const t2=Math.max(0,Math.min(1,u-k*.035)),tt=rev?1-t2:t2;const mx=l?l.mx:(a.x+b.x)/2,my=l?l.my:(a.y+b.y)/2;const x=(1-tt)*(1-tt)*pa.x+2*(1-tt)*tt*mx+tt*tt*pb.x,y=(1-tt)*(1-tt)*pa.y+2*(1-tt)*tt*my+tt*tt*pb.y;const dx=(pb.x-pa.x)*(rev?-1:1),dy=(pb.y-pa.y)*(rev?-1:1),ang=Math.atan2(dy,dx);ctx.save();ctx.translate(x,y);ctx.rotate(ang);ctx.fillStyle=OC[f.owner];ctx.globalAlpha=1-k*.08;ctx.beginPath();ctx.moveTo(7,0);ctx.lineTo(-5,-4.5);ctx.lineTo(-3,0);ctx.lineTo(-5,4.5);ctx.closePath();ctx.fill();ctx.strokeStyle='rgba(40,30,50,.5)';ctx.lineWidth=1;ctx.stroke();ctx.restore()}
+if(u>=1&&!f.done){f.done=true;arrive(f)}});fleets=fleets.filter(f=>!f.done);
+parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*1.6;p.vx*=.96;p.vy*=.96;ctx.globalAlpha=Math.max(0,p.l*.8);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l+.5,0,6.283);ctx.fill()});ctx.globalAlpha=1;parts=parts.filter(p=>p.l>0);
+floats.forEach(f=>{f.y-=18*dt;f.l-=dt*.8;ctx.globalAlpha=Math.min(1,f.l*2);ctx.font='900 14px system-ui';ctx.textAlign='center';ctx.fillStyle=f.c;ctx.lineWidth=3;ctx.strokeStyle='rgba(255,255,255,.8)';ctx.strokeText(f.t,f.x,f.y);ctx.fillText(f.t,f.x,f.y)});ctx.globalAlpha=1;floats=floats.filter(f=>f.l>0);ctx.restore()}
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;draw(dt)}
+/* ---------- input ---------- */
+cvs.addEventListener('pointerdown',e=>{ac();if(state!=='play'||busy)return;const b=cvs.getBoundingClientRect(),x=(e.clientX-b.left)*(W/b.width),y=(e.clientY-b.top)*(H/b.height);let hit=-1,bd=1e9;planets.forEach(p=>{const d=Math.hypot(p.x-x,p.y-y);if(d<9+p.r*6.5+10&&d<bd){bd=d;hit=p.id}});
+if(hit<0){sel=-1;return}const p=planets[hit];
+if(sel<0){if(p.owner===1&&p.ships>=2){sel=hit;sfx.sel();setMsg('Now tap a planet connected to it (highlighted).')}else sfx.err();return}
+if(hit===sel){sel=-1;return}
+if(nb(sel).includes(hit)){const from=sel;playerMove(from,hit)}else{if(p.owner===1&&p.ships>=2){sel=hit;sfx.sel()}else{sfx.err();setMsg('Those planets are not connected.')}}});
+addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!$('ov').classList.contains('hide')){const b=$('go')||$('nx')||$('rt');if(b){e.preventDefault();b.click()}}});
+/* ---------- boot ---------- */
+menu();hud();requestAnimationFrame(loop);
+window.__wg={get state(){return state},get planets(){return planets},get edges(){return edges},get lvl(){return lvl},get round(){return round},get busy(){return busy},playerMove,start,get sel(){return sel},counts,nb,SV};
+</script>
+</body>
+</html>

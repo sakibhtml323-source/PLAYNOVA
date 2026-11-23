@@ -1,0 +1,434 @@
+{
+ "run_from": "/home/claude/p",
+ "total": 71,
+ "passed": 71,
+ "failed": 0,
+ "tests": [
+  {
+   "group": "catalogue",
+   "test": "500 games in registry",
+   "result": "PASS",
+   "detail": "500"
+  },
+  {
+   "group": "catalogue",
+   "test": "no duplicate ids/slugs",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "catalogue",
+   "test": "every game file, page, thumbnail and banner exists",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "security",
+   "test": "no game page uses allow-same-origin",
+   "result": "PASS",
+   "detail": "500 pages, 0 with allow-same-origin"
+  },
+  {
+   "group": "security",
+   "test": "every game iframe has sandbox=\"allow-scripts\"",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "security",
+   "test": "every site page has a CSP meta tag",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "integration",
+   "test": "capability registry statuses valid",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "integration",
+   "test": "no game marked FULLY_INTEGRATED without evidence",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "seo",
+   "test": "all 500 game pages have the correct canonical URL",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "seo",
+   "test": "all 500 game pages have Open Graph + Twitter tags",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "seo",
+   "test": "all 500 game pages have valid JSON-LD",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "seo",
+   "test": "500 unique titles and 500 unique non-empty descriptions",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "seo",
+   "test": "every sitemap URL exists on disk",
+   "result": "PASS",
+   "detail": "521 urls, missing []"
+  },
+  {
+   "group": "seo",
+   "test": "robots.txt allows crawling and points to the sitemap",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "html",
+   "test": "no tag-nesting errors on any site page (incl. cookies, privacy, terms)",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "html",
+   "test": "no duplicate static HTML ids in any production HTML file (incl. the 500 game files)",
+   "result": "PASS",
+   "detail": "{}"
+  },
+  {
+   "group": "html",
+   "test": "legal pages use readable colours (dark theme overrides present)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "storage",
+   "test": "bridge is the first script of all 500 games (initialised before game scripts)",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "storage",
+   "test": "all 500 game pages hydrate saved data via pn-frame.js before the game loads",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "ads",
+   "test": "ads disabled by default with no publisher id or fake credentials",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "offline",
+   "test": "service worker has versioned cache cleanup and own-page cache keys",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "wallet",
+   "test": "duplicate session reward blocked",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "wallet",
+   "test": "insufficient balance purchase blocked",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "wallet",
+   "test": "purchase deducts exact price once",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "wallet",
+   "test": "duplicate purchase blocked",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "wallet",
+   "test": "ledger sum never negative",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "storage",
+   "test": "IndexedDB restores progress after localStorage cleared",
+   "result": "PASS",
+   "detail": "255"
+  },
+  {
+   "group": "storage",
+   "test": "corrupt data recovers to fresh profile with backup",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "storage",
+   "test": "import rejects invalid data",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "daily",
+   "test": "login claim once only",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "daily",
+   "test": "play challenge locked before a session",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "daily",
+   "test": "reset day is UTC",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "achievements",
+   "test": "First Game unlocks, 10 Games does not",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "adapter",
+   "test": "wrong origin rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "adapter",
+   "test": "malformed message rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "adapter",
+   "test": "unsupported game rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "bridge",
+   "test": "wrong nonce rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "bridge",
+   "test": "valid level event rewards platform amount only (20 XP)",
+   "result": "PASS",
+   "detail": "20"
+  },
+  {
+   "group": "bridge",
+   "test": "replayed level gives no extra reward",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "bridge",
+   "test": "game cannot read platform data",
+   "result": "PASS",
+   "detail": "null"
+  },
+  {
+   "group": "shim",
+   "test": "game storage persists across reload via platform store",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "platform",
+   "test": "no JS page errors in logic tests",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "group": "gameplay",
+   "test": "real clicks complete level 1 of desert-reflection-232 and reward 20 XP once",
+   "result": "PASS",
+   "detail": "20"
+  },
+  {
+   "group": "player",
+   "test": "restart twice returns to ready",
+   "result": "PASS",
+   "detail": "['ready', 'ready']"
+  },
+  {
+   "group": "player",
+   "test": "restart does not add browser-history entries",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "player",
+   "test": "fullscreen button is clickable (consent bar not covering it)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "a11y",
+   "test": "home: exactly one h1",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "a11y",
+   "test": "games: exactly one h1",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "a11y",
+   "test": "profile: exactly one h1",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "a11y",
+   "test": "404: exactly one h1",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "a11y",
+   "test": "game: exactly one h1",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "offline",
+   "test": "unvisited page shows offline page",
+   "result": "PASS",
+   "detail": "Offline | PLAYNOVA"
+  },
+  {
+   "group": "offline",
+   "test": "previously visited game works offline",
+   "result": "PASS",
+   "detail": "ready"
+  },
+  {
+   "group": "storage",
+   "test": "save, reload, restore and quota error work on a 30-game sample",
+   "result": "PASS",
+   "detail": "30"
+  },
+  {
+   "group": "game-panel",
+   "test": "progress drawer closed by default and opens with related games",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "home @360px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "games @360px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "profile @360px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "game @360px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "home @412px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "games @412px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "profile @412px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "game @412px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "home @768px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "games @768px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "profile @768px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "game @768px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "home @1366px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "games @1366px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "profile @1366px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "group": "responsive",
+   "test": "game @1366px no horizontal overflow",
+   "result": "PASS",
+   "detail": ""
+  }
+ ]
+}

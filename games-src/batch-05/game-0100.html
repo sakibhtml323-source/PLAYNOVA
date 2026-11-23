@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wild Color Match: Infinite</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0f0f0f;font-family:'Segoe UI',Arial,sans-serif;color:#eee;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.1rem;color:#f472b6;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:16px;font-size:.9rem;margin-bottom:12px}
+#target{font-size:1.1rem;margin-bottom:14px;text-align:center}
+#swatch{width:130px;height:130px;border-radius:50%;margin:0 auto 20px;box-shadow:0 8px 40px rgba(0,0,0,.6);transition:background .1s}
+#wheel{display:grid;grid-template-columns:repeat(4,64px);gap:10px;justify-content:center}
+.chip{width:64px;height:64px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform .1s}
+.chip:hover{transform:scale(1.1)}
+.chip.sel{border-color:#fff}
+#fb{text-align:center;min-height:1.6em;margin-top:16px;font-weight:700}
+#ov{position:fixed;inset:0;background:rgba(15,15,10,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#eee;padding:20px;z-index:5}
+button{background:#f472b6;border:none;color:#0f0f0f;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:360px){#wheel{grid-template-columns:repeat(4,52px)}.chip{width:52px;height:52px}}
+</style>
+</head>
+<body>
+<h1>🎨 WILD COLOR MATCH: INFINITE</h1>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Score <b id="s">0</b></span><span>Lives <b id="l">3</b></span><span>Best <b id="b">0</b></span></div>
+<div id="target">Memorize…</div>
+<div id="swatch"></div>
+<div id="wheel"></div>
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#f472b6">WILD COLOR MATCH</h2><p id="od">Infinite rounds of color-memory madness! A swatch flashes — then you must rebuild it from the wheel of chips. Rounds get faster, palettes get wilder. How deep can you go?</p><button id="btn">MATCH</button></div>
+<script>
+"use strict";
+const rnd=()=>Math.floor(Math.random()*256);
+let target,round,score,lives,playing,showT,best=+localStorage.getItem('wc_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function newRound(){target=[rnd(),rnd(),rnd()];
+const sw=document.getElementById('swatch');
+sw.style.background='rgb('+target.join(',')+')';
+document.getElementById('target').textContent='Round '+round+' — MEMORIZE!';
+// hide after delay
+const hideMs=Math.max(400,1600-round*80);
+clearTimeout(showT);
+showT=setTimeout(()=>{
+sw.style.background='#1c1c1c';
+document.getElementById('target').textContent='Now match it from the wheel!';
+buildWheel();},hideMs);}
+function buildWheel(){const w=document.getElementById('wheel');w.innerHTML='';
+const opts=[target];
+while(opts.length<8){const c=[rnd(),rnd(),rnd()];
+if(!opts.some(o=>Math.abs(o[0]-c[0])+Math.abs(o[1]-c[1])+Math.abs(o[2]-c[2])<60))opts.push(c);}
+opts.sort(()=>Math.random()-.5);
+opts.forEach((c,i)=>{const chip=document.createElement('div');chip.className='chip';
+chip.style.background='rgb('+c.join(',')+')';
+chip.onclick=()=>pick(c,chip);w.appendChild(chip);});}
+function pick(c,chip){if(!playing)return;audio.resume();
+chip.classList.add('sel');
+const d=Math.abs(c[0]-target[0])+Math.abs(c[1]-target[1])+Math.abs(c[2]-target[2]);
+if(d<30){score+=Math.max(10,100-round*4);document.getElementById('s').textContent=score;
+document.getElementById('fb').textContent='✓ Wild match! +'+(100-round*4);document.getElementById('fb').style.color='#4ade80';
+beep(700,.1,'triangle');round++;document.getElementById('r').textContent=round;
+document.getElementById('wheel').innerHTML='';setTimeout(newRound,700);}
+else{lives--;document.getElementById('l').textContent=lives;beep(150,.2,'sawtooth');
+document.getElementById('fb').textContent='✗ That\'s off by '+d;document.getElementById('fb').style.color='#f87171';
+if(lives<=0)end();}}
+function end(){playing=false;if(score>best){best=score;localStorage.setItem('wc_best',best);document.getElementById('b').textContent=best;}
+const r=round>=12?'🌈 CHROMATIC GOD':round>=8?'🎨 WILD EYE':round>=5?'👁️ SHARP':'🌫️ BLURRY';
+document.getElementById('od').innerHTML=r+'<br>You survived <b style="font-size:1.4rem;color:#f472b6">'+round+'</b> rounds · Score '+score;
+document.getElementById('btn').textContent='RECOLOR';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;
+if(e.key>='1'&&e.key<='8'){const c=document.querySelectorAll('.chip')[+e.key-1];if(c)c.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();round=1;score=0;lives=3;playing=true;
+document.getElementById('r').textContent=1;document.getElementById('s').textContent=0;document.getElementById('l').textContent=3;
+document.getElementById('fb').textContent='';
+document.getElementById('ov').style.display='none';newRound();};
+</script>
+</body>
+</html>

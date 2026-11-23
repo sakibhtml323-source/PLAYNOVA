@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Key Turn #391</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+canvas{background:#312e81;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🗝️ Royal Key Turn</h1><div class="sub">Rotate the key to align its teeth with the lock slots — wrong angle breaks the pick!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Picks <b id="p">3</b></span><span>Score <b id="s">0</b></span></div>
+<canvas id="cv" width="360" height="360"></canvas>
+<div id="msg"></div>
+<button id="btn">👑 New Lock</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=360,CX=W/2,CY=W/2;let angle=0,target=0,tolerance=0.2,level=1,picks=3,score=0,dragging=false;
+function newLock(){target=Math.random()*Math.PI*2;
+tolerance=Math.max(0.08,0.28-level*0.02);
+angle=Math.random()*Math.PI*2;
+document.getElementById('l').textContent=level;
+document.getElementById('p').textContent=picks;
+draw();msg('Rotate the key into the lock!');}
+function angDiff(a,b){let d=Math.abs(a-b)%(Math.PI*2);return Math.min(d,Math.PI*2-d);}
+cvs.addEventListener('pointerdown',e=>{dragging=true;drag(e);});
+cvs.addEventListener('pointermove',e=>{if(dragging)drag(e);});
+cvs.addEventListener('pointerup',()=>{dragging=false;tryTurn();});
+function drag(e){const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+angle=Math.atan2(y-CY,x-CX);draw();}
+function tryTurn(){const off=angDiff(angle,target);
+if(off<tolerance){score+=Math.round((tolerance-off)*100)+50;
+document.getElementById('s').textContent=score;
+beep(880,.25,'triangle');msg('🔓 Click! Level '+(level+1));level++;
+setTimeout(newLock,800);}
+else{picks--;document.getElementById('p').textContent=picks;
+beep(150,.2,'sawtooth');msg('🔨 The pick snaps!');
+if(picks<=0){picks=3;level=Math.max(1,level-1);msg('💔 Out of picks — lock resets.');setTimeout(newLock,1000);}}}
+function draw(){ctx.fillStyle='#312e81';ctx.fillRect(0,0,W,W);
+// lock body
+ctx.beginPath();ctx.arc(CX,CY,110,0,7);ctx.fillStyle='#4338ca';ctx.fill();
+ctx.strokeStyle='#6366f1';ctx.lineWidth=6;ctx.stroke();
+// keyhole
+ctx.beginPath();ctx.arc(CX,CY,34,0,7);ctx.fillStyle='#1e1b4b';ctx.fill();
+// target indicator
+ctx.save();ctx.translate(CX,CY);ctx.rotate(target);
+ctx.strokeStyle='#fbbf2455';ctx.lineWidth=8;
+ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(70,0);ctx.stroke();ctx.restore();
+// key
+ctx.save();ctx.translate(CX,CY);ctx.rotate(angle);
+ctx.strokeStyle='#fbbf24';ctx.lineWidth=6;ctx.lineCap='round';
+ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(78,0);ctx.stroke();
+// teeth
+for(let i=0;i<3;i++){const tx=52+i*12;
+ctx.beginPath();ctx.moveTo(tx,-2);ctx.lineTo(tx,-12+i*3);ctx.stroke();}
+ctx.beginPath();ctx.arc(0,0,14,0,7);ctx.stroke();
+ctx.restore();
+// tolerance arc
+ctx.strokeStyle='#22c55e44';ctx.lineWidth=4;
+ctx.beginPath();ctx.arc(CX,CY,96,target-tolerance,target+tolerance);ctx.stroke();ctx.lineWidth=1;}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;picks=3;score=0;
+document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newLock();};
+newLock();
+</script></body></html>

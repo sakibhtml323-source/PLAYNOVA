@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Grid Slide #418</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,54px);gap:3px;margin:12px}
+.c{width:56px;height:56px;background:#1e293b;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer}
+.c.goal{outline:2px solid #fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔀 Crystal Grid Slide</h1><div class="sub">Tap a gem, then an arrow button — the WHOLE row or column slides one step!</div>
+<div id="hud"><span>Placed <b id="p">0</b>/<b id="pt">0</b></span><span>Moves <b id="m">0</b></span><span>Level <b id="l">1</b></span></div>
+<div id="grid"></div>
+<div id="ctl" style="display:flex;gap:8px;margin:8px">
+<button id="L" style="padding:8px 12px;font-size:.8rem">← Row</button><button id="R" style="padding:8px 12px;font-size:.8rem">Row →</button>
+<button id="U" style="padding:8px 12px;font-size:.8rem">↑ Col</button><button id="D" style="padding:8px 12px;font-size:.8rem">Col ↓</button>
+</div>
+<div id="msg"></div>
+<button id="btn">✨ New Grid</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5,GEMS=['💎','🔮','👑','⚜️','🌟'];
+let grid=[],target=[],sel=null,moves=0,level=1;
+function gen(){grid=[];target=[];
+for(let r=0;r<N;r++){const row=[];const trow=[];
+for(let c=0;c<N;c++){const v=(Math.random()*5)|0;row.push(v);trow.push(v);}
+grid.push(row);target.push(trow);}
+// scramble with row/col shifts
+const sh=4+level;
+for(let i=0;i<sh;i++){const t=(Math.random()*2)|0,idx=(Math.random()*N)|0,d=Math.random()<0.5?1:-1;
+if(t===0){if(d>0)grid[idx].unshift(grid[idx].pop());else grid[idx].push(grid[idx].shift());}
+else{const col=grid.map(row=>row[idx]);
+if(d>0)col.unshift(col.pop());else col.push(col.shift());
+for(let r=0;r<N;r++)grid[r][idx]=col[r];}}
+// ensure scrambled
+if(grid.every((row,r)=>row.every((v,c)=>v===target[r][c]))){grid[0].unshift(grid[0].pop());}
+sel=null;moves=0;document.getElementById('m').textContent=0;
+document.getElementById('l').textContent=level;
+document.getElementById('pt').textContent=N*N;
+render();msg('Restore the crystal order!');}
+function slide(type,dir){if(!sel)return;const r=sel.r,c=sel.c;moves++;
+document.getElementById('m').textContent=moves;
+if(type==='row'){if(dir>0)grid[r].unshift(grid[r].pop());else grid[r].push(grid[r].shift());}
+else{const col=grid.map(row=>row[c]);
+if(dir>0)col.unshift(col.pop());else col.push(col.shift());
+for(let i=0;i<N;i++)grid[i][c]=col[i];}
+beep(400+moves*10,.06);render();check();}
+function check(){const n=grid.reduce((a,row,r)=>a+row.filter((v,c)=>v===target[r][c]).length,0);
+document.getElementById('p').textContent=n;
+if(n>=N*N){beep(880,.3,'triangle');msg('🔀 Grid restored! Level '+(level+1));level++;
+setTimeout(gen,1000);}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]===target[r][c]?' goal':'');
+d.textContent=GEMS[grid[r][c]];
+if(sel&&sel.r===r&&sel.c===c)d.style.outline='3px solid #facc15';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();sel={r,c};beep(300,.05);render();};
+g.appendChild(d);}}
+document.getElementById('L').onclick=()=>slide('row',-1);
+document.getElementById('R').onclick=()=>slide('row',1);
+document.getElementById('U').onclick=()=>slide('col',-1);
+document.getElementById('D').onclick=()=>slide('col',1);
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Rainbow #398</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#mixes{display:flex;gap:16px;margin:12px}
+.swatch{width:110px;height:110px;border-radius:14px;border:3px solid #4f46e5}
+#sliders{display:flex;flex-direction:column;gap:8px;margin:8px}
+.sl{display:flex;align-items:center;gap:10px}
+.sl input{width:200px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🌈 Royal Rainbow</h1><div class="sub">Mix red, green and blue to match the royal color exactly!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="mixes">
+<div><div class="swatch" id="target"></div><small>Target</small></div>
+<div><div class="swatch" id="yours"></div><small>Yours</small></div>
+</div>
+<div id="sliders">
+<div class="sl">🔴 <input type="range" id="R" min="0" max="255" value="128"> <span id="rv">128</span></div>
+<div class="sl">🟢 <input type="range" id="G" min="0" max="255" value="128"> <span id="gv">128</span></div>
+<div class="sl">🔵 <input type="range" id="B" min="0" max="255" value="128"> <span id="bv">128</span></div>
+</div>
+<div id="msg"></div>
+<button id="btn">🎨 New Color</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let tgt={r:128,g:128,b:128},round=1,score=0,best=+localStorage.getItem('rrb_best')||0;
+document.getElementById('b').textContent=best;
+function newColor(){tgt={r:(Math.random()*256)|0,g:(Math.random()*256)|0,b:(Math.random()*256)|0};
+document.getElementById('target').style.background='rgb('+tgt.r+','+tgt.g+','+tgt.b+')';
+update();msg('Match the royal color!');}
+function update(){const R=+document.getElementById('R').value;
+const G=+document.getElementById('G').value;const B=+document.getElementById('B').value;
+document.getElementById('rv').textContent=R;document.getElementById('gv').textContent=G;document.getElementById('bv').textContent=B;
+document.getElementById('yours').style.background='rgb('+R+','+G+','+B+')';
+const diff=Math.abs(R-tgt.r)+Math.abs(G-tgt.g)+Math.abs(B-tgt.b);
+if(diff===0){score+=300-round*10;document.getElementById('s').textContent=score;
+if(score>best){best=score;localStorage.setItem('rrb_best',best);document.getElementById('b').textContent=best;}
+beep(880,.3,'triangle');msg('🌈 Perfect match! +'+Math.round(300-round*10));round++;
+document.getElementById('r').textContent=round;
+setTimeout(newColor,1000);}
+else if(diff<12){msg('🔥 Almost! ('+diff+' off)');}
+else if(diff<40){msg('🌡️ Getting warm… ('+diff+' off)');}
+else{msg('❄️ Cold ('+diff+' off)');}}
+['R','G','B'].forEach(id=>{document.getElementById(id).addEventListener('input',()=>{
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();update();});});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;score=0;
+document.getElementById('s').textContent=0;document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newColor();};
+newColor();
+</script></body></html>

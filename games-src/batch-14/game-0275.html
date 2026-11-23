@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Wave Composer #275</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem;max-width:320px;text-align:center}
+#tracks{display:flex;flex-direction:column;gap:8px;margin:10px}
+.tr{display:flex;align-items:center;gap:8px}
+.tr .lbl{width:90px;font-size:.8rem;color:#a1a1aa;text-align:right}
+canvas.wave{background:#27272a;border-radius:6px;cursor:pointer}
+#target{display:flex;gap:4px;margin:8px}
+.tcell{width:26px;height:26px;background:#3f3f46;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.tcell.on{background:#facc15;color:#18181b;font-weight:800}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:6px}
+#msg{min-height:1.3em;font-weight:600}
+</style></head><body>
+<h1>🌊 Haunted Wave Composer</h1>
+<div class="sub">Shape each track's waveform to match the target pattern — press ▶ to test!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Match <b id="m">0</b>%</span></div>
+<div>🎯 Target:</div>
+<div id="target"></div>
+<div id="tracks"></div>
+<div id="msg"></div>
+<div>
+<button id="test">▶ Test</button>
+<button id="new">🎲 New Song</button>
+</div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.12,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.12,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const STEPS=8;const TRACKS=[{n:'👻 Ghost Lead',base:330},{n:'🎃 Bass',base:110},{n:'🦇 Hi-Hat',base:880}];
+let waves=[[],[],[]],target=[],level=1;
+function genTarget(){target=[];const density=Math.min(7,3+level);
+for(let i=0;i<density;i++)target.push((Math.random()*STEPS)|0);
+renderTarget();}
+function renderTarget(){const el=document.getElementById('target');el.innerHTML='';
+for(let i=0;i<STEPS;i++){const d=document.createElement('div');d.className='tcell'+(target.includes(i)?' on':'');
+d.textContent=i+1;el.appendChild(d);}}
+function newSong(){waves=TRACKS.map(()=>Array.from({length:STEPS},()=>Math.random()*0.7+0.15));
+genTarget();buildTracks();msg('Shape the waves! Click to raise/lower points.');}
+function buildTracks(){const w=document.getElementById('tracks');w.innerHTML='';
+TRACKS.forEach((tr,ti)=>{const row=document.createElement('div');row.className='tr';
+const lbl=document.createElement('div');lbl.className='lbl';lbl.textContent=tr.n;row.appendChild(lbl);
+const cv=document.createElement('canvas');cv.className='wave';cv.width=240;cv.height=50;
+cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();
+const x=Math.floor((e.clientX-r.left)/r.width*STEPS);
+waves[ti][x]=Math.max(0.05,Math.min(1,(e.clientY-r.top)/r.height));
+waves[ti][x]=1-waves[ti][x];
+beep(tr.base+waves[ti][x]*200,.08);drawWave(cv,waves[ti],ti);});
+row.appendChild(cv);w.appendChild(row);drawWave(cv,waves[ti],ti);});
+document.getElementById('l').textContent=level;}
+function drawWave(cv,data,ti){const ctx=cv.getContext('2d');ctx.fillStyle='#27272a';ctx.fillRect(0,0,cv.width,cv.height);
+ctx.strokeStyle=['#a78bfa','#fbbf24','#67e8f9'][ti];ctx.lineWidth=2;ctx.beginPath();
+data.forEach((v,i)=>{const x=i/(STEPS-1)*cv.width,y=(1-v)*cv.height;
+i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+ctx.stroke();
+// target hint line
+ctx.strokeStyle='#facc1555';ctx.setLineDash([3,3]);ctx.beginPath();
+target.forEach((tv,k)=>{const x=tv/(STEPS-1)*cv.width;
+ctx.moveTo(x,0);ctx.lineTo(x,cv.height);});
+ctx.stroke();ctx.setLineDash([]);}
+function test(){let match=0;
+// check: at each target step, some track has a peak
+target.forEach(tv=>{const hit=waves.some(w=>w[tv]>0.7);if(hit)match++;});
+const pct=Math.round(match/Math.max(1,target.length)*100);
+document.getElementById('m').textContent=pct;
+// play the song
+const beat=200;let t=0;
+waves.forEach((w,ti)=>{w.forEach((v,i)=>{if(v>0.4)setTimeout(()=>beep(TRACKS[ti].base+v*300,.15),t+i*beat);});});
+if(pct>=100){beep(880,.3,'triangle');msg('🎵 Perfect match! Level '+(level+1));level++;
+setTimeout(newSong,1200);}
+else{beep(200,.15,'sawtooth');msg('🎯 '+pct+'% — peaks must align with target columns!');}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('test').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();test();};
+document.getElementById('new').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newSong();};
+newSong();
+</script></body></html>

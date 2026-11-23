@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Crazy Pastel Reaction Time</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;transition:background .2s;user-select:none}
+body.wait{background:linear-gradient(#fbcfe8,#ddd6fe)}
+body.go{background:linear-gradient(#a7f3d0,#bae6fd)}
+body.early{background:linear-gradient(#fecaca,#fed7aa)}
+#hud{display:flex;gap:16px;padding:12px;font-size:.95rem;color:#6b7280}
+h1{font-size:1.2rem;color:#9d174d;padding-top:14px}
+#pad{flex:1;width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#big{font-size:2rem;font-weight:800;color:#374151;text-align:center;padding:20px}
+#stats{width:min(480px,92vw);background:#ffffffcc;border-radius:14px;padding:12px;margin-bottom:14px;font-size:.9rem;color:#4b5563}
+#stats b{color:#9d174d}
+#hist{display:flex;gap:4px;justify-content:center;margin:6px 0}
+.hb{width:22px;height:10px;border-radius:5px;background:#e9d5ff}
+#ov{position:fixed;inset:0;background:rgba(255,255,255,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#374151;padding:20px;z-index:5}
+button{background:#f9a8d4;border:none;color:#831843;font-weight:800;padding:12px 34px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:12px}
+@media(max-width:480px){#big{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<h1>🌸 CRAZY PASTEL REACTION TIME</h1>
+<div id="hud"><span>Round <b id="r">1</b>/5</span><span>Avg <b id="a">—</b> ms</span><span>Best <b id="b">—</b> ms</span></div>
+<div id="pad"><div id="big">Tap START — then tap the instant the screen turns pastel green!</div></div>
+<div id="stats"><div id="hist"></div><div id="sum" style="text-align:center">Complete 5 rounds to get your rating.</div></div>
+<div id="ov"><h2 style="color:#9d174d">REACTION TIME TEST</h2><p id="od">Wait for the green… tap too early and the round is forfeit. 5 rounds, average counts!</p><button id="btn">START</button></div>
+<script>
+"use strict";
+let state='idle',t0,times=[],round,best=+localStorage.getItem('rt_best')||0,to;
+if(best)document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const big=document.getElementById('big'),body=document.body;
+function startRound(){state='wait';body.className='wait';big.textContent='Wait for green…';
+to=setTimeout(()=>{state='go';t0=performance.now();body.className='go';big.textContent='TAP NOW!!!';beep(880,.1,'triangle');},1200+Math.random()*2600);}
+function tap(){if(state==='wait'){clearTimeout(to);state='idle';body.className='early';big.innerHTML='⚠️ Too early!<br><small>Tap to try this round again.</small>';beep(160,.2,'sawtooth');}
+else if(state==='go'){const ms=Math.round(performance.now()-t0);times.push(ms);round++;
+document.getElementById('r').textContent=Math.min(round+1,5);
+const avg=Math.round(times.reduce((a,b)=>a+b,0)/times.length);
+document.getElementById('a').textContent=avg;
+const h=document.createElement('div');h.className='hb';h.style.width=Math.min(120,ms/3)+'px';document.getElementById('hist').appendChild(h);
+beep(500+Math.max(0,400-ms),.08);
+if(round>=5){state='idle';body.className='';finish(avg);}else{state='idle';body.className='';big.innerHTML=ms+' ms<br><small>Tap for next round</small>';}}
+else if(state==='idle'){startRound();}}
+function finish(avg){const r=avg<180?'⚡ LIGHTNING NINJA':avg<230?'🔥 BLAZING':avg<300?'👍 SHARP':'🐢 WARMING UP';
+if(!best||avg<best){best=avg;localStorage.setItem('rt_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('sum').innerHTML='Average: <b>'+avg+' ms</b> — '+r+'<br>Best: '+best+' ms';
+document.getElementById('od').innerHTML='Average reaction: <b style="font-size:1.5rem;color:#9d174d">'+avg+' ms</b><br>'+r+(avg<200?'<br>🏆 New personal best material!':'');
+document.getElementById('btn').textContent='TEST AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('pad').addEventListener('pointerdown',()=>{audio.resume();tap();});
+window.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tap();}});
+document.getElementById('btn').onclick=()=>{audio.resume();times=[];round=0;document.getElementById('hist').innerHTML='';document.getElementById('r').textContent=1;document.getElementById('ov').style.display='none';startRound();};
+</script>
+</body>
+</html>

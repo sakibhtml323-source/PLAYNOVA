@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Balance Beam #295</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>⚖️ Desert Balance Beam</h1><div class="sub">Balance the beam with left/right keys — keep the ball on as long as possible!</div>
+<div id="hud"><span>Time <b id="t">0.0</b>s</span><span>Best <b id="b">0.0</b>s</span></div>
+<canvas id="cv" width="440" height="340"></canvas>
+<div id="ov"><div style="font-size:3rem">🌵</div><p>◀ ▶ or A/D to tilt the beam.<br>Gravity drags the ball — don't let it roll off!</p><button id="btn">Balance</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=340,CX=W/2,CY=H/2;
+let ball={x:0,vx:0},beamA=0,playing=false,startT=0,best=+localStorage.getItem('bb_best')||0,keys={};
+document.getElementById('b').textContent=best.toFixed(1);
+document.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;});
+document.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+function step(dt){const BL=180;
+// tilt control
+if(keys['arrowleft']||keys['a'])beamA-=0.015;
+if(keys['arrowright']||keys['d'])beamA+=0.015;
+beamA*=0.995; // slight self-centering
+beamA=Math.max(-0.3,Math.min(0.3,beamA));
+// physics
+ball.vx+=Math.sin(beamA)*0.18;ball.x+=ball.vx;
+ball.vx*=0.99;
+// danger beep near edge
+if(Math.abs(ball.x)>BL*0.7&&Math.random()<0.05)beep(200,.05,'sawtooth');
+if(Math.abs(ball.x)>BL+14){fall();}}
+function fall(){playing=false;beep(130,.35,'sawtooth');
+const t=((Date.now()-startT)/1000);
+if(t>best){best=t;localStorage.setItem('bb_best',best);document.getElementById('b').textContent=best.toFixed(1);}
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='💥 The ball rolled off!<br>Balanced for <b style="color:#fbbf24">'+t.toFixed(1)+'s</b>';}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,H);
+// beam
+ctx.save();ctx.translate(CX,CY);ctx.rotate(beamA);
+ctx.fillStyle='#57534e';ctx.fillRect(-180,-5,360,10);
+// center mark
+ctx.fillStyle='#fbbf24';ctx.fillRect(-3,-12,6,8);
+ctx.restore();
+// ball
+const bx=CX+ball.x*Math.cos(beamA),by=CY+ball.x*Math.sin(beamA)-12;
+ctx.beginPath();ctx.arc(bx,by,10,0,7);ctx.fillStyle='#fbbf24';ctx.fill();
+ctx.strokeStyle='#fff5';ctx.stroke();
+document.getElementById('t').textContent=((Date.now()-startT)/1000).toFixed(1);
+if(playing){step(1/60);requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{ball={x:0,vx:0};beamA=0;
+document.getElementById('ov').style.display='none';playing=true;startT=Date.now();
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();};
+</script></body></html>

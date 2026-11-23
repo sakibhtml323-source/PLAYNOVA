@@ -1,0 +1,170 @@
+{
+ "generated_by": "automated Playwright run against local build",
+ "tests": [
+  {
+   "test": "verified session earns 5 coins + 10 xp (+20 coins First Game achievement)",
+   "result": "PASS",
+   "detail": "observed [coins,xp]=[25,10] = 5 session + 20 First Game achievement coins; the strict check first FAILED because I forgot the achievement bonus, expectation corrected"
+  },
+  {
+   "test": "duplicate session gives no second reward",
+   "result": "PASS",
+   "detail": "10"
+  },
+  {
+   "test": "unknown item rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "daily login claim works once",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "play challenge locked before a session",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "play challenge claimable after session, once",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "daily reset uses UTC date",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "level increases at XP threshold (100 XP = level 2)",
+   "result": "PASS",
+   "detail": "[120, 2]"
+  },
+  {
+   "test": "level-up logged in XP history",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "valid level event accepted",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "replay of same level: no extra reward",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "skipping ahead (level 5 before unlocked) rejected",
+   "result": "PASS",
+   "detail": "response=IGNORED, completed levels=[1]; earlier check had a lenient fallback that could not fail"
+  },
+  {
+   "test": "reward amounts in message ignored",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "wrong origin rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "wrong sender rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "malformed message rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "unknown event type rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "unsupported game rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "win from a game without win capability earns nothing",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "XSS in display name is sanitised and not rendered as HTML",
+   "result": "PASS",
+   "detail": "name stored as: img srcx onerrora; no <img> rendered, no dialog fired. First run FAILED only because my check wrongly required the word onerror to be absent; criterion corrected"
+  },
+  {
+   "test": "Recommended row appears with history",
+   "result": "PASS",
+   "detail": "10"
+  },
+  {
+   "test": "Recommended row hidden without history",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "difficulty filter shows exact count",
+   "result": "PASS",
+   "detail": "72 games"
+  },
+  {
+   "test": "no page errors during tests",
+   "result": "PASS",
+   "detail": "[]"
+  },
+  {
+   "test": "bridge event with wrong nonce rejected",
+   "result": "PASS",
+   "detail": "0"
+  },
+  {
+   "test": "bridge event with no nonce rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "valid bridge event rewards exactly the platform amount (20 XP), message amounts ignored",
+   "result": "PASS",
+   "detail": "20"
+  },
+  {
+   "test": "replaying the same level via bridge gives no extra XP",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "skipping to a locked level rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "win event from game without win capability earns nothing",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "unknown event type ignored",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "game cannot read platform data (pn_data)",
+   "result": "PASS",
+   "detail": "null"
+  },
+  {
+   "test": "game cannot reach parent PLAYNOVA object",
+   "result": "PASS",
+   "detail": "BLOCKED"
+  }
+ ]
+}

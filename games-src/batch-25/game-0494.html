@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Windmill Spin #0494</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+canvas{background:#1f2937;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#facc15}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>Desert Windmill Spin</h1><div class="sub">Spin the windmill by swiping in circles — hold the target RPM!</div>
+<div id="hud"><span>RPM <b id="r">0</b></span><span>Target <b id="t">60</b></span><span>⏱️ <b id="tm">30</b>s</span></div>
+<canvas id="cv" width="400" height="380"></canvas>
+<div id="ov"><div style="font-size:3rem">🌬️</div><p>Swipe circles fast to spin — stay near the target RPM!</p><button id="btn">Start</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+function msg(t){document.getElementById('msg').textContent=t;}
+function end(w){if(!playing)return;playing=false;beep(w?880:130,.3,w?'triangle':'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML=w?WIN[0]:LOSE[0];}
+const WIN=['🏆 Victory!'];const LOSE=['💥 Game over!'];
+const W=400,H=380;let rpm=0,holding=false,playing=false,time=30,timer=null,target=60,spinPts=[];
+cvs.addEventListener('pointermove',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+spinPts.push({x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height,a:Math.atan2((e.clientY-r.top)*H/r.height-H/2,(e.clientX-r.left)*W/r.width-W/2)});
+if(spinPts.length>6)spinPts.shift();
+if(spinPts.length>=3){const n=spinPts.length;
+let da=spinPts[n-1].a-spinPts[n-2].a;
+if(da>Math.PI)da-=Math.PI*2;if(da<-Math.PI)da+=Math.PI*2;
+rpm=Math.min(120,Math.max(0,rpm+da*8));}});
+function gen(){rpm=0;playing=true;time=30;spinPts=[];
+document.getElementById('tm').textContent=30;document.getElementById('t').textContent=60;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();
+clearInterval(timer);timer=setInterval(()=>{time--;
+rpm*=0.92;document.getElementById('r').textContent=Math.round(rpm);
+document.getElementById('tm').textContent=time;
+if(Math.abs(rpm-target)<8){beep(700,.05);}
+if(time<=0){playing=false;clearInterval(timer);
+const ok=Math.abs(rpm-target)<15;
+end(ok);}},1000);draw();}
+function draw(){ctx.fillStyle='#1f2937';ctx.fillRect(0,0,W,H);
+const spd=rpm/60;
+for(let i=0;i<4;i++){ctx.save();ctx.translate(W/2,H/2);ctx.rotate(spd*Date.now()/300+i*Math.PI/2);
+ctx.fillStyle=i%2?'#7c3aed':'#4338ca';
+ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(90,-16);ctx.lineTo(90,16);ctx.fill();ctx.restore();}
+ctx.beginPath();ctx.arc(W/2,H/2,10,0,7);ctx.fillStyle='#facc15';ctx.fill();
+ctx.font='16px system-ui';ctx.textAlign='center';
+ctx.fillText('target: '+target+' RPM',W/2,50);
+if(playing)requestAnimationFrame(draw);}
+</script><div id="msg"></div>
+<script>document.getElementById('btn').addEventListener('click',function(){document.getElementById('ov').style.display='none';gen();});</script>
+</body></html>

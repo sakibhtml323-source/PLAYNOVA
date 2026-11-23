@@ -1,0 +1,131 @@
+{
+ "suites": [
+  {
+   "name": "Per-game gameplay QA harness, 14 checks x 500 games (GAMEPLAY-QA-REPORT.csv)",
+   "executed": 7000,
+   "passed": 4032,
+   "failed": 0,
+   "unverified": 2223,
+   "not_applicable": 745,
+   "evidence": "TEST_EVIDENCE/gameplay_qa_counts.json"
+  },
+  {
+   "name": "Storage API test on every game (set/get/remove/quota/reload/restore/delete/corrupt)",
+   "executed": 500,
+   "passed": 500,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/storage_all_500.json"
+  },
+  {
+   "name": "tests/run_all.py from a clean extraction (catalogue, SEO, HTML, security, wallet, bridge, offline, responsive, ...)",
+   "executed": 71,
+   "passed": 71,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/clean_extract_run.json"
+  },
+  {
+   "name": "Site crawl 525 pages at 360 px (errors, overflow, game ready)",
+   "executed": 525,
+   "passed": 525,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/final_crawl_525_pages.json"
+  },
+  {
+   "name": "Responsive layout 9 widths + landscape x 7 pages",
+   "executed": 84,
+   "passed": 84,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/responsive_9_viewports.json"
+  },
+  {
+   "name": "Static code: node --check of 514 inline game scripts + site JS + JSON files",
+   "executed": 526,
+   "passed": 526,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/static_code_checks.json"
+  },
+  {
+   "name": "Offline: 20 visited games, 5 unvisited, reconnect",
+   "executed": 26,
+   "passed": 26,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/offline_sample_20_games.json"
+  },
+  {
+   "name": "Real-input level-1 gameplay tests (16 games)",
+   "executed": 16,
+   "passed": 16,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/ (spot, maze, puzzle, stack, four_games, stealth, 346 files)"
+  },
+  {
+   "name": "Repair verification tests (memory sequence x4, tower-defense wave x5+hero, dialogs x3, drawer 14)",
+   "executed": 27,
+   "passed": 27,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/memory_sequence_fix.json, tower_defense_wave_fix.json, game_panel_tests.json"
+  },
+  {
+   "name": "Performance measurements (5 pages x 2 profiles + 8-restart memory test)",
+   "executed": 11,
+   "passed": 11,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/performance_measurements.json"
+  },
+  {
+   "name": "Contrast audit (pixel based, 15 page types)",
+   "executed": 15,
+   "passed": 15,
+   "failed": 0,
+   "unverified": 0,
+   "not_applicable": 0,
+   "evidence": "TEST_EVIDENCE/contrast_audit_final.json (41 elements still flagged by the estimate, see MOBILE report)"
+  }
+ ],
+ "totals": {
+  "tests_executed": 8801,
+  "passed": 5833,
+  "failed": 0,
+  "unverified_items": 2223,
+  "not_applicable_items": 745
+ },
+ "games": {
+  "preserved": 500,
+  "tested_by_gameplay_harness": 500,
+  "games_with_a_failed_check": 0,
+  "games_with_at_least_one_UNVERIFIED_item": 500,
+  "games_with_observed_response_to_at_least_one_input": 201,
+  "games_with_verified_level1_reward": 16
+ },
+ "not_executed": [
+  "Firefox",
+  "WebKit/Safari",
+  "Real Android 9 / 4 GB device",
+  "Lighthouse",
+  "axe-core / real screen reader",
+  "Win/lose/level/reward verification for 484 games",
+  "Touch/mobile gameplay verification per game",
+  "Offline for all 500 games",
+  "Live GitHub Pages deployment",
+  "Google indexing / AdSense",
+  "Licence and authorship verification"
+ ]
+}

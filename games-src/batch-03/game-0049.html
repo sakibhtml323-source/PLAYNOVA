@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Infinity Physics Sandbox: Pirate Seas</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0c4a6e,#082f49);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#7dd3fc;padding:8px}
+#tools{display:flex;gap:6px;margin:6px;flex-wrap:wrap;justify-content:center}
+#tools button{border:1px solid #38bdf8;background:#0c4a6ecc;color:#e0f2fe;border-radius:18px;padding:6px 12px;cursor:pointer;font-size:.8rem}
+#tools button.sel{background:#38bdf8;color:#082f49}
+canvas{background:linear-gradient(#7dd3fc22,#0ea5e911),#0c4a6e;touch-action:none;border-top:3px solid #fbbf24}
+#tip{font-size:.72rem;color:#bae6fd;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button.big{background:#fbbf24;color:#082f49;border:none;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏴‍☠️ INFINITY PHYSICS: PIRATE SEAS</h1>
+<div id="tools">
+<button class="sel" data-m="cannon">💣 Cannonball</button><button data-m="ship">⛵ Ship</button>
+<button data-m="rock">🪨 Rock</button><button data-m="erase">✖ Erase</button>
+<button id="wind">💨 Wind: →</button><button id="wave">🌊 Wave: CALM</button><button id="clear">↺ Clear</button>
+</div>
+<canvas id="c"></canvas>
+<div id="tip">Tap to drop. Ships sail, rocks sink, cannonballs arc. Wind & waves change the sea.</div>
+<div id="ov"><h2 style="color:#7dd3fc">PIRATE PHYSICS</h2><p id="od">An endless ocean sandbox! Drop ships, rocks and cannonballs. Toggle wind and waves to watch the sea physics play. Saves your fleet automatically.</p><button class="big" id="btn">SET SAIL</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+let W=innerWidth,H=innerHeight-100;
+cvs.width=W;cvs.height=H;
+let bodies=[],mode='cannon',wind=0,wavy=false;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.05){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.06;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+document.querySelectorAll('#tools [data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('#tools [data-m]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');});
+const winds=[0,1,-1];let wi=0;
+document.getElementById('wind').onclick=e=>{wi=(wi+1)%3;wind=winds[wi];e.target.textContent='💨 Wind: '+['CALM','→','←'][wi];};
+document.getElementById('wave').onclick=e=>{wavy=!wavy;e.target.textContent='🌊 Wave: '+(wavy?'HIGH':'CALM');};
+document.getElementById('clear').onclick=()=>{bodies=[];localStorage.removeItem('pp_save');};
+function resize(){W=innerWidth;H=Math.max(220,innerHeight-100);cvs.width=W;cvs.height=H;}
+window.addEventListener('resize',resize);
+function pos(e){const r=cvs.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
+cvs.addEventListener('pointerdown',e=>{audio.resume();const p=pos(e);
+if(mode==='cannon'){bodies.push({t:'b',x:p.x,y:p.y,vx:(Math.random()-.5)*3,vy:2,r:8,c:'#1c1917'});beep(200);}
+else if(mode==='ship'){bodies.push({t:'s',x:p.x,y:p.y,vx:0,vy:0,w:34,ph:Math.random()*7});beep(500);}
+else if(mode==='rock'){bodies.push({t:'r',x:p.x,y:p.y,vx:0,vy:0,r:10+Math.random()*12,c:'#78716c'});beep(300);}
+else{bodies=bodies.filter(b=>Math.hypot(b.x-p.x,(b.y||0)-p.y)>40);}
+save();});
+function save(){try{localStorage.setItem('pp_save',JSON.stringify(bodies.slice(-100)));}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('pp_save'));if(d)bodies=d;}catch(e){}}
+load();
+function step(){bodies.forEach(b=>{
+if(b.t==='b'){b.vy+=0.3;b.x+=b.vx+wind*0.4;b.y+=b.vy;
+if(b.y>H-8){b.y=H-8;b.vy*=-0.55;b.vx*=0.98;}}
+else if(b.t==='r'){b.vy+=0.25;b.x+=wind*0.2;b.y+=b.vy;
+if(b.y>H-b.r/2){b.y=H-b.r/2;b.vy=0;}}
+else if(b.t==='s'){b.ph+=0.05;const bob=Math.sin(b.ph)*(wavy?3:1);
+b.y=H-26+bob;b.x+=wind*0.8+Math.sin(b.ph*0.3)*0.3;
+if(b.x<-40)b.x=W+40;if(b.x>W+40)b.x=-40;}
+b.x=Math.max(10,Math.min(W-10,b.x));});}
+function draw(){ctx.clearRect(0,0,W,H);
+// waves
+ctx.strokeStyle='#38bdf833';for(let i=0;i<3;i++){ctx.beginPath();
+for(let x=0;x<W;x+=8){const y=H-14-i*10+Math.sin(x/40+(Date.now()/300)+i)*(wavy?6:2);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
+ctx.fillStyle='#fbbf24';ctx.fillRect(0,H-4,W,4);
+bodies.forEach(b=>{
+if(b.t==='b'){ctx.fillStyle=b.c;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fill();}
+else if(b.t==='r'){ctx.fillStyle=b.c;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fill();}
+else if(b.t==='s'){ctx.font='26px serif';ctx.textAlign='center';ctx.fillText('⛵',b.x,b.y+8);}});}
+let fc=0;
+function loop(){step();draw();if(++fc%120===0)save();requestAnimationFrame(loop);}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='b')document.querySelector('[data-m=cannon]').click();
+if(k==='s')document.querySelector('[data-m=ship]').click();
+if(k==='r')document.querySelector('[data-m=rock]').click();
+if(k==='e')document.querySelector('[data-m=erase]').click();
+if(k==='w')document.getElementById('wind').click();
+if(k==='v')document.getElementById('wave').click();
+if(k==='c')document.getElementById('clear').click();});
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

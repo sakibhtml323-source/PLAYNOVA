@@ -1,0 +1,696 @@
+{
+ "widths": [
+  320,
+  360,
+  375,
+  390,
+  414,
+  768,
+  1024,
+  1366,
+  1920
+ ],
+ "pages": [
+  "home",
+  "games",
+  "categories",
+  "category",
+  "profile",
+  "cookies",
+  "game"
+ ],
+ "results": [
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 320,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 360,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 375,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 390,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 414,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 768,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1366,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 1,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1920,
+   "orientation": "portrait",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 740,
+   "orientation": "landscape 740x360",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 915,
+   "orientation": "landscape 915x412",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "home",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "games",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "categories",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "category",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "profile",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "cookies",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  },
+  {
+   "width": 1024,
+   "orientation": "landscape 1024x768",
+   "page": "game",
+   "overflow_px": 0,
+   "controls_under_32px": 0,
+   "errors": []
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Spell Chain #301</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,54px);gap:4px;margin:12px}
+.t{width:54px;height:54px;background:#1f2937;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;cursor:pointer;user-select:none}
+.t.sel{background:#7c3aed;transform:scale(1.05)}
+#word{font-size:1.5rem;font-weight:800;letter-spacing:3px;color:#facc15;min-height:2rem;margin:4px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🥷 Ninja Spell Chain</h1><div class="sub">Chain adjacent letters into words — longer words, bigger score!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Words <b id="w">0</b></span><span>⏱️ <b id="t">60</b>s</span></div>
+<div id="grid"></div><div id="word"></div>
+<div>
+<button id="cast">🌀 Cast Word</button>
+<button id="clear">✖ Clear</button>
+<button id="new">🎲 New Grid</button>
+</div>
+<div id="msg"></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const GRID_LETTERS='EEEEAAAIIIIOOONNRRTTLLSSUUDDGGGBCMPFHVWYJKXZQ';
+const N=5;let grid=[],sel=[],score=0,words=0,timer=null,time=60;
+function newGrid(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)
+row.push(GRID_LETTERS[(Math.random()*GRID_LETTERS.length)|0]);grid.push(row);}
+sel=[];document.getElementById('word').textContent='';
+document.getElementById('s').textContent=score;document.getElementById('w').textContent=words;
+time=60;document.getElementById('t').textContent=60;
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);beep(130,.3,'sawtooth');
+msg('⏰ Time! Final: '+score+' pts, '+words+' words');}},1000);render();}
+function tap(r,c){const i=r*N+c;
+if(sel.includes(i)){sel=sel.filter(x=>x!==i);beep(300,.04);render();updateWord();return;}
+if(sel.length){const last=sel[sel.length-1];const lr=(last/N)|0,lc=last%N;
+if(Math.abs(lr-r)+Math.abs(lc-c)!==1){beep(160,.06,'sawtooth');return;}}
+sel.push(i);beep(400+sel.length*40,.06);render();updateWord();}
+function updateWord(){document.getElementById('word').textContent=sel.map(i=>grid[(i/N)|0][i%N]).join('');}
+document.getElementById('cast').onclick=()=>{
+const word=sel.map(i=>grid[(i/N)|0][i%N]).join('');
+if(word.length<3){beep(160,.08,'sawtooth');msg('At least 3 letters!');return;}
+const valid=word.length>=3&&word.length<=10;
+if(valid){const pts=word.length*word.length*10;score+=pts;words++;
+document.getElementById('s').textContent=score;document.getElementById('w').textContent=words;
+beep(500+word.length*50,.15,'triangle');msg('✨ "'+word+'" +'+pts+'!');
+// remove used tiles, drop new ones
+sel.forEach(i=>{grid[(i/N)|0][i%N]=GRID_LETTERS[(Math.random()*GRID_LETTERS.length)|0];});}
+else beep(180,.1,'sawtooth');
+sel=[];render();updateWord();};
+document.getElementById('clear').onclick=()=>{sel=[];render();updateWord();};
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');d.className='t';
+d.textContent=grid[r][c];
+if(sel.includes(r*N+c))d.classList.add('sel');
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('new').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newGrid();};
+newGrid();
+</script></body></html>

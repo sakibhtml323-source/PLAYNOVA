@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Turbo Magic Parkour</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#2e1065,#0f172a);font-family:Georgia,serif;color:#e9d5ff;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#c084fc;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#1e1b4b;border-radius:12px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e9d5ff;padding:20px;z-index:5}
+button{background:#a855f7;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🪄 TURBO MAGIC PARKOUR</h1>
+<div id="hud"><span>Distance <b id="d">0</b>m</span><span>✨ Mana <b id="m">100</b>%</span><span>Best <b id="b">0</b>m</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#c084fc">SPELLRUNNER</h2><p id="od">Turbo-charged magical parkour! Jump with Space/↑/tap, double-jump mid-air, cast a shield with F (10 mana) to smash through obstacles. Mana refills slowly — spend it wisely!</p><button id="btn">CAST OFF</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=520,H=280;cvs.width=W;cvs.height=H;const GY=H-42;
+let wiz,obs,orbs,playing,speed,dist,mana,frame,shield,jumps,best=+localStorage.getItem('tmp_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){wiz={x:80,y:GY,vy:0,w:22,h:30,onG:true,jumps:0};obs=[];orbs=[];dist=0;speed=5;mana=100;frame=0;shield=0;jumps=0;playing=true;
+document.getElementById('d').textContent=0;document.getElementById('m').textContent=100;}
+function jump(){if(wiz.onG){wiz.vy=-11;wiz.onG=false;wiz.jumps=1;beep(520,.05);}else if(wiz.jumps<2){wiz.vy=-9.5;wiz.jumps++;beep(640,.05);}}
+function castShield(){if(mana<10||shield>0)return;mana-=10;shield=200;beep(880,.1,'triangle');
+document.getElementById('m').textContent=Math.round(mana);}
+window.addEventListener('keydown',e=>{if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();jump();}if(e.key==='f'||e.key==='F')castShield();});
+cvs.addEventListener('pointerdown',e=>{audio.resume();jump();});
+function step(){frame++;dist+=speed/18;speed=5+dist/200;document.getElementById('d').textContent=Math.floor(dist);
+mana=Math.min(100,mana+0.06);document.getElementById('m').textContent=Math.round(mana);
+if(shield>0)shield--;
+wiz.vy+=0.56;wiz.y+=wiz.vy;wiz.onG=false;
+if(wiz.y>=GY){wiz.y=GY;wiz.vy=0;wiz.onG=true;wiz.jumps=0;}
+if(frame%Math.max(22,44-dist/45|0)===0){const r=Math.random();
+if(r<0.4)obs.push({x:W+20,y:GY-24,w:30,h:24,t:'rock'});
+else if(r<0.65)obs.push({x:W+20,y:GY-56,w:18,h:34,t:'spike'});
+else if(r<0.85)orbs.push({x:W+20,y:GY-70-Math.random()*40,got:false});
+else obs.push({x:W+20,y:GY-12,w:34,h:12,t:'gap'});}
+obs.forEach(o=>o.x-=speed);orbs.forEach(o=>o.x-=speed);
+obs=obs.filter(o=>o.x>-60);orbs=orbs.filter(o=>o.x>-30&&!o.got);
+orbs.forEach(o=>{if(Math.abs(o.x-wiz.x)<26&&Math.abs(o.y-wiz.y)<30){o.got=true;mana=Math.min(100,mana+20);
+document.getElementById('m').textContent=Math.round(mana);beep(800,.07);}});
+obs.forEach(o=>{if(wiz.x+wiz.w/2>o.x&&wiz.x-wiz.w/2<o.x+o.w&&wiz.y-wiz.h<o.y+o.h&&wiz.y>o.y){
+if(shield>0){obs.splice(obs.indexOf(o),1);beep(700,.08,'triangle');}
+else die();}});}
+function die(){playing=false;const d=Math.floor(dist);
+if(d>best){best=d;localStorage.setItem('tmp_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The magic fades at <b style="color:#c084fc">'+d+'m</b>!';
+document.getElementById('btn').textContent='RECHARGE';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#1e1b4b';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#312e81';for(let i=0;i<8;i++){const mx=(i*140-(dist*10)%140);ctx.fillRect(mx,30+(i%3)*30,3,GY-30);}
+ctx.fillStyle='#4c1d95';ctx.fillRect(0,GY,W,H-GY);
+obs.forEach(o=>{if(o.t==='rock'){ctx.fillStyle='#6d28d9';ctx.fillRect(o.x,o.y,o.w,o.h);}
+else if(o.t==='spike'){ctx.fillStyle='#a855f7';ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w/2,o.y);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.fill();}
+else{ctx.fillStyle='#2e1065';ctx.fillRect(o.x,GY-6,o.w,14);}});
+orbs.forEach(o=>{const g2=ctx.createRadialGradient(o.x,o.y,2,o.x,o.y,12);
+g2.addColorStop(0,'#e9d5ff');g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(o.x,o.y,12,0,7);ctx.fill();});
+// wizard
+if(shield>0){ctx.strokeStyle='#a855f788';ctx.lineWidth=3;ctx.beginPath();ctx.arc(wiz.x,wiz.y-wiz.h/2,24,0,7);ctx.stroke();ctx.lineWidth=1;}
+ctx.fillStyle='#7c3aed';ctx.fillRect(wiz.x-wiz.w/2,wiz.y-wiz.h,wiz.w,wiz.h);
+ctx.fillStyle='#e9d5ff';ctx.fillRect(wiz.x-wiz.w/2,wiz.y-wiz.h,wiz.w,7);
+ctx.fillStyle='#111';ctx.fillRect(wiz.x+4,wiz.y-wiz.h+12,4,4);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

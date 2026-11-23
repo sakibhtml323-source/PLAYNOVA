@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Lantern Maze #370</title><style>
+body{margin:0;font-family:system-ui;background:#0a0a1a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(9,40px);gap:1px;margin:12px}
+.c{width:40px;height:40px;background:#111122;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.c.wall{background:#1e1e3f}
+.c.vis{background:#2d2d55}
+.c.me{background:#7c3aed;outline:2px solid #facc15}
+.c.goal{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🏮 Ninja Lantern Maze</h1><div class="sub">Your lantern lights only nearby tiles — grab 🕯️ candles to refill it!</div>
+<div id="hud"><span>Oil <b id="o">20</b></span><span>Level <b id="l">1</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🌑 New Night</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=9;let grid=[],me={r:1,c:1},goal={r:7,c:7},oil=20,level=1,candles=[],playing=true;
+function gen(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(r%2===0&&c%2===0&&Math.random()<0.5?1:0);grid.push(row);}
+for(let i=0;i<N;i++){grid[0][i]=1;grid[N-1][i]=1;grid[i][0]=1;grid[i][N-1]=1;}
+grid[1][1]=0;me={r:1,c:1};goal={r:7,c:7};grid[7][7]=0;
+candles=[];const nc=Math.min(1+level,4);
+for(let i=0;i<nc;i++){let r,c;do{r=2+((Math.random()*5)|0);c=2+((Math.random()*5)|0);}while(grid[r][c]);
+candles.push({r,c});}
+oil=20+level*2;playing=true;
+document.getElementById('o').textContent=oil;
+document.getElementById('l').textContent=level;
+render();msg('Reach the exit — refill at candles!');}
+function vis(r,c){const R=1+Math.floor(oil/10);
+for(let dr=-R;dr<=R;dr++)for(let dc=-R;dc<=R;dc++){
+if(Math.abs(dr)+Math.abs(dc)>R)continue;
+const rr=r+dr,cc=c+dc;
+if(rr>=0&&rr<N&&cc>=0&&cc<N)return true;}
+return Math.abs(r-me.r)+Math.abs(c-me.c)<=R;}
+function tap(r,c){if(!playing||Math.abs(r-me.r)+Math.abs(c-me.c)!==1||grid[r][c])return;
+me={r,c};oil--;
+const cd=candles.find(x=>x.r===r&&x.c===c);
+if(cd){oil=Math.min(oil+10,30);candles=candles.filter(x=>x!==cd);
+beep(700,.12,'triangle');msg('🕯️ +10 oil!');}
+else beep(380,.04);
+document.getElementById('o').textContent=oil;
+render();
+if(r===goal.r&&c===goal.c){playing=false;beep(880,.3,'triangle');
+msg('🌅 Dawn breaks! Level '+(level+1));level++;
+setTimeout(gen,1000);return;}
+if(oil<=0){playing=false;beep(130,.3,'sawtooth');msg('🌑 Darkness swallows you…');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+const v=vis(r,c);
+d.className='c'+(grid[r][c]?' wall':'')+(v?' vis':'');
+if(!v){d.style.opacity=0.25;}
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🏮';}
+else if(r===goal.r&&c===goal.c&&v){d.classList.add('goal');d.textContent='🚪';}
+else if(candles.some(x=>x.r===r&&x.c===c)&&v)d.textContent='🕯️';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

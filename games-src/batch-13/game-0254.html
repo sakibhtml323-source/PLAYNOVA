@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Spot Shift #254</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#wrap{display:flex;gap:10px;margin:10px;flex-wrap:wrap;justify-content:center}
+canvas{background:#27272a;border-radius:10px;touch-action:none;max-width:45vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Spot Shift</h1><div class="sub">The scenes drift and shimmer — find the 3 differences before time runs out!</div>
+<div id="hud"><span>⏱️ <b id="tm">30</b>s</span><span>Found <b id="f">0</b>/3</span><span>Level <b id="l">1</b></span></div>
+<div id="wrap"><canvas id="L" width="280" height="280"></canvas><canvas id="R" width="280" height="280"></canvas></div>
+<div id="msg"></div><button id="btn">👁️ New Vision</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const LC=document.getElementById('L'),RC=document.getElementById('R'),lx=LC.getContext('2d'),rx=RC.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=280;let spots=[],found=[],timeLeft=30,timer=null,level=1,phase=0;
+function setup(){spots=[];const base=[
+{x:60,y:60,w:22,h:22,c:'#f59e0b',c2:'#ef4444'},
+{x:210,y:80,w:18,h:18,c:'#22d3ee',c2:'#22d3ee'},
+{x:140,y:200,w:24,h:14,c:'#a78bfa',c2:'#34d399'}];
+spots=base.map((s,i)=>({...s,id:i}));found=[];timeLeft=Math.max(15,30-level*2);
+document.getElementById('tm').textContent=timeLeft;document.getElementById('f').textContent=0;
+clearInterval(timer);timer=setInterval(()=>{timeLeft--;document.getElementById('tm').textContent=timeLeft;
+if(timeLeft<=0){clearInterval(timer);beep(130,.3,'sawtooth');msg('⏰ Vision faded!');level=1;document.getElementById('l').textContent=1;}},1000);draw();}
+function draw(){phase+=0.02;
+const dx=Math.sin(phase)*3,dy=Math.cos(phase*0.7)*2;
+[lx,rx].forEach((ctx,side)=>{ctx.fillStyle='#27272a';ctx.fillRect(0,0,W,W);
+ctx.save();ctx.translate(dx*(side?-1:1),dy);
+// haunted house scene
+ctx.fillStyle='#3f3f46';ctx.fillRect(60,100,160,120);
+ctx.fillStyle='#52525b';ctx.beginPath();ctx.moveTo(40,100);ctx.lineTo(140,40);ctx.lineTo(240,100);ctx.fill();
+ctx.fillStyle='#facc15';ctx.fillRect(120,140,40,50);
+ctx.fillStyle='#18181b';ctx.fillRect(80,120,24,24);ctx.fillRect(176,120,24,24);
+// moon
+ctx.fillStyle='#e4e4e7';ctx.beginPath();ctx.arc(side?230:50,60,22,0,7);ctx.fill();
+// ghosts floating
+ctx.font='20px serif';ctx.textAlign='center';
+ctx.fillText('👻',80+Math.sin(phase*2)*10,180+Math.cos(phase*1.5)*8);
+ctx.fillText('👻',200+Math.cos(phase*1.8)*10,190+Math.sin(phase*1.2)*8);
+// difference markers
+spots.forEach(s=>{if(found.includes(s.id))return;
+ctx.fillStyle=side?s.c2:s.c;ctx.fillRect(s.x,s.y,s.w,s.h);});
+ctx.restore();});
+if(playing)requestAnimationFrame(draw);}
+let playing=false;
+function check(e,side){const cv=side?RC:LC;const r=cv.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+for(const s of spots){if(found.includes(s.id))continue;
+if(x>s.x-10&&x<s.x+s.w+10&&y>s.y-10&&y<s.y+s.h+10){found.push(s.id);
+document.getElementById('f').textContent=found.length;
+beep(700+found.length*40,.1,'triangle');
+if(found.length>=3){clearInterval(timer);beep(880,.2,'triangle');msg('🎉 Sharp eyes! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;document.getElementById('l').textContent=level;setTimeout(setup,900);}return;}}
+beep(160,.08,'sawtooth');}
+function msg(t){document.getElementById('msg').textContent=t;}
+[LC,RC].forEach((c,i)=>c.addEventListener('pointerdown',e=>{if(!playing)return;check(e,i===1);}));
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();setup();playing=true;requestAnimationFrame(draw);};
+setup();playing=true;requestAnimationFrame(draw);
+</script></body></html>

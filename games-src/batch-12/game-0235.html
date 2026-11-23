@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Hotseat Conquest #235</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(8,40px);gap:2px;margin:10px}
+.cell{width:40px;height:40px;background:#27272a;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none}
+.cell.p1{background:#7c3aed}.cell.p2{background:#dc2626}
+.cell .n{font-size:.65rem;font-weight:800;color:#fff}
+.cell .d{font-size:1rem}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.4em;font-weight:600;max-width:340px;text-align:center}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Hotseat Conquest</h1><div class="sub">2 players, one device. Claim cells, then attack neighbors — dice decide!</div>
+<div id="hud"><span>🟣 <b id="s1">0</b></span><span>🔴 <b id="s2">0</b></span><span>Turn <b id="t">P1</b></span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">🏰 New Haunt</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=8;let own=[],cnt=[],turn=1,sel=null,playing=true;
+function neigh(i){const r=(i/N)|0,c=i%N;const out=[];
+if(r>0)out.push(i-N);if(r<N-1)out.push(i+N);if(c>0)out.push(i-1);if(c<N-1)out.push(i+1);return out;}
+function init(){own=Array(64).fill(0);cnt=Array(64).fill(0);
+own[0]=1;own[63]=2;cnt[0]=8;cnt[63]=8;turn=1;sel=null;playing=true;render();function msg(t){document.getElementById('msg').textContent=t;}
+msg('P1 🟣 — pick a cell next to your territory to claim');}
+function tap(i){if(!playing)return;
+if(sel===null){
+ if(own[i]===turn){sel=i;render();msg((turn===1?'P1 🟣':'P2 🔴')+' — now tap an enemy neighbor to attack, or your own to reinforce');return;}
+ if(own[i]===0&&neigh(i).some(n=>own[n]===turn)){own[i]=turn;cnt[i]=3;beep(500,.08);endTurn();return;}
+ beep(160,.07,'sawtooth');return;}
+// second tap
+if(sel===i){sel=null;render();msg('Deselected.');return;}
+if(own[i]===turn){cnt[i]=Math.min(12,cnt[i]+2);beep(620,.08);endTurn();return;}
+if(own[i]!==0&&neigh(i).includes(sel)){attack(sel,i);return;}
+beep(160,.07,'sawtooth');}
+function attack(a,b){const atk=Math.ceil(Math.random()*6)+cnt[a],def=Math.ceil(Math.random()*6)+cnt[b];
+if(atk>def){own[b]=turn;cnt[b]=Math.max(1,Math.floor(cnt[a]/2));cnt[a]=Math.max(1,cnt[a]-2);beep(760,.12,'triangle');msg('⚔️ P'+turn+' captures! ('+atk+' vs '+def+')');}
+else{cnt[a]=Math.max(1,cnt[a]-2);beep(250,.12,'sawtooth');msg('🛡️ Defense holds! ('+atk+' vs '+def+')');}
+sel=null;endTurn();}
+function endTurn(){turn=turn===1?2:1;sel=null;
+document.getElementById('t').textContent='P'+turn;
+render();check();}
+function check(){const p1=own.filter(x=>x===1).length,p2=own.filter(x=>x===2).length;
+document.getElementById('s1').textContent=p1;document.getElementById('s2').textContent=p2;
+if(p1===0||p2===0||p1+p2>=64){playing=false;
+const w=p1>p2?'🟣 P1 rules the haunt!':p2>p1?'🔴 P2 rules the haunt!':'🤝 Draw!';
+msg(w+'  '+p1+'–'+p2);beep(880,.25,'triangle');return;}
+msg((turn===1?'P1 🟣':'P2 🔴')+' — claim, reinforce, or attack!');}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+for(let i=0;i<64;i++){const d=document.createElement('div');
+d.className='cell'+(own[i]===1?' p1':own[i]===2?' p2':'');
+if(sel===i)d.style.outline='2px solid #facc15';
+d.innerHTML='<span class="d">'+(own[i]===1?'🟣':own[i]===2?'🔴':'·')+'</span><span class="n">'+cnt[i]+'</span>';
+d.onclick=()=>tap(i);b.appendChild(d);}}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();init();};
+init();
+</script></body></html>

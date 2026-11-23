@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Norse Shared Screen Racing</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#44403c);font-family:Georgia,serif;color:#fde68a;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:16px;font-size:.85rem;margin-bottom:4px}
+canvas{background:#57534e;border-radius:10px;border:3px solid #78716c;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(41,37,36,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fde68a;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#292524;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⚔ NORSE RACING</h1>
+<div id="hud"><span>🔴 P1 laps <b id="l1">0</b>/3</span><span id="msg">First to 3 laps!</span><span>🔵 P2 laps <b id="l2">0</b>/3</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#fbbf24">VALHALLA VELOCITY</h2><p id="od">2 vikings, one fjord track! 🔴 P1: W A S D. 🔵 P2: arrows. The snow slows you — hug the dark road! 3 laps to Valhalla!</p><button id="btn">SOUND THE HORN</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=560,H=340;cvs.width=W;cvs.height=H;
+const CX=W/2,CY=H/2,RX=220,RY=110,ROAD=32;
+let cars,keys,playing,frame;let nr3=+localStorage.getItem('nsr_last')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mkCar(a,c2){return{a,lap:0,prog:0,sp:0,c:c2,x:0,y:0};}
+function init(){cars=[mkCar(-Math.PI/2,'#dc2626'),mkCar(-Math.PI/2+0.3,'#3b82f6')];keys={};playing=true;frame=0;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+function posOn(a){return{x:CX+Math.cos(a)*RX,y:CY+Math.sin(a)*RY};}
+function step(){frame++;
+cars.forEach((car,i)=>{
+const ct=i===0?{u:keys['w'],d:keys['s'],l:keys['a'],r:keys['d']}:{u:keys['arrowup'],d:keys['arrowdown'],l:keys['arrowleft'],r:keys['arrowright']};
+const p=posOn(car.a);
+const rad=Math.hypot((p.x-CX)/RX,(p.y-CY)/RY);
+const onRoad=Math.abs(rad-1)*Math.max(RX,RY)<ROAD+8;
+const acc=onRoad?0.07:0.03,maxSp=onRoad?3.6:1.5;
+if(ct.u)car.sp+=acc;if(ct.d)car.sp-=acc*1.5;
+car.sp*=onRoad?0.985:0.955;car.sp=Math.max(-1.4,Math.min(maxSp,car.sp));
+const steer=(ct.l?-1:0)+(ct.r?1:0);
+car.a+=steer*0.05*(car.sp>=0?1:-1)*Math.min(1,Math.abs(car.sp)/1.2);
+const prev=car.prog;
+car.prog=((car.a+Math.PI/2)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+if(prev>5.5&&car.prog<0.8&&car.sp>0){car.lap++;beep(i===0?600:800,.12,'triangle');
+document.getElementById('l'+(i+1)).textContent=car.lap;
+if(car.lap>=3)return finish(i);}
+const np=posOn(car.a);car.x=np.x;car.y=np.y;});}
+function finish(i){playing=false;
+localStorage.setItem('nsr_last',i+1);
+document.getElementById('od').innerHTML='🏆 <b>PLAYER '+(i+1)+' REACHES VALHALLA!</b><br>Laps: '+cars[i].lap+' — '+cars[1-i].lap;
+document.getElementById('btn').textContent='REMATCH';document.getElementById('ov').style.display='flex';beep(880,.25,'triangle');}
+function draw(){ctx.fillStyle='#e7e5e4';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#fff';for(let i=0;i<50;i++)ctx.fillRect((i*149+frame)%W,(i*83+frame/2)%H,2,2);
+// fjord
+ctx.fillStyle='#93c5fd';ctx.beginPath();ctx.ellipse(CX,CY,RX-ROAD-24,RY-ROAD-24,0,0,7);ctx.fill();
+// road
+ctx.strokeStyle='#57534e';ctx.lineWidth=ROAD*2;ctx.beginPath();ctx.ellipse(CX,CY,RX,RY,0,0,7);ctx.stroke();
+ctx.strokeStyle='#292524';ctx.lineWidth=2;ctx.setLineDash([12,12]);ctx.beginPath();ctx.ellipse(CX,CY,RX,RY,0,0,7);ctx.stroke();ctx.setLineDash([]);ctx.lineWidth=1;
+const sp=posOn(-Math.PI/2);ctx.fillStyle='#fff';ctx.fillRect(sp.x-4,sp.y-ROAD,8,ROAD*2);
+cars.forEach(c2=>{ctx.fillStyle=c2.c;
+ctx.save();ctx.translate(c2.x,c2.y);ctx.rotate(c2.a+Math.PI/2);
+ctx.fillRect(-9,-13,18,26);ctx.fillStyle='#fff';ctx.fillRect(-5,-9,10,7);ctx.restore();});}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();
+document.getElementById('l1').textContent=0;document.getElementById('l2').textContent=0;
+document.getElementById('msg').textContent='First to 3 laps!';
+document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

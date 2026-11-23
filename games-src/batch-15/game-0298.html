@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Rhythm Taps #298</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#ring{width:200px;height:200px;border-radius:50%;background:#312e81;display:flex;align-items:center;justify-content:center;font-size:3.4rem;cursor:pointer;margin:16px;transition:all .1s;border:6px solid #4f46e5}
+#ring.pulse{transform:scale(1.08);border-color:#fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎵 Royal Rhythm Taps</h1><div class="sub">Tap exactly on the beat pulses — timing precision scores PERFECT / GOOD / MISS.</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Combo <b id="c">×0</b></span><span>⏱️ <b id="t">30</b>s</span></div>
+<div id="ring">🥁</div>
+<div id="msg"></div>
+<button id="btn">👑 Start Performance</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const BPM=100,BEAT=60/BPM;
+let score=0,combo=0,playing=false,beatT=0,lastPulse=-1,timer=null,time=30;
+function pulse(){lastPulse=beatT;
+const el=document.getElementById('ring');
+el.classList.add('pulse');beep(440,.08,'triangle');
+setTimeout(()=>el.classList.remove('pulse'),100);}
+function tap(){if(!playing)return;
+const since=beatT-lastPulse;
+const off=Math.min(since,BEAT-since);
+if(lastPulse>=0&&off<0.09){combo++;const pts=100+combo*10;score+=pts;
+beep(700+combo*40,.1,'triangle');msg('⭐ PERFECT! +'+pts);}
+else if(lastPulse>=0&&off<0.2){combo=Math.max(1,combo);score+=40;
+beep(500,.08);msg('👍 Good +40');}
+else{combo=0;beep(180,.12,'sawtooth');msg('💨 Miss…');}
+document.getElementById('s').textContent=score;
+document.getElementById('c').textContent='×'+combo;}
+document.getElementById('ring').onclick=tap;
+document.addEventListener('keydown',e=>{if(e.code==='Space')tap();});
+function loop(){if(!playing)return;
+beatT+=1/60;
+if(beatT-lastPulse>=BEAT&&lastPulse>=0)pulse();
+else if(lastPulse<0&&beatT>0.5)pulse();
+requestAnimationFrame(loop);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{score=0;combo=0;beatT=0;lastPulse=-1;time=30;
+document.getElementById('s').textContent=0;document.getElementById('c').textContent='×0';
+document.getElementById('t').textContent=30;msg('');
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;loop();
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);
+msg('👑 Performance over! Score: '+score+(score>=2000?' — Royal Virtuoso!':score>=1000?' — Court Musician!':''));
+beep(score>=1000?880:400,.3,score>=1000?'triangle':'sawtooth');}},1000);};
+</script></body></html>

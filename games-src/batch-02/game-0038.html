@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Silver Horror Hexagon Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0c0a09;font-family:Georgia,serif;color:#d6d3d1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#a8a29e;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#1c1917;border-radius:10px;border:1px solid #44403c;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(12,10,9,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d6d3d1;padding:20px;z-index:5}
+button{background:#d6d3d1;color:#0c0a09;border:none;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⬡ SILVER HORROR HEXAGON</h1>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#a8a29e">THE SILVER HEX</h2><p id="od">Rotate the cursed hexes (tap or arrows+Enter) so every silver line connects. Complete the sigil before the horror wakes…</p><button id="btn">ENTER THE RITUAL</button></div>
+<script>
+
+
+
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+let level,cells,playing,size,focus,best=+localStorage.getItem('sh_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const W=460,H=460;cvs.width=W;cvs.height=H;
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+// hex grid: pointy-top, axial offset coords
+function hexPos(q,r){const size2=34;const x=W/2+size2*Math.sqrt(3)*(q+r/2);const y=H/2+size2*1.5*r;return{x,y,s:size2};}
+function build(){const rings=Math.min(1+level,3);cells=[];
+for(let q=-rings;q<=rings;q++)for(let r=Math.max(-rings,-q-rings);r<=Math.min(rings,-q+rings);r++){
+const sides=[0,0,0,0,0,0].map(()=>Math.random()<0.55?1:0);
+// ensure at least 2 openings
+if(sides.filter(Boolean).length<2)sides[(Math.random()*6)|0]=1,sides[(Math.random()*6)|0]=1;
+cells.push({q,r,rot:(Math.random()*6)|0,sides,src:q===0&&r===0});}
+// canonical solve: rotate so openings match neighbors — build from src BFS
+const byKey=k=>cells.find(c2=>c2.q+','+c2.r===k);
+const DIRS=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
+const src=cells.find(c2=>c2.src);if(!src)return;src.rot=0;const seen=new Set([src.q+','+src.r]);const queue=[src];
+while(queue.length){const cur=queue.shift();
+DIRS.forEach((d,i)=>{const nk=(cur.q+d[0])+','+(cur.r+d[1]);const nb=byKey(nk);
+if(nb&&!seen.has(nk)){seen.add(nk);
+// set nb rotation so that nb opening faces cur
+const need=(i+3)%6;
+let r2=0;for(let t=0;t<6;t++){if(nb.sides[(need-t+6)%6]){r2=t;break;}}
+nb.rot=r2;queue.push(nb);}});}
+// scramble
+cells.forEach(c2=>{c2.rot=(c2.rot+1+((Math.random()*5)|0))%6;});
+focus=0;document.getElementById('l').textContent=level;}
+function openings(c2){const out=new Set();for(let i=0;i<6;i++)if(c2.sides[(i-c2.rot+6)%6])out.add(i);return out;}
+function solvedAll(){const byKey=k=>cells.find(c2=>c2.q+','+c2.r===k);const DIRS=[[1,0],[1,-1],[0,-1],[-1,0],[-1,1],[0,1]];
+const src=cells.find(c2=>c2.src);if(!src||!cells.length)return false;const seen=new Set([src]);const q=[src];
+while(q.length){const cur=q.shift();
+DIRS.forEach((d,i)=>{const nb=byKey((cur.q+d[0])+','+(cur.r+d[1]));
+if(nb&&!seen.has(nb)&&openings(cur).has(i)&&openings(nb).has((i+3)%6)){seen.add(nb);q.push(nb);}});}
+return cells.every(c2=>c2===src||seen.has(c2));}
+function render(){ctx.fillStyle='#1c1917';ctx.fillRect(0,0,W,H);
+cells.forEach((c2,i)=>{const p=hexPos(c2.q,c2.r);
+if(focus===i){ctx.strokeStyle='#f5f5f4';ctx.lineWidth=2;hexPath(p.x,p.y,p.s+5);ctx.stroke();}
+ctx.strokeStyle=c2.src?'#d4d4d8':'#57534e';ctx.lineWidth=2;hexPath(p.x,p.y,p.s);ctx.stroke();
+ctx.fillStyle='#292524';hexPath(p.x,p.y,p.s);ctx.fill();
+ctx.strokeStyle='#d4d4d8';ctx.lineWidth=4;ctx.lineCap='round';
+openings(c2).forEach(side=>{const a=Math.PI/3*side-Math.PI/6;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+Math.cos(a)*p.s*0.85,p.y+Math.sin(a)*p.s*0.85);ctx.stroke();});
+if(c2.src){ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(p.x,p.y,5,0,7);ctx.fill();}});
+if(playing&&solvedAll())win();}
+function hexPath(x,y,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/6;const px=x+Math.cos(a)*s,py=y+Math.sin(a)*s;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}ctx.closePath();}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+cells.forEach((c2,i)=>{const p=hexPos(c2.q,c2.r);if(Math.hypot(p.x-x,p.y-y)<p.s){c2.rot=(c2.rot+1)%6;focus=i;beep(300+c2.rot*50,.05);render();}});});
+window.addEventListener('keydown',e=>{if(!playing||!cells.length||focus>=cells.length)return;const k=e.key;
+if(k==='ArrowRight')focus=(focus+1)%cells.length;else if(k==='ArrowLeft')focus=(focus-1+cells.length)%cells.length;
+else if(k==='Enter'||k===' '){e.preventDefault();cells[focus].rot=(cells[focus].rot+1)%6;beep(300+cells[focus].rot*50,.05);}
+else return;render();});
+function win(){playing=false;const score=level*100;const cur=+document.getElementById('s').textContent;
+const tot=cur+score;document.getElementById('s').textContent=tot;
+if(tot>best){best=tot;localStorage.setItem('sh_best',best);document.getElementById('b').textContent=best;}
+beep(700,.15,'triangle');setTimeout(()=>beep(900,.15,'triangle'),140);
+document.getElementById('od').innerHTML='⬡ Sigil <b>'+level+'</b> complete! +'+score+' points.<br>The horror stirs deeper…';
+document.getElementById('btn').textContent='DEEPER';level++;document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();render();document.getElementById('ov').style.display='none';};
+
+
+
+</script>
+</body>
+</html>

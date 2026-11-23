@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Flow #351</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(4,74px);gap:5px;margin:12px}
+.t{width:74px;height:74px;background:#1e293b;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.t svg{width:64px;height:64px}
+.t.lit{background:#312e81}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💧 Crystal Flow</h1><div class="sub">Rotate the pipes — carry water from the spring to every crystal!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Filled <b id="f">0</b>%</span><span>Rotations <b id="m">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">✨ New Flow</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=4,SIZE=16;
+// type: 0=straight 1=elbow 2=T 3=cross; r=rotation
+let cells=[],level=1,moves=0,size=4;
+function opens(c){const o=[];
+if(c.t===0){o.push((0+c.r)%4);o.push((2+c.r)%4);}
+else if(c.t===1){o.push((0+c.r)%4);o.push((1+c.r)%4);}
+else if(c.t===2){o.push((0+c.r)%4);o.push((1+c.r)%4);o.push((3+c.r)%4);}
+else{o.push(0);o.push(1);o.push(2);o.push(3);}
+return o;}
+function build(){cells=[];size=Math.min(4+Math.floor(level/2),5);
+const src=(Math.random()*size)|0;
+const path=[src];const used=new Set([src]);
+while(path.length<Math.min(SIZE,size*size)){const last=path[path.length-1];
+const r=(last/size)|0,c=last%size;const opts=[];
+if(r>0&&!used.has(last-size))opts.push(last-size);
+if(r<size-1&&!used.has(last+size))opts.push(last+size);
+if(c>0&&!used.has(last-1))opts.push(last-1);
+if(c<size-1&&!used.has(last+1))opts.push(last+1);
+if(!opts.length)break;const nx=opts[(Math.random()*opts.length)|0];
+used.add(nx);path.push(nx);}
+for(let i=0;i<SIZE;i++){const pi=path.indexOf(i);let t='none';
+if(pi>=0){const prev=path[pi-1],next=path[pi+1];
+if(pi===0)t=1;
+else if(pi===path.length-1)t=1;
+else if((prev!==undefined&&Math.abs(prev-i)===1&&next!==undefined&&Math.abs(next-i)===size)||
+(prev!==undefined&&Math.abs(prev-i)===size&&next!==undefined&&Math.abs(next-i)===1))t=1;
+else t=0;}
+cells.push({t,r:(Math.random()*4)|0,src:i===src,lit:false,onPath:pi>=0});}
+moves=0;document.getElementById('l').textContent=level;
+document.getElementById('m').textContent=0;
+light();render();msg('Carry water to all path tiles!');}
+function light(){cells.forEach(c=>c.lit=false);
+const q=[cells.findIndex(c=>c.src)];
+if(q[0]<0)return;cells[q[0]].lit=true;
+while(q.length){const cur=q.pop();const c=cells[cur];
+opens(c).forEach(d=>{let n=-1;const r=(cur/size)|0,cc=cur%size;
+if(d===0&&r>0)n=cur-size;if(d===1&&cc<size-1)n=cur+1;
+if(d===2&&r<size-1)n=cur+size;if(d===3&&cc>0)n=cur-1;
+if(n>=0&&cells[n].t!=='none'&&!cells[n].lit&&opens(cells[n]).includes((d+2)%4)){
+cells[n].lit=true;q.push(n);}});}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+cells.forEach((c,i)=>{const d=document.createElement('div');
+d.className='t'+(c.lit?' lit':'');
+let svg='';
+const col=c.lit?'#38bdf8':'#475569';
+if(c.t===0)svg='<svg viewBox="0 0 40 40"><line x1="20" y1="0" x2="20" y2="40" stroke="'+col+'" stroke-width="8"/></svg>';
+else if(c.t===1)svg='<svg viewBox="0 0 40 40"><path d="M 20 0 Q 20 20 40 20" fill="none" stroke="'+col+'" stroke-width="8"/></svg>';
+if(c.src)svg='<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="10" fill="#38bdf8"/></svg>';
+d.innerHTML=svg;
+d.onclick=()=>{if(c.t==='none')return;
+cells[i].r=(cells[i].r+1)%4;moves++;document.getElementById('m').textContent=moves;
+beep(400,.05);light();render();check();};
+g.appendChild(d);});}
+function check(){const total=cells.filter(c=>c.onPath).length;
+const lit=cells.filter(c=>c.onPath&&c.lit).length;
+document.getElementById('f').textContent=Math.round(lit/total*100);
+if(lit===total){beep(880,.3,'triangle');msg('💧 All crystals watered! Level '+(level+1));level++;
+setTimeout(build,1000);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();};
+build();
+</script></body></html>

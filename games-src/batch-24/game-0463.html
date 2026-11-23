@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Prism Split #463</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+canvas{background:#1e293b;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔺 Crystal Prism Split</h1><div class="sub">Rotate the prism — the beam splits into colors. Hit every gem with its matching color!</div>
+<div id="hud"><span>Gems lit <b id="g">0</b>/<b id="gt">0</b></span><span>Moves <b id="m">0</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">✨ New Prism</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,CX=W/2,CY=W/2;const COLORS=[['#ef4444','❤️'],['#3b82f6','💙'],['#22c55e','💚']];
+let prism={a:0},gems=[],source={x:50,y:50},moves=0,level=1,dragging=false;
+function gen(){gems=[];const n=Math.min(3,COLORS.length);
+for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2;
+gems.push({x:CX+Math.cos(a)*140,y:CY+Math.sin(a)*140,c:i,lit:false});}
+prism.a=0;moves=0;document.getElementById('l').textContent=level;
+document.getElementById('g').textContent=0;document.getElementById('gt').textContent=n;
+document.getElementById('m').textContent=0;
+draw();msg('Split the light to each gem!');}
+cvs.addEventListener('pointerdown',e=>{dragging=true;drag(e);});
+cvs.addEventListener('pointermove',e=>{if(dragging)drag(e);});
+cvs.addEventListener('pointerup',()=>{dragging=false;});
+function drag(e){const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+prism.a=Math.atan2(y-CY,x-CX);moves++;document.getElementById('m').textContent=moves;
+beep(300,.05);check();draw();}
+function beamHit(bx,by,g){// distance from gem to ray (bx,by direction)
+const dx=g.x-CX,dy=g.y-CY;
+const t=Math.max(0,dx*bx+dy*by);
+const px=CX+bx*t,py=CY+by*t;
+return Math.hypot(g.x-px,g.y-py)<20&&t>10;}
+function check(){const bx=Math.cos(prism.a),by=Math.sin(prism.a);
+// split into 3 beams at -30,0,+30 degrees
+[-0.5,0,0.5].forEach((off,i)=>{const a=prism.a+off;
+const c=Math.cos(a),s=Math.sin(a);
+gems.forEach(g=>{if(g.c===i&&beamHit(c,s,g)){if(!g.lit){g.lit=true;beep(500+i*150,.12,'triangle');}
+}});
+});
+document.getElementById('g').textContent=gems.filter(g=>g.lit).length;
+if(gems.every(g=>g.lit)){beep(880,.3,'triangle');msg('🔺 Full spectrum! Level '+(level+1));level++;
+setTimeout(gen,1000);}}
+function draw(){ctx.fillStyle='#1e293b';ctx.fillRect(0,0,W,W);
+// source beam to prism
+ctx.strokeStyle='#fbbf24';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(source.x,source.y);ctx.lineTo(CX,CY);ctx.stroke();
+// split beams
+[-0.5,0,0.5].forEach((off,i)=>{const a=prism.a+off;
+ctx.strokeStyle=COLORS[i][0];ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(CX,CY);
+ctx.lineTo(CX+Math.cos(a)*200,CY+Math.sin(a)*200);ctx.stroke();});
+ctx.lineWidth=1;
+// prism
+ctx.save();ctx.translate(CX,CY);ctx.rotate(prism.a);
+ctx.fillStyle='#a78bfa';
+ctx.beginPath();ctx.moveTo(16,0);ctx.lineTo(-10,-12);ctx.lineTo(-10,12);ctx.fill();
+ctx.restore();
+// gems
+gems.forEach(g=>{ctx.font='22px serif';ctx.textAlign='center';
+ctx.globalAlpha=g.lit?1:0.4;
+ctx.fillText(COLORS[g.c][1],g.x,g.y+8);ctx.globalAlpha=1;
+if(g.lit){ctx.strokeStyle=COLORS[g.c][0];ctx.lineWidth=2;
+ctx.beginPath();ctx.arc(g.x,g.y,18,0,7);ctx.stroke();ctx.lineWidth=1;}});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

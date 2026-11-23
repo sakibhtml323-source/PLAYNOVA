@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Word Search #258</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(8,36px);gap:2px;margin:10px}
+.l{width:36px;height:36px;background:#1e293b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;cursor:pointer;user-select:none}
+.l.sel{background:#4338ca}
+.l.done{background:#14532d;opacity:.8}
+#words{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px;max-width:340px}
+.wd{padding:3px 10px;border-radius:999px;background:#1e293b;font-size:.8rem;font-weight:700}
+.wd.done{text-decoration:line-through;opacity:.5}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Crystal Word Search</h1><div class="sub">Drag across letters (or tap first & last) to find the hidden crystal words!</div>
+<div id="hud"><span>Found <b id="f">0</b>/5</span><span>Time <b id="t">90</b>s</span></div>
+<div id="grid"></div>
+<div id="words"></div>
+<button id="btn">✨ New Grid</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=8;const WORDLIST=['AMETHYST','RUBY','OPAL','JADE','PEARL','TOPAZ','ONYX','AGATE','BERYL','IVORY'];
+const DIRS=[[0,1],[1,0],[1,1],[-1,1]];
+let grid=[],words=[],found=0,sel=[],timer=null,time=90;
+function place(grid,word){for(let t=0;t<200;t++){const d=DIRS[(Math.random()*4)|0];
+const r=(Math.random()*N)|0,c=(Math.random()*N)|0;
+const endR=r+d[0]*(word.length-1),endC=c+d[1]*(word.length-1);
+if(endR<0||endR>=N||endC<0||endC>=N)continue;
+let ok=true;
+for(let i=0;i<word.length;i++){const ch=grid[r+d[0]*i][c+d[1]*i];if(ch&&ch!==word[i]){ok=false;break;}}
+if(!ok)continue;
+for(let i=0;i<word.length;i++)grid[r+d[0]*i][c+d[1]*i]=word[i];
+return true;}return false;}
+function newGrid(){grid=Array.from({length:N},()=>Array(N).fill(null));
+words=WORDLIST.slice().sort(()=>Math.random()-.5).slice(0,5);
+words.forEach(w=>{if(!place(grid,w)){}}); // fill empties
+const FILL='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(!grid[r][c])grid[r][c]=FILL[(Math.random()*26)|0];
+found=0;sel=[];time=90;
+document.getElementById('f').textContent=0;document.getElementById('t').textContent=90;
+const wd=document.getElementById('words');wd.innerHTML='';
+words.forEach(w=>{const d=document.createElement('span');d.className='wd';d.textContent=w;d.dataset.w=w;wd.appendChild(d);});
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);beep(130,.3,'sawtooth');}},1000);render();}
+function tap(r,c){const i=r*N+c;
+if(!sel.length){sel=[i];render();return;}
+const[a]=sel;const ar=(a/N)|0,ac=a%N;
+const dr=Math.sign(r-ar),dc=Math.sign(c-ac);
+// must be straight line
+if(!(dr===0||dc===0||Math.abs(dr)===Math.abs(dc))){sel=[i];render();return;}
+const len=Math.max(Math.abs(r-ar),Math.abs(c-ac));
+let str='';const cells=[];
+for(let k=0;k<=len;k++){const rr=ar+dr*k,cc=ac+dc*k;str+=grid[rr][cc];cells.push(rr*N+cc);}
+const rev=str.split('').reverse().join('');
+const hit=words.find(w=>w===str||w===rev);
+if(hit){found++;document.getElementById('f').textContent=found;
+document.querySelectorAll('.wd').forEach(d=>{if(d.dataset.w===hit)d.classList.add('done');});
+cells.forEach(ci=>{document.querySelectorAll('.l')[ci].classList.add('done');});
+beep(700+found*60,.12,'triangle');
+if(found>=5){clearInterval(timer);beep(880,.3,'triangle');}}
+else{beep(180,.1,'sawtooth');}
+sel=[];render();}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');d.className='l';
+d.textContent=grid[r][c];
+if(sel.includes(r*N+c))d.classList.add('sel');
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newGrid();};
+newGrid();
+</script></body></html>

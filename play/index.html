@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'sha256-63Ua09JGPEYu/ZEVBntVTHOpz9r9RWDDobpl6py+wdg=' 'sha256-sX7nmyT717c1lRWk75WG1N94IZufyS81TcK8bskVZrM='; media-src 'self'; connect-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'self'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Play | PLAYNOVA</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/portal.css">
+<script>const ROOT="../";</script>
+<link rel="stylesheet" href="../assets/css/playnova-ui.css"></head>
+<body class="player-mode" data-page="play">
+<header class="site"><div class="navpill">
+<a class="logo" href="../">&#9650; PLAY<b>NOVA</b></a>
+<div class="search">&#128269; <input id="q" type="text" aria-label="Search games" placeholder="Search games&hellip;" autocomplete="off"></div>
+<nav class="mainnav">
+<a href="../">Home</a><a href="../games/">All Games</a><a href="../categories/">Categories</a>
+<a href="../popular/">Popular</a><a href="../new/">New</a><a href="../about/">About</a>
+</nav></div></header>
+<main class="container">
+<button id="backBtn" title="Back" aria-label="Back to games">&#8592;</button>
+<div class="crumbs"><a href="../">Home</a> / <span id="crumbTitle">Game</span></div>
+<div id="playMount"></div>
+</main>
+<script src="../assets/js/registry.js"></script>
+<script src="../assets/js/ads-config.js"></script>
+<script src="../assets/js/ads.js"></script>
+<script src="../assets/js/audio.js"></script>
+<script src="../assets/js/portal.js"></script>
+<script src="../assets/js/pn-frame.js"></script>
+<script>
+(function(){
+  const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const slug=new URLSearchParams(location.search).get('slug');
+  const g=(typeof REGISTRY!=='undefined'?REGISTRY:[]).find(x=>x.slug===slug);
+  const m=document.getElementById('playMount');
+  if(!g){ m.innerHTML='<div class="legal"><h1>&#127918; Game not found</h1><p>This game is not in the registry yet.</p><a class="btn pri" href="../games/">Browse all games</a></div>'; return; }
+  window.GAME={id:g.id,slug:g.slug,title:g.title};
+  document.title=g.seoTitle; document.getElementById('crumbTitle').textContent=g.title;
+  m.innerHTML=
+   '<div class="player" id="playerWrap"><div class="loadstate" id="loadState"><div class="spin"></div>'
+  +'<div class="lmsg" id="loadMsg">Loading game&hellip;</div>'
+  +'<button class="btn pri" id="btnRetry" style="display:none">&#8635; Retry</button></div>'
+  +'<iframe id="gameFrame" data-pn-src="../'+esc(g.gameUrl)+'" title="'+esc(g.title)+'" sandbox="allow-scripts" data-pn-iso="1" allow="autoplay; fullscreen; pointer-lock; gamepad" referrerpolicy="no-referrer"></iframe>'
+  +'<div class="poverlay" id="pauseOverlay"><h3>Game covered</h3><p>Input is blocked while this screen is up. Games run in a sandboxed frame, so their own timers may keep running.</p>'
+  +'<button class="btn pri" id="btnResume">&#9654; Resume</button><button class="btn ghost" id="btnReloadErr">&#8635; Restart game</button></div></div>'
+  +'<div class="infostrip"><div class="thumb"><img src="../'+esc(g.thumbnail)+'" alt="'+esc(g.title)+' thumbnail" width="400" height="300"></div>'
+  +'<div><h1>'+esc(g.emoji)+' '+esc(g.title)+'</h1><div class="by">by <b>PLAYNOVA</b></div>'
+  +'<p class="desc" style="color:var(--mut);font-size:.9rem">'+esc(g.description)+'</p>'
+  +'<div class="gmeta"><span>Category: '+esc(g.category)+'</span><span>Difficulty: '+esc(g.difficulty)+'</span></div>'
+  +'<div class="pcontrols">'
+  +'<button class="btn pri" id="btnFs">&#9094; Fullscreen</button>'
+  +'<button class="btn sec" id="btnRestart">&#8635; Restart</button>'
+  +'<button class="btn sec" id="btnPause">&#10074;&#10074; Pause</button>'
+  +'<button class="btn ghost" id="btnSound">&#128266; Sound</button>'
+  +'<button class="btn ghost" id="btnFav">&#11088; Favorite</button>'
+  +'</div></div></div>'
+  +'<div id="extraInfo"><div class="howto"><b>How to play:</b> '+esc(g.instructions)+'</div>';
+  const s=document.createElement('script'); s.src='../assets/js/player.js'; document.body.appendChild(s);
+  const s2=document.createElement('script'); s2.src='../assets/js/touchpad.js'; document.body.appendChild(s2);
+})();
+</script>
+<script src="../assets/js/playnova-core.js"></script></body></html>

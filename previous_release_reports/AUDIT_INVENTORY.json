@@ -1,0 +1,8423 @@
+{
+ "generated": "2026-11-05 02:22",
+ "self_reference": "fixed-point: every recorded size (incl. both inventory files) matches the final ZIP entry size",
+ "files": [
+  {
+   "path": "404.html",
+   "size": 3989
+  },
+  {
+   "path": "500_GAME_TEST_REPORT.csv",
+   "size": 29437
+  },
+  {
+   "path": "ADD-NEW-GAME-BN.md",
+   "size": 2397
+  },
+  {
+   "path": "ADD-NEW-GAME.md",
+   "size": 3551
+  },
+  {
+   "path": "AD_NETWORK_READINESS.md",
+   "size": 1639
+  },
+  {
+   "path": "AD_NETWORK_SETUP.md",
+   "size": 2199
+  },
+  {
+   "path": "AUDIT_INVENTORY.json",
+   "size": 169344
+  },
+  {
+   "path": "AUDIT_INVENTORY.md",
+   "size": 165
+  },
+  {
+   "path": "BROKEN_ASSETS_REPORT.csv",
+   "size": 29
+  },
+  {
+   "path": "BROKEN_LINK_REPORT.csv",
+   "size": 18
+  },
+  {
+   "path": "BUG_AUDIT_REPORT_BN.md",
+   "size": 3769
+  },
+  {
+   "path": "BUG_FIX_REPORT_BN.md",
+   "size": 2193
+  },
+  {
+   "path": "BUTTON_TEST_REPORT.csv",
+   "size": 1702
+  },
+  {
+   "path": "CATEGORY_SEO_REPORT.csv",
+   "size": 1005
+  },
+  {
+   "path": "CONSOLE_ERRORS_REPORT.md",
+   "size": 1402
+  },
+  {
+   "path": "CORE_WEB_VITALS_REPORT.md",
+   "size": 1190
+  },
+  {
+   "path": "DEPLOYMENT_GUIDE.md",
+   "size": 1475
+  },
+  {
+   "path": "DEPLOYMENT_GUIDE_BN.md",
+   "size": 2173
+  },
+  {
+   "path": "FINAL_AUDIT_REPORT_BN.md",
+   "size": 3788
+  },
+  {
+   "path": "FINAL_RELEASE_REPORT.md",
+   "size": 1927
+  },
+  {
+   "path": "FINAL_RELEASE_REPORT_BN.md",
+   "size": 2244
+  },
+  {
+   "path": "FULL_CODE_AUDIT_BN.md",
+   "size": 2376
+  },
+  {
+   "path": "GAME_INTEGRITY_REPORT.json",
+   "size": 134
+  },
+  {
+   "path": "GAME_INTEGRITY_REPORT.md",
+   "size": 357
+  },
+  {
+   "path": "GAME_INVENTORY.csv",
+   "size": 170878
+  },
+  {
+   "path": "GAME_LOGIC_AUDIT_BN.md",
+   "size": 2242
+  },
+  {
+   "path": "GAME_SEO_REPORT.csv",
+   "size": 150465
+  },
+  {
+   "path": "GAME_TEST_REPORT.csv",
+   "size": 29943
+  },
+  {
+   "path": "GOOGLE_SEARCH_CONSOLE_GUIDE.md",
+   "size": 1719
+  },
+  {
+   "path": "INTERNAL_LINK_AUDIT.csv",
+   "size": 34503
+  },
+  {
+   "path": "KEYWORD_STRATEGY.md",
+   "size": 4281
+  },
+  {
+   "path": "KNOWN_ISSUES.md",
+   "size": 2556
+  },
+  {
+   "path": "LICENSE_AUDIT.md",
+   "size": 2275
+  },
+  {
+   "path": "LOADING_PAUSE_TEST_REPORT_BN.md",
+   "size": 1335
+  },
+  {
+   "path": "MOBILE_TEST_REPORT.md",
+   "size": 907
+  },
+  {
+   "path": "MOBILE_TEST_REPORT_BN.md",
+   "size": 1133
+  },
+  {
+   "path": "PERFORMANCE_REPORT.md",
+   "size": 1239
+  },
+  {
+   "path": "RELEASE_REPORT.md",
+   "size": 4929
+  },
+  {
+   "path": "SECURITY_AUDIT.md",
+   "size": 2047
+  },
+  {
+   "path": "SECURITY_REPORT.md",
+   "size": 2020
+  },
+  {
+   "path": "SECURITY_REPORT_BN.md",
+   "size": 1484
+  },
+  {
+   "path": "SEO_AUDIT.json",
+   "size": 294
+  },
+  {
+   "path": "SEO_AUDIT.md",
+   "size": 501
+  },
+  {
+   "path": "SEO_AUDIT_REPORT.md",
+   "size": 1762
+  },
+  {
+   "path": "SEO_MAINTENANCE_GUIDE.md",
+   "size": 1413
+  },
+  {
+   "path": "SEO_REPORT.md",
+   "size": 1382
+  },
+  {
+   "path": "SITEMAP_VALIDATION_REPORT.md",
+   "size": 610
+  },
+  {
+   "path": "STRUCTURED_DATA_REPORT.md",
+   "size": 862
+  },
+  {
+   "path": "TEST_RESULTS.csv",
+   "size": 1837
+  },
+  {
+   "path": "UI_UX_CHANGELOG_BN.md",
+   "size": 5453
+  },
+  {
+   "path": "about/index.html",
+   "size": 5113
+  },
+  {
+   "path": "assets/css/portal.css",
+   "size": 15930
+  },
+  {
+   "path": "assets/img/banners/air-hockey-pirate-theme.webp",
+   "size": 14752
+  },
+  {
+   "path": "assets/img/banners/airport-manager-glassmorphism-edition.webp",
+   "size": 26130
+  },
+  {
+   "path": "assets/img/banners/airport-manager-greek-myth-edition.webp",
+   "size": 22518
+  },
+  {
+   "path": "assets/img/banners/anagram-sports-edition.webp",
+   "size": 24472
+  },
+  {
+   "path": "assets/img/banners/arctic-crazy-universe.webp",
+   "size": 14446
+  },
+  {
+   "path": "assets/img/banners/arctic-flappy-universe-edition.webp",
+   "size": 19056
+  },
+  {
+   "path": "assets/img/banners/arctic-hidden-object-storm.webp",
+   "size": 16104
+  },
+  {
+   "path": "assets/img/banners/ball-bounce-glassmorphism-edition.webp",
+   "size": 23370
+  },
+  {
+   "path": "assets/img/banners/base-defense-isometric-edition.webp",
+   "size": 26042
+  },
+  {
+   "path": "assets/img/banners/beat-bell-354.webp",
+   "size": 9372
+  },
+  {
+   "path": "assets/img/banners/board-game-greek-myth.webp",
+   "size": 18768
+  },
+  {
+   "path": "assets/img/banners/brave-traffic-control-samurai-edition.webp",
+   "size": 19606
+  },
+  {
+   "path": "assets/img/banners/cel-shaded-space-war-2p-edition.webp",
+   "size": 27936
+  },
+  {
+   "path": "assets/img/banners/chain-combo-merge-194.webp",
+   "size": 21278
+  },
+  {
+   "path": "assets/img/banners/checkers-ai-pastel-edition.webp",
+   "size": 15720
+  },
+  {
+   "path": "assets/img/banners/chill-greek-myth-sudoku.webp",
+   "size": 14888
+  },
+  {
+   "path": "assets/img/banners/clever-arctic-tales.webp",
+   "size": 14844
+  },
+  {
+   "path": "assets/img/banners/clever-tycoon.webp",
+   "size": 12686
+  },
+  {
+   "path": "assets/img/banners/coloring-book-cyberpunk-edition.webp",
+   "size": 22820
+  },
+  {
+   "path": "assets/img/banners/coloring-book-food-edition.webp",
+   "size": 18474
+  },
+  {
+   "path": "assets/img/banners/coloring-book-glassmorphism-edition.webp",
+   "size": 29958
+  },
+  {
+   "path": "assets/img/banners/combo-clicker-37-active-only.webp",
+   "size": 18152
+  },
+  {
+   "path": "assets/img/banners/comic-book-chronicles.webp",
+   "size": 24876
+  },
+  {
+   "path": "assets/img/banners/cosmic-jungle-hero.webp",
+   "size": 10506
+  },
+  {
+   "path": "assets/img/banners/cosmic-magic-riddle-solver.webp",
+   "size": 13144
+  },
+  {
+   "path": "assets/img/banners/cosmic-medieval-war.webp",
+   "size": 20660
+  },
+  {
+   "path": "assets/img/banners/cosmic-monochrome-farming-sim.webp",
+   "size": 24296
+  },
+  {
+   "path": "assets/img/banners/crazy-jungle-forest.webp",
+   "size": 16772
+  },
+  {
+   "path": "assets/img/banners/crazy-pastel-reaction-time.webp",
+   "size": 17142
+  },
+  {
+   "path": "assets/img/banners/crystal-balance-251.webp",
+   "size": 22600
+  },
+  {
+   "path": "assets/img/banners/crystal-ball-sort-245.webp",
+   "size": 13898
+  },
+  {
+   "path": "assets/img/banners/crystal-cipher-269.webp",
+   "size": 16996
+  },
+  {
+   "path": "assets/img/banners/crystal-code-breaker-330.webp",
+   "size": 19782
+  },
+  {
+   "path": "assets/img/banners/crystal-color-chain-323.webp",
+   "size": 19856
+  },
+  {
+   "path": "assets/img/banners/crystal-comet-catch-420.webp",
+   "size": 21106
+  },
+  {
+   "path": "assets/img/banners/crystal-defense-grid-300.webp",
+   "size": 15198
+  },
+  {
+   "path": "assets/img/banners/crystal-dice-duel-311.webp",
+   "size": 24970
+  },
+  {
+   "path": "assets/img/banners/crystal-dot-link-276.webp",
+   "size": 16106
+  },
+  {
+   "path": "assets/img/banners/crystal-dot-pop-292.webp",
+   "size": 21938
+  },
+  {
+   "path": "assets/img/banners/crystal-flood-gate-425.webp",
+   "size": 24144
+  },
+  {
+   "path": "assets/img/banners/crystal-flow-351.webp",
+   "size": 11974
+  },
+  {
+   "path": "assets/img/banners/crystal-gem-grid-446.webp",
+   "size": 22090
+  },
+  {
+   "path": "assets/img/banners/crystal-golem-merge-0490.webp",
+   "size": 15724
+  },
+  {
+   "path": "assets/img/banners/crystal-golem-path-472.webp",
+   "size": 24522
+  },
+  {
+   "path": "assets/img/banners/crystal-grid-shift-362.webp",
+   "size": 18880
+  },
+  {
+   "path": "assets/img/banners/crystal-grid-slide-418.webp",
+   "size": 18134
+  },
+  {
+   "path": "assets/img/banners/crystal-harmony-377.webp",
+   "size": 24164
+  },
+  {
+   "path": "assets/img/banners/crystal-hex-duel-229.webp",
+   "size": 19678
+  },
+  {
+   "path": "assets/img/banners/crystal-horror-flappy.webp",
+   "size": 26560
+  },
+  {
+   "path": "assets/img/banners/crystal-ice-break-336.webp",
+   "size": 18102
+  },
+  {
+   "path": "assets/img/banners/crystal-isometric-blast.webp",
+   "size": 16508
+  },
+  {
+   "path": "assets/img/banners/crystal-laser-alignment-287.webp",
+   "size": 22962
+  },
+  {
+   "path": "assets/img/banners/crystal-match-blast-236.webp",
+   "size": 21076
+  },
+  {
+   "path": "assets/img/banners/crystal-memory-matrix-282.webp",
+   "size": 23172
+  },
+  {
+   "path": "assets/img/banners/crystal-number-drop-319.webp",
+   "size": 21200
+  },
+  {
+   "path": "assets/img/banners/crystal-path-defense-343.webp",
+   "size": 21046
+  },
+  {
+   "path": "assets/img/banners/crystal-path-finder-297.webp",
+   "size": 17030
+  },
+  {
+   "path": "assets/img/banners/crystal-pond-ripple-405.webp",
+   "size": 22888
+  },
+  {
+   "path": "assets/img/banners/crystal-pool-dive-452.webp",
+   "size": 15212
+  },
+  {
+   "path": "assets/img/banners/crystal-pool-shot-433.webp",
+   "size": 18822
+  },
+  {
+   "path": "assets/img/banners/crystal-prism-split-463.webp",
+   "size": 18866
+  },
+  {
+   "path": "assets/img/banners/crystal-puzzle-grid-355.webp",
+   "size": 14906
+  },
+  {
+   "path": "assets/img/banners/crystal-reflex-grid-303.webp",
+   "size": 14616
+  },
+  {
+   "path": "assets/img/banners/crystal-rhythm-grid-263.webp",
+   "size": 14920
+  },
+  {
+   "path": "assets/img/banners/crystal-shift-puzzle-306.webp",
+   "size": 14018
+  },
+  {
+   "path": "assets/img/banners/crystal-stack-sort-346.webp",
+   "size": 14972
+  },
+  {
+   "path": "assets/img/banners/crystal-tide-pool-436.webp",
+   "size": 21718
+  },
+  {
+   "path": "assets/img/banners/crystal-word-search-258.webp",
+   "size": 16462
+  },
+  {
+   "path": "assets/img/banners/cute-animals-rise.webp",
+   "size": 13408
+  },
+  {
+   "path": "assets/img/banners/cyberpunk-sky.webp",
+   "size": 15406
+  },
+  {
+   "path": "assets/img/banners/dark-mode-anagram-puzzle.webp",
+   "size": 21928
+  },
+  {
+   "path": "assets/img/banners/dark-mode-sport-hero.webp",
+   "size": 21302
+  },
+  {
+   "path": "assets/img/banners/dash-brawler-55.webp",
+   "size": 14682
+  },
+  {
+   "path": "assets/img/banners/decoy-spotter-140.webp",
+   "size": 17244
+  },
+  {
+   "path": "assets/img/banners/desert-ant-farm-361.webp",
+   "size": 16566
+  },
+  {
+   "path": "assets/img/banners/desert-ant-hill-0491.webp",
+   "size": 16238
+  },
+  {
+   "path": "assets/img/banners/desert-balance-beam-295.webp",
+   "size": 21080
+  },
+  {
+   "path": "assets/img/banners/desert-bounce-quest-281.webp",
+   "size": 19586
+  },
+  {
+   "path": "assets/img/banners/desert-cactus-guard-457.webp",
+   "size": 20380
+  },
+  {
+   "path": "assets/img/banners/desert-camel-bell-432.webp",
+   "size": 16872
+  },
+  {
+   "path": "assets/img/banners/desert-camel-choir-386.webp",
+   "size": 25780
+  },
+  {
+   "path": "assets/img/banners/desert-camel-market-462.webp",
+   "size": 25050
+  },
+  {
+   "path": "assets/img/banners/desert-camel-race-352.webp",
+   "size": 14852
+  },
+  {
+   "path": "assets/img/banners/desert-caravan-trade-291.webp",
+   "size": 19444
+  },
+  {
+   "path": "assets/img/banners/desert-coin-flip-357.webp",
+   "size": 12208
+  },
+  {
+   "path": "assets/img/banners/desert-coin-pusher-342.webp",
+   "size": 23264
+  },
+  {
+   "path": "assets/img/banners/desert-dot-trail-333.webp",
+   "size": 22940
+  },
+  {
+   "path": "assets/img/banners/desert-draw-path-268.webp",
+   "size": 22170
+  },
+  {
+   "path": "assets/img/banners/desert-dual-defense-262.webp",
+   "size": 13794
+  },
+  {
+   "path": "assets/img/banners/desert-dune-board-411.webp",
+   "size": 17610
+  },
+  {
+   "path": "assets/img/banners/desert-echo-shout-450.webp",
+   "size": 16294
+  },
+  {
+   "path": "assets/img/banners/desert-fire-dance-475.webp",
+   "size": 24174
+  },
+  {
+   "path": "assets/img/banners/desert-firefly-catch-372.webp",
+   "size": 24358
+  },
+  {
+   "path": "assets/img/banners/desert-forge-idle-226.webp",
+   "size": 23920
+  },
+  {
+   "path": "assets/img/banners/desert-frog-leap-417.webp",
+   "size": 19898
+  },
+  {
+   "path": "assets/img/banners/desert-gear-puzzle-382.webp",
+   "size": 13866
+  },
+  {
+   "path": "assets/img/banners/desert-gravity-flip-240.webp",
+   "size": 14558
+  },
+  {
+   "path": "assets/img/banners/desert-hawk-dive-468.webp",
+   "size": 17152
+  },
+  {
+   "path": "assets/img/banners/desert-legendary-galaxy.webp",
+   "size": 20304
+  },
+  {
+   "path": "assets/img/banners/desert-logic-gates.webp",
+   "size": 17292
+  },
+  {
+   "path": "assets/img/banners/desert-masked-dancer-435.webp",
+   "size": 17678
+  },
+  {
+   "path": "assets/img/banners/desert-math-challenge-ocean-edition.webp",
+   "size": 18948
+  },
+  {
+   "path": "assets/img/banners/desert-math-puzzle.webp",
+   "size": 12152
+  },
+  {
+   "path": "assets/img/banners/desert-mega-hero-241.webp",
+   "size": 16616
+  },
+  {
+   "path": "assets/img/banners/desert-memory-match-248.webp",
+   "size": 14144
+  },
+  {
+   "path": "assets/img/banners/desert-mine-cart-365.webp",
+   "size": 16056
+  },
+  {
+   "path": "assets/img/banners/desert-mirror-path-315.webp",
+   "size": 18502
+  },
+  {
+   "path": "assets/img/banners/desert-moon-hopper-0488.webp",
+   "size": 15032
+  },
+  {
+   "path": "assets/img/banners/desert-moon-jump-459.webp",
+   "size": 14134
+  },
+  {
+   "path": "assets/img/banners/desert-moon-phase-399.webp",
+   "size": 26214
+  },
+  {
+   "path": "assets/img/banners/desert-night-patrol-464.webp",
+   "size": 13966
+  },
+  {
+   "path": "assets/img/banners/desert-night-watch-402.webp",
+   "size": 23788
+  },
+  {
+   "path": "assets/img/banners/desert-oasis-defense-302.webp",
+   "size": 27040
+  },
+  {
+   "path": "assets/img/banners/desert-oasis-guard-429.webp",
+   "size": 18756
+  },
+  {
+   "path": "assets/img/banners/desert-oasis-hop-388.webp",
+   "size": 15392
+  },
+  {
+   "path": "assets/img/banners/desert-oasis-match-326.webp",
+   "size": 23582
+  },
+  {
+   "path": "assets/img/banners/desert-oasis-ring-479.webp",
+   "size": 16570
+  },
+  {
+   "path": "assets/img/banners/desert-oasis-rope-466.webp",
+   "size": 24660
+  },
+  {
+   "path": "assets/img/banners/desert-rain-catch-477.webp",
+   "size": 22906
+  },
+  {
+   "path": "assets/img/banners/desert-reflection-232.webp",
+   "size": 14980
+  },
+  {
+   "path": "assets/img/banners/desert-rhythm-hop-347.webp",
+   "size": 12570
+  },
+  {
+   "path": "assets/img/banners/desert-rhythm-runner-277.webp",
+   "size": 17328
+  },
+  {
+   "path": "assets/img/banners/desert-rhythm-tap-320.webp",
+   "size": 18808
+  },
+  {
+   "path": "assets/img/banners/desert-rhythm-tap-empire.webp",
+   "size": 19096
+  },
+  {
+   "path": "assets/img/banners/desert-sand-draw-322.webp",
+   "size": 13440
+  },
+  {
+   "path": "assets/img/banners/desert-sand-storm-392.webp",
+   "size": 25076
+  },
+  {
+   "path": "assets/img/banners/desert-sand-timer-369.webp",
+   "size": 23048
+  },
+  {
+   "path": "assets/img/banners/desert-sand-timer-duel-0498.webp",
+   "size": 14544
+  },
+  {
+   "path": "assets/img/banners/desert-scarab-maze-396.webp",
+   "size": 26968
+  },
+  {
+   "path": "assets/img/banners/desert-scarab-push-445.webp",
+   "size": 21622
+  },
+  {
+   "path": "assets/img/banners/desert-scarab-rush-337.webp",
+   "size": 15088
+  },
+  {
+   "path": "assets/img/banners/desert-scorpion-sting-376.webp",
+   "size": 26426
+  },
+  {
+   "path": "assets/img/banners/desert-scroll-roll-329.webp",
+   "size": 13452
+  },
+  {
+   "path": "assets/img/banners/desert-snake-charmer-454.webp",
+   "size": 18250
+  },
+  {
+   "path": "assets/img/banners/desert-snake-pit-272.webp",
+   "size": 12138
+  },
+  {
+   "path": "assets/img/banners/desert-snake-trail-259.webp",
+   "size": 13820
+  },
+  {
+   "path": "assets/img/banners/desert-solar-align-409.webp",
+   "size": 17058
+  },
+  {
+   "path": "assets/img/banners/desert-star-fall-442.webp",
+   "size": 22534
+  },
+  {
+   "path": "assets/img/banners/desert-star-link-486.webp",
+   "size": 17828
+  },
+  {
+   "path": "assets/img/banners/desert-star-map-427.webp",
+   "size": 16426
+  },
+  {
+   "path": "assets/img/banners/desert-star-navigate-406.webp",
+   "size": 27286
+  },
+  {
+   "path": "assets/img/banners/desert-sun-catch-439.webp",
+   "size": 15022
+  },
+  {
+   "path": "assets/img/banners/desert-sun-dial-422.webp",
+   "size": 22348
+  },
+  {
+   "path": "assets/img/banners/desert-sun-dial-run-471.webp",
+   "size": 15888
+  },
+  {
+   "path": "assets/img/banners/desert-sun-race-482.webp",
+   "size": 21418
+  },
+  {
+   "path": "assets/img/banners/desert-train-switch-307.webp",
+   "size": 17718
+  },
+  {
+   "path": "assets/img/banners/desert-vault-286.webp",
+   "size": 22766
+  },
+  {
+   "path": "assets/img/banners/desert-wind-chime-414.webp",
+   "size": 18562
+  },
+  {
+   "path": "assets/img/banners/desert-wind-ladder-447.webp",
+   "size": 23518
+  },
+  {
+   "path": "assets/img/banners/desert-windmill-spin-0494.webp",
+   "size": 27320
+  },
+  {
+   "path": "assets/img/banners/dragon-dark-mode-riddle-solver.webp",
+   "size": 18988
+  },
+  {
+   "path": "assets/img/banners/dress-up-glassmorphism-edition.webp",
+   "size": 20100
+  },
+  {
+   "path": "assets/img/banners/dual-source-pipes-186.webp",
+   "size": 12212
+  },
+  {
+   "path": "assets/img/banners/egyptian-gate-traffic-223.webp",
+   "size": 19974
+  },
+  {
+   "path": "assets/img/banners/egyptian-math-pyramid-264.webp",
+   "size": 24188
+  },
+  {
+   "path": "assets/img/banners/egyptian-portal-2048-255.webp",
+   "size": 18570
+  },
+  {
+   "path": "assets/img/banners/egyptian-wrap-pipes-231.webp",
+   "size": 17392
+  },
+  {
+   "path": "assets/img/banners/endless-hotseat-strategy.webp",
+   "size": 17506
+  },
+  {
+   "path": "assets/img/banners/endless-strategy-greek-myth.webp",
+   "size": 13330
+  },
+  {
+   "path": "assets/img/banners/epic-arctic-versus-puzzle.webp",
+   "size": 16990
+  },
+  {
+   "path": "assets/img/banners/epic-cozy-merge-2p-edition.webp",
+   "size": 18310
+  },
+  {
+   "path": "assets/img/banners/epic-egyptian-school-simulator.webp",
+   "size": 20838
+  },
+  {
+   "path": "assets/img/banners/epic-magic-coloring-book.webp",
+   "size": 16072
+  },
+  {
+   "path": "assets/img/banners/epic-pixel-art-tower.webp",
+   "size": 20974
+  },
+  {
+   "path": "assets/img/banners/epic-time-management-infinity.webp",
+   "size": 14160
+  },
+  {
+   "path": "assets/img/banners/epic-vehicle-combat-horror-edition.webp",
+   "size": 26780
+  },
+  {
+   "path": "assets/img/banners/eternal-egyptian-dungeon.webp",
+   "size": 19686
+  },
+  {
+   "path": "assets/img/banners/eternal-halloween-tycoon.webp",
+   "size": 14884
+  },
+  {
+   "path": "assets/img/banners/eternal-number-merge.webp",
+   "size": 14082
+  },
+  {
+   "path": "assets/img/banners/eternal-robot-room-escape.webp",
+   "size": 29134
+  },
+  {
+   "path": "assets/img/banners/fighting-robot-edition.webp",
+   "size": 23478
+  },
+  {
+   "path": "assets/img/banners/flying-kings-checkers-142.webp",
+   "size": 14146
+  },
+  {
+   "path": "assets/img/banners/focus-trainer-comic-book-edition.webp",
+   "size": 31424
+  },
+  {
+   "path": "assets/img/banners/focus-trainer-pixel-art-edition.webp",
+   "size": 21872
+  },
+  {
+   "path": "assets/img/banners/fog-of-war-checkers-215.webp",
+   "size": 13488
+  },
+  {
+   "path": "assets/img/banners/food-dragon-island.webp",
+   "size": 13372
+  },
+  {
+   "path": "assets/img/banners/food-dungeon-222.webp",
+   "size": 17200
+  },
+  {
+   "path": "assets/img/banners/glassmorphism-golden-adventure.webp",
+   "size": 25964
+  },
+  {
+   "path": "assets/img/banners/glassmorphism-realm.webp",
+   "size": 22732
+  },
+  {
+   "path": "assets/img/banners/golden-comic-book-mountain.webp",
+   "size": 25278
+  },
+  {
+   "path": "assets/img/banners/golden-neon-forest.webp",
+   "size": 28102
+  },
+  {
+   "path": "assets/img/banners/golden-watercolor-portal.webp",
+   "size": 16246
+  },
+  {
+   "path": "assets/img/banners/gradient-heavy-super-race.webp",
+   "size": 17676
+  },
+  {
+   "path": "assets/img/banners/gravity-puzzle-pirate-edition.webp",
+   "size": 15828
+  },
+  {
+   "path": "assets/img/banners/gravity-shift-merge-163.webp",
+   "size": 15546
+  },
+  {
+   "path": "assets/img/banners/greek-myth-endless-runner-fury.webp",
+   "size": 24572
+  },
+  {
+   "path": "assets/img/banners/gunner-watercolor-edition.webp",
+   "size": 32528
+  },
+  {
+   "path": "assets/img/banners/halloween-epic-arena.webp",
+   "size": 18492
+  },
+  {
+   "path": "assets/img/banners/halloween-hyper-portal.webp",
+   "size": 18350
+  },
+  {
+   "path": "assets/img/banners/halloween-intense-puzzle.webp",
+   "size": 18742
+  },
+  {
+   "path": "assets/img/banners/halloween-king.webp",
+   "size": 17636
+  },
+  {
+   "path": "assets/img/banners/haunted-anagram-arena-271.webp",
+   "size": 18462
+  },
+  {
+   "path": "assets/img/banners/haunted-attic-climb-0493.webp",
+   "size": 14366
+  },
+  {
+   "path": "assets/img/banners/haunted-attic-crawl-438.webp",
+   "size": 14796
+  },
+  {
+   "path": "assets/img/banners/haunted-attic-drop-484.webp",
+   "size": 17944
+  },
+  {
+   "path": "assets/img/banners/haunted-attic-sort-419.webp",
+   "size": 22892
+  },
+  {
+   "path": "assets/img/banners/haunted-attic-stack-453.webp",
+   "size": 20002
+  },
+  {
+   "path": "assets/img/banners/haunted-ballroom-470.webp",
+   "size": 19936
+  },
+  {
+   "path": "assets/img/banners/haunted-bell-ring-410.webp",
+   "size": 20012
+  },
+  {
+   "path": "assets/img/banners/haunted-bubble-pop-305.webp",
+   "size": 22794
+  },
+  {
+   "path": "assets/img/banners/haunted-calculator-244.webp",
+   "size": 14054
+  },
+  {
+   "path": "assets/img/banners/haunted-chime-order-0489.webp",
+   "size": 18646
+  },
+  {
+   "path": "assets/img/banners/haunted-clock-hands-416.webp",
+   "size": 20778
+  },
+  {
+   "path": "assets/img/banners/haunted-clock-puzzle-0499.webp",
+   "size": 24360
+  },
+  {
+   "path": "assets/img/banners/haunted-clock-tower-348.webp",
+   "size": 24688
+  },
+  {
+   "path": "assets/img/banners/haunted-crystal-ball-358.webp",
+   "size": 25128
+  },
+  {
+   "path": "assets/img/banners/haunted-door-guard-434.webp",
+   "size": 19632
+  },
+  {
+   "path": "assets/img/banners/haunted-echo-384.webp",
+   "size": 10630
+  },
+  {
+   "path": "assets/img/banners/haunted-falling-blocks-279.webp",
+   "size": 21054
+  },
+  {
+   "path": "assets/img/banners/haunted-garden-tend-473.webp",
+   "size": 15446
+  },
+  {
+   "path": "assets/img/banners/haunted-ghost-maze-310.webp",
+   "size": 14320
+  },
+  {
+   "path": "assets/img/banners/haunted-grave-dig-0495.webp",
+   "size": 23020
+  },
+  {
+   "path": "assets/img/banners/haunted-graveyard-465.webp",
+   "size": 15420
+  },
+  {
+   "path": "assets/img/banners/haunted-grid-crawler-325.webp",
+   "size": 24562
+  },
+  {
+   "path": "assets/img/banners/haunted-hotseat-conquest-235.webp",
+   "size": 29398
+  },
+  {
+   "path": "assets/img/banners/haunted-hourglass-race-404.webp",
+   "size": 23524
+  },
+  {
+   "path": "assets/img/banners/haunted-library-395.webp",
+   "size": 20384
+  },
+  {
+   "path": "assets/img/banners/haunted-maze-chase-299.webp",
+   "size": 14102
+  },
+  {
+   "path": "assets/img/banners/haunted-merge-blast-250.webp",
+   "size": 14058
+  },
+  {
+   "path": "assets/img/banners/haunted-mirror-hall-476.webp",
+   "size": 13818
+  },
+  {
+   "path": "assets/img/banners/haunted-mirror-match-338.webp",
+   "size": 15418
+  },
+  {
+   "path": "assets/img/banners/haunted-mirror-path-373.webp",
+   "size": 16488
+  },
+  {
+   "path": "assets/img/banners/haunted-number-path-344.webp",
+   "size": 14404
+  },
+  {
+   "path": "assets/img/banners/haunted-obby-run-230.webp",
+   "size": 22094
+  },
+  {
+   "path": "assets/img/banners/haunted-organ-444.webp",
+   "size": 15248
+  },
+  {
+   "path": "assets/img/banners/haunted-painting-366.webp",
+   "size": 18704
+  },
+  {
+   "path": "assets/img/banners/haunted-painting-find-431.webp",
+   "size": 22060
+  },
+  {
+   "path": "assets/img/banners/haunted-pattern-shift-284.webp",
+   "size": 14112
+  },
+  {
+   "path": "assets/img/banners/haunted-portrait-row-424.webp",
+   "size": 16948
+  },
+  {
+   "path": "assets/img/banners/haunted-row-slide-227.webp",
+   "size": 18396
+  },
+  {
+   "path": "assets/img/banners/haunted-simon-duel-224.webp",
+   "size": 18394
+  },
+  {
+   "path": "assets/img/banners/haunted-sound-board-290.webp",
+   "size": 21230
+  },
+  {
+   "path": "assets/img/banners/haunted-spot-pop-313.webp",
+   "size": 12456
+  },
+  {
+   "path": "assets/img/banners/haunted-spot-shift-254.webp",
+   "size": 18748
+  },
+  {
+   "path": "assets/img/banners/haunted-tile-runner-0318.webp",
+   "size": 13874
+  },
+  {
+   "path": "assets/img/banners/haunted-tower-stack-260.webp",
+   "size": 14978
+  },
+  {
+   "path": "assets/img/banners/haunted-tower-stack-449.webp",
+   "size": 14874
+  },
+  {
+   "path": "assets/img/banners/haunted-wave-composer-275.webp",
+   "size": 29064
+  },
+  {
+   "path": "assets/img/banners/haunted-whack-a-ghost-265.webp",
+   "size": 22122
+  },
+  {
+   "path": "assets/img/banners/hero-defense-90.webp",
+   "size": 9484
+  },
+  {
+   "path": "assets/img/banners/high-stakes-quiz-84.webp",
+   "size": 11524
+  },
+  {
+   "path": "assets/img/banners/horror-cosmic-merge.webp",
+   "size": 12010
+  },
+  {
+   "path": "assets/img/banners/horror-neon-forest.webp",
+   "size": 19954
+  },
+  {
+   "path": "assets/img/banners/hospital-tycoon-fantasy-edition.webp",
+   "size": 17876
+  },
+  {
+   "path": "assets/img/banners/hyper-tile-puzzle-watercolor.webp",
+   "size": 15774
+  },
+  {
+   "path": "assets/img/banners/idle-clicker-minimalist-edition.webp",
+   "size": 17500
+  },
+  {
+   "path": "assets/img/banners/idle-pharaoh-237.webp",
+   "size": 11122
+  },
+  {
+   "path": "assets/img/banners/infinity-party-game.webp",
+   "size": 16738
+  },
+  {
+   "path": "assets/img/banners/infinity-physics-sandbox-pirate-seas.webp",
+   "size": 21190
+  },
+  {
+   "path": "assets/img/banners/intense-2-player-strategy.webp",
+   "size": 15870
+  },
+  {
+   "path": "assets/img/banners/intense-brain-puzzle-saga-daily-seed.webp",
+   "size": 16320
+  },
+  {
+   "path": "assets/img/banners/intense-cooking-infinity-edition.webp",
+   "size": 21446
+  },
+  {
+   "path": "assets/img/banners/intense-horror-rise.webp",
+   "size": 20444
+  },
+  {
+   "path": "assets/img/banners/intense-infinite-runner.webp",
+   "size": 23720
+  },
+  {
+   "path": "assets/img/banners/intense-maze.webp",
+   "size": 20540
+  },
+  {
+   "path": "assets/img/banners/intense-pixel-art-rise.webp",
+   "size": 23764
+  },
+  {
+   "path": "assets/img/banners/intense-samurai-vehicle-combat.webp",
+   "size": 20238
+  },
+  {
+   "path": "assets/img/banners/intense-school-simulator.webp",
+   "size": 22830
+  },
+  {
+   "path": "assets/img/banners/intense-sports-rush.webp",
+   "size": 16234
+  },
+  {
+   "path": "assets/img/banners/iq-test-samurai-edition.webp",
+   "size": 17242
+  },
+  {
+   "path": "assets/img/banners/iron-gunner.webp",
+   "size": 25236
+  },
+  {
+   "path": "assets/img/banners/iron-minimalist-logic-gates.webp",
+   "size": 14280
+  },
+  {
+   "path": "assets/img/banners/isometric-brave-kingdom.webp",
+   "size": 18534
+  },
+  {
+   "path": "assets/img/banners/isometric-mystic-city.webp",
+   "size": 17814
+  },
+  {
+   "path": "assets/img/banners/jungle-farm-puzzle.webp",
+   "size": 17146
+  },
+  {
+   "path": "assets/img/banners/king-rush-checkers-149.webp",
+   "size": 12670
+  },
+  {
+   "path": "assets/img/banners/leak-pressure-pipes-83.webp",
+   "size": 15384
+  },
+  {
+   "path": "assets/img/banners/legendary-maze.webp",
+   "size": 17000
+  },
+  {
+   "path": "assets/img/banners/legendary-minimalist-blast.webp",
+   "size": 20788
+  },
+  {
+   "path": "assets/img/banners/legendary-modern-flat-war.webp",
+   "size": 22682
+  },
+  {
+   "path": "assets/img/banners/legendary-traffic-control-food-edition.webp",
+   "size": 21598
+  },
+  {
+   "path": "assets/img/banners/lightning-ladder-storm-reflexes-24.webp",
+   "size": 28282
+  },
+  {
+   "path": "assets/img/banners/lives-lens-spotter-160.webp",
+   "size": 17720
+  },
+  {
+   "path": "assets/img/banners/losing-checkers-147-lose-all-pieces-to-win.webp",
+   "size": 18104
+  },
+  {
+   "path": "assets/img/banners/low-poly-fall.webp",
+   "size": 12958
+  },
+  {
+   "path": "assets/img/banners/magic-rise.webp",
+   "size": 11464
+  },
+  {
+   "path": "assets/img/banners/medieval-arena.webp",
+   "size": 12194
+  },
+  {
+   "path": "assets/img/banners/mega-halloween-airport-manager.webp",
+   "size": 17624
+  },
+  {
+   "path": "assets/img/banners/mega-hotseat-strategy.webp",
+   "size": 19096
+  },
+  {
+   "path": "assets/img/banners/mega-magic-logic-gates.webp",
+   "size": 14160
+  },
+  {
+   "path": "assets/img/banners/memory-sequence-isometric-edition.webp",
+   "size": 15602
+  },
+  {
+   "path": "assets/img/banners/minimalist-intense-puzzle.webp",
+   "size": 12490
+  },
+  {
+   "path": "assets/img/banners/minimalist-vehicle-combat-rush.webp",
+   "size": 14876
+  },
+  {
+   "path": "assets/img/banners/modern-flat-mystic-master.webp",
+   "size": 24690
+  },
+  {
+   "path": "assets/img/banners/modern-flat-puzzle-norse-edition.webp",
+   "size": 19500
+  },
+  {
+   "path": "assets/img/banners/music-sequence-builder-249.webp",
+   "size": 15884
+  },
+  {
+   "path": "assets/img/banners/music-versus-242.webp",
+   "size": 18742
+  },
+  {
+   "path": "assets/img/banners/mystic-physics-sandbox.webp",
+   "size": 18576
+  },
+  {
+   "path": "assets/img/banners/neon-party-game-race-edition.webp",
+   "size": 22458
+  },
+  {
+   "path": "assets/img/banners/neumorphism-hotseat-strategy-sky.webp",
+   "size": 28034
+  },
+  {
+   "path": "assets/img/banners/neumorphism-phantom-rush.webp",
+   "size": 16600
+  },
+  {
+   "path": "assets/img/banners/ninja-arena-king-270.webp",
+   "size": 21550
+  },
+  {
+   "path": "assets/img/banners/ninja-balance-tower-331.webp",
+   "size": 21632
+  },
+  {
+   "path": "assets/img/banners/ninja-coin-tower-225.webp",
+   "size": 13912
+  },
+  {
+   "path": "assets/img/banners/ninja-color-flood-285.webp",
+   "size": 13810
+  },
+  {
+   "path": "assets/img/banners/ninja-dart-board-321.webp",
+   "size": 13648
+  },
+  {
+   "path": "assets/img/banners/ninja-dress-up-221.webp",
+   "size": 15290
+  },
+  {
+   "path": "assets/img/banners/ninja-fog-walk-441.webp",
+   "size": 12468
+  },
+  {
+   "path": "assets/img/banners/ninja-hotseat-strategy-battle.webp",
+   "size": 19838
+  },
+  {
+   "path": "assets/img/banners/ninja-ice-flow-367.webp",
+   "size": 16368
+  },
+  {
+   "path": "assets/img/banners/ninja-ice-slide-267.webp",
+   "size": 13156
+  },
+  {
+   "path": "assets/img/banners/ninja-lantern-catch-389.webp",
+   "size": 22972
+  },
+  {
+   "path": "assets/img/banners/ninja-lantern-light-339.webp",
+   "size": 16874
+  },
+  {
+   "path": "assets/img/banners/ninja-lantern-maze-370.webp",
+   "size": 13212
+  },
+  {
+   "path": "assets/img/banners/ninja-lantern-toss-428.webp",
+   "size": 18424
+  },
+  {
+   "path": "assets/img/banners/ninja-leaf-glide-381.webp",
+   "size": 14908
+  },
+  {
+   "path": "assets/img/banners/ninja-leaf-sweep-461.webp",
+   "size": 18672
+  },
+  {
+   "path": "assets/img/banners/ninja-logic-gates-273.webp",
+   "size": 22390
+  },
+  {
+   "path": "assets/img/banners/ninja-mask-match-397.webp",
+   "size": 15064
+  },
+  {
+   "path": "assets/img/banners/ninja-math-sprint-246.webp",
+   "size": 23190
+  },
+  {
+   "path": "assets/img/banners/ninja-maze-sprint-233.webp",
+   "size": 23176
+  },
+  {
+   "path": "assets/img/banners/ninja-mirror-maze-280.webp",
+   "size": 17972
+  },
+  {
+   "path": "assets/img/banners/ninja-orchard-harvest-312.webp",
+   "size": 21116
+  },
+  {
+   "path": "assets/img/banners/ninja-pixel-painter-288.webp",
+   "size": 20394
+  },
+  {
+   "path": "assets/img/banners/ninja-quiz-blitz-252.webp",
+   "size": 17938
+  },
+  {
+   "path": "assets/img/banners/ninja-reaction-238.webp",
+   "size": 13912
+  },
+  {
+   "path": "assets/img/banners/ninja-reflex-duel-256.webp",
+   "size": 12988
+  },
+  {
+   "path": "assets/img/banners/ninja-sand-sprint-401.webp",
+   "size": 13840
+  },
+  {
+   "path": "assets/img/banners/ninja-scroll-balance-458.webp",
+   "size": 20024
+  },
+  {
+   "path": "assets/img/banners/ninja-scroll-cargo-360.webp",
+   "size": 20246
+  },
+  {
+   "path": "assets/img/banners/ninja-scroll-chase-0497.webp",
+   "size": 14290
+  },
+  {
+   "path": "assets/img/banners/ninja-shadow-clone-413.webp",
+   "size": 21726
+  },
+  {
+   "path": "assets/img/banners/ninja-shadow-match-296.webp",
+   "size": 25336
+  },
+  {
+   "path": "assets/img/banners/ninja-shadow-step-350.webp",
+   "size": 18454
+  },
+  {
+   "path": "assets/img/banners/ninja-silent-step-421.webp",
+   "size": 13944
+  },
+  {
+   "path": "assets/img/banners/ninja-silver-chronicles.webp",
+   "size": 14204
+  },
+  {
+   "path": "assets/img/banners/ninja-smoke-bomb-379.webp",
+   "size": 13322
+  },
+  {
+   "path": "assets/img/banners/ninja-smoke-maze-481.webp",
+   "size": 18610
+  },
+  {
+   "path": "assets/img/banners/ninja-spell-chain-301.webp",
+   "size": 15964
+  },
+  {
+   "path": "assets/img/banners/ninja-stack-sort-308.webp",
+   "size": 20586
+  },
+  {
+   "path": "assets/img/banners/ninja-star-catch-0316.webp",
+   "size": 19050
+  },
+  {
+   "path": "assets/img/banners/ninja-star-link-385.webp",
+   "size": 16864
+  },
+  {
+   "path": "assets/img/banners/ninja-star-pin-456.webp",
+   "size": 11816
+  },
+  {
+   "path": "assets/img/banners/ninja-star-throw-356.webp",
+   "size": 21042
+  },
+  {
+   "path": "assets/img/banners/ninja-star-trace-467.webp",
+   "size": 21732
+  },
+  {
+   "path": "assets/img/banners/ninja-stealth-grid-261.webp",
+   "size": 12796
+  },
+  {
+   "path": "assets/img/banners/ninja-storm-dodge-400.webp",
+   "size": 21672
+  },
+  {
+   "path": "assets/img/banners/ninja-target-skipper-293.webp",
+   "size": 22198
+  },
+  {
+   "path": "assets/img/banners/ninja-torch-trail-393.webp",
+   "size": 13402
+  },
+  {
+   "path": "assets/img/banners/ninja-wall-run-485.webp",
+   "size": 12656
+  },
+  {
+   "path": "assets/img/banners/ninja-water-drop-374.webp",
+   "size": 22776
+  },
+  {
+   "path": "assets/img/banners/ninja-web-swing-408.webp",
+   "size": 19722
+  },
+  {
+   "path": "assets/img/banners/ninja-wind-blade-341.webp",
+   "size": 13242
+  },
+  {
+   "path": "assets/img/banners/ninja-wind-blade-dance-478.webp",
+   "size": 15588
+  },
+  {
+   "path": "assets/img/banners/ninja-wind-sprint-327.webp",
+   "size": 16772
+  },
+  {
+   "path": "assets/img/banners/ninja-windmill-334.webp",
+   "size": 12220
+  },
+  {
+   "path": "assets/img/banners/ninja-word-scroll-364.webp",
+   "size": 23610
+  },
+  {
+   "path": "assets/img/banners/norse-shared-screen-racing.webp",
+   "size": 21836
+  },
+  {
+   "path": "assets/img/banners/ocean-brave-puzzle.webp",
+   "size": 17938
+  },
+  {
+   "path": "assets/img/banners/ocean-spot-the-difference-empire.webp",
+   "size": 15560
+  },
+  {
+   "path": "assets/img/banners/overheat-clicker-118.webp",
+   "size": 15736
+  },
+  {
+   "path": "assets/img/banners/overtime-trivia-168.webp",
+   "size": 9800
+  },
+  {
+   "path": "assets/img/banners/parkour-cute-animals-edition.webp",
+   "size": 19462
+  },
+  {
+   "path": "assets/img/banners/party-game-egyptian-edition.webp",
+   "size": 20544
+  },
+  {
+   "path": "assets/img/banners/party-game-neon-edition.webp",
+   "size": 28462
+  },
+  {
+   "path": "assets/img/banners/phantom-glassmorphism-hotseat-strategy.webp",
+   "size": 27082
+  },
+  {
+   "path": "assets/img/banners/phantom-isometric-hidden-object.webp",
+   "size": 20332
+  },
+  {
+   "path": "assets/img/banners/phantom-side-scroller.webp",
+   "size": 20718
+  },
+  {
+   "path": "assets/img/banners/phoenix-arctic-legend.webp",
+   "size": 18616
+  },
+  {
+   "path": "assets/img/banners/phoenix-cute-animals-island.webp",
+   "size": 16830
+  },
+  {
+   "path": "assets/img/banners/pirate-fruit-ninja-farm.webp",
+   "size": 12950
+  },
+  {
+   "path": "assets/img/banners/pirate-idle-clicker-fury.webp",
+   "size": 13410
+  },
+  {
+   "path": "assets/img/banners/pixel-art-golden-challenge.webp",
+   "size": 32288
+  },
+  {
+   "path": "assets/img/banners/pixel-checkers-fog-243.webp",
+   "size": 23998
+  },
+  {
+   "path": "assets/img/banners/quantum-run.webp",
+   "size": 14192
+  },
+  {
+   "path": "assets/img/banners/quantum-samurai-coloring-book.webp",
+   "size": 30120
+  },
+  {
+   "path": "assets/img/banners/quantum-viking-merge.webp",
+   "size": 11118
+  },
+  {
+   "path": "assets/img/banners/resource-management-robot-edition.webp",
+   "size": 23638
+  },
+  {
+   "path": "assets/img/banners/retro-16-bit-quantum-dash.webp",
+   "size": 20242
+  },
+  {
+   "path": "assets/img/banners/retro-8-bit-school-simulator-rush.webp",
+   "size": 26276
+  },
+  {
+   "path": "assets/img/banners/retro-lives-arena-113.webp",
+   "size": 17900
+  },
+  {
+   "path": "assets/img/banners/robot-fighting-gate.webp",
+   "size": 16734
+  },
+  {
+   "path": "assets/img/banners/robot-intense-dash.webp",
+   "size": 21472
+  },
+  {
+   "path": "assets/img/banners/robot-rush.webp",
+   "size": 16050
+  },
+  {
+   "path": "assets/img/banners/robot-world.webp",
+   "size": 14110
+  },
+  {
+   "path": "assets/img/banners/roundabout-yield-173.webp",
+   "size": 12208
+  },
+  {
+   "path": "assets/img/banners/row-slide-puzzle-69.webp",
+   "size": 10748
+  },
+  {
+   "path": "assets/img/banners/royal-anagram-battle-353.webp",
+   "size": 16290
+  },
+  {
+   "path": "assets/img/banners/royal-archer-range-437.webp",
+   "size": 15506
+  },
+  {
+   "path": "assets/img/banners/royal-banner-weave-448.webp",
+   "size": 20140
+  },
+  {
+   "path": "assets/img/banners/royal-bee-garden-363.webp",
+   "size": 14192
+  },
+  {
+   "path": "assets/img/banners/royal-bell-tower-451.webp",
+   "size": 18834
+  },
+  {
+   "path": "assets/img/banners/royal-candle-light-328.webp",
+   "size": 14286
+  },
+  {
+   "path": "assets/img/banners/royal-cannon-aim-407.webp",
+   "size": 23874
+  },
+  {
+   "path": "assets/img/banners/royal-card-castle-387.webp",
+   "size": 27232
+  },
+  {
+   "path": "assets/img/banners/royal-card-count-314.webp",
+   "size": 23342
+  },
+  {
+   "path": "assets/img/banners/royal-charm-match-340.webp",
+   "size": 15072
+  },
+  {
+   "path": "assets/img/banners/royal-checkers-blitz-234.webp",
+   "size": 15834
+  },
+  {
+   "path": "assets/img/banners/royal-chess-knight-371.webp",
+   "size": 19176
+  },
+  {
+   "path": "assets/img/banners/royal-chess-puzzles-266.webp",
+   "size": 15952
+  },
+  {
+   "path": "assets/img/banners/royal-coin-sort-0496.webp",
+   "size": 13348
+  },
+  {
+   "path": "assets/img/banners/royal-cooking-dash-228.webp",
+   "size": 19854
+  },
+  {
+   "path": "assets/img/banners/royal-cooking-party-game.webp",
+   "size": 22792
+  },
+  {
+   "path": "assets/img/banners/royal-cooking.webp",
+   "size": 11594
+  },
+  {
+   "path": "assets/img/banners/royal-court-word-duel-247.webp",
+   "size": 20996
+  },
+  {
+   "path": "assets/img/banners/royal-crown-catch-460.webp",
+   "size": 19250
+  },
+  {
+   "path": "assets/img/banners/royal-crown-finale-0500.webp",
+   "size": 20790
+  },
+  {
+   "path": "assets/img/banners/royal-crown-jewels-380.webp",
+   "size": 24976
+  },
+  {
+   "path": "assets/img/banners/royal-crown-slide-0492.webp",
+   "size": 18166
+  },
+  {
+   "path": "assets/img/banners/royal-crown-tower-349.webp",
+   "size": 16994
+  },
+  {
+   "path": "assets/img/banners/royal-deck-duel-278.webp",
+   "size": 13778
+  },
+  {
+   "path": "assets/img/banners/royal-desert-party-game.webp",
+   "size": 20556
+  },
+  {
+   "path": "assets/img/banners/royal-dice-stack-375.webp",
+   "size": 18806
+  },
+  {
+   "path": "assets/img/banners/royal-egg-catch-324.webp",
+   "size": 19188
+  },
+  {
+   "path": "assets/img/banners/royal-fan-fare-426.webp",
+   "size": 18694
+  },
+  {
+   "path": "assets/img/banners/royal-feast-balance-394.webp",
+   "size": 19610
+  },
+  {
+   "path": "assets/img/banners/royal-feast-balance-480.webp",
+   "size": 22938
+  },
+  {
+   "path": "assets/img/banners/royal-feast-rush-359.webp",
+   "size": 23988
+  },
+  {
+   "path": "assets/img/banners/royal-gate-keeper-335.webp",
+   "size": 14750
+  },
+  {
+   "path": "assets/img/banners/royal-goblet-guess-423.webp",
+   "size": 21482
+  },
+  {
+   "path": "assets/img/banners/royal-goblin-market-483.webp",
+   "size": 17932
+  },
+  {
+   "path": "assets/img/banners/royal-gradient-traffic-control.webp",
+   "size": 29080
+  },
+  {
+   "path": "assets/img/banners/royal-hidden-object.webp",
+   "size": 16084
+  },
+  {
+   "path": "assets/img/banners/royal-idle-kingdom-253.webp",
+   "size": 14860
+  },
+  {
+   "path": "assets/img/banners/royal-jester-juggle-345.webp",
+   "size": 19860
+  },
+  {
+   "path": "assets/img/banners/royal-jewel-merge-317.webp",
+   "size": 14038
+  },
+  {
+   "path": "assets/img/banners/royal-jewel-weigh-430.webp",
+   "size": 26574
+  },
+  {
+   "path": "assets/img/banners/royal-joust-304.webp",
+   "size": 22244
+  },
+  {
+   "path": "assets/img/banners/royal-joust-duel-412.webp",
+   "size": 13402
+  },
+  {
+   "path": "assets/img/banners/royal-key-turn-391.webp",
+   "size": 22198
+  },
+  {
+   "path": "assets/img/banners/royal-match-towers-274.webp",
+   "size": 18402
+  },
+  {
+   "path": "assets/img/banners/royal-music-tiles-332.webp",
+   "size": 21398
+  },
+  {
+   "path": "assets/img/banners/royal-number-maze-283.webp",
+   "size": 14222
+  },
+  {
+   "path": "assets/img/banners/royal-pipe-connect-257.webp",
+   "size": 14208
+  },
+  {
+   "path": "assets/img/banners/royal-portrait-mix-378.webp",
+   "size": 14588
+  },
+  {
+   "path": "assets/img/banners/royal-procession-455.webp",
+   "size": 15438
+  },
+  {
+   "path": "assets/img/banners/royal-rainbow-398.webp",
+   "size": 16596
+  },
+  {
+   "path": "assets/img/banners/royal-recipe-mix-383.webp",
+   "size": 13234
+  },
+  {
+   "path": "assets/img/banners/royal-rhythm-taps-298.webp",
+   "size": 17668
+  },
+  {
+   "path": "assets/img/banners/royal-soup-stir-368.webp",
+   "size": 23006
+  },
+  {
+   "path": "assets/img/banners/royal-sword-pull-403.webp",
+   "size": 14372
+  },
+  {
+   "path": "assets/img/banners/royal-tapestry-469.webp",
+   "size": 17672
+  },
+  {
+   "path": "assets/img/banners/royal-throne-path-440.webp",
+   "size": 14358
+  },
+  {
+   "path": "assets/img/banners/royal-throne-sort-390.webp",
+   "size": 16200
+  },
+  {
+   "path": "assets/img/banners/royal-tile-swap-289.webp",
+   "size": 14778
+  },
+  {
+   "path": "assets/img/banners/royal-torch-run-415.webp",
+   "size": 15076
+  },
+  {
+   "path": "assets/img/banners/royal-trumpet-call-443.webp",
+   "size": 15554
+  },
+  {
+   "path": "assets/img/banners/royal-vault-heist-487.webp",
+   "size": 18498
+  },
+  {
+   "path": "assets/img/banners/royal-vault-spin-474.webp",
+   "size": 18872
+  },
+  {
+   "path": "assets/img/banners/royal-word-grid-309.webp",
+   "size": 14618
+  },
+  {
+   "path": "assets/img/banners/royal-word-ladder-239.webp",
+   "size": 15670
+  },
+  {
+   "path": "assets/img/banners/royal-word-search-blitz-294.webp",
+   "size": 24626
+  },
+  {
+   "path": "assets/img/banners/rune-tree-idle-197.webp",
+   "size": 12972
+  },
+  {
+   "path": "assets/img/banners/samurai-zombie-survival-blast.webp",
+   "size": 27170
+  },
+  {
+   "path": "assets/img/banners/shadow-christmas-2-player-battle.webp",
+   "size": 23332
+  },
+  {
+   "path": "assets/img/banners/side-scroller-arctic-edition.webp",
+   "size": 20292
+  },
+  {
+   "path": "assets/img/banners/silent-music-galaxy.webp",
+   "size": 23204
+  },
+  {
+   "path": "assets/img/banners/silver-celtic-merge.webp",
+   "size": 12382
+  },
+  {
+   "path": "assets/img/banners/silver-horror-hexagon-puzzle.webp",
+   "size": 25600
+  },
+  {
+   "path": "assets/img/banners/simulation-norse.webp",
+   "size": 10922
+  },
+  {
+   "path": "assets/img/banners/snowboarder-neon-chronicles.webp",
+   "size": 26730
+  },
+  {
+   "path": "assets/img/banners/space-resource-management-fury.webp",
+   "size": 22060
+  },
+  {
+   "path": "assets/img/banners/splitter-defense-165.webp",
+   "size": 22890
+  },
+  {
+   "path": "assets/img/banners/storm-jungle-puzzle.webp",
+   "size": 16688
+  },
+  {
+   "path": "assets/img/banners/storm-jungle-word-search.webp",
+   "size": 19002
+  },
+  {
+   "path": "assets/img/banners/super-christmas-blast.webp",
+   "size": 15446
+  },
+  {
+   "path": "assets/img/banners/super-cooking-samurai-edition.webp",
+   "size": 24750
+  },
+  {
+   "path": "assets/img/banners/super-desert-shared-screen-racing.webp",
+   "size": 26670
+  },
+  {
+   "path": "assets/img/banners/super-halloween-farming-simulator.webp",
+   "size": 13882
+  },
+  {
+   "path": "assets/img/banners/super-hotseat-strategy-christmas-edition.webp",
+   "size": 18148
+  },
+  {
+   "path": "assets/img/banners/swift-color-sorting-pirate-edition.webp",
+   "size": 16908
+  },
+  {
+   "path": "assets/img/banners/swift-neon-gunner.webp",
+   "size": 16392
+  },
+  {
+   "path": "assets/img/banners/swift-watercolor-typing-speed.webp",
+   "size": 16828
+  },
+  {
+   "path": "assets/img/banners/thunder-retro-chronicles.webp",
+   "size": 20992
+  },
+  {
+   "path": "assets/img/banners/thunder-sports-zombie-survival.webp",
+   "size": 21272
+  },
+  {
+   "path": "assets/img/banners/tile-rotation-arctic-edition.webp",
+   "size": 18876
+  },
+  {
+   "path": "assets/img/banners/time-killer-pirates.webp",
+   "size": 20218
+  },
+  {
+   "path": "assets/img/banners/token-hunt-slide-217.webp",
+   "size": 11412
+  },
+  {
+   "path": "assets/img/banners/top-down-shooter-magic-edition.webp",
+   "size": 24726
+  },
+  {
+   "path": "assets/img/banners/tower-forge-115-click-tower-to-upgrade.webp",
+   "size": 9654
+  },
+  {
+   "path": "assets/img/banners/train-crossing-212.webp",
+   "size": 18022
+  },
+  {
+   "path": "assets/img/banners/turbo-airport-manager-steampunk-edition.webp",
+   "size": 22134
+  },
+  {
+   "path": "assets/img/banners/turbo-christmas-ball-bounce.webp",
+   "size": 19770
+  },
+  {
+   "path": "assets/img/banners/turbo-christmas-legend.webp",
+   "size": 14462
+  },
+  {
+   "path": "assets/img/banners/turbo-magic-parkour.webp",
+   "size": 18992
+  },
+  {
+   "path": "assets/img/banners/ultimate-desert-dungeon.webp",
+   "size": 24458
+  },
+  {
+   "path": "assets/img/banners/ultimate-endless-runner-pirate-edition.webp",
+   "size": 23826
+  },
+  {
+   "path": "assets/img/banners/ultimate-match-3-fantasy-edition.webp",
+   "size": 20582
+  },
+  {
+   "path": "assets/img/banners/versus-puzzle-food-edition.webp",
+   "size": 18748
+  },
+  {
+   "path": "assets/img/banners/versus-puzzle-horror-edition.webp",
+   "size": 19034
+  },
+  {
+   "path": "assets/img/banners/vibrant-mega-ocean.webp",
+   "size": 26290
+  },
+  {
+   "path": "assets/img/banners/viking-farming-sim-adventure.webp",
+   "size": 16488
+  },
+  {
+   "path": "assets/img/banners/viking-merge-watercolor-edition.webp",
+   "size": 22690
+  },
+  {
+   "path": "assets/img/banners/villager-escort-131.webp",
+   "size": 11400
+  },
+  {
+   "path": "assets/img/banners/watercolor-color-match-infinite.webp",
+   "size": 18078
+  },
+  {
+   "path": "assets/img/banners/watercolor-galaxy.webp",
+   "size": 20484
+  },
+  {
+   "path": "assets/img/banners/watercolor-merge-holiday-edition.webp",
+   "size": 18606
+  },
+  {
+   "path": "assets/img/banners/watercolor-physics-sandbox.webp",
+   "size": 26828
+  },
+  {
+   "path": "assets/img/banners/watercolor-quantum-dash.webp",
+   "size": 16046
+  },
+  {
+   "path": "assets/img/banners/watercolor-tales.webp",
+   "size": 25170
+  },
+  {
+   "path": "assets/img/banners/western-physics-sandbox-empire.webp",
+   "size": 24314
+  },
+  {
+   "path": "assets/img/banners/western-shared-screen-racing-hero.webp",
+   "size": 27014
+  },
+  {
+   "path": "assets/img/banners/wild-color-match-infinite.webp",
+   "size": 22512
+  },
+  {
+   "path": "assets/img/banners/wild-desert-storm.webp",
+   "size": 20468
+  },
+  {
+   "path": "assets/img/banners/wild-glassmorphism-nonogram.webp",
+   "size": 27750
+  },
+  {
+   "path": "assets/img/banners/wild-greek-myth-shooter.webp",
+   "size": 22482
+  },
+  {
+   "path": "assets/img/banners/wild-rise.webp",
+   "size": 9940
+  },
+  {
+   "path": "assets/img/banners/wrap-pipes-102.webp",
+   "size": 13830
+  },
+  {
+   "path": "assets/img/banners/zen-vibrant-master.webp",
+   "size": 18464
+  },
+  {
+   "path": "assets/img/banners/zombie-puzzle-liquid-glass.webp",
+   "size": 14174
+  },
+  {
+   "path": "assets/img/favicon.svg",
+   "size": 338
+  },
+  {
+   "path": "assets/img/icon-192.png",
+   "size": 1661
+  },
+  {
+   "path": "assets/img/icon-512.png",
+   "size": 4410
+  },
+  {
+   "path": "assets/img/icon-maskable-192.png",
+   "size": 1790
+  },
+  {
+   "path": "assets/img/icon-maskable-512.png",
+   "size": 4818
+  },
+  {
+   "path": "assets/img/thumbs/air-hockey-pirate-theme.webp",
+   "size": 7900
+  },
+  {
+   "path": "assets/img/thumbs/airport-manager-glassmorphism-edition.webp",
+   "size": 13074
+  },
+  {
+   "path": "assets/img/thumbs/airport-manager-greek-myth-edition.webp",
+   "size": 10674
+  },
+  {
+   "path": "assets/img/thumbs/anagram-sports-edition.webp",
+   "size": 10646
+  },
+  {
+   "path": "assets/img/thumbs/arctic-crazy-universe.webp",
+   "size": 7308
+  },
+  {
+   "path": "assets/img/thumbs/arctic-flappy-universe-edition.webp",
+   "size": 8852
+  },
+  {
+   "path": "assets/img/thumbs/arctic-hidden-object-storm.webp",
+   "size": 8204
+  },
+  {
+   "path": "assets/img/thumbs/ball-bounce-glassmorphism-edition.webp",
+   "size": 13430
+  },
+  {
+   "path": "assets/img/thumbs/base-defense-isometric-edition.webp",
+   "size": 11258
+  },
+  {
+   "path": "assets/img/thumbs/beat-bell-354.webp",
+   "size": 3908
+  },
+  {
+   "path": "assets/img/thumbs/board-game-greek-myth.webp",
+   "size": 9416
+  },
+  {
+   "path": "assets/img/thumbs/brave-traffic-control-samurai-edition.webp",
+   "size": 8094
+  },
+  {
+   "path": "assets/img/thumbs/cel-shaded-space-war-2p-edition.webp",
+   "size": 13110
+  },
+  {
+   "path": "assets/img/thumbs/chain-combo-merge-194.webp",
+   "size": 9366
+  },
+  {
+   "path": "assets/img/thumbs/checkers-ai-pastel-edition.webp",
+   "size": 8020
+  },
+  {
+   "path": "assets/img/thumbs/chill-greek-myth-sudoku.webp",
+   "size": 7556
+  },
+  {
+   "path": "assets/img/thumbs/clever-arctic-tales.webp",
+   "size": 7298
+  },
+  {
+   "path": "assets/img/thumbs/clever-tycoon.webp",
+   "size": 5940
+  },
+  {
+   "path": "assets/img/thumbs/coloring-book-cyberpunk-edition.webp",
+   "size": 10022
+  },
+  {
+   "path": "assets/img/thumbs/coloring-book-food-edition.webp",
+   "size": 9240
+  },
+  {
+   "path": "assets/img/thumbs/coloring-book-glassmorphism-edition.webp",
+   "size": 13046
+  },
+  {
+   "path": "assets/img/thumbs/combo-clicker-37-active-only.webp",
+   "size": 8652
+  },
+  {
+   "path": "assets/img/thumbs/comic-book-chronicles.webp",
+   "size": 12102
+  },
+  {
+   "path": "assets/img/thumbs/cosmic-jungle-hero.webp",
+   "size": 5574
+  },
+  {
+   "path": "assets/img/thumbs/cosmic-magic-riddle-solver.webp",
+   "size": 7364
+  },
+  {
+   "path": "assets/img/thumbs/cosmic-medieval-war.webp",
+   "size": 9946
+  },
+  {
+   "path": "assets/img/thumbs/cosmic-monochrome-farming-sim.webp",
+   "size": 11714
+  },
+  {
+   "path": "assets/img/thumbs/crazy-jungle-forest.webp",
+   "size": 7620
+  },
+  {
+   "path": "assets/img/thumbs/crazy-pastel-reaction-time.webp",
+   "size": 9036
+  },
+  {
+   "path": "assets/img/thumbs/crystal-balance-251.webp",
+   "size": 10016
+  },
+  {
+   "path": "assets/img/thumbs/crystal-ball-sort-245.webp",
+   "size": 6808
+  },
+  {
+   "path": "assets/img/thumbs/crystal-cipher-269.webp",
+   "size": 8746
+  },
+  {
+   "path": "assets/img/thumbs/crystal-code-breaker-330.webp",
+   "size": 10884
+  },
+  {
+   "path": "assets/img/thumbs/crystal-color-chain-323.webp",
+   "size": 9460
+  },
+  {
+   "path": "assets/img/thumbs/crystal-comet-catch-420.webp",
+   "size": 9504
+  },
+  {
+   "path": "assets/img/thumbs/crystal-defense-grid-300.webp",
+   "size": 7776
+  },
+  {
+   "path": "assets/img/thumbs/crystal-dice-duel-311.webp",
+   "size": 10446
+  },
+  {
+   "path": "assets/img/thumbs/crystal-dot-link-276.webp",
+   "size": 7646
+  },
+  {
+   "path": "assets/img/thumbs/crystal-dot-pop-292.webp",
+   "size": 8988
+  },
+  {
+   "path": "assets/img/thumbs/crystal-flood-gate-425.webp",
+   "size": 10186
+  },
+  {
+   "path": "assets/img/thumbs/crystal-flow-351.webp",
+   "size": 6028
+  },
+  {
+   "path": "assets/img/thumbs/crystal-gem-grid-446.webp",
+   "size": 9988
+  },
+  {
+   "path": "assets/img/thumbs/crystal-golem-merge-0490.webp",
+   "size": 7408
+  },
+  {
+   "path": "assets/img/thumbs/crystal-golem-path-472.webp",
+   "size": 10220
+  },
+  {
+   "path": "assets/img/thumbs/crystal-grid-shift-362.webp",
+   "size": 8798
+  },
+  {
+   "path": "assets/img/thumbs/crystal-grid-slide-418.webp",
+   "size": 8860
+  },
+  {
+   "path": "assets/img/thumbs/crystal-harmony-377.webp",
+   "size": 11388
+  },
+  {
+   "path": "assets/img/thumbs/crystal-hex-duel-229.webp",
+   "size": 8572
+  },
+  {
+   "path": "assets/img/thumbs/crystal-horror-flappy.webp",
+   "size": 10952
+  },
+  {
+   "path": "assets/img/thumbs/crystal-ice-break-336.webp",
+   "size": 8746
+  },
+  {
+   "path": "assets/img/thumbs/crystal-isometric-blast.webp",
+   "size": 8242
+  },
+  {
+   "path": "assets/img/thumbs/crystal-laser-alignment-287.webp",
+   "size": 10962
+  },
+  {
+   "path": "assets/img/thumbs/crystal-match-blast-236.webp",
+   "size": 10104
+  },
+  {
+   "path": "assets/img/thumbs/crystal-memory-matrix-282.webp",
+   "size": 11120
+  },
+  {
+   "path": "assets/img/thumbs/crystal-number-drop-319.webp",
+   "size": 11458
+  },
+  {
+   "path": "assets/img/thumbs/crystal-path-defense-343.webp",
+   "size": 10062
+  },
+  {
+   "path": "assets/img/thumbs/crystal-path-finder-297.webp",
+   "size": 8742
+  },
+  {
+   "path": "assets/img/thumbs/crystal-pond-ripple-405.webp",
+   "size": 10894
+  },
+  {
+   "path": "assets/img/thumbs/crystal-pool-dive-452.webp",
+   "size": 7008
+  },
+  {
+   "path": "assets/img/thumbs/crystal-pool-shot-433.webp",
+   "size": 8816
+  },
+  {
+   "path": "assets/img/thumbs/crystal-prism-split-463.webp",
+   "size": 8364
+  },
+  {
+   "path": "assets/img/thumbs/crystal-puzzle-grid-355.webp",
+   "size": 7540
+  },
+  {
+   "path": "assets/img/thumbs/crystal-reflex-grid-303.webp",
+   "size": 7226
+  },
+  {
+   "path": "assets/img/thumbs/crystal-rhythm-grid-263.webp",
+   "size": 7746
+  },
+  {
+   "path": "assets/img/thumbs/crystal-shift-puzzle-306.webp",
+   "size": 7310
+  },
+  {
+   "path": "assets/img/thumbs/crystal-stack-sort-346.webp",
+   "size": 7720
+  },
+  {
+   "path": "assets/img/thumbs/crystal-tide-pool-436.webp",
+   "size": 9442
+  },
+  {
+   "path": "assets/img/thumbs/crystal-word-search-258.webp",
+   "size": 8710
+  },
+  {
+   "path": "assets/img/thumbs/cute-animals-rise.webp",
+   "size": 6308
+  },
+  {
+   "path": "assets/img/thumbs/cyberpunk-sky.webp",
+   "size": 6862
+  },
+  {
+   "path": "assets/img/thumbs/dark-mode-anagram-puzzle.webp",
+   "size": 10754
+  },
+  {
+   "path": "assets/img/thumbs/dark-mode-sport-hero.webp",
+   "size": 10016
+  },
+  {
+   "path": "assets/img/thumbs/dash-brawler-55.webp",
+   "size": 6950
+  },
+  {
+   "path": "assets/img/thumbs/decoy-spotter-140.webp",
+   "size": 7400
+  },
+  {
+   "path": "assets/img/thumbs/desert-ant-farm-361.webp",
+   "size": 9492
+  },
+  {
+   "path": "assets/img/thumbs/desert-ant-hill-0491.webp",
+   "size": 7204
+  },
+  {
+   "path": "assets/img/thumbs/desert-balance-beam-295.webp",
+   "size": 10422
+  },
+  {
+   "path": "assets/img/thumbs/desert-bounce-quest-281.webp",
+   "size": 9744
+  },
+  {
+   "path": "assets/img/thumbs/desert-cactus-guard-457.webp",
+   "size": 9268
+  },
+  {
+   "path": "assets/img/thumbs/desert-camel-bell-432.webp",
+   "size": 7398
+  },
+  {
+   "path": "assets/img/thumbs/desert-camel-choir-386.webp",
+   "size": 10876
+  },
+  {
+   "path": "assets/img/thumbs/desert-camel-market-462.webp",
+   "size": 10928
+  },
+  {
+   "path": "assets/img/thumbs/desert-camel-race-352.webp",
+   "size": 7418
+  },
+  {
+   "path": "assets/img/thumbs/desert-caravan-trade-291.webp",
+   "size": 8978
+  },
+  {
+   "path": "assets/img/thumbs/desert-coin-flip-357.webp",
+   "size": 5782
+  },
+  {
+   "path": "assets/img/thumbs/desert-coin-pusher-342.webp",
+   "size": 10816
+  },
+  {
+   "path": "assets/img/thumbs/desert-dot-trail-333.webp",
+   "size": 9714
+  },
+  {
+   "path": "assets/img/thumbs/desert-draw-path-268.webp",
+   "size": 9494
+  },
+  {
+   "path": "assets/img/thumbs/desert-dual-defense-262.webp",
+   "size": 7212
+  },
+  {
+   "path": "assets/img/thumbs/desert-dune-board-411.webp",
+   "size": 9332
+  },
+  {
+   "path": "assets/img/thumbs/desert-echo-shout-450.webp",
+   "size": 7246
+  },
+  {
+   "path": "assets/img/thumbs/desert-fire-dance-475.webp",
+   "size": 10550
+  },
+  {
+   "path": "assets/img/thumbs/desert-firefly-catch-372.webp",
+   "size": 10536
+  },
+  {
+   "path": "assets/img/thumbs/desert-forge-idle-226.webp",
+   "size": 8224
+  },
+  {
+   "path": "assets/img/thumbs/desert-frog-leap-417.webp",
+   "size": 10446
+  },
+  {
+   "path": "assets/img/thumbs/desert-gear-puzzle-382.webp",
+   "size": 6986
+  },
+  {
+   "path": "assets/img/thumbs/desert-gravity-flip-240.webp",
+   "size": 7104
+  },
+  {
+   "path": "assets/img/thumbs/desert-hawk-dive-468.webp",
+   "size": 8296
+  },
+  {
+   "path": "assets/img/thumbs/desert-legendary-galaxy.webp",
+   "size": 9962
+  },
+  {
+   "path": "assets/img/thumbs/desert-logic-gates.webp",
+   "size": 7974
+  },
+  {
+   "path": "assets/img/thumbs/desert-masked-dancer-435.webp",
+   "size": 9362
+  },
+  {
+   "path": "assets/img/thumbs/desert-math-challenge-ocean-edition.webp",
+   "size": 9212
+  },
+  {
+   "path": "assets/img/thumbs/desert-math-puzzle.webp",
+   "size": 6284
+  },
+  {
+   "path": "assets/img/thumbs/desert-mega-hero-241.webp",
+   "size": 8772
+  },
+  {
+   "path": "assets/img/thumbs/desert-memory-match-248.webp",
+   "size": 6956
+  },
+  {
+   "path": "assets/img/thumbs/desert-mine-cart-365.webp",
+   "size": 7146
+  },
+  {
+   "path": "assets/img/thumbs/desert-mirror-path-315.webp",
+   "size": 8512
+  },
+  {
+   "path": "assets/img/thumbs/desert-moon-hopper-0488.webp",
+   "size": 6848
+  },
+  {
+   "path": "assets/img/thumbs/desert-moon-jump-459.webp",
+   "size": 7368
+  },
+  {
+   "path": "assets/img/thumbs/desert-moon-phase-399.webp",
+   "size": 12038
+  },
+  {
+   "path": "assets/img/thumbs/desert-night-patrol-464.webp",
+   "size": 7006
+  },
+  {
+   "path": "assets/img/thumbs/desert-night-watch-402.webp",
+   "size": 9984
+  },
+  {
+   "path": "assets/img/thumbs/desert-oasis-defense-302.webp",
+   "size": 11612
+  },
+  {
+   "path": "assets/img/thumbs/desert-oasis-guard-429.webp",
+   "size": 9652
+  },
+  {
+   "path": "assets/img/thumbs/desert-oasis-hop-388.webp",
+   "size": 7158
+  },
+  {
+   "path": "assets/img/thumbs/desert-oasis-match-326.webp",
+   "size": 11236
+  },
+  {
+   "path": "assets/img/thumbs/desert-oasis-ring-479.webp",
+   "size": 7240
+  },
+  {
+   "path": "assets/img/thumbs/desert-oasis-rope-466.webp",
+   "size": 10244
+  },
+  {
+   "path": "assets/img/thumbs/desert-rain-catch-477.webp",
+   "size": 10658
+  },
+  {
+   "path": "assets/img/thumbs/desert-reflection-232.webp",
+   "size": 7558
+  },
+  {
+   "path": "assets/img/thumbs/desert-rhythm-hop-347.webp",
+   "size": 6136
+  },
+  {
+   "path": "assets/img/thumbs/desert-rhythm-runner-277.webp",
+   "size": 8114
+  },
+  {
+   "path": "assets/img/thumbs/desert-rhythm-tap-320.webp",
+   "size": 9362
+  },
+  {
+   "path": "assets/img/thumbs/desert-rhythm-tap-empire.webp",
+   "size": 10712
+  },
+  {
+   "path": "assets/img/thumbs/desert-sand-draw-322.webp",
+   "size": 6264
+  },
+  {
+   "path": "assets/img/thumbs/desert-sand-storm-392.webp",
+   "size": 11168
+  },
+  {
+   "path": "assets/img/thumbs/desert-sand-timer-369.webp",
+   "size": 9772
+  },
+  {
+   "path": "assets/img/thumbs/desert-sand-timer-duel-0498.webp",
+   "size": 7182
+  },
+  {
+   "path": "assets/img/thumbs/desert-scarab-maze-396.webp",
+   "size": 12236
+  },
+  {
+   "path": "assets/img/thumbs/desert-scarab-push-445.webp",
+   "size": 9756
+  },
+  {
+   "path": "assets/img/thumbs/desert-scarab-rush-337.webp",
+   "size": 7630
+  },
+  {
+   "path": "assets/img/thumbs/desert-scorpion-sting-376.webp",
+   "size": 11796
+  },
+  {
+   "path": "assets/img/thumbs/desert-scroll-roll-329.webp",
+   "size": 6518
+  },
+  {
+   "path": "assets/img/thumbs/desert-snake-charmer-454.webp",
+   "size": 8580
+  },
+  {
+   "path": "assets/img/thumbs/desert-snake-pit-272.webp",
+   "size": 6162
+  },
+  {
+   "path": "assets/img/thumbs/desert-snake-trail-259.webp",
+   "size": 7230
+  },
+  {
+   "path": "assets/img/thumbs/desert-solar-align-409.webp",
+   "size": 7722
+  },
+  {
+   "path": "assets/img/thumbs/desert-star-fall-442.webp",
+   "size": 9856
+  },
+  {
+   "path": "assets/img/thumbs/desert-star-link-486.webp",
+   "size": 8304
+  },
+  {
+   "path": "assets/img/thumbs/desert-star-map-427.webp",
+   "size": 7970
+  },
+  {
+   "path": "assets/img/thumbs/desert-star-navigate-406.webp",
+   "size": 11150
+  },
+  {
+   "path": "assets/img/thumbs/desert-sun-catch-439.webp",
+   "size": 7724
+  },
+  {
+   "path": "assets/img/thumbs/desert-sun-dial-422.webp",
+   "size": 10788
+  },
+  {
+   "path": "assets/img/thumbs/desert-sun-dial-run-471.webp",
+   "size": 8358
+  },
+  {
+   "path": "assets/img/thumbs/desert-sun-race-482.webp",
+   "size": 10044
+  },
+  {
+   "path": "assets/img/thumbs/desert-train-switch-307.webp",
+   "size": 9148
+  },
+  {
+   "path": "assets/img/thumbs/desert-vault-286.webp",
+   "size": 8382
+  },
+  {
+   "path": "assets/img/thumbs/desert-wind-chime-414.webp",
+   "size": 9196
+  },
+  {
+   "path": "assets/img/thumbs/desert-wind-ladder-447.webp",
+   "size": 11972
+  },
+  {
+   "path": "assets/img/thumbs/desert-windmill-spin-0494.webp",
+   "size": 10254
+  },
+  {
+   "path": "assets/img/thumbs/dragon-dark-mode-riddle-solver.webp",
+   "size": 9200
+  },
+  {
+   "path": "assets/img/thumbs/dress-up-glassmorphism-edition.webp",
+   "size": 11200
+  },
+  {
+   "path": "assets/img/thumbs/dual-source-pipes-186.webp",
+   "size": 5864
+  },
+  {
+   "path": "assets/img/thumbs/egyptian-gate-traffic-223.webp",
+   "size": 8912
+  },
+  {
+   "path": "assets/img/thumbs/egyptian-math-pyramid-264.webp",
+   "size": 11702
+  },
+  {
+   "path": "assets/img/thumbs/egyptian-portal-2048-255.webp",
+   "size": 9480
+  },
+  {
+   "path": "assets/img/thumbs/egyptian-wrap-pipes-231.webp",
+   "size": 9612
+  },
+  {
+   "path": "assets/img/thumbs/endless-hotseat-strategy.webp",
+   "size": 9098
+  },
+  {
+   "path": "assets/img/thumbs/endless-strategy-greek-myth.webp",
+   "size": 7692
+  },
+  {
+   "path": "assets/img/thumbs/epic-arctic-versus-puzzle.webp",
+   "size": 8414
+  },
+  {
+   "path": "assets/img/thumbs/epic-cozy-merge-2p-edition.webp",
+   "size": 9166
+  },
+  {
+   "path": "assets/img/thumbs/epic-egyptian-school-simulator.webp",
+   "size": 8258
+  },
+  {
+   "path": "assets/img/thumbs/epic-magic-coloring-book.webp",
+   "size": 8042
+  },
+  {
+   "path": "assets/img/thumbs/epic-pixel-art-tower.webp",
+   "size": 9592
+  },
+  {
+   "path": "assets/img/thumbs/epic-time-management-infinity.webp",
+   "size": 7242
+  },
+  {
+   "path": "assets/img/thumbs/epic-vehicle-combat-horror-edition.webp",
+   "size": 11562
+  },
+  {
+   "path": "assets/img/thumbs/eternal-egyptian-dungeon.webp",
+   "size": 9618
+  },
+  {
+   "path": "assets/img/thumbs/eternal-halloween-tycoon.webp",
+   "size": 7554
+  },
+  {
+   "path": "assets/img/thumbs/eternal-number-merge.webp",
+   "size": 7048
+  },
+  {
+   "path": "assets/img/thumbs/eternal-robot-room-escape.webp",
+   "size": 13278
+  },
+  {
+   "path": "assets/img/thumbs/fighting-robot-edition.webp",
+   "size": 9256
+  },
+  {
+   "path": "assets/img/thumbs/flying-kings-checkers-142.webp",
+   "size": 7252
+  },
+  {
+   "path": "assets/img/thumbs/focus-trainer-comic-book-edition.webp",
+   "size": 13866
+  },
+  {
+   "path": "assets/img/thumbs/focus-trainer-pixel-art-edition.webp",
+   "size": 11512
+  },
+  {
+   "path": "assets/img/thumbs/fog-of-war-checkers-215.webp",
+   "size": 6844
+  },
+  {
+   "path": "assets/img/thumbs/food-dragon-island.webp",
+   "size": 6698
+  },
+  {
+   "path": "assets/img/thumbs/food-dungeon-222.webp",
+   "size": 8438
+  },
+  {
+   "path": "assets/img/thumbs/glassmorphism-golden-adventure.webp",
+   "size": 10208
+  },
+  {
+   "path": "assets/img/thumbs/glassmorphism-realm.webp",
+   "size": 10600
+  },
+  {
+   "path": "assets/img/thumbs/golden-comic-book-mountain.webp",
+   "size": 13256
+  },
+  {
+   "path": "assets/img/thumbs/golden-neon-forest.webp",
+   "size": 12770
+  },
+  {
+   "path": "assets/img/thumbs/golden-watercolor-portal.webp",
+   "size": 9114
+  },
+  {
+   "path": "assets/img/thumbs/gradient-heavy-super-race.webp",
+   "size": 8570
+  },
+  {
+   "path": "assets/img/thumbs/gravity-puzzle-pirate-edition.webp",
+   "size": 6954
+  },
+  {
+   "path": "assets/img/thumbs/gravity-shift-merge-163.webp",
+   "size": 8250
+  },
+  {
+   "path": "assets/img/thumbs/greek-myth-endless-runner-fury.webp",
+   "size": 13690
+  },
+  {
+   "path": "assets/img/thumbs/gunner-watercolor-edition.webp",
+   "size": 12228
+  },
+  {
+   "path": "assets/img/thumbs/halloween-epic-arena.webp",
+   "size": 9100
+  },
+  {
+   "path": "assets/img/thumbs/halloween-hyper-portal.webp",
+   "size": 9166
+  },
+  {
+   "path": "assets/img/thumbs/halloween-intense-puzzle.webp",
+   "size": 9108
+  },
+  {
+   "path": "assets/img/thumbs/halloween-king.webp",
+   "size": 7854
+  },
+  {
+   "path": "assets/img/thumbs/haunted-anagram-arena-271.webp",
+   "size": 9624
+  },
+  {
+   "path": "assets/img/thumbs/haunted-attic-climb-0493.webp",
+   "size": 6656
+  },
+  {
+   "path": "assets/img/thumbs/haunted-attic-crawl-438.webp",
+   "size": 7260
+  },
+  {
+   "path": "assets/img/thumbs/haunted-attic-drop-484.webp",
+   "size": 8706
+  },
+  {
+   "path": "assets/img/thumbs/haunted-attic-sort-419.webp",
+   "size": 9718
+  },
+  {
+   "path": "assets/img/thumbs/haunted-attic-stack-453.webp",
+   "size": 9412
+  },
+  {
+   "path": "assets/img/thumbs/haunted-ballroom-470.webp",
+   "size": 9474
+  },
+  {
+   "path": "assets/img/thumbs/haunted-bell-ring-410.webp",
+   "size": 10254
+  },
+  {
+   "path": "assets/img/thumbs/haunted-bubble-pop-305.webp",
+   "size": 9268
+  },
+  {
+   "path": "assets/img/thumbs/haunted-calculator-244.webp",
+   "size": 6650
+  },
+  {
+   "path": "assets/img/thumbs/haunted-chime-order-0489.webp",
+   "size": 8956
+  },
+  {
+   "path": "assets/img/thumbs/haunted-clock-hands-416.webp",
+   "size": 11212
+  },
+  {
+   "path": "assets/img/thumbs/haunted-clock-puzzle-0499.webp",
+   "size": 10682
+  },
+  {
+   "path": "assets/img/thumbs/haunted-clock-tower-348.webp",
+   "size": 11502
+  },
+  {
+   "path": "assets/img/thumbs/haunted-crystal-ball-358.webp",
+   "size": 11588
+  },
+  {
+   "path": "assets/img/thumbs/haunted-door-guard-434.webp",
+   "size": 8830
+  },
+  {
+   "path": "assets/img/thumbs/haunted-echo-384.webp",
+   "size": 4608
+  },
+  {
+   "path": "assets/img/thumbs/haunted-falling-blocks-279.webp",
+   "size": 8768
+  },
+  {
+   "path": "assets/img/thumbs/haunted-garden-tend-473.webp",
+   "size": 8516
+  },
+  {
+   "path": "assets/img/thumbs/haunted-ghost-maze-310.webp",
+   "size": 7112
+  },
+  {
+   "path": "assets/img/thumbs/haunted-grave-dig-0495.webp",
+   "size": 9120
+  },
+  {
+   "path": "assets/img/thumbs/haunted-graveyard-465.webp",
+   "size": 7998
+  },
+  {
+   "path": "assets/img/thumbs/haunted-grid-crawler-325.webp",
+   "size": 12042
+  },
+  {
+   "path": "assets/img/thumbs/haunted-hotseat-conquest-235.webp",
+   "size": 11540
+  },
+  {
+   "path": "assets/img/thumbs/haunted-hourglass-race-404.webp",
+   "size": 10696
+  },
+  {
+   "path": "assets/img/thumbs/haunted-library-395.webp",
+   "size": 9230
+  },
+  {
+   "path": "assets/img/thumbs/haunted-maze-chase-299.webp",
+   "size": 6724
+  },
+  {
+   "path": "assets/img/thumbs/haunted-merge-blast-250.webp",
+   "size": 7170
+  },
+  {
+   "path": "assets/img/thumbs/haunted-mirror-hall-476.webp",
+   "size": 6876
+  },
+  {
+   "path": "assets/img/thumbs/haunted-mirror-match-338.webp",
+   "size": 7866
+  },
+  {
+   "path": "assets/img/thumbs/haunted-mirror-path-373.webp",
+   "size": 8356
+  },
+  {
+   "path": "assets/img/thumbs/haunted-number-path-344.webp",
+   "size": 6706
+  },
+  {
+   "path": "assets/img/thumbs/haunted-obby-run-230.webp",
+   "size": 10196
+  },
+  {
+   "path": "assets/img/thumbs/haunted-organ-444.webp",
+   "size": 8324
+  },
+  {
+   "path": "assets/img/thumbs/haunted-painting-366.webp",
+   "size": 10210
+  },
+  {
+   "path": "assets/img/thumbs/haunted-painting-find-431.webp",
+   "size": 8996
+  },
+  {
+   "path": "assets/img/thumbs/haunted-pattern-shift-284.webp",
+   "size": 7156
+  },
+  {
+   "path": "assets/img/thumbs/haunted-portrait-row-424.webp",
+   "size": 8026
+  },
+  {
+   "path": "assets/img/thumbs/haunted-row-slide-227.webp",
+   "size": 7990
+  },
+  {
+   "path": "assets/img/thumbs/haunted-simon-duel-224.webp",
+   "size": 9690
+  },
+  {
+   "path": "assets/img/thumbs/haunted-sound-board-290.webp",
+   "size": 9690
+  },
+  {
+   "path": "assets/img/thumbs/haunted-spot-pop-313.webp",
+   "size": 5752
+  },
+  {
+   "path": "assets/img/thumbs/haunted-spot-shift-254.webp",
+   "size": 8046
+  },
+  {
+   "path": "assets/img/thumbs/haunted-tile-runner-0318.webp",
+   "size": 6416
+  },
+  {
+   "path": "assets/img/thumbs/haunted-tower-stack-260.webp",
+   "size": 7720
+  },
+  {
+   "path": "assets/img/thumbs/haunted-tower-stack-449.webp",
+   "size": 7716
+  },
+  {
+   "path": "assets/img/thumbs/haunted-wave-composer-275.webp",
+   "size": 10222
+  },
+  {
+   "path": "assets/img/thumbs/haunted-whack-a-ghost-265.webp",
+   "size": 10622
+  },
+  {
+   "path": "assets/img/thumbs/hero-defense-90.webp",
+   "size": 4558
+  },
+  {
+   "path": "assets/img/thumbs/high-stakes-quiz-84.webp",
+   "size": 5854
+  },
+  {
+   "path": "assets/img/thumbs/horror-cosmic-merge.webp",
+   "size": 6302
+  },
+  {
+   "path": "assets/img/thumbs/horror-neon-forest.webp",
+   "size": 8284
+  },
+  {
+   "path": "assets/img/thumbs/hospital-tycoon-fantasy-edition.webp",
+   "size": 7772
+  },
+  {
+   "path": "assets/img/thumbs/hyper-tile-puzzle-watercolor.webp",
+   "size": 8340
+  },
+  {
+   "path": "assets/img/thumbs/idle-clicker-minimalist-edition.webp",
+   "size": 8178
+  },
+  {
+   "path": "assets/img/thumbs/idle-pharaoh-237.webp",
+   "size": 5378
+  },
+  {
+   "path": "assets/img/thumbs/infinity-party-game.webp",
+   "size": 9152
+  },
+  {
+   "path": "assets/img/thumbs/infinity-physics-sandbox-pirate-seas.webp",
+   "size": 10104
+  },
+  {
+   "path": "assets/img/thumbs/intense-2-player-strategy.webp",
+   "size": 7942
+  },
+  {
+   "path": "assets/img/thumbs/intense-brain-puzzle-saga-daily-seed.webp",
+   "size": 7880
+  },
+  {
+   "path": "assets/img/thumbs/intense-cooking-infinity-edition.webp",
+   "size": 9294
+  },
+  {
+   "path": "assets/img/thumbs/intense-horror-rise.webp",
+   "size": 9182
+  },
+  {
+   "path": "assets/img/thumbs/intense-infinite-runner.webp",
+   "size": 10816
+  },
+  {
+   "path": "assets/img/thumbs/intense-maze.webp",
+   "size": 9896
+  },
+  {
+   "path": "assets/img/thumbs/intense-pixel-art-rise.webp",
+   "size": 9996
+  },
+  {
+   "path": "assets/img/thumbs/intense-samurai-vehicle-combat.webp",
+   "size": 8994
+  },
+  {
+   "path": "assets/img/thumbs/intense-school-simulator.webp",
+   "size": 11602
+  },
+  {
+   "path": "assets/img/thumbs/intense-sports-rush.webp",
+   "size": 7722
+  },
+  {
+   "path": "assets/img/thumbs/iq-test-samurai-edition.webp",
+   "size": 8054
+  },
+  {
+   "path": "assets/img/thumbs/iron-gunner.webp",
+   "size": 9460
+  },
+  {
+   "path": "assets/img/thumbs/iron-minimalist-logic-gates.webp",
+   "size": 7470
+  },
+  {
+   "path": "assets/img/thumbs/isometric-brave-kingdom.webp",
+   "size": 9500
+  },
+  {
+   "path": "assets/img/thumbs/isometric-mystic-city.webp",
+   "size": 8724
+  },
+  {
+   "path": "assets/img/thumbs/jungle-farm-puzzle.webp",
+   "size": 7784
+  },
+  {
+   "path": "assets/img/thumbs/king-rush-checkers-149.webp",
+   "size": 6546
+  },
+  {
+   "path": "assets/img/thumbs/leak-pressure-pipes-83.webp",
+   "size": 7830
+  },
+  {
+   "path": "assets/img/thumbs/legendary-maze.webp",
+   "size": 7096
+  },
+  {
+   "path": "assets/img/thumbs/legendary-minimalist-blast.webp",
+   "size": 9330
+  },
+  {
+   "path": "assets/img/thumbs/legendary-modern-flat-war.webp",
+   "size": 11106
+  },
+  {
+   "path": "assets/img/thumbs/legendary-traffic-control-food-edition.webp",
+   "size": 8732
+  },
+  {
+   "path": "assets/img/thumbs/lightning-ladder-storm-reflexes-24.webp",
+   "size": 13116
+  },
+  {
+   "path": "assets/img/thumbs/lives-lens-spotter-160.webp",
+   "size": 8662
+  },
+  {
+   "path": "assets/img/thumbs/losing-checkers-147-lose-all-pieces-to-win.webp",
+   "size": 8204
+  },
+  {
+   "path": "assets/img/thumbs/low-poly-fall.webp",
+   "size": 6040
+  },
+  {
+   "path": "assets/img/thumbs/magic-rise.webp",
+   "size": 5656
+  },
+  {
+   "path": "assets/img/thumbs/medieval-arena.webp",
+   "size": 6376
+  },
+  {
+   "path": "assets/img/thumbs/mega-halloween-airport-manager.webp",
+   "size": 6642
+  },
+  {
+   "path": "assets/img/thumbs/mega-hotseat-strategy.webp",
+   "size": 9322
+  },
+  {
+   "path": "assets/img/thumbs/mega-magic-logic-gates.webp",
+   "size": 7228
+  },
+  {
+   "path": "assets/img/thumbs/memory-sequence-isometric-edition.webp",
+   "size": 8292
+  },
+  {
+   "path": "assets/img/thumbs/minimalist-intense-puzzle.webp",
+   "size": 6010
+  },
+  {
+   "path": "assets/img/thumbs/minimalist-vehicle-combat-rush.webp",
+   "size": 8220
+  },
+  {
+   "path": "assets/img/thumbs/modern-flat-mystic-master.webp",
+   "size": 11494
+  },
+  {
+   "path": "assets/img/thumbs/modern-flat-puzzle-norse-edition.webp",
+   "size": 9024
+  },
+  {
+   "path": "assets/img/thumbs/music-sequence-builder-249.webp",
+   "size": 8224
+  },
+  {
+   "path": "assets/img/thumbs/music-versus-242.webp",
+   "size": 8436
+  },
+  {
+   "path": "assets/img/thumbs/mystic-physics-sandbox.webp",
+   "size": 9092
+  },
+  {
+   "path": "assets/img/thumbs/neon-party-game-race-edition.webp",
+   "size": 10724
+  },
+  {
+   "path": "assets/img/thumbs/neumorphism-hotseat-strategy-sky.webp",
+   "size": 12566
+  },
+  {
+   "path": "assets/img/thumbs/neumorphism-phantom-rush.webp",
+   "size": 9208
+  },
+  {
+   "path": "assets/img/thumbs/ninja-arena-king-270.webp",
+   "size": 8996
+  },
+  {
+   "path": "assets/img/thumbs/ninja-balance-tower-331.webp",
+   "size": 10478
+  },
+  {
+   "path": "assets/img/thumbs/ninja-coin-tower-225.webp",
+   "size": 6160
+  },
+  {
+   "path": "assets/img/thumbs/ninja-color-flood-285.webp",
+   "size": 6126
+  },
+  {
+   "path": "assets/img/thumbs/ninja-dart-board-321.webp",
+   "size": 6690
+  },
+  {
+   "path": "assets/img/thumbs/ninja-dress-up-221.webp",
+   "size": 7432
+  },
+  {
+   "path": "assets/img/thumbs/ninja-fog-walk-441.webp",
+   "size": 5712
+  },
+  {
+   "path": "assets/img/thumbs/ninja-hotseat-strategy-battle.webp",
+   "size": 8672
+  },
+  {
+   "path": "assets/img/thumbs/ninja-ice-flow-367.webp",
+   "size": 9282
+  },
+  {
+   "path": "assets/img/thumbs/ninja-ice-slide-267.webp",
+   "size": 6564
+  },
+  {
+   "path": "assets/img/thumbs/ninja-lantern-catch-389.webp",
+   "size": 10622
+  },
+  {
+   "path": "assets/img/thumbs/ninja-lantern-light-339.webp",
+   "size": 8666
+  },
+  {
+   "path": "assets/img/thumbs/ninja-lantern-maze-370.webp",
+   "size": 6006
+  },
+  {
+   "path": "assets/img/thumbs/ninja-lantern-toss-428.webp",
+   "size": 8790
+  },
+  {
+   "path": "assets/img/thumbs/ninja-leaf-glide-381.webp",
+   "size": 7372
+  },
+  {
+   "path": "assets/img/thumbs/ninja-leaf-sweep-461.webp",
+   "size": 9018
+  },
+  {
+   "path": "assets/img/thumbs/ninja-logic-gates-273.webp",
+   "size": 9740
+  },
+  {
+   "path": "assets/img/thumbs/ninja-mask-match-397.webp",
+   "size": 7312
+  },
+  {
+   "path": "assets/img/thumbs/ninja-math-sprint-246.webp",
+   "size": 9582
+  },
+  {
+   "path": "assets/img/thumbs/ninja-maze-sprint-233.webp",
+   "size": 9684
+  },
+  {
+   "path": "assets/img/thumbs/ninja-mirror-maze-280.webp",
+   "size": 7964
+  },
+  {
+   "path": "assets/img/thumbs/ninja-orchard-harvest-312.webp",
+   "size": 9694
+  },
+  {
+   "path": "assets/img/thumbs/ninja-pixel-painter-288.webp",
+   "size": 8798
+  },
+  {
+   "path": "assets/img/thumbs/ninja-quiz-blitz-252.webp",
+   "size": 8748
+  },
+  {
+   "path": "assets/img/thumbs/ninja-reaction-238.webp",
+   "size": 6458
+  },
+  {
+   "path": "assets/img/thumbs/ninja-reflex-duel-256.webp",
+   "size": 6320
+  },
+  {
+   "path": "assets/img/thumbs/ninja-sand-sprint-401.webp",
+   "size": 7350
+  },
+  {
+   "path": "assets/img/thumbs/ninja-scroll-balance-458.webp",
+   "size": 9032
+  },
+  {
+   "path": "assets/img/thumbs/ninja-scroll-cargo-360.webp",
+   "size": 9358
+  },
+  {
+   "path": "assets/img/thumbs/ninja-scroll-chase-0497.webp",
+   "size": 6256
+  },
+  {
+   "path": "assets/img/thumbs/ninja-shadow-clone-413.webp",
+   "size": 10800
+  },
+  {
+   "path": "assets/img/thumbs/ninja-shadow-match-296.webp",
+   "size": 9546
+  },
+  {
+   "path": "assets/img/thumbs/ninja-shadow-step-350.webp",
+   "size": 9326
+  },
+  {
+   "path": "assets/img/thumbs/ninja-silent-step-421.webp",
+   "size": 6122
+  },
+  {
+   "path": "assets/img/thumbs/ninja-silver-chronicles.webp",
+   "size": 7278
+  },
+  {
+   "path": "assets/img/thumbs/ninja-smoke-bomb-379.webp",
+   "size": 7076
+  },
+  {
+   "path": "assets/img/thumbs/ninja-smoke-maze-481.webp",
+   "size": 9000
+  },
+  {
+   "path": "assets/img/thumbs/ninja-spell-chain-301.webp",
+   "size": 6916
+  },
+  {
+   "path": "assets/img/thumbs/ninja-stack-sort-308.webp",
+   "size": 9708
+  },
+  {
+   "path": "assets/img/thumbs/ninja-star-catch-0316.webp",
+   "size": 8690
+  },
+  {
+   "path": "assets/img/thumbs/ninja-star-link-385.webp",
+   "size": 7666
+  },
+  {
+   "path": "assets/img/thumbs/ninja-star-pin-456.webp",
+   "size": 5444
+  },
+  {
+   "path": "assets/img/thumbs/ninja-star-throw-356.webp",
+   "size": 10402
+  },
+  {
+   "path": "assets/img/thumbs/ninja-star-trace-467.webp",
+   "size": 10944
+  },
+  {
+   "path": "assets/img/thumbs/ninja-stealth-grid-261.webp",
+   "size": 6414
+  },
+  {
+   "path": "assets/img/thumbs/ninja-storm-dodge-400.webp",
+   "size": 10004
+  },
+  {
+   "path": "assets/img/thumbs/ninja-target-skipper-293.webp",
+   "size": 9640
+  },
+  {
+   "path": "assets/img/thumbs/ninja-torch-trail-393.webp",
+   "size": 6858
+  },
+  {
+   "path": "assets/img/thumbs/ninja-wall-run-485.webp",
+   "size": 6154
+  },
+  {
+   "path": "assets/img/thumbs/ninja-water-drop-374.webp",
+   "size": 9462
+  },
+  {
+   "path": "assets/img/thumbs/ninja-web-swing-408.webp",
+   "size": 9730
+  },
+  {
+   "path": "assets/img/thumbs/ninja-wind-blade-341.webp",
+   "size": 6490
+  },
+  {
+   "path": "assets/img/thumbs/ninja-wind-blade-dance-478.webp",
+   "size": 8004
+  },
+  {
+   "path": "assets/img/thumbs/ninja-wind-sprint-327.webp",
+   "size": 8066
+  },
+  {
+   "path": "assets/img/thumbs/ninja-windmill-334.webp",
+   "size": 6430
+  },
+  {
+   "path": "assets/img/thumbs/ninja-word-scroll-364.webp",
+   "size": 10056
+  },
+  {
+   "path": "assets/img/thumbs/norse-shared-screen-racing.webp",
+   "size": 9898
+  },
+  {
+   "path": "assets/img/thumbs/ocean-brave-puzzle.webp",
+   "size": 9522
+  },
+  {
+   "path": "assets/img/thumbs/ocean-spot-the-difference-empire.webp",
+   "size": 8274
+  },
+  {
+   "path": "assets/img/thumbs/overheat-clicker-118.webp",
+   "size": 7670
+  },
+  {
+   "path": "assets/img/thumbs/overtime-trivia-168.webp",
+   "size": 5236
+  },
+  {
+   "path": "assets/img/thumbs/parkour-cute-animals-edition.webp",
+   "size": 9810
+  },
+  {
+   "path": "assets/img/thumbs/party-game-egyptian-edition.webp",
+   "size": 10624
+  },
+  {
+   "path": "assets/img/thumbs/party-game-neon-edition.webp",
+   "size": 13120
+  },
+  {
+   "path": "assets/img/thumbs/phantom-glassmorphism-hotseat-strategy.webp",
+   "size": 12230
+  },
+  {
+   "path": "assets/img/thumbs/phantom-isometric-hidden-object.webp",
+   "size": 8098
+  },
+  {
+   "path": "assets/img/thumbs/phantom-side-scroller.webp",
+   "size": 9544
+  },
+  {
+   "path": "assets/img/thumbs/phoenix-arctic-legend.webp",
+   "size": 8410
+  },
+  {
+   "path": "assets/img/thumbs/phoenix-cute-animals-island.webp",
+   "size": 8588
+  },
+  {
+   "path": "assets/img/thumbs/pirate-fruit-ninja-farm.webp",
+   "size": 6808
+  },
+  {
+   "path": "assets/img/thumbs/pirate-idle-clicker-fury.webp",
+   "size": 7492
+  },
+  {
+   "path": "assets/img/thumbs/pixel-art-golden-challenge.webp",
+   "size": 14266
+  },
+  {
+   "path": "assets/img/thumbs/pixel-checkers-fog-243.webp",
+   "size": 10676
+  },
+  {
+   "path": "assets/img/thumbs/quantum-run.webp",
+   "size": 5876
+  },
+  {
+   "path": "assets/img/thumbs/quantum-samurai-coloring-book.webp",
+   "size": 13364
+  },
+  {
+   "path": "assets/img/thumbs/quantum-viking-merge.webp",
+   "size": 5920
+  },
+  {
+   "path": "assets/img/thumbs/resource-management-robot-edition.webp",
+   "size": 11322
+  },
+  {
+   "path": "assets/img/thumbs/retro-16-bit-quantum-dash.webp",
+   "size": 9964
+  },
+  {
+   "path": "assets/img/thumbs/retro-8-bit-school-simulator-rush.webp",
+   "size": 12176
+  },
+  {
+   "path": "assets/img/thumbs/retro-lives-arena-113.webp",
+   "size": 9034
+  },
+  {
+   "path": "assets/img/thumbs/robot-fighting-gate.webp",
+   "size": 7636
+  },
+  {
+   "path": "assets/img/thumbs/robot-intense-dash.webp",
+   "size": 8288
+  },
+  {
+   "path": "assets/img/thumbs/robot-rush.webp",
+   "size": 7508
+  },
+  {
+   "path": "assets/img/thumbs/robot-world.webp",
+   "size": 6394
+  },
+  {
+   "path": "assets/img/thumbs/roundabout-yield-173.webp",
+   "size": 5974
+  },
+  {
+   "path": "assets/img/thumbs/row-slide-puzzle-69.webp",
+   "size": 5212
+  },
+  {
+   "path": "assets/img/thumbs/royal-anagram-battle-353.webp",
+   "size": 7568
+  },
+  {
+   "path": "assets/img/thumbs/royal-archer-range-437.webp",
+   "size": 7966
+  },
+  {
+   "path": "assets/img/thumbs/royal-banner-weave-448.webp",
+   "size": 9586
+  },
+  {
+   "path": "assets/img/thumbs/royal-bee-garden-363.webp",
+   "size": 6578
+  },
+  {
+   "path": "assets/img/thumbs/royal-bell-tower-451.webp",
+   "size": 8672
+  },
+  {
+   "path": "assets/img/thumbs/royal-candle-light-328.webp",
+   "size": 6348
+  },
+  {
+   "path": "assets/img/thumbs/royal-cannon-aim-407.webp",
+   "size": 10564
+  },
+  {
+   "path": "assets/img/thumbs/royal-card-castle-387.webp",
+   "size": 10224
+  },
+  {
+   "path": "assets/img/thumbs/royal-card-count-314.webp",
+   "size": 10556
+  },
+  {
+   "path": "assets/img/thumbs/royal-charm-match-340.webp",
+   "size": 6880
+  },
+  {
+   "path": "assets/img/thumbs/royal-checkers-blitz-234.webp",
+   "size": 7260
+  },
+  {
+   "path": "assets/img/thumbs/royal-chess-knight-371.webp",
+   "size": 8674
+  },
+  {
+   "path": "assets/img/thumbs/royal-chess-puzzles-266.webp",
+   "size": 7864
+  },
+  {
+   "path": "assets/img/thumbs/royal-coin-sort-0496.webp",
+   "size": 6826
+  },
+  {
+   "path": "assets/img/thumbs/royal-cooking-dash-228.webp",
+   "size": 8566
+  },
+  {
+   "path": "assets/img/thumbs/royal-cooking-party-game.webp",
+   "size": 10882
+  },
+  {
+   "path": "assets/img/thumbs/royal-cooking.webp",
+   "size": 6012
+  },
+  {
+   "path": "assets/img/thumbs/royal-court-word-duel-247.webp",
+   "size": 9988
+  },
+  {
+   "path": "assets/img/thumbs/royal-crown-catch-460.webp",
+   "size": 9250
+  },
+  {
+   "path": "assets/img/thumbs/royal-crown-finale-0500.webp",
+   "size": 9784
+  },
+  {
+   "path": "assets/img/thumbs/royal-crown-jewels-380.webp",
+   "size": 10144
+  },
+  {
+   "path": "assets/img/thumbs/royal-crown-slide-0492.webp",
+   "size": 8884
+  },
+  {
+   "path": "assets/img/thumbs/royal-crown-tower-349.webp",
+   "size": 8230
+  },
+  {
+   "path": "assets/img/thumbs/royal-deck-duel-278.webp",
+   "size": 6662
+  },
+  {
+   "path": "assets/img/thumbs/royal-desert-party-game.webp",
+   "size": 10648
+  },
+  {
+   "path": "assets/img/thumbs/royal-dice-stack-375.webp",
+   "size": 11644
+  },
+  {
+   "path": "assets/img/thumbs/royal-egg-catch-324.webp",
+   "size": 9354
+  },
+  {
+   "path": "assets/img/thumbs/royal-fan-fare-426.webp",
+   "size": 9520
+  },
+  {
+   "path": "assets/img/thumbs/royal-feast-balance-394.webp",
+   "size": 9712
+  },
+  {
+   "path": "assets/img/thumbs/royal-feast-balance-480.webp",
+   "size": 10814
+  },
+  {
+   "path": "assets/img/thumbs/royal-feast-rush-359.webp",
+   "size": 10532
+  },
+  {
+   "path": "assets/img/thumbs/royal-gate-keeper-335.webp",
+   "size": 6700
+  },
+  {
+   "path": "assets/img/thumbs/royal-goblet-guess-423.webp",
+   "size": 10062
+  },
+  {
+   "path": "assets/img/thumbs/royal-goblin-market-483.webp",
+   "size": 9018
+  },
+  {
+   "path": "assets/img/thumbs/royal-gradient-traffic-control.webp",
+   "size": 11616
+  },
+  {
+   "path": "assets/img/thumbs/royal-hidden-object.webp",
+   "size": 7608
+  },
+  {
+   "path": "assets/img/thumbs/royal-idle-kingdom-253.webp",
+   "size": 6692
+  },
+  {
+   "path": "assets/img/thumbs/royal-jester-juggle-345.webp",
+   "size": 9974
+  },
+  {
+   "path": "assets/img/thumbs/royal-jewel-merge-317.webp",
+   "size": 6616
+  },
+  {
+   "path": "assets/img/thumbs/royal-jewel-weigh-430.webp",
+   "size": 11050
+  },
+  {
+   "path": "assets/img/thumbs/royal-joust-304.webp",
+   "size": 9120
+  },
+  {
+   "path": "assets/img/thumbs/royal-joust-duel-412.webp",
+   "size": 6008
+  },
+  {
+   "path": "assets/img/thumbs/royal-key-turn-391.webp",
+   "size": 10384
+  },
+  {
+   "path": "assets/img/thumbs/royal-match-towers-274.webp",
+   "size": 8712
+  },
+  {
+   "path": "assets/img/thumbs/royal-music-tiles-332.webp",
+   "size": 8750
+  },
+  {
+   "path": "assets/img/thumbs/royal-number-maze-283.webp",
+   "size": 7538
+  },
+  {
+   "path": "assets/img/thumbs/royal-pipe-connect-257.webp",
+   "size": 6764
+  },
+  {
+   "path": "assets/img/thumbs/royal-portrait-mix-378.webp",
+   "size": 7084
+  },
+  {
+   "path": "assets/img/thumbs/royal-procession-455.webp",
+   "size": 7838
+  },
+  {
+   "path": "assets/img/thumbs/royal-rainbow-398.webp",
+   "size": 8366
+  },
+  {
+   "path": "assets/img/thumbs/royal-recipe-mix-383.webp",
+   "size": 6250
+  },
+  {
+   "path": "assets/img/thumbs/royal-rhythm-taps-298.webp",
+   "size": 8536
+  },
+  {
+   "path": "assets/img/thumbs/royal-soup-stir-368.webp",
+   "size": 10602
+  },
+  {
+   "path": "assets/img/thumbs/royal-sword-pull-403.webp",
+   "size": 6692
+  },
+  {
+   "path": "assets/img/thumbs/royal-tapestry-469.webp",
+   "size": 8308
+  },
+  {
+   "path": "assets/img/thumbs/royal-throne-path-440.webp",
+   "size": 7168
+  },
+  {
+   "path": "assets/img/thumbs/royal-throne-sort-390.webp",
+   "size": 7712
+  },
+  {
+   "path": "assets/img/thumbs/royal-tile-swap-289.webp",
+   "size": 7412
+  },
+  {
+   "path": "assets/img/thumbs/royal-torch-run-415.webp",
+   "size": 7696
+  },
+  {
+   "path": "assets/img/thumbs/royal-trumpet-call-443.webp",
+   "size": 9144
+  },
+  {
+   "path": "assets/img/thumbs/royal-vault-heist-487.webp",
+   "size": 7484
+  },
+  {
+   "path": "assets/img/thumbs/royal-vault-spin-474.webp",
+   "size": 8408
+  },
+  {
+   "path": "assets/img/thumbs/royal-word-grid-309.webp",
+   "size": 7146
+  },
+  {
+   "path": "assets/img/thumbs/royal-word-ladder-239.webp",
+   "size": 7586
+  },
+  {
+   "path": "assets/img/thumbs/royal-word-search-blitz-294.webp",
+   "size": 11716
+  },
+  {
+   "path": "assets/img/thumbs/rune-tree-idle-197.webp",
+   "size": 6162
+  },
+  {
+   "path": "assets/img/thumbs/samurai-zombie-survival-blast.webp",
+   "size": 11826
+  },
+  {
+   "path": "assets/img/thumbs/shadow-christmas-2-player-battle.webp",
+   "size": 10702
+  },
+  {
+   "path": "assets/img/thumbs/side-scroller-arctic-edition.webp",
+   "size": 8556
+  },
+  {
+   "path": "assets/img/thumbs/silent-music-galaxy.webp",
+   "size": 10608
+  },
+  {
+   "path": "assets/img/thumbs/silver-celtic-merge.webp",
+   "size": 6452
+  },
+  {
+   "path": "assets/img/thumbs/silver-horror-hexagon-puzzle.webp",
+   "size": 10430
+  },
+  {
+   "path": "assets/img/thumbs/simulation-norse.webp",
+   "size": 5666
+  },
+  {
+   "path": "assets/img/thumbs/snowboarder-neon-chronicles.webp",
+   "size": 10312
+  },
+  {
+   "path": "assets/img/thumbs/space-resource-management-fury.webp",
+   "size": 10300
+  },
+  {
+   "path": "assets/img/thumbs/splitter-defense-165.webp",
+   "size": 8172
+  },
+  {
+   "path": "assets/img/thumbs/storm-jungle-puzzle.webp",
+   "size": 7902
+  },
+  {
+   "path": "assets/img/thumbs/storm-jungle-word-search.webp",
+   "size": 9604
+  },
+  {
+   "path": "assets/img/thumbs/super-christmas-blast.webp",
+   "size": 7746
+  },
+  {
+   "path": "assets/img/thumbs/super-cooking-samurai-edition.webp",
+   "size": 10330
+  },
+  {
+   "path": "assets/img/thumbs/super-desert-shared-screen-racing.webp",
+   "size": 12768
+  },
+  {
+   "path": "assets/img/thumbs/super-halloween-farming-simulator.webp",
+   "size": 6082
+  },
+  {
+   "path": "assets/img/thumbs/super-hotseat-strategy-christmas-edition.webp",
+   "size": 7742
+  },
+  {
+   "path": "assets/img/thumbs/swift-color-sorting-pirate-edition.webp",
+   "size": 8394
+  },
+  {
+   "path": "assets/img/thumbs/swift-neon-gunner.webp",
+   "size": 7458
+  },
+  {
+   "path": "assets/img/thumbs/swift-watercolor-typing-speed.webp",
+   "size": 8850
+  },
+  {
+   "path": "assets/img/thumbs/thunder-retro-chronicles.webp",
+   "size": 10448
+  },
+  {
+   "path": "assets/img/thumbs/thunder-sports-zombie-survival.webp",
+   "size": 8400
+  },
+  {
+   "path": "assets/img/thumbs/tile-rotation-arctic-edition.webp",
+   "size": 7876
+  },
+  {
+   "path": "assets/img/thumbs/time-killer-pirates.webp",
+   "size": 8838
+  },
+  {
+   "path": "assets/img/thumbs/token-hunt-slide-217.webp",
+   "size": 5446
+  },
+  {
+   "path": "assets/img/thumbs/top-down-shooter-magic-edition.webp",
+   "size": 10194
+  },
+  {
+   "path": "assets/img/thumbs/tower-forge-115-click-tower-to-upgrade.webp",
+   "size": 4618
+  },
+  {
+   "path": "assets/img/thumbs/train-crossing-212.webp",
+   "size": 7848
+  },
+  {
+   "path": "assets/img/thumbs/turbo-airport-manager-steampunk-edition.webp",
+   "size": 10286
+  },
+  {
+   "path": "assets/img/thumbs/turbo-christmas-ball-bounce.webp",
+   "size": 9754
+  },
+  {
+   "path": "assets/img/thumbs/turbo-christmas-legend.webp",
+   "size": 7448
+  },
+  {
+   "path": "assets/img/thumbs/turbo-magic-parkour.webp",
+   "size": 9676
+  },
+  {
+   "path": "assets/img/thumbs/ultimate-desert-dungeon.webp",
+   "size": 10318
+  },
+  {
+   "path": "assets/img/thumbs/ultimate-endless-runner-pirate-edition.webp",
+   "size": 10644
+  },
+  {
+   "path": "assets/img/thumbs/ultimate-match-3-fantasy-edition.webp",
+   "size": 9742
+  },
+  {
+   "path": "assets/img/thumbs/versus-puzzle-food-edition.webp",
+   "size": 9494
+  },
+  {
+   "path": "assets/img/thumbs/versus-puzzle-horror-edition.webp",
+   "size": 8576
+  },
+  {
+   "path": "assets/img/thumbs/vibrant-mega-ocean.webp",
+   "size": 11370
+  },
+  {
+   "path": "assets/img/thumbs/viking-farming-sim-adventure.webp",
+   "size": 9464
+  },
+  {
+   "path": "assets/img/thumbs/viking-merge-watercolor-edition.webp",
+   "size": 10524
+  },
+  {
+   "path": "assets/img/thumbs/villager-escort-131.webp",
+   "size": 6236
+  },
+  {
+   "path": "assets/img/thumbs/watercolor-color-match-infinite.webp",
+   "size": 9220
+  },
+  {
+   "path": "assets/img/thumbs/watercolor-galaxy.webp",
+   "size": 9030
+  },
+  {
+   "path": "assets/img/thumbs/watercolor-merge-holiday-edition.webp",
+   "size": 8348
+  },
+  {
+   "path": "assets/img/thumbs/watercolor-physics-sandbox.webp",
+   "size": 13146
+  },
+  {
+   "path": "assets/img/thumbs/watercolor-quantum-dash.webp",
+   "size": 8164
+  },
+  {
+   "path": "assets/img/thumbs/watercolor-tales.webp",
+   "size": 11024
+  },
+  {
+   "path": "assets/img/thumbs/western-physics-sandbox-empire.webp",
+   "size": 11282
+  },
+  {
+   "path": "assets/img/thumbs/western-shared-screen-racing-hero.webp",
+   "size": 11106
+  },
+  {
+   "path": "assets/img/thumbs/wild-color-match-infinite.webp",
+   "size": 9940
+  },
+  {
+   "path": "assets/img/thumbs/wild-desert-storm.webp",
+   "size": 10122
+  },
+  {
+   "path": "assets/img/thumbs/wild-glassmorphism-nonogram.webp",
+   "size": 14076
+  },
+  {
+   "path": "assets/img/thumbs/wild-greek-myth-shooter.webp",
+   "size": 10582
+  },
+  {
+   "path": "assets/img/thumbs/wild-rise.webp",
+   "size": 4948
+  },
+  {
+   "path": "assets/img/thumbs/wrap-pipes-102.webp",
+   "size": 5186
+  },
+  {
+   "path": "assets/img/thumbs/zen-vibrant-master.webp",
+   "size": 8196
+  },
+  {
+   "path": "assets/img/thumbs/zombie-puzzle-liquid-glass.webp",
+   "size": 7704
+  },
+  {
+   "path": "assets/js/ads-config.js",
+   "size": 766
+  },
+  {
+   "path": "assets/js/ads.js",
+   "size": 2012
+  },
+  {
+   "path": "assets/js/audio.js",
+   "size": 4883
+  },
+  {
+   "path": "assets/js/player.js",
+   "size": 8164
+  },
+  {
+   "path": "assets/js/portal.js",
+   "size": 7721
+  },
+  {
+   "path": "assets/js/registry.js",
+   "size": 420507
+  },
+  {
+   "path": "assets/js/registry.json",
+   "size": 420459
+  },
+  {
+   "path": "assets/js/touchpad.js",
+   "size": 4789
+  },
+  {
+   "path": "browser_console_errors.json",
+   "size": 2
+  },
+  {
+   "path": "categories/index.html",
+   "size": 4492
+  },
+  {
+   "path": "category/action/index.html",
+   "size": 4201
+  },
+  {
+   "path": "category/arcade/index.html",
+   "size": 4211
+  },
+  {
+   "path": "category/brain/index.html",
+   "size": 4204
+  },
+  {
+   "path": "category/casual/index.html",
+   "size": 4218
+  },
+  {
+   "path": "category/multiplayer-local/index.html",
+   "size": 4308
+  },
+  {
+   "path": "category/puzzle/index.html",
+   "size": 4208
+  },
+  {
+   "path": "category/simulation/index.html",
+   "size": 4248
+  },
+  {
+   "path": "category/strategy/index.html",
+   "size": 4225
+  },
+  {
+   "path": "contact/index.html",
+   "size": 4790
+  },
+  {
+   "path": "cookies/index.html",
+   "size": 4784
+  },
+  {
+   "path": "disclaimer/index.html",
+   "size": 4537
+  },
+  {
+   "path": "favorites/index.html",
+   "size": 4134
+  },
+  {
+   "path": "game/air-hockey-pirate-theme/index.html",
+   "size": 9626
+  },
+  {
+   "path": "game/airport-manager-glassmorphism-edition/index.html",
+   "size": 9981
+  },
+  {
+   "path": "game/airport-manager-greek-myth-edition/index.html",
+   "size": 9751
+  },
+  {
+   "path": "game/anagram-sports-edition/index.html",
+   "size": 9283
+  },
+  {
+   "path": "game/arctic-crazy-universe/index.html",
+   "size": 9615
+  },
+  {
+   "path": "game/arctic-flappy-universe-edition/index.html",
+   "size": 9606
+  },
+  {
+   "path": "game/arctic-hidden-object-storm/index.html",
+   "size": 9589
+  },
+  {
+   "path": "game/ball-bounce-glassmorphism-edition/index.html",
+   "size": 9700
+  },
+  {
+   "path": "game/base-defense-isometric-edition/index.html",
+   "size": 9749
+  },
+  {
+   "path": "game/beat-bell-354/index.html",
+   "size": 8698
+  },
+  {
+   "path": "game/board-game-greek-myth/index.html",
+   "size": 9694
+  },
+  {
+   "path": "game/brave-traffic-control-samurai-edition/index.html",
+   "size": 9898
+  },
+  {
+   "path": "game/cel-shaded-space-war-2p-edition/index.html",
+   "size": 9678
+  },
+  {
+   "path": "game/chain-combo-merge-194/index.html",
+   "size": 9427
+  },
+  {
+   "path": "game/checkers-ai-pastel-edition/index.html",
+   "size": 9492
+  },
+  {
+   "path": "game/chill-greek-myth-sudoku/index.html",
+   "size": 9351
+  },
+  {
+   "path": "game/clever-arctic-tales/index.html",
+   "size": 9533
+  },
+  {
+   "path": "game/clever-tycoon/index.html",
+   "size": 8946
+  },
+  {
+   "path": "game/coloring-book-cyberpunk-edition/index.html",
+   "size": 9098
+  },
+  {
+   "path": "game/coloring-book-food-edition/index.html",
+   "size": 8880
+  },
+  {
+   "path": "game/coloring-book-glassmorphism-edition/index.html",
+   "size": 9126
+  },
+  {
+   "path": "game/combo-clicker-37-active-only/index.html",
+   "size": 9011
+  },
+  {
+   "path": "game/comic-book-chronicles/index.html",
+   "size": 9807
+  },
+  {
+   "path": "game/cosmic-jungle-hero/index.html",
+   "size": 9579
+  },
+  {
+   "path": "game/cosmic-magic-riddle-solver/index.html",
+   "size": 9532
+  },
+  {
+   "path": "game/cosmic-medieval-war/index.html",
+   "size": 9078
+  },
+  {
+   "path": "game/cosmic-monochrome-farming-sim/index.html",
+   "size": 9522
+  },
+  {
+   "path": "game/crazy-jungle-forest/index.html",
+   "size": 9383
+  },
+  {
+   "path": "game/crazy-pastel-reaction-time/index.html",
+   "size": 9231
+  },
+  {
+   "path": "game/crystal-balance-251/index.html",
+   "size": 8834
+  },
+  {
+   "path": "game/crystal-ball-sort-245/index.html",
+   "size": 8842
+  },
+  {
+   "path": "game/crystal-cipher-269/index.html",
+   "size": 8837
+  },
+  {
+   "path": "game/crystal-code-breaker-330/index.html",
+   "size": 8852
+  },
+  {
+   "path": "game/crystal-color-chain-323/index.html",
+   "size": 8861
+  },
+  {
+   "path": "game/crystal-comet-catch-420/index.html",
+   "size": 8965
+  },
+  {
+   "path": "game/crystal-defense-grid-300/index.html",
+   "size": 8827
+  },
+  {
+   "path": "game/crystal-dice-duel-311/index.html",
+   "size": 8905
+  },
+  {
+   "path": "game/crystal-dot-link-276/index.html",
+   "size": 8850
+  },
+  {
+   "path": "game/crystal-dot-pop-292/index.html",
+   "size": 8869
+  },
+  {
+   "path": "game/crystal-flood-gate-425/index.html",
+   "size": 8926
+  },
+  {
+   "path": "game/crystal-flow-351/index.html",
+   "size": 8693
+  },
+  {
+   "path": "game/crystal-gem-grid-446/index.html",
+   "size": 8843
+  },
+  {
+   "path": "game/crystal-golem-merge-0490/index.html",
+   "size": 8905
+  },
+  {
+   "path": "game/crystal-golem-path-472/index.html",
+   "size": 8857
+  },
+  {
+   "path": "game/crystal-grid-shift-362/index.html",
+   "size": 8752
+  },
+  {
+   "path": "game/crystal-grid-slide-418/index.html",
+   "size": 8934
+  },
+  {
+   "path": "game/crystal-harmony-377/index.html",
+   "size": 8787
+  },
+  {
+   "path": "game/crystal-hex-duel-229/index.html",
+   "size": 8872
+  },
+  {
+   "path": "game/crystal-horror-flappy/index.html",
+   "size": 9383
+  },
+  {
+   "path": "game/crystal-ice-break-336/index.html",
+   "size": 8837
+  },
+  {
+   "path": "game/crystal-isometric-blast/index.html",
+   "size": 9717
+  },
+  {
+   "path": "game/crystal-laser-alignment-287/index.html",
+   "size": 8979
+  },
+  {
+   "path": "game/crystal-match-blast-236/index.html",
+   "size": 8833
+  },
+  {
+   "path": "game/crystal-memory-matrix-282/index.html",
+   "size": 8959
+  },
+  {
+   "path": "game/crystal-number-drop-319/index.html",
+   "size": 8838
+  },
+  {
+   "path": "game/crystal-path-defense-343/index.html",
+   "size": 8890
+  },
+  {
+   "path": "game/crystal-path-finder-297/index.html",
+   "size": 8874
+  },
+  {
+   "path": "game/crystal-pond-ripple-405/index.html",
+   "size": 8894
+  },
+  {
+   "path": "game/crystal-pool-dive-452/index.html",
+   "size": 8816
+  },
+  {
+   "path": "game/crystal-pool-shot-433/index.html",
+   "size": 8805
+  },
+  {
+   "path": "game/crystal-prism-split-463/index.html",
+   "size": 8865
+  },
+  {
+   "path": "game/crystal-puzzle-grid-355/index.html",
+   "size": 8852
+  },
+  {
+   "path": "game/crystal-reflex-grid-303/index.html",
+   "size": 8855
+  },
+  {
+   "path": "game/crystal-rhythm-grid-263/index.html",
+   "size": 8953
+  },
+  {
+   "path": "game/crystal-shift-puzzle-306/index.html",
+   "size": 8903
+  },
+  {
+   "path": "game/crystal-stack-sort-346/index.html",
+   "size": 8864
+  },
+  {
+   "path": "game/crystal-tide-pool-436/index.html",
+   "size": 8870
+  },
+  {
+   "path": "game/crystal-word-search-258/index.html",
+   "size": 8916
+  },
+  {
+   "path": "game/cute-animals-rise/index.html",
+   "size": 9798
+  },
+  {
+   "path": "game/cyberpunk-sky/index.html",
+   "size": 9485
+  },
+  {
+   "path": "game/dark-mode-anagram-puzzle/index.html",
+   "size": 9347
+  },
+  {
+   "path": "game/dark-mode-sport-hero/index.html",
+   "size": 9476
+  },
+  {
+   "path": "game/dash-brawler-55/index.html",
+   "size": 9457
+  },
+  {
+   "path": "game/decoy-spotter-140/index.html",
+   "size": 9439
+  },
+  {
+   "path": "game/desert-ant-farm-361/index.html",
+   "size": 8813
+  },
+  {
+   "path": "game/desert-ant-hill-0491/index.html",
+   "size": 8816
+  },
+  {
+   "path": "game/desert-balance-beam-295/index.html",
+   "size": 8937
+  },
+  {
+   "path": "game/desert-bounce-quest-281/index.html",
+   "size": 8927
+  },
+  {
+   "path": "game/desert-cactus-guard-457/index.html",
+   "size": 8833
+  },
+  {
+   "path": "game/desert-camel-bell-432/index.html",
+   "size": 8927
+  },
+  {
+   "path": "game/desert-camel-choir-386/index.html",
+   "size": 8795
+  },
+  {
+   "path": "game/desert-camel-market-462/index.html",
+   "size": 8852
+  },
+  {
+   "path": "game/desert-camel-race-352/index.html",
+   "size": 8951
+  },
+  {
+   "path": "game/desert-caravan-trade-291/index.html",
+   "size": 8888
+  },
+  {
+   "path": "game/desert-coin-flip-357/index.html",
+   "size": 8805
+  },
+  {
+   "path": "game/desert-coin-pusher-342/index.html",
+   "size": 8862
+  },
+  {
+   "path": "game/desert-dot-trail-333/index.html",
+   "size": 8796
+  },
+  {
+   "path": "game/desert-draw-path-268/index.html",
+   "size": 8890
+  },
+  {
+   "path": "game/desert-dual-defense-262/index.html",
+   "size": 8951
+  },
+  {
+   "path": "game/desert-dune-board-411/index.html",
+   "size": 8835
+  },
+  {
+   "path": "game/desert-echo-shout-450/index.html",
+   "size": 8832
+  },
+  {
+   "path": "game/desert-fire-dance-475/index.html",
+   "size": 8873
+  },
+  {
+   "path": "game/desert-firefly-catch-372/index.html",
+   "size": 8950
+  },
+  {
+   "path": "game/desert-forge-idle-226/index.html",
+   "size": 8765
+  },
+  {
+   "path": "game/desert-frog-leap-417/index.html",
+   "size": 8902
+  },
+  {
+   "path": "game/desert-gear-puzzle-382/index.html",
+   "size": 8800
+  },
+  {
+   "path": "game/desert-gravity-flip-240/index.html",
+   "size": 8942
+  },
+  {
+   "path": "game/desert-hawk-dive-468/index.html",
+   "size": 8936
+  },
+  {
+   "path": "game/desert-legendary-galaxy/index.html",
+   "size": 9570
+  },
+  {
+   "path": "game/desert-logic-gates/index.html",
+   "size": 9322
+  },
+  {
+   "path": "game/desert-masked-dancer-435/index.html",
+   "size": 8869
+  },
+  {
+   "path": "game/desert-math-challenge-ocean-edition/index.html",
+   "size": 9780
+  },
+  {
+   "path": "game/desert-math-puzzle/index.html",
+   "size": 9460
+  },
+  {
+   "path": "game/desert-mega-hero-241/index.html",
+   "size": 8929
+  },
+  {
+   "path": "game/desert-memory-match-248/index.html",
+   "size": 8870
+  },
+  {
+   "path": "game/desert-mine-cart-365/index.html",
+   "size": 8829
+  },
+  {
+   "path": "game/desert-mirror-path-315/index.html",
+   "size": 8841
+  },
+  {
+   "path": "game/desert-moon-hopper-0488/index.html",
+   "size": 8894
+  },
+  {
+   "path": "game/desert-moon-jump-459/index.html",
+   "size": 8883
+  },
+  {
+   "path": "game/desert-moon-phase-399/index.html",
+   "size": 8843
+  },
+  {
+   "path": "game/desert-night-patrol-464/index.html",
+   "size": 8951
+  },
+  {
+   "path": "game/desert-night-watch-402/index.html",
+   "size": 8836
+  },
+  {
+   "path": "game/desert-oasis-defense-302/index.html",
+   "size": 8947
+  },
+  {
+   "path": "game/desert-oasis-guard-429/index.html",
+   "size": 8885
+  },
+  {
+   "path": "game/desert-oasis-hop-388/index.html",
+   "size": 8809
+  },
+  {
+   "path": "game/desert-oasis-match-326/index.html",
+   "size": 8841
+  },
+  {
+   "path": "game/desert-oasis-ring-479/index.html",
+   "size": 8826
+  },
+  {
+   "path": "game/desert-oasis-rope-466/index.html",
+   "size": 8892
+  },
+  {
+   "path": "game/desert-rain-catch-477/index.html",
+   "size": 8956
+  },
+  {
+   "path": "game/desert-reflection-232/index.html",
+   "size": 8894
+  },
+  {
+   "path": "game/desert-rhythm-hop-347/index.html",
+   "size": 8850
+  },
+  {
+   "path": "game/desert-rhythm-runner-277/index.html",
+   "size": 8896
+  },
+  {
+   "path": "game/desert-rhythm-tap-320/index.html",
+   "size": 8820
+  },
+  {
+   "path": "game/desert-rhythm-tap-empire/index.html",
+   "size": 9395
+  },
+  {
+   "path": "game/desert-sand-draw-322/index.html",
+   "size": 8826
+  },
+  {
+   "path": "game/desert-sand-storm-392/index.html",
+   "size": 8935
+  },
+  {
+   "path": "game/desert-sand-timer-369/index.html",
+   "size": 8847
+  },
+  {
+   "path": "game/desert-sand-timer-duel-0498/index.html",
+   "size": 8970
+  },
+  {
+   "path": "game/desert-scarab-maze-396/index.html",
+   "size": 8850
+  },
+  {
+   "path": "game/desert-scarab-push-445/index.html",
+   "size": 8922
+  },
+  {
+   "path": "game/desert-scarab-rush-337/index.html",
+   "size": 8845
+  },
+  {
+   "path": "game/desert-scorpion-sting-376/index.html",
+   "size": 8905
+  },
+  {
+   "path": "game/desert-scroll-roll-329/index.html",
+   "size": 8823
+  },
+  {
+   "path": "game/desert-snake-charmer-454/index.html",
+   "size": 8888
+  },
+  {
+   "path": "game/desert-snake-pit-272/index.html",
+   "size": 8842
+  },
+  {
+   "path": "game/desert-snake-trail-259/index.html",
+   "size": 8925
+  },
+  {
+   "path": "game/desert-solar-align-409/index.html",
+   "size": 8816
+  },
+  {
+   "path": "game/desert-star-fall-442/index.html",
+   "size": 8925
+  },
+  {
+   "path": "game/desert-star-link-486/index.html",
+   "size": 8823
+  },
+  {
+   "path": "game/desert-star-map-427/index.html",
+   "size": 8773
+  },
+  {
+   "path": "game/desert-star-navigate-406/index.html",
+   "size": 8992
+  },
+  {
+   "path": "game/desert-sun-catch-439/index.html",
+   "size": 8873
+  },
+  {
+   "path": "game/desert-sun-dial-422/index.html",
+   "size": 8774
+  },
+  {
+   "path": "game/desert-sun-dial-run-471/index.html",
+   "size": 8944
+  },
+  {
+   "path": "game/desert-sun-race-482/index.html",
+   "size": 8852
+  },
+  {
+   "path": "game/desert-train-switch-307/index.html",
+   "size": 8837
+  },
+  {
+   "path": "game/desert-vault-286/index.html",
+   "size": 8799
+  },
+  {
+   "path": "game/desert-wind-chime-414/index.html",
+   "size": 8842
+  },
+  {
+   "path": "game/desert-wind-ladder-447/index.html",
+   "size": 8908
+  },
+  {
+   "path": "game/desert-windmill-spin-0494/index.html",
+   "size": 8913
+  },
+  {
+   "path": "game/dragon-dark-mode-riddle-solver/index.html",
+   "size": 9637
+  },
+  {
+   "path": "game/dress-up-glassmorphism-edition/index.html",
+   "size": 9659
+  },
+  {
+   "path": "game/dual-source-pipes-186/index.html",
+   "size": 9354
+  },
+  {
+   "path": "game/egyptian-gate-traffic-223/index.html",
+   "size": 9024
+  },
+  {
+   "path": "game/egyptian-math-pyramid-264/index.html",
+   "size": 8907
+  },
+  {
+   "path": "game/egyptian-portal-2048-255/index.html",
+   "size": 8856
+  },
+  {
+   "path": "game/egyptian-wrap-pipes-231/index.html",
+   "size": 8917
+  },
+  {
+   "path": "game/endless-hotseat-strategy/index.html",
+   "size": 9871
+  },
+  {
+   "path": "game/endless-strategy-greek-myth/index.html",
+   "size": 9872
+  },
+  {
+   "path": "game/epic-arctic-versus-puzzle/index.html",
+   "size": 9790
+  },
+  {
+   "path": "game/epic-cozy-merge-2p-edition/index.html",
+   "size": 9827
+  },
+  {
+   "path": "game/epic-egyptian-school-simulator/index.html",
+   "size": 9957
+  },
+  {
+   "path": "game/epic-magic-coloring-book/index.html",
+   "size": 8822
+  },
+  {
+   "path": "game/epic-pixel-art-tower/index.html",
+   "size": 9599
+  },
+  {
+   "path": "game/epic-time-management-infinity/index.html",
+   "size": 9702
+  },
+  {
+   "path": "game/epic-vehicle-combat-horror-edition/index.html",
+   "size": 9634
+  },
+  {
+   "path": "game/eternal-egyptian-dungeon/index.html",
+   "size": 9758
+  },
+  {
+   "path": "game/eternal-halloween-tycoon/index.html",
+   "size": 8880
+  },
+  {
+   "path": "game/eternal-number-merge/index.html",
+   "size": 9228
+  },
+  {
+   "path": "game/eternal-robot-room-escape/index.html",
+   "size": 9726
+  },
+  {
+   "path": "game/fighting-robot-edition/index.html",
+   "size": 9363
+  },
+  {
+   "path": "game/flying-kings-checkers-142/index.html",
+   "size": 9542
+  },
+  {
+   "path": "game/focus-trainer-comic-book-edition/index.html",
+   "size": 9485
+  },
+  {
+   "path": "game/focus-trainer-pixel-art-edition/index.html",
+   "size": 9475
+  },
+  {
+   "path": "game/fog-of-war-checkers-215/index.html",
+   "size": 9204
+  },
+  {
+   "path": "game/food-dragon-island/index.html",
+   "size": 9525
+  },
+  {
+   "path": "game/food-dungeon-222/index.html",
+   "size": 8689
+  },
+  {
+   "path": "game/glassmorphism-golden-adventure/index.html",
+   "size": 9753
+  },
+  {
+   "path": "game/glassmorphism-realm/index.html",
+   "size": 9549
+  },
+  {
+   "path": "game/golden-comic-book-mountain/index.html",
+   "size": 9694
+  },
+  {
+   "path": "game/golden-neon-forest/index.html",
+   "size": 9679
+  },
+  {
+   "path": "game/golden-watercolor-portal/index.html",
+   "size": 9783
+  },
+  {
+   "path": "game/gradient-heavy-super-race/index.html",
+   "size": 9578
+  },
+  {
+   "path": "game/gravity-puzzle-pirate-edition/index.html",
+   "size": 9901
+  },
+  {
+   "path": "game/gravity-shift-merge-163/index.html",
+   "size": 9586
+  },
+  {
+   "path": "game/greek-myth-endless-runner-fury/index.html",
+   "size": 9674
+  },
+  {
+   "path": "game/gunner-watercolor-edition/index.html",
+   "size": 9510
+  },
+  {
+   "path": "game/halloween-epic-arena/index.html",
+   "size": 9519
+  },
+  {
+   "path": "game/halloween-hyper-portal/index.html",
+   "size": 9579
+  },
+  {
+   "path": "game/halloween-intense-puzzle/index.html",
+   "size": 9635
+  },
+  {
+   "path": "game/halloween-king/index.html",
+   "size": 9438
+  },
+  {
+   "path": "game/haunted-anagram-arena-271/index.html",
+   "size": 8952
+  },
+  {
+   "path": "game/haunted-attic-climb-0493/index.html",
+   "size": 8886
+  },
+  {
+   "path": "game/haunted-attic-crawl-438/index.html",
+   "size": 8844
+  },
+  {
+   "path": "game/haunted-attic-drop-484/index.html",
+   "size": 8901
+  },
+  {
+   "path": "game/haunted-attic-sort-419/index.html",
+   "size": 8813
+  },
+  {
+   "path": "game/haunted-attic-stack-453/index.html",
+   "size": 8887
+  },
+  {
+   "path": "game/haunted-ballroom-470/index.html",
+   "size": 8881
+  },
+  {
+   "path": "game/haunted-bell-ring-410/index.html",
+   "size": 8816
+  },
+  {
+   "path": "game/haunted-bubble-pop-305/index.html",
+   "size": 8916
+  },
+  {
+   "path": "game/haunted-calculator-244/index.html",
+   "size": 8889
+  },
+  {
+   "path": "game/haunted-chime-order-0489/index.html",
+   "size": 8914
+  },
+  {
+   "path": "game/haunted-clock-hands-416/index.html",
+   "size": 8826
+  },
+  {
+   "path": "game/haunted-clock-puzzle-0499/index.html",
+   "size": 8987
+  },
+  {
+   "path": "game/haunted-clock-tower-348/index.html",
+   "size": 8870
+  },
+  {
+   "path": "game/haunted-crystal-ball-358/index.html",
+   "size": 8846
+  },
+  {
+   "path": "game/haunted-door-guard-434/index.html",
+   "size": 8829
+  },
+  {
+   "path": "game/haunted-echo-384/index.html",
+   "size": 8716
+  },
+  {
+   "path": "game/haunted-falling-blocks-279/index.html",
+   "size": 8949
+  },
+  {
+   "path": "game/haunted-garden-tend-473/index.html",
+   "size": 8869
+  },
+  {
+   "path": "game/haunted-ghost-maze-310/index.html",
+   "size": 8869
+  },
+  {
+   "path": "game/haunted-grave-dig-0495/index.html",
+   "size": 8862
+  },
+  {
+   "path": "game/haunted-graveyard-465/index.html",
+   "size": 8839
+  },
+  {
+   "path": "game/haunted-grid-crawler-325/index.html",
+   "size": 8948
+  },
+  {
+   "path": "game/haunted-hotseat-conquest-235/index.html",
+   "size": 8992
+  },
+  {
+   "path": "game/haunted-hourglass-race-404/index.html",
+   "size": 8907
+  },
+  {
+   "path": "game/haunted-library-395/index.html",
+   "size": 8723
+  },
+  {
+   "path": "game/haunted-maze-chase-299/index.html",
+   "size": 8841
+  },
+  {
+   "path": "game/haunted-merge-blast-250/index.html",
+   "size": 8863
+  },
+  {
+   "path": "game/haunted-mirror-hall-476/index.html",
+   "size": 8900
+  },
+  {
+   "path": "game/haunted-mirror-match-338/index.html",
+   "size": 8851
+  },
+  {
+   "path": "game/haunted-mirror-path-373/index.html",
+   "size": 8847
+  },
+  {
+   "path": "game/haunted-number-path-344/index.html",
+   "size": 8877
+  },
+  {
+   "path": "game/haunted-obby-run-230/index.html",
+   "size": 8881
+  },
+  {
+   "path": "game/haunted-organ-444/index.html",
+   "size": 8721
+  },
+  {
+   "path": "game/haunted-painting-366/index.html",
+   "size": 8849
+  },
+  {
+   "path": "game/haunted-painting-find-431/index.html",
+   "size": 8933
+  },
+  {
+   "path": "game/haunted-pattern-shift-284/index.html",
+   "size": 8926
+  },
+  {
+   "path": "game/haunted-portrait-row-424/index.html",
+   "size": 8969
+  },
+  {
+   "path": "game/haunted-row-slide-227/index.html",
+   "size": 8894
+  },
+  {
+   "path": "game/haunted-simon-duel-224/index.html",
+   "size": 8699
+  },
+  {
+   "path": "game/haunted-sound-board-290/index.html",
+   "size": 8928
+  },
+  {
+   "path": "game/haunted-spot-pop-313/index.html",
+   "size": 8837
+  },
+  {
+   "path": "game/haunted-spot-shift-254/index.html",
+   "size": 8884
+  },
+  {
+   "path": "game/haunted-tile-runner-0318/index.html",
+   "size": 8914
+  },
+  {
+   "path": "game/haunted-tower-stack-260/index.html",
+   "size": 8917
+  },
+  {
+   "path": "game/haunted-tower-stack-449/index.html",
+   "size": 8889
+  },
+  {
+   "path": "game/haunted-wave-composer-275/index.html",
+   "size": 8916
+  },
+  {
+   "path": "game/haunted-whack-a-ghost-265/index.html",
+   "size": 8932
+  },
+  {
+   "path": "game/hero-defense-90/index.html",
+   "size": 9368
+  },
+  {
+   "path": "game/high-stakes-quiz-84/index.html",
+   "size": 9419
+  },
+  {
+   "path": "game/horror-cosmic-merge/index.html",
+   "size": 9608
+  },
+  {
+   "path": "game/horror-neon-forest/index.html",
+   "size": 9517
+  },
+  {
+   "path": "game/hospital-tycoon-fantasy-edition/index.html",
+   "size": 9975
+  },
+  {
+   "path": "game/hyper-tile-puzzle-watercolor/index.html",
+   "size": 9658
+  },
+  {
+   "path": "game/idle-clicker-minimalist-edition/index.html",
+   "size": 9033
+  },
+  {
+   "path": "game/idle-pharaoh-237/index.html",
+   "size": 8719
+  },
+  {
+   "path": "game/infinity-party-game/index.html",
+   "size": 9336
+  },
+  {
+   "path": "game/infinity-physics-sandbox-pirate-seas/index.html",
+   "size": 9798
+  },
+  {
+   "path": "game/intense-2-player-strategy/index.html",
+   "size": 9741
+  },
+  {
+   "path": "game/intense-brain-puzzle-saga-daily-seed/index.html",
+   "size": 9732
+  },
+  {
+   "path": "game/intense-cooking-infinity-edition/index.html",
+   "size": 9771
+  },
+  {
+   "path": "game/intense-horror-rise/index.html",
+   "size": 9541
+  },
+  {
+   "path": "game/intense-infinite-runner/index.html",
+   "size": 9612
+  },
+  {
+   "path": "game/intense-maze/index.html",
+   "size": 9104
+  },
+  {
+   "path": "game/intense-pixel-art-rise/index.html",
+   "size": 9641
+  },
+  {
+   "path": "game/intense-samurai-vehicle-combat/index.html",
+   "size": 9837
+  },
+  {
+   "path": "game/intense-school-simulator/index.html",
+   "size": 9905
+  },
+  {
+   "path": "game/intense-sports-rush/index.html",
+   "size": 9539
+  },
+  {
+   "path": "game/iq-test-samurai-edition/index.html",
+   "size": 9128
+  },
+  {
+   "path": "game/iron-gunner/index.html",
+   "size": 8738
+  },
+  {
+   "path": "game/iron-minimalist-logic-gates/index.html",
+   "size": 9432
+  },
+  {
+   "path": "game/isometric-brave-kingdom/index.html",
+   "size": 9733
+  },
+  {
+   "path": "game/isometric-mystic-city/index.html",
+   "size": 9723
+  },
+  {
+   "path": "game/jungle-farm-puzzle/index.html",
+   "size": 9067
+  },
+  {
+   "path": "game/king-rush-checkers-149/index.html",
+   "size": 9447
+  },
+  {
+   "path": "game/leak-pressure-pipes-83/index.html",
+   "size": 9348
+  },
+  {
+   "path": "game/legendary-maze/index.html",
+   "size": 9276
+  },
+  {
+   "path": "game/legendary-minimalist-blast/index.html",
+   "size": 9553
+  },
+  {
+   "path": "game/legendary-modern-flat-war/index.html",
+   "size": 9914
+  },
+  {
+   "path": "game/legendary-traffic-control-food-edition/index.html",
+   "size": 9786
+  },
+  {
+   "path": "game/lightning-ladder-storm-reflexes-24/index.html",
+   "size": 9574
+  },
+  {
+   "path": "game/lives-lens-spotter-160/index.html",
+   "size": 9520
+  },
+  {
+   "path": "game/losing-checkers-147-lose-all-pieces-to-win/index.html",
+   "size": 9711
+  },
+  {
+   "path": "game/low-poly-fall/index.html",
+   "size": 9573
+  },
+  {
+   "path": "game/magic-rise/index.html",
+   "size": 9410
+  },
+  {
+   "path": "game/medieval-arena/index.html",
+   "size": 9459
+  },
+  {
+   "path": "game/mega-halloween-airport-manager/index.html",
+   "size": 9932
+  },
+  {
+   "path": "game/mega-hotseat-strategy/index.html",
+   "size": 9620
+  },
+  {
+   "path": "game/mega-magic-logic-gates/index.html",
+   "size": 9457
+  },
+  {
+   "path": "game/memory-sequence-isometric-edition/index.html",
+   "size": 9514
+  },
+  {
+   "path": "game/minimalist-intense-puzzle/index.html",
+   "size": 9297
+  },
+  {
+   "path": "game/minimalist-vehicle-combat-rush/index.html",
+   "size": 9525
+  },
+  {
+   "path": "game/modern-flat-mystic-master/index.html",
+   "size": 10086
+  },
+  {
+   "path": "game/modern-flat-puzzle-norse-edition/index.html",
+   "size": 9775
+  },
+  {
+   "path": "game/music-sequence-builder-249/index.html",
+   "size": 8899
+  },
+  {
+   "path": "game/music-versus-242/index.html",
+   "size": 8799
+  },
+  {
+   "path": "game/mystic-physics-sandbox/index.html",
+   "size": 9720
+  },
+  {
+   "path": "game/neon-party-game-race-edition/index.html",
+   "size": 9966
+  },
+  {
+   "path": "game/neumorphism-hotseat-strategy-sky/index.html",
+   "size": 9883
+  },
+  {
+   "path": "game/neumorphism-phantom-rush/index.html",
+   "size": 9159
+  },
+  {
+   "path": "game/ninja-arena-king-270/index.html",
+   "size": 8863
+  },
+  {
+   "path": "game/ninja-balance-tower-331/index.html",
+   "size": 8800
+  },
+  {
+   "path": "game/ninja-coin-tower-225/index.html",
+   "size": 8925
+  },
+  {
+   "path": "game/ninja-color-flood-285/index.html",
+   "size": 8838
+  },
+  {
+   "path": "game/ninja-dart-board-321/index.html",
+   "size": 8831
+  },
+  {
+   "path": "game/ninja-dress-up-221/index.html",
+   "size": 8742
+  },
+  {
+   "path": "game/ninja-fog-walk-441/index.html",
+   "size": 8740
+  },
+  {
+   "path": "game/ninja-hotseat-strategy-battle/index.html",
+   "size": 9823
+  },
+  {
+   "path": "game/ninja-ice-flow-367/index.html",
+   "size": 8839
+  },
+  {
+   "path": "game/ninja-ice-slide-267/index.html",
+   "size": 8802
+  },
+  {
+   "path": "game/ninja-lantern-catch-389/index.html",
+   "size": 8861
+  },
+  {
+   "path": "game/ninja-lantern-light-339/index.html",
+   "size": 8859
+  },
+  {
+   "path": "game/ninja-lantern-maze-370/index.html",
+   "size": 8832
+  },
+  {
+   "path": "game/ninja-lantern-toss-428/index.html",
+   "size": 8867
+  },
+  {
+   "path": "game/ninja-leaf-glide-381/index.html",
+   "size": 8868
+  },
+  {
+   "path": "game/ninja-leaf-sweep-461/index.html",
+   "size": 8922
+  },
+  {
+   "path": "game/ninja-logic-gates-273/index.html",
+   "size": 8806
+  },
+  {
+   "path": "game/ninja-mask-match-397/index.html",
+   "size": 8739
+  },
+  {
+   "path": "game/ninja-math-sprint-246/index.html",
+   "size": 8881
+  },
+  {
+   "path": "game/ninja-maze-sprint-233/index.html",
+   "size": 8807
+  },
+  {
+   "path": "game/ninja-mirror-maze-280/index.html",
+   "size": 8903
+  },
+  {
+   "path": "game/ninja-orchard-harvest-312/index.html",
+   "size": 8952
+  },
+  {
+   "path": "game/ninja-pixel-painter-288/index.html",
+   "size": 8840
+  },
+  {
+   "path": "game/ninja-quiz-blitz-252/index.html",
+   "size": 8864
+  },
+  {
+   "path": "game/ninja-reaction-238/index.html",
+   "size": 8865
+  },
+  {
+   "path": "game/ninja-reflex-duel-256/index.html",
+   "size": 8853
+  },
+  {
+   "path": "game/ninja-sand-sprint-401/index.html",
+   "size": 8878
+  },
+  {
+   "path": "game/ninja-scroll-balance-458/index.html",
+   "size": 8923
+  },
+  {
+   "path": "game/ninja-scroll-cargo-360/index.html",
+   "size": 8961
+  },
+  {
+   "path": "game/ninja-scroll-chase-0497/index.html",
+   "size": 8886
+  },
+  {
+   "path": "game/ninja-shadow-clone-413/index.html",
+   "size": 8804
+  },
+  {
+   "path": "game/ninja-shadow-match-296/index.html",
+   "size": 8843
+  },
+  {
+   "path": "game/ninja-shadow-step-350/index.html",
+   "size": 8915
+  },
+  {
+   "path": "game/ninja-silent-step-421/index.html",
+   "size": 8915
+  },
+  {
+   "path": "game/ninja-silver-chronicles/index.html",
+   "size": 9520
+  },
+  {
+   "path": "game/ninja-smoke-bomb-379/index.html",
+   "size": 8862
+  },
+  {
+   "path": "game/ninja-smoke-maze-481/index.html",
+   "size": 8823
+  },
+  {
+   "path": "game/ninja-spell-chain-301/index.html",
+   "size": 8849
+  },
+  {
+   "path": "game/ninja-stack-sort-308/index.html",
+   "size": 8798
+  },
+  {
+   "path": "game/ninja-star-catch-0316/index.html",
+   "size": 8947
+  },
+  {
+   "path": "game/ninja-star-link-385/index.html",
+   "size": 8829
+  },
+  {
+   "path": "game/ninja-star-pin-456/index.html",
+   "size": 8800
+  },
+  {
+   "path": "game/ninja-star-throw-356/index.html",
+   "size": 8808
+  },
+  {
+   "path": "game/ninja-star-trace-467/index.html",
+   "size": 8785
+  },
+  {
+   "path": "game/ninja-stealth-grid-261/index.html",
+   "size": 8844
+  },
+  {
+   "path": "game/ninja-storm-dodge-400/index.html",
+   "size": 8891
+  },
+  {
+   "path": "game/ninja-target-skipper-293/index.html",
+   "size": 8910
+  },
+  {
+   "path": "game/ninja-torch-trail-393/index.html",
+   "size": 8785
+  },
+  {
+   "path": "game/ninja-wall-run-485/index.html",
+   "size": 8813
+  },
+  {
+   "path": "game/ninja-water-drop-374/index.html",
+   "size": 8721
+  },
+  {
+   "path": "game/ninja-web-swing-408/index.html",
+   "size": 8796
+  },
+  {
+   "path": "game/ninja-wind-blade-341/index.html",
+   "size": 8824
+  },
+  {
+   "path": "game/ninja-wind-blade-dance-478/index.html",
+   "size": 8945
+  },
+  {
+   "path": "game/ninja-wind-sprint-327/index.html",
+   "size": 8853
+  },
+  {
+   "path": "game/ninja-windmill-334/index.html",
+   "size": 8765
+  },
+  {
+   "path": "game/ninja-word-scroll-364/index.html",
+   "size": 8819
+  },
+  {
+   "path": "game/norse-shared-screen-racing/index.html",
+   "size": 9472
+  },
+  {
+   "path": "game/ocean-brave-puzzle/index.html",
+   "size": 9491
+  },
+  {
+   "path": "game/ocean-spot-the-difference-empire/index.html",
+   "size": 9354
+  },
+  {
+   "path": "game/overheat-clicker-118/index.html",
+   "size": 8738
+  },
+  {
+   "path": "game/overtime-trivia-168/index.html",
+   "size": 9292
+  },
+  {
+   "path": "game/parkour-cute-animals-edition/index.html",
+   "size": 9507
+  },
+  {
+   "path": "game/party-game-egyptian-edition/index.html",
+   "size": 9704
+  },
+  {
+   "path": "game/party-game-neon-edition/index.html",
+   "size": 9932
+  },
+  {
+   "path": "game/phantom-glassmorphism-hotseat-strategy/index.html",
+   "size": 9960
+  },
+  {
+   "path": "game/phantom-isometric-hidden-object/index.html",
+   "size": 9595
+  },
+  {
+   "path": "game/phantom-side-scroller/index.html",
+   "size": 9648
+  },
+  {
+   "path": "game/phoenix-arctic-legend/index.html",
+   "size": 9767
+  },
+  {
+   "path": "game/phoenix-cute-animals-island/index.html",
+   "size": 9608
+  },
+  {
+   "path": "game/pirate-fruit-ninja-farm/index.html",
+   "size": 9603
+  },
+  {
+   "path": "game/pirate-idle-clicker-fury/index.html",
+   "size": 8919
+  },
+  {
+   "path": "game/pixel-art-golden-challenge/index.html",
+   "size": 9400
+  },
+  {
+   "path": "game/pixel-checkers-fog-243/index.html",
+   "size": 8876
+  },
+  {
+   "path": "game/quantum-run/index.html",
+   "size": 9466
+  },
+  {
+   "path": "game/quantum-samurai-coloring-book/index.html",
+   "size": 8959
+  },
+  {
+   "path": "game/quantum-viking-merge/index.html",
+   "size": 9474
+  },
+  {
+   "path": "game/resource-management-robot-edition/index.html",
+   "size": 9850
+  },
+  {
+   "path": "game/retro-16-bit-quantum-dash/index.html",
+   "size": 9293
+  },
+  {
+   "path": "game/retro-8-bit-school-simulator-rush/index.html",
+   "size": 9668
+  },
+  {
+   "path": "game/retro-lives-arena-113/index.html",
+   "size": 9562
+  },
+  {
+   "path": "game/robot-fighting-gate/index.html",
+   "size": 9668
+  },
+  {
+   "path": "game/robot-intense-dash/index.html",
+   "size": 9436
+  },
+  {
+   "path": "game/robot-rush/index.html",
+   "size": 9662
+  },
+  {
+   "path": "game/robot-world/index.html",
+   "size": 9271
+  },
+  {
+   "path": "game/roundabout-yield-173/index.html",
+   "size": 9663
+  },
+  {
+   "path": "game/row-slide-puzzle-69/index.html",
+   "size": 9392
+  },
+  {
+   "path": "game/royal-anagram-battle-353/index.html",
+   "size": 8868
+  },
+  {
+   "path": "game/royal-archer-range-437/index.html",
+   "size": 8867
+  },
+  {
+   "path": "game/royal-banner-weave-448/index.html",
+   "size": 8865
+  },
+  {
+   "path": "game/royal-bee-garden-363/index.html",
+   "size": 8869
+  },
+  {
+   "path": "game/royal-bell-tower-451/index.html",
+   "size": 8868
+  },
+  {
+   "path": "game/royal-candle-light-328/index.html",
+   "size": 8845
+  },
+  {
+   "path": "game/royal-cannon-aim-407/index.html",
+   "size": 8850
+  },
+  {
+   "path": "game/royal-card-castle-387/index.html",
+   "size": 8850
+  },
+  {
+   "path": "game/royal-card-count-314/index.html",
+   "size": 8891
+  },
+  {
+   "path": "game/royal-charm-match-340/index.html",
+   "size": 8830
+  },
+  {
+   "path": "game/royal-checkers-blitz-234/index.html",
+   "size": 8796
+  },
+  {
+   "path": "game/royal-chess-knight-371/index.html",
+   "size": 8826
+  },
+  {
+   "path": "game/royal-chess-puzzles-266/index.html",
+   "size": 8953
+  },
+  {
+   "path": "game/royal-coin-sort-0496/index.html",
+   "size": 8864
+  },
+  {
+   "path": "game/royal-cooking-dash-228/index.html",
+   "size": 8929
+  },
+  {
+   "path": "game/royal-cooking-party-game/index.html",
+   "size": 9584
+  },
+  {
+   "path": "game/royal-cooking/index.html",
+   "size": 9349
+  },
+  {
+   "path": "game/royal-court-word-duel-247/index.html",
+   "size": 8970
+  },
+  {
+   "path": "game/royal-crown-catch-460/index.html",
+   "size": 8803
+  },
+  {
+   "path": "game/royal-crown-finale-0500/index.html",
+   "size": 8909
+  },
+  {
+   "path": "game/royal-crown-jewels-380/index.html",
+   "size": 8814
+  },
+  {
+   "path": "game/royal-crown-slide-0492/index.html",
+   "size": 8899
+  },
+  {
+   "path": "game/royal-crown-tower-349/index.html",
+   "size": 8876
+  },
+  {
+   "path": "game/royal-deck-duel-278/index.html",
+   "size": 8812
+  },
+  {
+   "path": "game/royal-desert-party-game/index.html",
+   "size": 9516
+  },
+  {
+   "path": "game/royal-dice-stack-375/index.html",
+   "size": 8818
+  },
+  {
+   "path": "game/royal-egg-catch-324/index.html",
+   "size": 8930
+  },
+  {
+   "path": "game/royal-fan-fare-426/index.html",
+   "size": 8830
+  },
+  {
+   "path": "game/royal-feast-balance-394/index.html",
+   "size": 8961
+  },
+  {
+   "path": "game/royal-feast-balance-480/index.html",
+   "size": 8908
+  },
+  {
+   "path": "game/royal-feast-rush-359/index.html",
+   "size": 8835
+  },
+  {
+   "path": "game/royal-gate-keeper-335/index.html",
+   "size": 8895
+  },
+  {
+   "path": "game/royal-goblet-guess-423/index.html",
+   "size": 8825
+  },
+  {
+   "path": "game/royal-goblin-market-483/index.html",
+   "size": 8863
+  },
+  {
+   "path": "game/royal-gradient-traffic-control/index.html",
+   "size": 9861
+  },
+  {
+   "path": "game/royal-hidden-object/index.html",
+   "size": 9374
+  },
+  {
+   "path": "game/royal-idle-kingdom-253/index.html",
+   "size": 8823
+  },
+  {
+   "path": "game/royal-jester-juggle-345/index.html",
+   "size": 8876
+  },
+  {
+   "path": "game/royal-jewel-merge-317/index.html",
+   "size": 8827
+  },
+  {
+   "path": "game/royal-jewel-weigh-430/index.html",
+   "size": 8836
+  },
+  {
+   "path": "game/royal-joust-304/index.html",
+   "size": 8715
+  },
+  {
+   "path": "game/royal-joust-duel-412/index.html",
+   "size": 8799
+  },
+  {
+   "path": "game/royal-key-turn-391/index.html",
+   "size": 8858
+  },
+  {
+   "path": "game/royal-match-towers-274/index.html",
+   "size": 8836
+  },
+  {
+   "path": "game/royal-music-tiles-332/index.html",
+   "size": 8876
+  },
+  {
+   "path": "game/royal-number-maze-283/index.html",
+   "size": 8809
+  },
+  {
+   "path": "game/royal-pipe-connect-257/index.html",
+   "size": 8839
+  },
+  {
+   "path": "game/royal-portrait-mix-378/index.html",
+   "size": 8834
+  },
+  {
+   "path": "game/royal-procession-455/index.html",
+   "size": 8840
+  },
+  {
+   "path": "game/royal-rainbow-398/index.html",
+   "size": 8719
+  },
+  {
+   "path": "game/royal-recipe-mix-383/index.html",
+   "size": 8773
+  },
+  {
+   "path": "game/royal-rhythm-taps-298/index.html",
+   "size": 8844
+  },
+  {
+   "path": "game/royal-soup-stir-368/index.html",
+   "size": 8709
+  },
+  {
+   "path": "game/royal-sword-pull-403/index.html",
+   "size": 8782
+  },
+  {
+   "path": "game/royal-tapestry-469/index.html",
+   "size": 8754
+  },
+  {
+   "path": "game/royal-throne-path-440/index.html",
+   "size": 8781
+  },
+  {
+   "path": "game/royal-throne-sort-390/index.html",
+   "size": 8775
+  },
+  {
+   "path": "game/royal-tile-swap-289/index.html",
+   "size": 8867
+  },
+  {
+   "path": "game/royal-torch-run-415/index.html",
+   "size": 8941
+  },
+  {
+   "path": "game/royal-trumpet-call-443/index.html",
+   "size": 8866
+  },
+  {
+   "path": "game/royal-vault-heist-487/index.html",
+   "size": 8805
+  },
+  {
+   "path": "game/royal-vault-spin-474/index.html",
+   "size": 8808
+  },
+  {
+   "path": "game/royal-word-grid-309/index.html",
+   "size": 8763
+  },
+  {
+   "path": "game/royal-word-ladder-239/index.html",
+   "size": 8872
+  },
+  {
+   "path": "game/royal-word-search-blitz-294/index.html",
+   "size": 8927
+  },
+  {
+   "path": "game/rune-tree-idle-197/index.html",
+   "size": 9050
+  },
+  {
+   "path": "game/samurai-zombie-survival-blast/index.html",
+   "size": 9589
+  },
+  {
+   "path": "game/shadow-christmas-2-player-battle/index.html",
+   "size": 9962
+  },
+  {
+   "path": "game/side-scroller-arctic-edition/index.html",
+   "size": 9772
+  },
+  {
+   "path": "game/silent-music-galaxy/index.html",
+   "size": 9596
+  },
+  {
+   "path": "game/silver-celtic-merge/index.html",
+   "size": 9380
+  },
+  {
+   "path": "game/silver-horror-hexagon-puzzle/index.html",
+   "size": 9430
+  },
+  {
+   "path": "game/simulation-norse/index.html",
+   "size": 9510
+  },
+  {
+   "path": "game/snowboarder-neon-chronicles/index.html",
+   "size": 9746
+  },
+  {
+   "path": "game/space-resource-management-fury/index.html",
+   "size": 9702
+  },
+  {
+   "path": "game/splitter-defense-165/index.html",
+   "size": 9895
+  },
+  {
+   "path": "game/storm-jungle-puzzle/index.html",
+   "size": 9771
+  },
+  {
+   "path": "game/storm-jungle-word-search/index.html",
+   "size": 9276
+  },
+  {
+   "path": "game/super-christmas-blast/index.html",
+   "size": 9563
+  },
+  {
+   "path": "game/super-cooking-samurai-edition/index.html",
+   "size": 9712
+  },
+  {
+   "path": "game/super-desert-shared-screen-racing/index.html",
+   "size": 9683
+  },
+  {
+   "path": "game/super-halloween-farming-simulator/index.html",
+   "size": 9521
+  },
+  {
+   "path": "game/super-hotseat-strategy-christmas-edition/index.html",
+   "size": 9863
+  },
+  {
+   "path": "game/swift-color-sorting-pirate-edition/index.html",
+   "size": 9690
+  },
+  {
+   "path": "game/swift-neon-gunner/index.html",
+   "size": 9708
+  },
+  {
+   "path": "game/swift-watercolor-typing-speed/index.html",
+   "size": 9346
+  },
+  {
+   "path": "game/thunder-retro-chronicles/index.html",
+   "size": 8989
+  },
+  {
+   "path": "game/thunder-sports-zombie-survival/index.html",
+   "size": 9644
+  },
+  {
+   "path": "game/tile-rotation-arctic-edition/index.html",
+   "size": 9562
+  },
+  {
+   "path": "game/time-killer-pirates/index.html",
+   "size": 9811
+  },
+  {
+   "path": "game/token-hunt-slide-217/index.html",
+   "size": 9289
+  },
+  {
+   "path": "game/top-down-shooter-magic-edition/index.html",
+   "size": 9978
+  },
+  {
+   "path": "game/tower-forge-115-click-tower-to-upgrade/index.html",
+   "size": 9774
+  },
+  {
+   "path": "game/train-crossing-212/index.html",
+   "size": 9340
+  },
+  {
+   "path": "game/turbo-airport-manager-steampunk-edition/index.html",
+   "size": 9943
+  },
+  {
+   "path": "game/turbo-christmas-ball-bounce/index.html",
+   "size": 9526
+  },
+  {
+   "path": "game/turbo-christmas-legend/index.html",
+   "size": 9648
+  },
+  {
+   "path": "game/turbo-magic-parkour/index.html",
+   "size": 9505
+  },
+  {
+   "path": "game/ultimate-desert-dungeon/index.html",
+   "size": 9544
+  },
+  {
+   "path": "game/ultimate-endless-runner-pirate-edition/index.html",
+   "size": 9806
+  },
+  {
+   "path": "game/ultimate-match-3-fantasy-edition/index.html",
+   "size": 8982
+  },
+  {
+   "path": "game/versus-puzzle-food-edition/index.html",
+   "size": 9967
+  },
+  {
+   "path": "game/versus-puzzle-horror-edition/index.html",
+   "size": 9970
+  },
+  {
+   "path": "game/vibrant-mega-ocean/index.html",
+   "size": 9232
+  },
+  {
+   "path": "game/viking-farming-sim-adventure/index.html",
+   "size": 9002
+  },
+  {
+   "path": "game/viking-merge-watercolor-edition/index.html",
+   "size": 9758
+  },
+  {
+   "path": "game/villager-escort-131/index.html",
+   "size": 9521
+  },
+  {
+   "path": "game/watercolor-color-match-infinite/index.html",
+   "size": 9648
+  },
+  {
+   "path": "game/watercolor-galaxy/index.html",
+   "size": 9639
+  },
+  {
+   "path": "game/watercolor-merge-holiday-edition/index.html",
+   "size": 9614
+  },
+  {
+   "path": "game/watercolor-physics-sandbox/index.html",
+   "size": 9557
+  },
+  {
+   "path": "game/watercolor-quantum-dash/index.html",
+   "size": 9555
+  },
+  {
+   "path": "game/watercolor-tales/index.html",
+   "size": 9531
+  },
+  {
+   "path": "game/western-physics-sandbox-empire/index.html",
+   "size": 9797
+  },
+  {
+   "path": "game/western-shared-screen-racing-hero/index.html",
+   "size": 9647
+  },
+  {
+   "path": "game/wild-color-match-infinite/index.html",
+   "size": 9667
+  },
+  {
+   "path": "game/wild-desert-storm/index.html",
+   "size": 9763
+  },
+  {
+   "path": "game/wild-glassmorphism-nonogram/index.html",
+   "size": 9593
+  },
+  {
+   "path": "game/wild-greek-myth-shooter/index.html",
+   "size": 9863
+  },
+  {
+   "path": "game/wild-rise/index.html",
+   "size": 9642
+  },
+  {
+   "path": "game/wrap-pipes-102/index.html",
+   "size": 9253
+  },
+  {
+   "path": "game/zen-vibrant-master/index.html",
+   "size": 9525
+  },
+  {
+   "path": "game/zombie-puzzle-liquid-glass/index.html",
+   "size": 9768
+  },
+  {
+   "path": "games-src/batch-01/game-0001.html",
+   "size": 7404
+  },
+  {
+   "path": "games-src/batch-01/game-0002.html",
+   "size": 5848
+  },
+  {
+   "path": "games-src/batch-01/game-0003.html",
+   "size": 5887
+  },
+  {
+   "path": "games-src/batch-01/game-0004.html",
+   "size": 5585
+  },
+  {
+   "path": "games-src/batch-01/game-0005.html",
+   "size": 6646
+  },
+  {
+   "path": "games-src/batch-01/game-0006.html",
+   "size": 6254
+  },
+  {
+   "path": "games-src/batch-01/game-0007.html",
+   "size": 6903
+  },
+  {
+   "path": "games-src/batch-01/game-0008.html",
+   "size": 5573
+  },
+  {
+   "path": "games-src/batch-01/game-0009.html",
+   "size": 5157
+  },
+  {
+   "path": "games-src/batch-01/game-0010.html",
+   "size": 5857
+  },
+  {
+   "path": "games-src/batch-01/game-0011.html",
+   "size": 6990
+  },
+  {
+   "path": "games-src/batch-01/game-0012.html",
+   "size": 5252
+  },
+  {
+   "path": "games-src/batch-01/game-0013.html",
+   "size": 6733
+  },
+  {
+   "path": "games-src/batch-01/game-0014.html",
+   "size": 5717
+  },
+  {
+   "path": "games-src/batch-01/game-0015.html",
+   "size": 5403
+  },
+  {
+   "path": "games-src/batch-01/game-0016.html",
+   "size": 4855
+  },
+  {
+   "path": "games-src/batch-01/game-0017.html",
+   "size": 5560
+  },
+  {
+   "path": "games-src/batch-01/game-0018.html",
+   "size": 5065
+  },
+  {
+   "path": "games-src/batch-01/game-0019.html",
+   "size": 6629
+  },
+  {
+   "path": "games-src/batch-01/game-0020.html",
+   "size": 6740
+  },
+  {
+   "path": "games-src/batch-02/game-0021.html",
+   "size": 4948
+  },
+  {
+   "path": "games-src/batch-02/game-0022.html",
+   "size": 6293
+  },
+  {
+   "path": "games-src/batch-02/game-0023.html",
+   "size": 6399
+  },
+  {
+   "path": "games-src/batch-02/game-0024.html",
+   "size": 5429
+  },
+  {
+   "path": "games-src/batch-02/game-0025.html",
+   "size": 7736
+  },
+  {
+   "path": "games-src/batch-02/game-0026.html",
+   "size": 6124
+  },
+  {
+   "path": "games-src/batch-02/game-0027.html",
+   "size": 5410
+  },
+  {
+   "path": "games-src/batch-02/game-0028.html",
+   "size": 6408
+  },
+  {
+   "path": "games-src/batch-02/game-0029.html",
+   "size": 5658
+  },
+  {
+   "path": "games-src/batch-02/game-0030.html",
+   "size": 5640
+  },
+  {
+   "path": "games-src/batch-02/game-0031.html",
+   "size": 6703
+  },
+  {
+   "path": "games-src/batch-02/game-0032.html",
+   "size": 7459
+  },
+  {
+   "path": "games-src/batch-02/game-0033.html",
+   "size": 7014
+  },
+  {
+   "path": "games-src/batch-02/game-0034.html",
+   "size": 6387
+  },
+  {
+   "path": "games-src/batch-02/game-0035.html",
+   "size": 5549
+  },
+  {
+   "path": "games-src/batch-02/game-0036.html",
+   "size": 6142
+  },
+  {
+   "path": "games-src/batch-02/game-0037.html",
+   "size": 6290
+  },
+  {
+   "path": "games-src/batch-02/game-0038.html",
+   "size": 6621
+  },
+  {
+   "path": "games-src/batch-02/game-0039.html",
+   "size": 6601
+  },
+  {
+   "path": "games-src/batch-02/game-0040.html",
+   "size": 5811
+  },
+  {
+   "path": "games-src/batch-03/game-0041.html",
+   "size": 6341
+  },
+  {
+   "path": "games-src/batch-03/game-0042.html",
+   "size": 6542
+  },
+  {
+   "path": "games-src/batch-03/game-0043.html",
+   "size": 8258
+  },
+  {
+   "path": "games-src/batch-03/game-0044.html",
+   "size": 4131
+  },
+  {
+   "path": "games-src/batch-03/game-0045.html",
+   "size": 5327
+  },
+  {
+   "path": "games-src/batch-03/game-0046.html",
+   "size": 6921
+  },
+  {
+   "path": "games-src/batch-03/game-0047.html",
+   "size": 5748
+  },
+  {
+   "path": "games-src/batch-03/game-0048.html",
+   "size": 6898
+  },
+  {
+   "path": "games-src/batch-03/game-0049.html",
+   "size": 5897
+  },
+  {
+   "path": "games-src/batch-03/game-0050.html",
+   "size": 5657
+  },
+  {
+   "path": "games-src/batch-03/game-0051.html",
+   "size": 5959
+  },
+  {
+   "path": "games-src/batch-03/game-0052.html",
+   "size": 6039
+  },
+  {
+   "path": "games-src/batch-03/game-0053.html",
+   "size": 6709
+  },
+  {
+   "path": "games-src/batch-03/game-0054.html",
+   "size": 6262
+  },
+  {
+   "path": "games-src/batch-03/game-0055.html",
+   "size": 6925
+  },
+  {
+   "path": "games-src/batch-03/game-0056.html",
+   "size": 6229
+  },
+  {
+   "path": "games-src/batch-03/game-0057.html",
+   "size": 7118
+  },
+  {
+   "path": "games-src/batch-03/game-0058.html",
+   "size": 5271
+  },
+  {
+   "path": "games-src/batch-03/game-0059.html",
+   "size": 6043
+  },
+  {
+   "path": "games-src/batch-03/game-0060.html",
+   "size": 6606
+  },
+  {
+   "path": "games-src/batch-04/game-0061.html",
+   "size": 6278
+  },
+  {
+   "path": "games-src/batch-04/game-0062.html",
+   "size": 6304
+  },
+  {
+   "path": "games-src/batch-04/game-0063.html",
+   "size": 5623
+  },
+  {
+   "path": "games-src/batch-04/game-0064.html",
+   "size": 5448
+  },
+  {
+   "path": "games-src/batch-04/game-0065.html",
+   "size": 5911
+  },
+  {
+   "path": "games-src/batch-04/game-0066.html",
+   "size": 6458
+  },
+  {
+   "path": "games-src/batch-04/game-0067.html",
+   "size": 4418
+  },
+  {
+   "path": "games-src/batch-04/game-0068.html",
+   "size": 5607
+  },
+  {
+   "path": "games-src/batch-04/game-0069.html",
+   "size": 5294
+  },
+  {
+   "path": "games-src/batch-04/game-0070.html",
+   "size": 6394
+  },
+  {
+   "path": "games-src/batch-04/game-0071.html",
+   "size": 7738
+  },
+  {
+   "path": "games-src/batch-04/game-0072.html",
+   "size": 4854
+  },
+  {
+   "path": "games-src/batch-04/game-0073.html",
+   "size": 5982
+  },
+  {
+   "path": "games-src/batch-04/game-0074.html",
+   "size": 6639
+  },
+  {
+   "path": "games-src/batch-04/game-0075.html",
+   "size": 6698
+  },
+  {
+   "path": "games-src/batch-04/game-0076.html",
+   "size": 5550
+  },
+  {
+   "path": "games-src/batch-04/game-0077.html",
+   "size": 5376
+  },
+  {
+   "path": "games-src/batch-04/game-0078.html",
+   "size": 5520
+  },
+  {
+   "path": "games-src/batch-04/game-0079.html",
+   "size": 5037
+  },
+  {
+   "path": "games-src/batch-04/game-0080.html",
+   "size": 6570
+  },
+  {
+   "path": "games-src/batch-05/game-0081.html",
+   "size": 4905
+  },
+  {
+   "path": "games-src/batch-05/game-0082.html",
+   "size": 4665
+  },
+  {
+   "path": "games-src/batch-05/game-0083.html",
+   "size": 7667
+  },
+  {
+   "path": "games-src/batch-05/game-0084.html",
+   "size": 6489
+  },
+  {
+   "path": "games-src/batch-05/game-0085.html",
+   "size": 5466
+  },
+  {
+   "path": "games-src/batch-05/game-0086.html",
+   "size": 4617
+  },
+  {
+   "path": "games-src/batch-05/game-0087.html",
+   "size": 6012
+  },
+  {
+   "path": "games-src/batch-05/game-0088.html",
+   "size": 6403
+  },
+  {
+   "path": "games-src/batch-05/game-0089.html",
+   "size": 4637
+  },
+  {
+   "path": "games-src/batch-05/game-0090.html",
+   "size": 7320
+  },
+  {
+   "path": "games-src/batch-05/game-0091.html",
+   "size": 6605
+  },
+  {
+   "path": "games-src/batch-05/game-0092.html",
+   "size": 7057
+  },
+  {
+   "path": "games-src/batch-05/game-0093.html",
+   "size": 6695
+  },
+  {
+   "path": "games-src/batch-05/game-0094.html",
+   "size": 5707
+  },
+  {
+   "path": "games-src/batch-05/game-0095.html",
+   "size": 6298
+  },
+  {
+   "path": "games-src/batch-05/game-0096.html",
+   "size": 6026
+  },
+  {
+   "path": "games-src/batch-05/game-0097.html",
+   "size": 6146
+  },
+  {
+   "path": "games-src/batch-05/game-0098.html",
+   "size": 5447
+  },
+  {
+   "path": "games-src/batch-05/game-0099.html",
+   "size": 5880
+  },
+  {
+   "path": "games-src/batch-05/game-0100.html",
+   "size": 5478
+  },
+  {
+   "path": "games-src/batch-06/game-0101.html",
+   "size": 6567
+  },
+  {
+   "path": "games-src/batch-06/game-0102.html",
+   "size": 7246
+  },
+  {
+   "path": "games-src/batch-06/game-0103.html",
+   "size": 6576
+  },
+  {
+   "path": "games-src/batch-06/game-0104.html",
+   "size": 6152
+  },
+  {
+   "path": "games-src/batch-06/game-0105.html",
+   "size": 6553
+  },
+  {
+   "path": "games-src/batch-06/game-0106.html",
+   "size": 4317
+  },
+  {
+   "path": "games-src/batch-06/game-0107.html",
+   "size": 4947
+  },
+  {
+   "path": "games-src/batch-06/game-0108.html",
+   "size": 6178
+  },
+  {
+   "path": "games-src/batch-06/game-0109.html",
+   "size": 5117
+  },
+  {
+   "path": "games-src/batch-06/game-0110.html",
+   "size": 5536
+  },
+  {
+   "path": "games-src/batch-06/game-0111.html",
+   "size": 6488
+  },
+  {
+   "path": "games-src/batch-06/game-0112.html",
+   "size": 4527
+  },
+  {
+   "path": "games-src/batch-06/game-0113.html",
+   "size": 6387
+  },
+  {
+   "path": "games-src/batch-06/game-0114.html",
+   "size": 6510
+  },
+  {
+   "path": "games-src/batch-06/game-0115.html",
+   "size": 7605
+  },
+  {
+   "path": "games-src/batch-06/game-0116.html",
+   "size": 5869
+  },
+  {
+   "path": "games-src/batch-06/game-0117.html",
+   "size": 6318
+  },
+  {
+   "path": "games-src/batch-06/game-0118.html",
+   "size": 7200
+  },
+  {
+   "path": "games-src/batch-06/game-0119.html",
+   "size": 5464
+  },
+  {
+   "path": "games-src/batch-06/game-0120.html",
+   "size": 5633
+  },
+  {
+   "path": "games-src/batch-07/game-0121.html",
+   "size": 6170
+  },
+  {
+   "path": "games-src/batch-07/game-0122.html",
+   "size": 5171
+  },
+  {
+   "path": "games-src/batch-07/game-0123.html",
+   "size": 6803
+  },
+  {
+   "path": "games-src/batch-07/game-0124.html",
+   "size": 5851
+  },
+  {
+   "path": "games-src/batch-07/game-0125.html",
+   "size": 6797
+  },
+  {
+   "path": "games-src/batch-07/game-0126.html",
+   "size": 6161
+  },
+  {
+   "path": "games-src/batch-07/game-0127.html",
+   "size": 6613
+  },
+  {
+   "path": "games-src/batch-07/game-0128.html",
+   "size": 6415
+  },
+  {
+   "path": "games-src/batch-07/game-0129.html",
+   "size": 6861
+  },
+  {
+   "path": "games-src/batch-07/game-0130.html",
+   "size": 6067
+  },
+  {
+   "path": "games-src/batch-07/game-0131.html",
+   "size": 6948
+  },
+  {
+   "path": "games-src/batch-07/game-0132.html",
+   "size": 5843
+  },
+  {
+   "path": "games-src/batch-07/game-0133.html",
+   "size": 5360
+  },
+  {
+   "path": "games-src/batch-07/game-0134.html",
+   "size": 5847
+  },
+  {
+   "path": "games-src/batch-07/game-0135.html",
+   "size": 5734
+  },
+  {
+   "path": "games-src/batch-07/game-0136.html",
+   "size": 5444
+  },
+  {
+   "path": "games-src/batch-07/game-0137.html",
+   "size": 4947
+  },
+  {
+   "path": "games-src/batch-07/game-0138.html",
+   "size": 5731
+  },
+  {
+   "path": "games-src/batch-07/game-0139.html",
+   "size": 6161
+  },
+  {
+   "path": "games-src/batch-07/game-0140.html",
+   "size": 6960
+  },
+  {
+   "path": "games-src/batch-08/game-0141.html",
+   "size": 5814
+  },
+  {
+   "path": "games-src/batch-08/game-0142.html",
+   "size": 6604
+  },
+  {
+   "path": "games-src/batch-08/game-0143.html",
+   "size": 6565
+  },
+  {
+   "path": "games-src/batch-08/game-0144.html",
+   "size": 7374
+  },
+  {
+   "path": "games-src/batch-08/game-0145.html",
+   "size": 5852
+  },
+  {
+   "path": "games-src/batch-08/game-0146.html",
+   "size": 5895
+  },
+  {
+   "path": "games-src/batch-08/game-0147.html",
+   "size": 6342
+  },
+  {
+   "path": "games-src/batch-08/game-0148.html",
+   "size": 5997
+  },
+  {
+   "path": "games-src/batch-08/game-0149.html",
+   "size": 7350
+  },
+  {
+   "path": "games-src/batch-08/game-0150.html",
+   "size": 6118
+  },
+  {
+   "path": "games-src/batch-08/game-0151.html",
+   "size": 7033
+  },
+  {
+   "path": "games-src/batch-08/game-0152.html",
+   "size": 7214
+  },
+  {
+   "path": "games-src/batch-08/game-0153.html",
+   "size": 5384
+  },
+  {
+   "path": "games-src/batch-08/game-0154.html",
+   "size": 5598
+  },
+  {
+   "path": "games-src/batch-08/game-0155.html",
+   "size": 5353
+  },
+  {
+   "path": "games-src/batch-08/game-0156.html",
+   "size": 6293
+  },
+  {
+   "path": "games-src/batch-08/game-0157.html",
+   "size": 5315
+  },
+  {
+   "path": "games-src/batch-08/game-0158.html",
+   "size": 4964
+  },
+  {
+   "path": "games-src/batch-08/game-0159.html",
+   "size": 5474
+  },
+  {
+   "path": "games-src/batch-08/game-0160.html",
+   "size": 7393
+  },
+  {
+   "path": "games-src/batch-09/game-0161.html",
+   "size": 5950
+  },
+  {
+   "path": "games-src/batch-09/game-0162.html",
+   "size": 6519
+  },
+  {
+   "path": "games-src/batch-09/game-0163.html",
+   "size": 5811
+  },
+  {
+   "path": "games-src/batch-09/game-0164.html",
+   "size": 5664
+  },
+  {
+   "path": "games-src/batch-09/game-0165.html",
+   "size": 7542
+  },
+  {
+   "path": "games-src/batch-09/game-0166.html",
+   "size": 6532
+  },
+  {
+   "path": "games-src/batch-09/game-0167.html",
+   "size": 4801
+  },
+  {
+   "path": "games-src/batch-09/game-0168.html",
+   "size": 7279
+  },
+  {
+   "path": "games-src/batch-09/game-0169.html",
+   "size": 6128
+  },
+  {
+   "path": "games-src/batch-09/game-0170.html",
+   "size": 4655
+  },
+  {
+   "path": "games-src/batch-09/game-0171.html",
+   "size": 5203
+  },
+  {
+   "path": "games-src/batch-09/game-0172.html",
+   "size": 6178
+  },
+  {
+   "path": "games-src/batch-09/game-0173.html",
+   "size": 6216
+  },
+  {
+   "path": "games-src/batch-09/game-0174.html",
+   "size": 5917
+  },
+  {
+   "path": "games-src/batch-09/game-0175.html",
+   "size": 5108
+  },
+  {
+   "path": "games-src/batch-09/game-0176.html",
+   "size": 6509
+  },
+  {
+   "path": "games-src/batch-09/game-0177.html",
+   "size": 5575
+  },
+  {
+   "path": "games-src/batch-09/game-0178.html",
+   "size": 4534
+  },
+  {
+   "path": "games-src/batch-09/game-0179.html",
+   "size": 5363
+  },
+  {
+   "path": "games-src/batch-09/game-0180.html",
+   "size": 6199
+  },
+  {
+   "path": "games-src/batch-10/game-0181.html",
+   "size": 6045
+  },
+  {
+   "path": "games-src/batch-10/game-0182.html",
+   "size": 5896
+  },
+  {
+   "path": "games-src/batch-10/game-0183.html",
+   "size": 5778
+  },
+  {
+   "path": "games-src/batch-10/game-0184.html",
+   "size": 6154
+  },
+  {
+   "path": "games-src/batch-10/game-0185.html",
+   "size": 6562
+  },
+  {
+   "path": "games-src/batch-10/game-0186.html",
+   "size": 8109
+  },
+  {
+   "path": "games-src/batch-10/game-0187.html",
+   "size": 6175
+  },
+  {
+   "path": "games-src/batch-10/game-0188.html",
+   "size": 6581
+  },
+  {
+   "path": "games-src/batch-10/game-0189.html",
+   "size": 6853
+  },
+  {
+   "path": "games-src/batch-10/game-0190.html",
+   "size": 6143
+  },
+  {
+   "path": "games-src/batch-10/game-0191.html",
+   "size": 6841
+  },
+  {
+   "path": "games-src/batch-10/game-0192.html",
+   "size": 7496
+  },
+  {
+   "path": "games-src/batch-10/game-0193.html",
+   "size": 5130
+  },
+  {
+   "path": "games-src/batch-10/game-0194.html",
+   "size": 5546
+  },
+  {
+   "path": "games-src/batch-10/game-0195.html",
+   "size": 5629
+  },
+  {
+   "path": "games-src/batch-10/game-0196.html",
+   "size": 4496
+  },
+  {
+   "path": "games-src/batch-10/game-0197.html",
+   "size": 6065
+  },
+  {
+   "path": "games-src/batch-10/game-0198.html",
+   "size": 7352
+  },
+  {
+   "path": "games-src/batch-10/game-0199.html",
+   "size": 5976
+  },
+  {
+   "path": "games-src/batch-10/game-0200.html",
+   "size": 5891
+  },
+  {
+   "path": "games-src/batch-11/game-0201.html",
+   "size": 6210
+  },
+  {
+   "path": "games-src/batch-11/game-0202.html",
+   "size": 6301
+  },
+  {
+   "path": "games-src/batch-11/game-0203.html",
+   "size": 5737
+  },
+  {
+   "path": "games-src/batch-11/game-0204.html",
+   "size": 6170
+  },
+  {
+   "path": "games-src/batch-11/game-0205.html",
+   "size": 5949
+  },
+  {
+   "path": "games-src/batch-11/game-0206.html",
+   "size": 6490
+  },
+  {
+   "path": "games-src/batch-11/game-0207.html",
+   "size": 5955
+  },
+  {
+   "path": "games-src/batch-11/game-0208.html",
+   "size": 4584
+  },
+  {
+   "path": "games-src/batch-11/game-0209.html",
+   "size": 5933
+  },
+  {
+   "path": "games-src/batch-11/game-0210.html",
+   "size": 7279
+  },
+  {
+   "path": "games-src/batch-11/game-0211.html",
+   "size": 5028
+  },
+  {
+   "path": "games-src/batch-11/game-0212.html",
+   "size": 6644
+  },
+  {
+   "path": "games-src/batch-11/game-0213.html",
+   "size": 6763
+  },
+  {
+   "path": "games-src/batch-11/game-0214.html",
+   "size": 6600
+  },
+  {
+   "path": "games-src/batch-11/game-0215.html",
+   "size": 6614
+  },
+  {
+   "path": "games-src/batch-11/game-0216.html",
+   "size": 5632
+  },
+  {
+   "path": "games-src/batch-11/game-0217.html",
+   "size": 5432
+  },
+  {
+   "path": "games-src/batch-11/game-0218.html",
+   "size": 5847
+  },
+  {
+   "path": "games-src/batch-11/game-0219.html",
+   "size": 5735
+  },
+  {
+   "path": "games-src/batch-11/game-0220.html",
+   "size": 5552
+  },
+  {
+   "path": "games-src/batch-12/game-0221.html",
+   "size": 4649
+  },
+  {
+   "path": "games-src/batch-12/game-0222.html",
+   "size": 4391
+  },
+  {
+   "path": "games-src/batch-12/game-0223.html",
+   "size": 4112
+  },
+  {
+   "path": "games-src/batch-12/game-0224.html",
+   "size": 4106
+  },
+  {
+   "path": "games-src/batch-12/game-0225.html",
+   "size": 3689
+  },
+  {
+   "path": "games-src/batch-12/game-0226.html",
+   "size": 2960
+  },
+  {
+   "path": "games-src/batch-12/game-0227.html",
+   "size": 3524
+  },
+  {
+   "path": "games-src/batch-12/game-0228.html",
+   "size": 5046
+  },
+  {
+   "path": "games-src/batch-12/game-0229.html",
+   "size": 3972
+  },
+  {
+   "path": "games-src/batch-12/game-0230.html",
+   "size": 4284
+  },
+  {
+   "path": "games-src/batch-12/game-0231.html",
+   "size": 4940
+  },
+  {
+   "path": "games-src/batch-12/game-0232.html",
+   "size": 4625
+  },
+  {
+   "path": "games-src/batch-12/game-0233.html",
+   "size": 4100
+  },
+  {
+   "path": "games-src/batch-12/game-0234.html",
+   "size": 4866
+  },
+  {
+   "path": "games-src/batch-12/game-0235.html",
+   "size": 4490
+  },
+  {
+   "path": "games-src/batch-12/game-0236.html",
+   "size": 4464
+  },
+  {
+   "path": "games-src/batch-12/game-0237.html",
+   "size": 3810
+  },
+  {
+   "path": "games-src/batch-12/game-0238.html",
+   "size": 4171
+  },
+  {
+   "path": "games-src/batch-12/game-0239.html",
+   "size": 5030
+  },
+  {
+   "path": "games-src/batch-12/game-0240.html",
+   "size": 4099
+  },
+  {
+   "path": "games-src/batch-13/game-0241.html",
+   "size": 4917
+  },
+  {
+   "path": "games-src/batch-13/game-0242.html",
+   "size": 4242
+  },
+  {
+   "path": "games-src/batch-13/game-0243.html",
+   "size": 4906
+  },
+  {
+   "path": "games-src/batch-13/game-0244.html",
+   "size": 4339
+  },
+  {
+   "path": "games-src/batch-13/game-0245.html",
+   "size": 4134
+  },
+  {
+   "path": "games-src/batch-13/game-0246.html",
+   "size": 5201
+  },
+  {
+   "path": "games-src/batch-13/game-0247.html",
+   "size": 4714
+  },
+  {
+   "path": "games-src/batch-13/game-0248.html",
+   "size": 4250
+  },
+  {
+   "path": "games-src/batch-13/game-0249.html",
+   "size": 3941
+  },
+  {
+   "path": "games-src/batch-13/game-0250.html",
+   "size": 3993
+  },
+  {
+   "path": "games-src/batch-13/game-0251.html",
+   "size": 4744
+  },
+  {
+   "path": "games-src/batch-13/game-0252.html",
+   "size": 4110
+  },
+  {
+   "path": "games-src/batch-13/game-0253.html",
+   "size": 4283
+  },
+  {
+   "path": "games-src/batch-13/game-0254.html",
+   "size": 4576
+  },
+  {
+   "path": "games-src/batch-13/game-0255.html",
+   "size": 5325
+  },
+  {
+   "path": "games-src/batch-13/game-0256.html",
+   "size": 3906
+  },
+  {
+   "path": "games-src/batch-13/game-0257.html",
+   "size": 5216
+  },
+  {
+   "path": "games-src/batch-13/game-0258.html",
+   "size": 4861
+  },
+  {
+   "path": "games-src/batch-13/game-0259.html",
+   "size": 4992
+  },
+  {
+   "path": "games-src/batch-13/game-0260.html",
+   "size": 4065
+  },
+  {
+   "path": "games-src/batch-14/game-0261.html",
+   "size": 5082
+  },
+  {
+   "path": "games-src/batch-14/game-0262.html",
+   "size": 6362
+  },
+  {
+   "path": "games-src/batch-14/game-0263.html",
+   "size": 4126
+  },
+  {
+   "path": "games-src/batch-14/game-0264.html",
+   "size": 4325
+  },
+  {
+   "path": "games-src/batch-14/game-0265.html",
+   "size": 4178
+  },
+  {
+   "path": "games-src/batch-14/game-0266.html",
+   "size": 4294
+  },
+  {
+   "path": "games-src/batch-14/game-0267.html",
+   "size": 4180
+  },
+  {
+   "path": "games-src/batch-14/game-0268.html",
+   "size": 4995
+  },
+  {
+   "path": "games-src/batch-14/game-0269.html",
+   "size": 3854
+  },
+  {
+   "path": "games-src/batch-14/game-0270.html",
+   "size": 4925
+  },
+  {
+   "path": "games-src/batch-14/game-0271.html",
+   "size": 3538
+  },
+  {
+   "path": "games-src/batch-14/game-0272.html",
+   "size": 6278
+  },
+  {
+   "path": "games-src/batch-14/game-0273.html",
+   "size": 4331
+  },
+  {
+   "path": "games-src/batch-14/game-0274.html",
+   "size": 3843
+  },
+  {
+   "path": "games-src/batch-14/game-0275.html",
+   "size": 5067
+  },
+  {
+   "path": "games-src/batch-14/game-0276.html",
+   "size": 4995
+  },
+  {
+   "path": "games-src/batch-14/game-0277.html",
+   "size": 4481
+  },
+  {
+   "path": "games-src/batch-14/game-0278.html",
+   "size": 4367
+  },
+  {
+   "path": "games-src/batch-14/game-0279.html",
+   "size": 5646
+  },
+  {
+   "path": "games-src/batch-14/game-0280.html",
+   "size": 5009
+  },
+  {
+   "path": "games-src/batch-15/game-0281.html",
+   "size": 5167
+  },
+  {
+   "path": "games-src/batch-15/game-0282.html",
+   "size": 3409
+  },
+  {
+   "path": "games-src/batch-15/game-0283.html",
+   "size": 4083
+  },
+  {
+   "path": "games-src/batch-15/game-0284.html",
+   "size": 4025
+  },
+  {
+   "path": "games-src/batch-15/game-0285.html",
+   "size": 3716
+  },
+  {
+   "path": "games-src/batch-15/game-0286.html",
+   "size": 4303
+  },
+  {
+   "path": "games-src/batch-15/game-0287.html",
+   "size": 5339
+  },
+  {
+   "path": "games-src/batch-15/game-0288.html",
+   "size": 4133
+  },
+  {
+   "path": "games-src/batch-15/game-0289.html",
+   "size": 4513
+  },
+  {
+   "path": "games-src/batch-15/game-0290.html",
+   "size": 3870
+  },
+  {
+   "path": "games-src/batch-15/game-0291.html",
+   "size": 4011
+  },
+  {
+   "path": "games-src/batch-15/game-0292.html",
+   "size": 4135
+  },
+  {
+   "path": "games-src/batch-15/game-0293.html",
+   "size": 4149
+  },
+  {
+   "path": "games-src/batch-15/game-0294.html",
+   "size": 5027
+  },
+  {
+   "path": "games-src/batch-15/game-0295.html",
+   "size": 3862
+  },
+  {
+   "path": "games-src/batch-15/game-0296.html",
+   "size": 3606
+  },
+  {
+   "path": "games-src/batch-15/game-0297.html",
+   "size": 4031
+  },
+  {
+   "path": "games-src/batch-15/game-0298.html",
+   "size": 3577
+  },
+  {
+   "path": "games-src/batch-15/game-0299.html",
+   "size": 4658
+  },
+  {
+   "path": "games-src/batch-15/game-0300.html",
+   "size": 4721
+  },
+  {
+   "path": "games-src/batch-16/game-0301.html",
+   "size": 4470
+  },
+  {
+   "path": "games-src/batch-16/game-0302.html",
+   "size": 4190
+  },
+  {
+   "path": "games-src/batch-16/game-0303.html",
+   "size": 4277
+  },
+  {
+   "path": "games-src/batch-16/game-0304.html",
+   "size": 3838
+  },
+  {
+   "path": "games-src/batch-16/game-0305.html",
+   "size": 6665
+  },
+  {
+   "path": "games-src/batch-16/game-0306.html",
+   "size": 4352
+  },
+  {
+   "path": "games-src/batch-16/game-0307.html",
+   "size": 4552
+  },
+  {
+   "path": "games-src/batch-16/game-0308.html",
+   "size": 4004
+  },
+  {
+   "path": "games-src/batch-16/game-0309.html",
+   "size": 4653
+  },
+  {
+   "path": "games-src/batch-16/game-0310.html",
+   "size": 4650
+  },
+  {
+   "path": "games-src/batch-16/game-0311.html",
+   "size": 3460
+  },
+  {
+   "path": "games-src/batch-16/game-0312.html",
+   "size": 4098
+  },
+  {
+   "path": "games-src/batch-16/game-0313.html",
+   "size": 4388
+  },
+  {
+   "path": "games-src/batch-16/game-0314.html",
+   "size": 3435
+  },
+  {
+   "path": "games-src/batch-16/game-0315.html",
+   "size": 4490
+  },
+  {
+   "path": "games-src/batch-16/game-0316.html",
+   "size": 3582
+  },
+  {
+   "path": "games-src/batch-16/game-0317.html",
+   "size": 3397
+  },
+  {
+   "path": "games-src/batch-16/game-0318.html",
+   "size": 3575
+  },
+  {
+   "path": "games-src/batch-16/game-0319.html",
+   "size": 3394
+  },
+  {
+   "path": "games-src/batch-16/game-0320.html",
+   "size": 3889
+  },
+  {
+   "path": "games-src/batch-17/game-0321.html",
+   "size": 3853
+  },
+  {
+   "path": "games-src/batch-17/game-0322.html",
+   "size": 4651
+  },
+  {
+   "path": "games-src/batch-17/game-0323.html",
+   "size": 4124
+  },
+  {
+   "path": "games-src/batch-17/game-0324.html",
+   "size": 4151
+  },
+  {
+   "path": "games-src/batch-17/game-0325.html",
+   "size": 4046
+  },
+  {
+   "path": "games-src/batch-17/game-0326.html",
+   "size": 3641
+  },
+  {
+   "path": "games-src/batch-17/game-0327.html",
+   "size": 4146
+  },
+  {
+   "path": "games-src/batch-17/game-0328.html",
+   "size": 3597
+  },
+  {
+   "path": "games-src/batch-17/game-0329.html",
+   "size": 4244
+  },
+  {
+   "path": "games-src/batch-17/game-0330.html",
+   "size": 4223
+  },
+  {
+   "path": "games-src/batch-17/game-0331.html",
+   "size": 3677
+  },
+  {
+   "path": "games-src/batch-17/game-0332.html",
+   "size": 3897
+  },
+  {
+   "path": "games-src/batch-17/game-0333.html",
+   "size": 3951
+  },
+  {
+   "path": "games-src/batch-17/game-0334.html",
+   "size": 3977
+  },
+  {
+   "path": "games-src/batch-17/game-0335.html",
+   "size": 3934
+  },
+  {
+   "path": "games-src/batch-17/game-0336.html",
+   "size": 3521
+  },
+  {
+   "path": "games-src/batch-17/game-0337.html",
+   "size": 3971
+  },
+  {
+   "path": "games-src/batch-17/game-0338.html",
+   "size": 3939
+  },
+  {
+   "path": "games-src/batch-17/game-0339.html",
+   "size": 3902
+  },
+  {
+   "path": "games-src/batch-17/game-0340.html",
+   "size": 4307
+  },
+  {
+   "path": "games-src/batch-18/game-0341.html",
+   "size": 4788
+  },
+  {
+   "path": "games-src/batch-18/game-0342.html",
+   "size": 4112
+  },
+  {
+   "path": "games-src/batch-18/game-0343.html",
+   "size": 4773
+  },
+  {
+   "path": "games-src/batch-18/game-0344.html",
+   "size": 4106
+  },
+  {
+   "path": "games-src/batch-18/game-0345.html",
+   "size": 3723
+  },
+  {
+   "path": "games-src/batch-18/game-0346.html",
+   "size": 4208
+  },
+  {
+   "path": "games-src/batch-18/game-0347.html",
+   "size": 4190
+  },
+  {
+   "path": "games-src/batch-18/game-0348.html",
+   "size": 4940
+  },
+  {
+   "path": "games-src/batch-18/game-0349.html",
+   "size": 4698
+  },
+  {
+   "path": "games-src/batch-18/game-0350.html",
+   "size": 4235
+  },
+  {
+   "path": "games-src/batch-18/game-0351.html",
+   "size": 5025
+  },
+  {
+   "path": "games-src/batch-18/game-0352.html",
+   "size": 4391
+  },
+  {
+   "path": "games-src/batch-18/game-0353.html",
+   "size": 5043
+  },
+  {
+   "path": "games-src/batch-18/game-0354.html",
+   "size": 4774
+  },
+  {
+   "path": "games-src/batch-18/game-0355.html",
+   "size": 3635
+  },
+  {
+   "path": "games-src/batch-18/game-0356.html",
+   "size": 4108
+  },
+  {
+   "path": "games-src/batch-18/game-0357.html",
+   "size": 3472
+  },
+  {
+   "path": "games-src/batch-18/game-0358.html",
+   "size": 3270
+  },
+  {
+   "path": "games-src/batch-18/game-0359.html",
+   "size": 5120
+  },
+  {
+   "path": "games-src/batch-18/game-0360.html",
+   "size": 4790
+  },
+  {
+   "path": "games-src/batch-19/game-0361.html",
+   "size": 4742
+  },
+  {
+   "path": "games-src/batch-19/game-0362.html",
+   "size": 4956
+  },
+  {
+   "path": "games-src/batch-19/game-0363.html",
+   "size": 4861
+  },
+  {
+   "path": "games-src/batch-19/game-0364.html",
+   "size": 4582
+  },
+  {
+   "path": "games-src/batch-19/game-0365.html",
+   "size": 5542
+  },
+  {
+   "path": "games-src/batch-19/game-0366.html",
+   "size": 4164
+  },
+  {
+   "path": "games-src/batch-19/game-0367.html",
+   "size": 4696
+  },
+  {
+   "path": "games-src/batch-19/game-0368.html",
+   "size": 4037
+  },
+  {
+   "path": "games-src/batch-19/game-0369.html",
+   "size": 4141
+  },
+  {
+   "path": "games-src/batch-19/game-0370.html",
+   "size": 4145
+  },
+  {
+   "path": "games-src/batch-19/game-0371.html",
+   "size": 3636
+  },
+  {
+   "path": "games-src/batch-19/game-0372.html",
+   "size": 4494
+  },
+  {
+   "path": "games-src/batch-19/game-0373.html",
+   "size": 6009
+  },
+  {
+   "path": "games-src/batch-19/game-0374.html",
+   "size": 5122
+  },
+  {
+   "path": "games-src/batch-19/game-0375.html",
+   "size": 3297
+  },
+  {
+   "path": "games-src/batch-19/game-0376.html",
+   "size": 4532
+  },
+  {
+   "path": "games-src/batch-19/game-0377.html",
+   "size": 4348
+  },
+  {
+   "path": "games-src/batch-19/game-0378.html",
+   "size": 3433
+  },
+  {
+   "path": "games-src/batch-19/game-0379.html",
+   "size": 5318
+  },
+  {
+   "path": "games-src/batch-19/game-0380.html",
+   "size": 4921
+  },
+  {
+   "path": "games-src/batch-20/game-0381.html",
+   "size": 4163
+  },
+  {
+   "path": "games-src/batch-20/game-0382.html",
+   "size": 4688
+  },
+  {
+   "path": "games-src/batch-20/game-0383.html",
+   "size": 4059
+  },
+  {
+   "path": "games-src/batch-20/game-0384.html",
+   "size": 3785
+  },
+  {
+   "path": "games-src/batch-20/game-0385.html",
+   "size": 4593
+  },
+  {
+   "path": "games-src/batch-20/game-0386.html",
+   "size": 4081
+  },
+  {
+   "path": "games-src/batch-20/game-0387.html",
+   "size": 4122
+  },
+  {
+   "path": "games-src/batch-20/game-0388.html",
+   "size": 4297
+  },
+  {
+   "path": "games-src/batch-20/game-0389.html",
+   "size": 4530
+  },
+  {
+   "path": "games-src/batch-20/game-0390.html",
+   "size": 4224
+  },
+  {
+   "path": "games-src/batch-20/game-0391.html",
+   "size": 4253
+  },
+  {
+   "path": "games-src/batch-20/game-0392.html",
+   "size": 4505
+  },
+  {
+   "path": "games-src/batch-20/game-0393.html",
+   "size": 3864
+  },
+  {
+   "path": "games-src/batch-20/game-0394.html",
+   "size": 4903
+  },
+  {
+   "path": "games-src/batch-20/game-0395.html",
+   "size": 3544
+  },
+  {
+   "path": "games-src/batch-20/game-0396.html",
+   "size": 4341
+  },
+  {
+   "path": "games-src/batch-20/game-0397.html",
+   "size": 3432
+  },
+  {
+   "path": "games-src/batch-20/game-0398.html",
+   "size": 4005
+  },
+  {
+   "path": "games-src/batch-20/game-0399.html",
+   "size": 3194
+  },
+  {
+   "path": "games-src/batch-20/game-0400.html",
+   "size": 3794
+  },
+  {
+   "path": "games-src/batch-21/game-0401.html",
+   "size": 4779
+  },
+  {
+   "path": "games-src/batch-21/game-0402.html",
+   "size": 4505
+  },
+  {
+   "path": "games-src/batch-21/game-0403.html",
+   "size": 4056
+  },
+  {
+   "path": "games-src/batch-21/game-0404.html",
+   "size": 3943
+  },
+  {
+   "path": "games-src/batch-21/game-0405.html",
+   "size": 4304
+  },
+  {
+   "path": "games-src/batch-21/game-0406.html",
+   "size": 4637
+  },
+  {
+   "path": "games-src/batch-21/game-0407.html",
+   "size": 4992
+  },
+  {
+   "path": "games-src/batch-21/game-0408.html",
+   "size": 4567
+  },
+  {
+   "path": "games-src/batch-21/game-0409.html",
+   "size": 4249
+  },
+  {
+   "path": "games-src/batch-21/game-0410.html",
+   "size": 3975
+  },
+  {
+   "path": "games-src/batch-21/game-0411.html",
+   "size": 4633
+  },
+  {
+   "path": "games-src/batch-21/game-0412.html",
+   "size": 3911
+  },
+  {
+   "path": "games-src/batch-21/game-0413.html",
+   "size": 4050
+  },
+  {
+   "path": "games-src/batch-21/game-0414.html",
+   "size": 4213
+  },
+  {
+   "path": "games-src/batch-21/game-0415.html",
+   "size": 4253
+  },
+  {
+   "path": "games-src/batch-21/game-0416.html",
+   "size": 3606
+  },
+  {
+   "path": "games-src/batch-21/game-0417.html",
+   "size": 4362
+  },
+  {
+   "path": "games-src/batch-21/game-0418.html",
+   "size": 4646
+  },
+  {
+   "path": "games-src/batch-21/game-0419.html",
+   "size": 3842
+  },
+  {
+   "path": "games-src/batch-21/game-0420.html",
+   "size": 4750
+  },
+  {
+   "path": "games-src/batch-22/game-0421.html",
+   "size": 3898
+  },
+  {
+   "path": "games-src/batch-22/game-0422.html",
+   "size": 4172
+  },
+  {
+   "path": "games-src/batch-22/game-0423.html",
+   "size": 4486
+  },
+  {
+   "path": "games-src/batch-22/game-0424.html",
+   "size": 4653
+  },
+  {
+   "path": "games-src/batch-22/game-0425.html",
+   "size": 5663
+  },
+  {
+   "path": "games-src/batch-22/game-0426.html",
+   "size": 4537
+  },
+  {
+   "path": "games-src/batch-22/game-0427.html",
+   "size": 4226
+  },
+  {
+   "path": "games-src/batch-22/game-0428.html",
+   "size": 4487
+  },
+  {
+   "path": "games-src/batch-22/game-0429.html",
+   "size": 3983
+  },
+  {
+   "path": "games-src/batch-22/game-0430.html",
+   "size": 4356
+  },
+  {
+   "path": "games-src/batch-22/game-0431.html",
+   "size": 4322
+  },
+  {
+   "path": "games-src/batch-22/game-0432.html",
+   "size": 4260
+  },
+  {
+   "path": "games-src/batch-22/game-0433.html",
+   "size": 4119
+  },
+  {
+   "path": "games-src/batch-22/game-0434.html",
+   "size": 4057
+  },
+  {
+   "path": "games-src/batch-22/game-0435.html",
+   "size": 3517
+  },
+  {
+   "path": "games-src/batch-22/game-0436.html",
+   "size": 4008
+  },
+  {
+   "path": "games-src/batch-22/game-0437.html",
+   "size": 4186
+  },
+  {
+   "path": "games-src/batch-22/game-0438.html",
+   "size": 3791
+  },
+  {
+   "path": "games-src/batch-22/game-0439.html",
+   "size": 4659
+  },
+  {
+   "path": "games-src/batch-22/game-0440.html",
+   "size": 4163
+  },
+  {
+   "path": "games-src/batch-23/game-0441.html",
+   "size": 3757
+  },
+  {
+   "path": "games-src/batch-23/game-0442.html",
+   "size": 4038
+  },
+  {
+   "path": "games-src/batch-23/game-0443.html",
+   "size": 3733
+  },
+  {
+   "path": "games-src/batch-23/game-0444.html",
+   "size": 3717
+  },
+  {
+   "path": "games-src/batch-23/game-0445.html",
+   "size": 4942
+  },
+  {
+   "path": "games-src/batch-23/game-0446.html",
+   "size": 4511
+  },
+  {
+   "path": "games-src/batch-23/game-0447.html",
+   "size": 4765
+  },
+  {
+   "path": "games-src/batch-23/game-0448.html",
+   "size": 4055
+  },
+  {
+   "path": "games-src/batch-23/game-0449.html",
+   "size": 4168
+  },
+  {
+   "path": "games-src/batch-23/game-0450.html",
+   "size": 4761
+  },
+  {
+   "path": "games-src/batch-23/game-0451.html",
+   "size": 4061
+  },
+  {
+   "path": "games-src/batch-23/game-0452.html",
+   "size": 4337
+  },
+  {
+   "path": "games-src/batch-23/game-0453.html",
+   "size": 4191
+  },
+  {
+   "path": "games-src/batch-23/game-0454.html",
+   "size": 4287
+  },
+  {
+   "path": "games-src/batch-23/game-0455.html",
+   "size": 3522
+  },
+  {
+   "path": "games-src/batch-23/game-0456.html",
+   "size": 4949
+  },
+  {
+   "path": "games-src/batch-23/game-0457.html",
+   "size": 4610
+  },
+  {
+   "path": "games-src/batch-23/game-0458.html",
+   "size": 3933
+  },
+  {
+   "path": "games-src/batch-23/game-0459.html",
+   "size": 4077
+  },
+  {
+   "path": "games-src/batch-23/game-0460.html",
+   "size": 4512
+  },
+  {
+   "path": "games-src/batch-24/game-0461.html",
+   "size": 4144
+  },
+  {
+   "path": "games-src/batch-24/game-0462.html",
+   "size": 4426
+  },
+  {
+   "path": "games-src/batch-24/game-0463.html",
+   "size": 4547
+  },
+  {
+   "path": "games-src/batch-24/game-0464.html",
+   "size": 4201
+  },
+  {
+   "path": "games-src/batch-24/game-0465.html",
+   "size": 3727
+  },
+  {
+   "path": "games-src/batch-24/game-0466.html",
+   "size": 4261
+  },
+  {
+   "path": "games-src/batch-24/game-0467.html",
+   "size": 3689
+  },
+  {
+   "path": "games-src/batch-24/game-0468.html",
+   "size": 4391
+  },
+  {
+   "path": "games-src/batch-24/game-0469.html",
+   "size": 3420
+  },
+  {
+   "path": "games-src/batch-24/game-0470.html",
+   "size": 3984
+  },
+  {
+   "path": "games-src/batch-24/game-0471.html",
+   "size": 4276
+  },
+  {
+   "path": "games-src/batch-24/game-0472.html",
+   "size": 5048
+  },
+  {
+   "path": "games-src/batch-24/game-0473.html",
+   "size": 4564
+  },
+  {
+   "path": "games-src/batch-24/game-0474.html",
+   "size": 5238
+  },
+  {
+   "path": "games-src/batch-24/game-0475.html",
+   "size": 4350
+  },
+  {
+   "path": "games-src/batch-24/game-0476.html",
+   "size": 3713
+  },
+  {
+   "path": "games-src/batch-24/game-0477.html",
+   "size": 4056
+  },
+  {
+   "path": "games-src/batch-24/game-0478.html",
+   "size": 5055
+  },
+  {
+   "path": "games-src/batch-24/game-0479.html",
+   "size": 4883
+  },
+  {
+   "path": "games-src/batch-24/game-0480.html",
+   "size": 5174
+  },
+  {
+   "path": "games-src/batch-25/game-0481.html",
+   "size": 3924
+  },
+  {
+   "path": "games-src/batch-25/game-0482.html",
+   "size": 3938
+  },
+  {
+   "path": "games-src/batch-25/game-0483.html",
+   "size": 3883
+  },
+  {
+   "path": "games-src/batch-25/game-0484.html",
+   "size": 4057
+  },
+  {
+   "path": "games-src/batch-25/game-0485.html",
+   "size": 4235
+  },
+  {
+   "path": "games-src/batch-25/game-0486.html",
+   "size": 5655
+  },
+  {
+   "path": "games-src/batch-25/game-0487.html",
+   "size": 3974
+  },
+  {
+   "path": "games-src/batch-25/game-0488.html",
+   "size": 4028
+  },
+  {
+   "path": "games-src/batch-25/game-0489.html",
+   "size": 4709
+  },
+  {
+   "path": "games-src/batch-25/game-0490.html",
+   "size": 3931
+  },
+  {
+   "path": "games-src/batch-25/game-0491.html",
+   "size": 4196
+  },
+  {
+   "path": "games-src/batch-25/game-0492.html",
+   "size": 4508
+  },
+  {
+   "path": "games-src/batch-25/game-0493.html",
+   "size": 3900
+  },
+  {
+   "path": "games-src/batch-25/game-0494.html",
+   "size": 4022
+  },
+  {
+   "path": "games-src/batch-25/game-0495.html",
+   "size": 4187
+  },
+  {
+   "path": "games-src/batch-25/game-0496.html",
+   "size": 4232
+  },
+  {
+   "path": "games-src/batch-25/game-0497.html",
+   "size": 3901
+  },
+  {
+   "path": "games-src/batch-25/game-0498.html",
+   "size": 4125
+  },
+  {
+   "path": "games-src/batch-25/game-0499.html",
+   "size": 4064
+  },
+  {
+   "path": "games-src/batch-25/game-0500.html",
+   "size": 4908
+  },
+  {
+   "path": "games/index.html",
+   "size": 4795
+  },
+  {
+   "path": "index.html",
+   "size": 6544
+  },
+  {
+   "path": "network_failures.json",
+   "size": 2
+  },
+  {
+   "path": "new/index.html",
+   "size": 3760
+  },
+  {
+   "path": "offline.html",
+   "size": 729
+  },
+  {
+   "path": "play/index.html",
+   "size": 3752
+  },
+  {
+   "path": "popular/index.html",
+   "size": 3835
+  },
+  {
+   "path": "privacy/index.html",
+   "size": 5613
+  },
+  {
+   "path": "recent/index.html",
+   "size": 4121
+  },
+  {
+   "path": "robots.txt",
+   "size": 91
+  },
+  {
+   "path": "screenshots/T01_home.png",
+   "size": 343562
+  },
+  {
+   "path": "screenshots/T12_dynamic.png",
+   "size": 89171
+  },
+  {
+   "path": "screenshots/T18_mobile_game.png",
+   "size": 92566
+  },
+  {
+   "path": "site.webmanifest",
+   "size": 697
+  },
+  {
+   "path": "sitemap.xml",
+   "size": 95000
+  },
+  {
+   "path": "sw.js",
+   "size": 1588
+  },
+  {
+   "path": "terms/index.html",
+   "size": 5229
+  },
+  {
+   "path": "test_results.json",
+   "size": 6883
+  },
+  {
+   "path": "test_results.md",
+   "size": 3290
+  },
+  {
+   "path": "tests/VALIDATOR_EVIDENCE.txt",
+   "size": 277
+  },
+  {
+   "path": "tests/ads_consent_results.json",
+   "size": 512
+  },
+  {
+   "path": "tests/ads_consent_test.py",
+   "size": 3484
+  },
+  {
+   "path": "tools/generate_sitemap.py",
+   "size": 1342
+  },
+  {
+   "path": "tools/validate_game.py",
+   "size": 2220
+  }
+ ],
+ "summary": {
+  "total_files": 2103,
+  "total_bytes": 23214882,
+  "games": 500
+ }
+}

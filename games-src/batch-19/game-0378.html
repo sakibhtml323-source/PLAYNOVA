@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Portrait Mix #378</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(3,84px);gap:4px;margin:12px}
+.p{width:84px;height:84px;background:#312e81;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;transition:transform .12s}
+.p.sel{outline:3px solid #fbbf24;transform:scale(1.05)}
+.p.ok{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🖼️ Royal Portrait Mix</h1><div class="sub">The royal portrait was scrambled — swap pieces to restore it!</div>
+<div id="hud"><span>Moves <b id="m">0</b></span><span>Correct <b id="c">0</b>/9</span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">👑 New Portrait</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const PARTS=[['👑',0],['👁️',1],['👁️',1],['👃',2],['👄',3],['🎀',4],['👔',5],['⚜️',6],['🦢',7]];
+// each part drawn big on its tile; goal is each tile shows its correct PARTS index
+let tiles=[],sel=null,moves=0;
+function gen(){tiles=PARTS.map((p,i)=>({correct:i,cur:i}));
+// scramble
+for(let i=0;i<12;i++){const a=(Math.random()*9)|0,b=(Math.random()*9)|0;
+[tiles[a].cur,tiles[b].cur]=[tiles[b].cur,tiles[a].cur];}
+if(tiles.every(t=>t.cur===t.correct)){[tiles[0].cur,tiles[1].cur]=[tiles[1].cur,tiles[0].cur];}
+sel=null;moves=0;document.getElementById('m').textContent=0;
+render();msg('Restore the portrait!');}
+function tap(i){if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[tiles[sel].cur,tiles[i].cur]=[tiles[i].cur,tiles[sel].cur];
+sel=null;moves++;document.getElementById('m').textContent=moves;
+beep(400,.06);render();check();}
+function check(){const n=tiles.filter(t=>t.cur===t.correct).length;
+document.getElementById('c').textContent=n;
+if(n>=9){beep(880,.3,'triangle');msg('👑 Portrait restored in '+moves+'!');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+tiles.forEach((t,i)=>{const d=document.createElement('div');
+d.className='p'+(t.cur===t.correct?' ok':'');
+d.textContent=PARTS[t.cur][0];
+if(sel===i)d.classList.add('sel');
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>High Stakes Quiz #84</title>
+<script>window.__pnNoPad=true;</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:#1a1230;font-family:'Segoe UI',system-ui,Arial,sans-serif;color:#fff3e6;display:flex;flex-direction:column;align-items:center;overflow:hidden;padding:max(6px,env(safe-area-inset-top)) 6px max(6px,env(safe-area-inset-bottom))}
+#hud{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;font-size:.82rem;margin:2px 0 5px}
+#hud span{background:rgba(255,255,255,.09);border:1px solid rgba(255,190,120,.3);border-radius:999px;padding:3px 12px;white-space:nowrap}
+#hud b{color:#ffd23f;font-variant-numeric:tabular-nums}
+#box{position:relative}
+canvas{display:block;border-radius:14px}
+#q{width:min(100%,380px);margin-top:8px}
+#cat{font-size:.75rem;opacity:.8;letter-spacing:1px;text-transform:uppercase}
+#qt{font-size:1.02rem;font-weight:700;line-height:1.35;margin:3px 0 7px;min-height:2.7em}
+#tbar{height:8px;border-radius:5px;background:rgba(0,0,0,.45);overflow:hidden}
+#tfill{display:block;height:100%;width:100%;background:linear-gradient(90deg,#7bff6a,#ffd23f,#ff6b6b);background-size:300% 100%;transition:width .2s linear}
+#ans{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.a{background:linear-gradient(180deg,#4a3a8a,#2e2260);border:2px solid rgba(255,255,255,.18);color:#fff;border-radius:14px;padding:11px 8px;font-size:.88rem;font-weight:700;cursor:pointer;min-height:54px;touch-action:manipulation;line-height:1.25;transition:transform .1s}
+.a:active{transform:scale(.97)}.a:disabled{cursor:default}.a.ok{background:linear-gradient(180deg,#3fbf5a,#1f8a3a);border-color:#9bff9b}.a.bad{background:linear-gradient(180deg,#d9534f,#962a26);border-color:#ffb0ad}.a.dim{opacity:.35}.a.hid{visibility:hidden}
+#life{display:flex;gap:7px;margin-top:8px;justify-content:center}
+#life button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff3e6;border-radius:12px;padding:7px 12px;font-size:.8rem;font-weight:700;cursor:pointer}
+#life button:disabled{opacity:.35}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(26,18,48,.94);border-radius:14px;text-align:center;padding:12px;z-index:5;gap:6px}
+.ov.hide{display:none}.ov h2{font-size:1.45rem;color:#ffd23f}.ov p{font-size:.86rem;line-height:1.4;max-width:320px;opacity:.93}
+.btn{background:linear-gradient(180deg,#ffd23f,#ff9a1a);color:#2a1500;border:none;padding:11px 28px;border-radius:24px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:6px;min-width:180px}
+.btn.alt{background:rgba(255,255,255,.14);color:#fff3e6;font-weight:600;font-size:.84rem;padding:7px 16px;min-width:0}
+</style>
+</head>
+<body>
+<div id="hud"><span>🍽 Course <b id="cs">1</b>/12</span><span>Score <b id="sc">0</b></span><span id="hr">❤❤❤</span><span>Best <b id="bs">0</b></span></div>
+<div id="box"><canvas id="c" width="360" height="190"></canvas><div class="ov" id="ov"></div></div>
+<div id="q"><div id="cat"></div><div id="qt"></div><div id="tbar"><i id="tfill"></i></div><div id="ans"></div></div>
+<div id="life"><button id="l5050">✂ 50/50</button><button id="lt">⏱ +10s</button><button id="lsk">⏭ Skip</button></div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const W=360,H=190,cvs=$('c'),ctx=cvs.getContext('2d');
+function emit(t,x){try{if(typeof pnEmit==='function')pnEmit(t,x||{})}catch(e){}}
+let SV={best:0,peaks:0};
+try{Object.assign(SV,JSON.parse(localStorage.getItem('qz_save')||'{}'));SV.best=Math.max(SV.best,+localStorage.getItem('qz_best')||0)}catch(e){}
+function save(){try{localStorage.setItem('qz_save',JSON.stringify(SV));localStorage.setItem('qz_best',SV.best)}catch(e){}}
+/* ---------- questions: [category, tier(0 easy,1 medium,2 hard), question, correct, wrong x3] ---------- */
+const Q=[
+['Food',0,'Which fruit is dried to make raisins?','Grapes','Plums','Dates','Figs'],
+['Food',0,'What is the main ingredient of guacamole?','Avocado','Tomato','Cucumber','Pea'],
+['Food',0,'Tofu is made from which bean?','Soybean','Chickpea','Black bean','Kidney bean'],
+['Food',0,'Which nut is the main ingredient of marzipan?','Almond','Peanut','Walnut','Cashew'],
+['Food',0,'Chocolate is made from the seeds of which plant?','Cacao','Coffee','Vanilla','Carob'],
+['Food',0,'Which vitamin are oranges famous for?','Vitamin C','Vitamin D','Vitamin K','Vitamin B12'],
+['Food',0,'Sushi is most associated with which country?','Japan','Thailand','Peru','Greece'],
+['Food',0,'Which vegetable are french fries made from?','Potato','Carrot','Cassava','Parsnip'],
+['Food',0,'Butter is made by churning what?','Cream','Cheese','Yoghurt','Egg yolk'],
+['Food',0,'Which herb is the main ingredient of pesto?','Basil','Mint','Parsley','Dill'],
+['Food',0,'Hummus is mainly made from what?','Chickpeas','Lentils','Rice','Peanuts'],
+['Food',0,'Which spice comes from the bark of a tree?','Cinnamon','Pepper','Turmeric','Cumin'],
+['Food',1,'Which spice is the most expensive by weight?','Saffron','Cinnamon bark','Cardamom','Black pepper'],
+['Food',1,'Kimchi is a traditional dish from which country?','Korea','Vietnam','Mongolia','Laos'],
+['Food',1,'Which gas makes bread dough rise?','Carbon dioxide','Oxygen','Nitrogen','Helium'],
+['Food',1,'Parmigiano-Reggiano cheese comes from which country?','Italy','France','Spain','Switzerland'],
+['Food',1,'Which compound makes chili peppers hot?','Capsaicin','Caffeine','Menthol','Glucose'],
+['Food',1,'Which country produces the most coffee?','Brazil','Ethiopia','Colombia','Vietnam'],
+['Food',1,'Sauerkraut is fermented from which vegetable?','Cabbage','Beetroot','Cucumber','Radish'],
+['Food',1,'Pad Thai is a famous dish from which country?','Thailand','Indonesia','Malaysia','Cambodia'],
+['Food',1,'Baklava is made with layers of what pastry?','Filo (phyllo)','Puff pastry','Shortcrust','Choux'],
+['Food',1,'Tiramisu comes from which country?','Italy','Austria','Portugal','Belgium'],
+['Food',1,'Poutine (fries, curds and gravy) is a dish from which country?','Canada','Ireland','Australia','Norway'],
+['Food',1,'Kombucha is made by fermenting what?','Sweet tea','Milk','Rice','Grape skins'],
+['Food',2,'Which city is the home of traditional balsamic vinegar?','Modena','Naples','Florence','Verona'],
+['Food',2,'Which country is the world\'s top producer of vanilla?','Madagascar','Mexico','Brazil','Sri Lanka'],
+['Food',2,'Which country is the largest producer of mangoes?','India','Brazil','Mexico','Thailand'],
+['Food',2,'Natto is made from what?','Fermented soybeans','Fermented rice','Pickled radish','Seaweed paste'],
+['Food',2,'Nutmeg is the dried seed of which tree?','Myristica (nutmeg tree)','Cinnamon tree','Clove tree','Pepper vine'],
+['Food',2,'Which fruit is pollinated by tiny fig wasps?','Fig','Date','Guava','Mulberry'],
+['Food',2,'The Japanese rice wine is called?','Sake','Soju','Shochu','Baijiu'],
+['Food',2,'Which country is the origin of the dish paella?','Spain','Portugal','Italy','Greece'],
+['Food',2,'Which grain is nixtamalised to make traditional tortillas?','Corn (maize)','Wheat','Rice','Sorghum'],
+['World',0,'How many continents are there?','7','5','6','8'],
+['World',0,'Which is the largest ocean?','Pacific','Atlantic','Indian','Arctic'],
+['World',0,'The pyramids of Giza are in which country?','Egypt','Mexico','Sudan','Peru'],
+['World',0,'The Eiffel Tower is in which city?','Paris','Rome','Berlin','Madrid'],
+['World',0,'The Great Wall is in which country?','China','Japan','India','Mongolia'],
+['World',0,'Which river flows through Egypt?','Nile','Amazon','Danube','Ganges'],
+['World',0,'What is the capital of Japan?','Tokyo','Kyoto','Osaka','Seoul'],
+['World',1,'What is the capital of Australia?','Canberra','Sydney','Melbourne','Perth'],
+['World',1,'What is the capital of Canada?','Ottawa','Toronto','Vancouver','Montreal'],
+['World',1,'What is the capital of Brazil?','Brasília','Rio de Janeiro','São Paulo','Salvador'],
+['World',1,'The Taj Mahal is in which Indian city?','Agra','Delhi','Jaipur','Mumbai'],
+['World',1,'Which is the largest hot desert in the world?','Sahara','Gobi','Kalahari','Arabian'],
+['World',1,'Which ocean lies between Africa and Australia?','Indian Ocean','Atlantic','Pacific','Arctic'],
+['World',2,'What is the capital of Switzerland?','Bern','Zurich','Geneva','Basel'],
+['World',2,'Which is the largest island in the world (not a continent)?','Greenland','Madagascar','Borneo','New Guinea'],
+['World',2,'In which year did humans first land on the Moon?','1969','1961','1972','1975'],
+['World',2,'Which ancient wonder stood in Alexandria?','The Lighthouse (Pharos)','Hanging Gardens','Colossus','Mausoleum'],
+['World',2,'What is the capital of Turkey?','Ankara','Istanbul','Izmir','Antalya'],
+['Science',0,'Which planet is known as the Red Planet?','Mars','Venus','Jupiter','Mercury'],
+['Science',0,'What is the chemical formula of water?','H2O','CO2','O2','NaCl'],
+['Science',0,'Which is the largest mammal?','Blue whale','Elephant','Giraffe','Hippo'],
+['Science',0,'Which is the fastest land animal?','Cheetah','Lion','Horse','Leopard'],
+['Science',0,'Which organ pumps blood around the body?','Heart','Liver','Lungs','Kidney'],
+['Science',0,'What do plants absorb from the air for photosynthesis?','Carbon dioxide','Oxygen','Helium','Hydrogen'],
+['Science',0,'Which animal is called the "ship of the desert"?','Camel','Horse','Ostrich','Donkey'],
+['Science',1,'How many bones does an adult human have?','206','150','300','188'],
+['Science',1,'Which planet is closest to the Sun?','Mercury','Venus','Earth','Mars'],
+['Science',1,'Which metal is liquid at room temperature?','Mercury','Lead','Tin','Zinc'],
+['Science',1,'Which is the hardest natural substance?','Diamond','Quartz','Steel','Granite'],
+['Science',1,'Which planet is famous for its bright rings?','Saturn','Mars','Mercury','Venus'],
+['Science',1,'Which gas makes up most of Earth\'s atmosphere?','Nitrogen','Oxygen','Carbon dioxide','Argon'],
+['Science',2,'How many hearts does an octopus have?','3','1','2','8'],
+['Science',2,'What is the smallest bone in the human body?','Stapes (in the ear)','Femur','Patella','Hyoid'],
+['Science',2,'What is the longest bone in the human body?','Femur','Tibia','Humerus','Spine'],
+['Science',2,'The chemical symbol Au stands for which element?','Gold','Silver','Argon','Aluminium'],
+['Science',2,'Which planet has the shortest day?','Jupiter','Earth','Mars','Venus'],
+['Science',2,'What is the study of fungi called?','Mycology','Botany','Zoology','Virology'],
+['Science',2,'Which element has atomic number 1?','Hydrogen','Helium','Lithium','Carbon'],
+['Bangladesh',0,'What is the capital of Bangladesh?','Dhaka','Chattogram','Khulna','Sylhet'],
+['Bangladesh',0,'What is the national fruit of Bangladesh?','Jackfruit','Mango','Banana','Lychee'],
+['Bangladesh',0,'What is the national flower of Bangladesh?','Water lily (Shapla)','Rose','Marigold','Jasmine'],
+['Bangladesh',0,'Which animal is Bangladesh\'s national animal?','Royal Bengal tiger','Elephant','Leopard','Deer'],
+['Bangladesh',1,'Which is the largest mangrove forest in the world, partly in Bangladesh?','Sundarbans','Amazonas','Everglades','Daintree'],
+['Bangladesh',1,'Which fish is the national fish of Bangladesh?','Hilsa (Ilish)','Rohu','Pangas','Tilapia'],
+['Bangladesh',1,'Which language is the national language of Bangladesh?','Bengali','Hindi','Urdu','Arabic'],
+['Bangladesh',1,'In which year did Bangladesh gain independence?','1971','1947','1952','1990'],
+['Bangladesh',2,'Who wrote the lyrics of Bangladesh\'s national anthem "Amar Shonar Bangla"?','Rabindranath Tagore','Kazi Nazrul Islam','Jibanananda Das','Michael Madhusudan Dutt'],
+['Bangladesh',2,'Which Bangladeshi won the Nobel Peace Prize in 2006?','Muhammad Yunus','Amartya Sen','Abdus Salam','Satyendra Bose'],
+['Bangladesh',2,'Which two great rivers form the delta that includes the Sundarbans?','Ganges and Brahmaputra','Indus and Ganges','Tigris and Euphrates','Mekong and Irrawaddy'],
+['Bangladesh',2,'Pohela Boishakh is the Bengali what?','New Year','Harvest festival','Independence Day','Spring festival'],
+['General',0,'How many players are on the field for one football (soccer) team?','11','9','10','12'],
+['General',0,'How many rings are on the Olympic flag?','5','4','6','7'],
+['General',0,'Who painted the Mona Lisa?','Leonardo da Vinci','Michelangelo','Raphael','Van Gogh'],
+['General',1,'How many squares are on a chess board?','64','49','81','100'],
+['General',1,'How many sides does a hexagon have?','6','5','7','8'],
+['General',1,'What is the smallest prime number?','2','1','3','0'],
+['General',1,'How many strings does a standard violin have?','4','5','6','3'],
+['General',2,'What is the freezing point of water in degrees Celsius?','0','-10','32','10']
+];
+/* ---------- audio ---------- */
+let AC=null;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended'){try{AC.resume()}catch(e){}}return AC}
+function tone(f,d,type,v,delay,slide){const a=ac();if(!a)return;try{const t=a.currentTime+(delay||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.08,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+const sfx={ok(s){[523,659,784].forEach((f,i)=>tone(f*(1+Math.min(s,6)*.03),.14,'triangle',.1,i*.07))},bad(){tone(180,.35,'sawtooth',.1,0,-90)},tick(){tone(900,.03,'square',.03)},life(){tone(700,.1,'sine',.07,0,300)},peak(){[523,659,784,1047,1319,1568].forEach((f,i)=>tone(f,.25,'triangle',.11,i*.09))},fall(){[330,262,196,147].forEach((f,i)=>tone(f,.3,'sawtooth',.09,i*.15))},pick(){tone(500,.05,'square',.05)}};
+/* ---------- state ---------- */
+const COURSES=['Appetiser','Soup','Salad','Starter','Fish','Sorbet','Main','Roast','Cheese','Dessert','Coffee','Petit fours'];
+const rnd=(a,b)=>a+Math.random()*(b-a);
+let state='menu',step=0,disp=0,score=0,lives=3,streak=0,cur=null,tLeft=0,tMax=15,used={},locked=false,time=0,parts=[],floats=[],shake=0,flash=0,ll={f:1,t:1,s:1},birds=[],best=0;
+birds=Array.from({length:4},()=>({x:Math.random()*W,y:rnd(14,70),v:rnd(10,22),p:Math.random()*6}));
+function pick(){const tier=step<4?0:step<8?1:2;let pool=Q.map((q,i)=>i).filter(i=>!used[i]&&Q[i][1]===tier);if(pool.length<2)pool=Q.map((q,i)=>i).filter(i=>!used[i]&&Q[i][1]>=Math.max(0,tier-1));if(!pool.length){used={};pool=Q.map((q,i)=>i).filter(i=>Q[i][1]===tier)}const i=pool[(Math.random()*pool.length)|0];used[i]=1;const q=Q[i],opts=[q[3],q[4],q[5],q[6]].map((t,k)=>({t,ok:k===0})).sort(()=>Math.random()-.5);return{cat:q[0],q:q[2],opts}}
+function show(){cur=pick();locked=false;$('cat').textContent={Food:'🍽 Food',World:'🌍 World',Science:'🔬 Science',Bangladesh:'🇧🇩 Bangladesh',General:'🎯 General'}[cur.cat]+' · '+COURSES[step];$('qt').textContent=cur.q;tMax=step<4?16:step<8?14:12;tLeft=tMax;
+$('ans').innerHTML=cur.opts.map((o,i)=>'<button class="a" data-i="'+i+'">'+'<small style="opacity:.6">'+'ABCD'[i]+'</small> '+o.t+'</button>').join('');hud()}
+function hud(){$('cs').textContent=Math.min(12,step+1);$('sc').textContent=score;$('hr').textContent='❤'.repeat(Math.max(0,lives))+'🖤'.repeat(Math.max(0,3-lives));$('bs').textContent=Math.max(SV.best,score);$('l5050').disabled=!ll.f||locked;$('lt').disabled=!ll.t||locked;$('lsk').disabled=!ll.s||locked}
+function start(){ac();step=0;disp=0;score=0;lives=3;streak=0;used={};ll={f:1,t:1,s:1};parts=[];floats=[];state='play';$('ov').classList.add('hide');show()}
+function answer(i){if(locked||state!=='play')return;locked=true;ac();const btns=[...$('ans').children];const ok=cur.opts[i]&&cur.opts[i].ok;btns.forEach((b,k)=>{b.disabled=true;if(cur.opts[k].ok)b.classList.add('ok');else if(k===i)b.classList.add('bad');else b.classList.add('dim')});
+if(ok){streak++;const pts=100+Math.round(tLeft*10)+(streak>1?streak*15:0);score+=pts;step++;sfx.ok(streak);flash=.25;floats.push({t:'+'+pts+(streak>1?' 🔥'+streak:''),c:'#ffd23f',y:H-30,l:1});burst(W/2,H-40,'#ffd23f',16);hud();
+if(step>=12){setTimeout(peak,900);return}}
+else{streak=0;lives--;step=Math.max(0,step-1);sfx.bad();shake=8;floats.push({t:i<0?'Time!':'Slipped!',c:'#ff6b6b',y:H-30,l:1});hud();if(lives<=0){setTimeout(fall,1100);return}}
+setTimeout(()=>{if(state==='play')show()},ok?1100:1500)}
+function peak(){state='over';sfx.peak();SV.peaks++;if(score>SV.best)SV.best=score;score+=lives*100;save();emit('GAME_SCORE_UPDATED',{score});emit('GAME_LEVEL_COMPLETED',{level:SV.peaks});flash=.6;burst(W/2,40,'#ffd23f',60);hud();
+setTimeout(()=>{$('ov').innerHTML='<h2>🏔 You reached the PEAK!</h2><p>Final score <b>'+score+'</b> (+'+lives*100+' for lives)<br>Best '+SV.best+' · Peaks reached '+SV.peaks+'</p><button class="btn" id="rt">CLIMB AGAIN</button>';$('ov').classList.remove('hide');$('rt').onclick=start},1200)}
+function fall(){state='over';sfx.fall();if(score>SV.best)SV.best=score;save();emit('GAME_SCORE_UPDATED',{score});emit('GAME_LOST',{});setTimeout(()=>{$('ov').innerHTML='<h2>🪂 You tumbled!</h2><p>You reached course <b>'+(Math.max(1,step+1))+'</b> ('+COURSES[Math.min(11,step)]+')<br>Score <b>'+score+'</b> · Best '+SV.best+'</p><button class="btn" id="rt">TRY AGAIN</button>';$('ov').classList.remove('hide');$('rt').onclick=start},900)}
+function menu(){state='menu';$('ov').innerHTML='<h2>🏔 HIGH STAKES QUIZ</h2><p>12 courses of delicious trivia! Answer before the timer digests — each right answer climbs the mountain. A wrong answer or timeout costs a ❤ <b>and slips you down</b>.</p><p>Lifelines: ✂ 50/50 · ⏱ +10s · ⏭ Skip (one each). Keys 1-4 or A-D to answer.</p><p>Best '+SV.best+' · Peaks '+SV.peaks+'</p><button class="btn" id="go">START CLIMBING</button>';$('ov').classList.remove('hide');$('go').onclick=start}
+$('ans').addEventListener('click',e=>{const b=e.target.closest('button');if(b)answer(+b.dataset.i)});
+$('l5050').onclick=()=>{if(!ll.f||locked||state!=='play')return;ll.f=0;sfx.life();const wr=cur.opts.map((o,i)=>i).filter(i=>!cur.opts[i].ok).sort(()=>Math.random()-.5).slice(0,2);wr.forEach(i=>{const b=$('ans').children[i];b.classList.add('hid');b.disabled=true});hud()};
+$('lt').onclick=()=>{if(!ll.t||locked||state!=='play')return;ll.t=0;sfx.life();tLeft=Math.min(tLeft+10,tMax+10);tMax=Math.max(tMax,tLeft);hud()};
+$('lsk').onclick=()=>{if(!ll.s||locked||state!=='play')return;ll.s=0;sfx.life();show()};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();const m={'1':0,'2':1,'3':2,'4':3,a:0,b:1,c:2,d:3}[k];if(state==='play'&&m!==undefined){e.preventDefault();answer(m)}else if((k==='enter'||k===' ')&&!$('ov').classList.contains('hide')){const b=$('go')||$('rt');if(b){e.preventDefault();b.click()}}});
+function burst(x,y,c,n){for(let i=0;i<n;i++){const a=Math.random()*6.283,s=rnd(40,160);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-60,l:1,r:rnd(2,4),c})}}
+/* ---------- render: the mountain ---------- */
+function pathPt(i){const t=i/12;return{x:36+t*260+Math.sin(t*9)*26,y:H-26-t*(H-62)}}
+function draw(dt){time+=dt;{const d=cvs.dpr||1;ctx.setTransform(d,0,0,d,0,0)}if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
+const prog=Math.min(1,disp/12),g=ctx.createLinearGradient(0,0,0,H);const c1=mix([255,150,90],[100,170,255],prog),c2=mix([255,215,150],[210,235,255],prog);g.addColorStop(0,c1);g.addColorStop(1,c2);ctx.fillStyle=g;ctx.fillRect(-10,-10,W+20,H+20);
+ctx.fillStyle='rgba(255,255,255,.9)';ctx.beginPath();ctx.arc(315,34,14,0,6.283);ctx.fill();
+birds.forEach(b=>{b.x+=b.v*dt;if(b.x>W+20)b.x=-20;ctx.strokeStyle='rgba(60,40,80,.6)';ctx.lineWidth=1.5;const f=Math.sin(time*8+b.p)*3;ctx.beginPath();ctx.moveTo(b.x-6,b.y+f);ctx.lineTo(b.x,b.y);ctx.lineTo(b.x+6,b.y+f);ctx.stroke()});
+ctx.fillStyle='#7a6a9a';ctx.beginPath();ctx.moveTo(-10,H);ctx.lineTo(60,90);ctx.lineTo(130,H);ctx.fill();ctx.fillStyle='#8a7aaa';ctx.beginPath();ctx.moveTo(220,H);ctx.lineTo(300,80);ctx.lineTo(380,H);ctx.fill();
+ctx.fillStyle='#5a4a7a';ctx.beginPath();ctx.moveTo(-10,H);ctx.lineTo(180,40);ctx.lineTo(380,H);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(180,40);ctx.lineTo(158,66);ctx.lineTo(171,62);ctx.lineTo(180,70);ctx.lineTo(190,61);ctx.lineTo(202,66);ctx.closePath();ctx.fill();
+ctx.strokeStyle='rgba(255,230,160,.8)';ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();for(let i=0;i<=12;i++){const p=pathPt(i);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)}ctx.stroke();ctx.setLineDash([]);
+for(let i=1;i<=12;i++){const p=pathPt(i);ctx.fillStyle=i<=step?'#ffd23f':'rgba(255,255,255,.55)';ctx.beginPath();ctx.arc(p.x,p.y,i===12?6:4,0,6.283);ctx.fill();if(i===12){ctx.fillStyle='#ff4d6d';ctx.fillRect(p.x,p.y-20,2,18);ctx.beginPath();ctx.moveTo(p.x+2,p.y-20);ctx.lineTo(p.x+14,p.y-16);ctx.lineTo(p.x+2,p.y-12);ctx.fill()}}
+disp+=(step-disp)*Math.min(1,dt*4);const a=Math.floor(disp),f=disp-a,p0=pathPt(a),p1=pathPt(Math.min(12,a+1)),cx=p0.x+(p1.x-p0.x)*f,cy=p0.y+(p1.y-p0.y)*f-8;
+ctx.font='22px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText('🧗',cx,cy+Math.sin(time*6)*(Math.abs(step-disp)>.05?2:.5));
+ctx.font='700 10px system-ui';ctx.fillStyle='rgba(255,255,255,.9)';ctx.fillText(COURSES[Math.min(11,Math.max(0,Math.round(disp)))],cx,cy-18);
+parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=260*dt;p.l-=dt*1.6;ctx.globalAlpha=Math.max(0,p.l);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r*(.4+p.l*.6),0,6.283);ctx.fill()});ctx.globalAlpha=1;parts=parts.filter(p=>p.l>0);
+floats.forEach(f=>{f.y-=22*dt;f.l-=dt*.8;ctx.globalAlpha=Math.min(1,f.l*2);ctx.font='900 18px system-ui';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.5)';ctx.strokeText(f.t,W/2,f.y);ctx.fillStyle=f.c;ctx.fillText(f.t,W/2,f.y)});ctx.globalAlpha=1;floats=floats.filter(f=>f.l>0);
+if(flash>0){ctx.fillStyle='rgba(255,255,255,'+flash*.5+')';ctx.fillRect(0,0,W,H);flash-=dt*2}shake=Math.max(0,shake-dt*20)}
+function mix(a,b,t){return 'rgb('+((a[0]+(b[0]-a[0])*t)|0)+','+((a[1]+(b[1]-a[1])*t)|0)+','+((a[2]+(b[2]-a[2])*t)|0)+')'}
+function fit(){const dpr=Math.min(devicePixelRatio||1,2),w=Math.min(innerWidth-12,380),h=Math.round(w*H/W);cvs.width=Math.round(W*dpr);cvs.height=Math.round(H*dpr);cvs.style.width=w+'px';cvs.style.height=h+'px';cvs.dpr=dpr}
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;
+if(state==='play'&&!locked){const prev=tLeft;tLeft-=dt;if(Math.ceil(tLeft)!==Math.ceil(prev)&&tLeft<5&&tLeft>0)sfx.tick();$('tfill').style.width=Math.max(0,tLeft/tMax*100)+'%';if(tLeft<=0){tLeft=0;answer(-1)}}
+draw(dt)}
+addEventListener('resize',fit);fit();
+menu();hud();requestAnimationFrame(loop);
+window.__qz={get state(){return state},get step(){return step},get lives(){return lives},get score(){return score},get cur(){return cur},answer,start,get tLeft(){return tLeft},set tLeft(v){tLeft=v},Q,SV};
+</script>
+</body>
+</html>

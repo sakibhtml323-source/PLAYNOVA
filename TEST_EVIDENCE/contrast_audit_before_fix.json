@@ -1,0 +1,413 @@
+{
+ "method": "pixel-based: each text element is measured against the real rendered background (page screenshot with text made transparent), WCAG AA 4.5:1 (3:1 for large text); estimates, translucent/gradient backgrounds are sampled by median",
+ "pages": {
+  "home": {
+   "text_elements_measured": 106,
+   "below_AA": 76,
+   "samples": [
+    [
+     "A",
+     "Home",
+     2.28,
+     13.12
+    ],
+    [
+     "P",
+     "Play Without Limits",
+     3.49,
+     12.8
+    ],
+    [
+     "P",
+     "Puzzle, action, racing, stra",
+     3.55,
+     16
+    ],
+    [
+     "BUTTON",
+     "\ud83c\udfb2 Random Game",
+     3.17,
+     15.52
+    ],
+    [
+     "SPAN",
+     "\u2714 500 unique games \u00b7 free fo",
+     2.53,
+     13.28
+    ],
+    [
+     "H2",
+     "\ud83d\udd25Action GamesAll \u203a",
+     1.18,
+     18.4
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd25",
+     1.03,
+     17.6
+    ],
+    [
+     "A",
+     "All \u203a",
+     1.14,
+     14.4
+    ]
+   ]
+  },
+  "games": {
+   "text_elements_measured": 134,
+   "below_AA": 70,
+   "samples": [
+    [
+     "A",
+     "All Games",
+     2.21,
+     13.12
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf3f Puzzle",
+     1.76,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\u2694 Casual",
+     2.63,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd2b Action",
+     1.67,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfa8 Casual",
+     1.4,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Multiplayer Local",
+     2.48,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf83 Casual",
+     1.94,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf0c Strategy",
+     2.32,
+     10.88
+    ]
+   ]
+  },
+  "categories": {
+   "text_elements_measured": 50,
+   "below_AA": 5,
+   "samples": [
+    [
+     "A",
+     "Categories",
+     2.21,
+     13.12
+    ],
+    [
+     "B",
+     "NOVA",
+     3.35,
+     14.72
+    ],
+    [
+     "SPAN",
+     "Desktop & mobile \u00b7 No ads sh",
+     1.91,
+     13.6
+    ],
+    [
+     "SPAN",
+     "online",
+     1.91,
+     13.6
+    ],
+    [
+     "A",
+     "Privacy preferences",
+     1.54,
+     13.6
+    ]
+   ]
+  },
+  "game page": {
+   "text_elements_measured": 10,
+   "below_AA": 7,
+   "samples": [
+    [
+     "H1",
+     "\ud83c\udf2b Ninja Fog Walk #441",
+     1.0,
+     13.6
+    ],
+    [
+     "DIV",
+     "by PLAYNOVA",
+     1.91,
+     11.52
+    ],
+    [
+     "B",
+     "PLAYNOVA",
+     1.89,
+     11.52
+    ],
+    [
+     "BUTTON",
+     "\u2386 Fullscreen (F)",
+     2.08,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "\u275a\u275a Pause (P)",
+     2.61,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "\u2b50 Favorite",
+     2.03,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "Progress",
+     1.0,
+     11.84
+    ]
+   ]
+  },
+  "profile": {
+   "text_elements_measured": 57,
+   "below_AA": 25,
+   "samples": [
+    [
+     "A",
+     "Popular",
+     2.26,
+     13.12
+    ],
+    [
+     "A",
+     "Profile",
+     2.28,
+     13.12
+    ],
+    [
+     "H3",
+     "XP history",
+     1.8,
+     18.72
+    ],
+    [
+     "P",
+     "No XP yet. Play a game for 2",
+     1.0,
+     16
+    ],
+    [
+     "H4",
+     "\u25b2 PLAYNOVA",
+     1.0,
+     14.72
+    ],
+    [
+     "P",
+     "500 unique, hand-built brows",
+     1.91,
+     13.6
+    ],
+    [
+     "H4",
+     "Games",
+     1.0,
+     14.72
+    ],
+    [
+     "A",
+     "All 500 Games",
+     1.91,
+     13.6
+    ]
+   ]
+  },
+  "cookies": {
+   "text_elements_measured": 53,
+   "below_AA": 37,
+   "samples": [
+    [
+     "H1",
+     "Cookie Policy",
+     1.3,
+     32
+    ],
+    [
+     "P",
+     "This policy explains how coo",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "localStorage (not a cookie, ",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "localStorage",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "localStorage (continued): yo",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "localStorage",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "IndexedDB (database playnova",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "IndexedDB",
+     1.3,
+     16
+    ]
+   ]
+  },
+  "privacy": {
+   "text_elements_measured": 59,
+   "below_AA": 39,
+   "samples": [
+    [
+     "H1",
+     "Privacy Policy",
+     1.3,
+     32
+    ],
+    [
+     "P",
+     "PLAYNOVA (\"the Site\") is a f",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "Game progress and high score",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "Game progress and high score",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "Favorites, recently-played a",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "Favorites, recently-played a",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "Audio preferences \u2014 volume/m",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "Audio preferences",
+     1.3,
+     16
+    ]
+   ]
+  },
+  "about": {
+   "text_elements_measured": 52,
+   "below_AA": 37,
+   "samples": [
+    [
+     "H1",
+     "About Us",
+     1.3,
+     32
+    ],
+    [
+     "P",
+     "PLAYNOVA is an independent g",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "quantity without sameness",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "500 mechanically unique game",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "500 mechanically unique game",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "Self-contained games \u2014 each ",
+     1.3,
+     16
+    ],
+    [
+     "B",
+     "Self-contained games",
+     1.3,
+     16
+    ],
+    [
+     "LI",
+     "Original artwork \u2014 every gam",
+     1.3,
+     16
+    ]
+   ]
+  }
+ }
+}

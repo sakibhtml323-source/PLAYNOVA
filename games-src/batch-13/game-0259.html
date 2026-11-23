@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Snake Trail #259</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#pad{display:grid;grid-template-columns:repeat(3,54px);gap:4px;margin:8px}
+.pd{width:54px;height:44px;border-radius:10px;border:none;background:#57534e;color:#fff;font-size:1.1rem;cursor:pointer}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🐍 Desert Snake Trail</h1><div class="sub">Eat the scarabs to grow. 🟡 Sand = speed zones! Don't bite your tail.</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span><span>Len <b id="l">3</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="pad">
+<button class="pd" data-d="u">⬆</button><div></div><div></div>
+<button class="pd" data-d="l">⬅</button><button class="pd" data-d="d">⬇</button><button class="pd" data-d="r">➡</button>
+</div>
+<div id="ov"><div style="font-size:3rem">🐍</div><p>Arrow keys or pad to steer.<br>Grow long, survive the dunes!</p><button id="btn">Slither</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,CELL=20,N=20;
+let snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}],dir={x:1,y:0},food={x:15,y:10},speedZones=[],score=0,playing=false,tick=0,best=+localStorage.getItem('sn_best')||0,tickMax=8;
+document.getElementById('b').textContent=best;
+function newZones(){speedZones=[];for(let i=0;i<3;i++){speedZones.push({x:(Math.random()*N)|0,y:(Math.random()*N)|0});}}
+function spawnFood(){do{food={x:(Math.random()*N)|0,y:(Math.random()*N)|0};}while(snake.some(s=>s.x===food.x&&s.y===food.y));}
+function turn(d){if(d==='u'&&dir.y!==1)dir={x:0,y:-1};if(d==='d'&&dir.y!==-1)dir={x:0,y:1};
+if(d==='l'&&dir.x!==1)dir={x:-1,y:0};if(d==='r'&&dir.x!==-1)dir={x:1,y:0};}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='arrowup')turn('u');if(k==='arrowdown')turn('d');if(k==='arrowleft')turn('l');if(k==='arrowright')turn('r');});
+document.querySelectorAll('.pd').forEach(b=>b.addEventListener('pointerdown',()=>turn(b.dataset.d)));
+function step(){tick++;
+const inZone=speedZones.some(z=>z.x===snake[0].x&&z.y===snake[0].y);
+const limit=inZone?Math.max(3,tickMax-3):tickMax;
+if(tick<limit)return;
+tick=0;
+const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+if(head.x<0||head.x>=N||head.y<0||head.y>=N||snake.some(s=>s.x===head.x&&s.y===head.y)){die();return;}
+snake.unshift(head);
+if(head.x===food.x&&head.y===food.y){score+=10;document.getElementById('s').textContent=score;
+beep(600+snake.length*15,.08,'triangle');spawnFood();if(snake.length%5===0)newZones();}
+else snake.pop();}
+function die(){if(!playing)return;playing=false;beep(130,.35,'sawtooth');
+if(score>best){best=score;localStorage.setItem('sn_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='💀 Bitten! Score: <b style="color:#fbbf24">'+score+'</b> · Length '+snake.length;}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,W);
+speedZones.forEach(z=>{ctx.fillStyle='#eab30833';ctx.fillRect(z.x*CELL,z.y*CELL,CELL,CELL);});
+ctx.font='16px serif';ctx.textAlign='center';
+ctx.fillText('🪲',food.x*CELL+10,food.y*CELL+14);
+snake.forEach((s,i)=>{ctx.fillStyle=i===0?'#a855f7':'#7c3aed';
+ctx.beginPath();ctx.roundRect(s.x*CELL+2,s.y*CELL+2,CELL-4,CELL-4,5);ctx.fill();});
+document.getElementById('l').textContent=snake.length;
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];dir={x:1,y:0};score=0;tick=0;
+document.getElementById('s').textContent=0;spawnFood();newZones();
+document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();};
+</script></body></html>

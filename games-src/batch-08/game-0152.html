@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Isometric Brave Kingdom</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#292524);font-family:Georgia,serif;color:#e7e5e4;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#292524;border:1px solid #44403c;border-radius:10px;padding:4px 10px}
+canvas{background:#1c1917;border-radius:12px;touch-action:none;max-width:100%;height:auto}
+#build{display:flex;gap:8px;margin:8px;flex-wrap:wrap;justify-content:center}
+#build button{background:#292524;border:1px solid #57534e;color:#e7e5e4;border-radius:10px;padding:8px 14px;font-size:.8rem;cursor:pointer}
+#build button:disabled{opacity:.4}
+#msg{text-align:center;font-size:.82rem;color:#a8a29e;min-height:1.6em}
+#ov{position:fixed;inset:0;background:rgba(28,25,23,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e7e5e4;padding:20px;z-index:5}
+button.big{background:#fbbf24;color:#1c1917;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏰 ISOMETRIC BRAVE KINGDOM</h1>
+<div id="hud"><span>👑 Reign <b id="y">1</b></span><span>🪙 Gold <b id="g">40</b></span><span>🌾 Food <b id="f">30</b></span><span>⚔️ Militia <b id="m">0</b></span><span>🏠 Huts <b id="h">0</b></span><span>⭐ Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="build">
+<button data-t="hut">🏠 Hut 15🪙</button><button data-t="farm">🌾 Farm 20🪙</button>
+<button data-t="barracks">⚔️ Barracks 35🪙</button><button data-t="shrine">⛩️ Shrine 25🪙</button>
+</div>
+<div id="msg">Rule for 10 years! Build the isometric kingdom — huts grow population, farms feed them, barracks defend.</div>
+<div id="ov"><h2 style="color:#fbbf24">BRAVE KINGDOM</h2><p id="od">An isometric kingdom sim! Place buildings on the iso grid. Population pays gold tax, eats food. Raiders strike every few years — militia defends. Survive 10 years of reign!</p><button class="big" id="btn">CROWN YOURSELF</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+let W=480,H=360;cvs.width=W;cvs.height=H;
+const TS=36,GW=10,GH=8;
+let blds,playing,year,gold,food,pop,militia,selT,placed,timer,best=+localStorage.getItem('bk_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function iso(x,y){return{x:W/2+(x-y)*TS*0.9,y:36+(x+y)*TS*0.45};}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){blds=[];playing=true;year=1;gold=40;food=30;pop=0;militia=0;selT='hut';placed=0;
+document.getElementById('y').textContent=1;document.getElementById('g').textContent=40;
+document.getElementById('f').textContent=30;document.getElementById('m').textContent=0;document.getElementById('h').textContent=0;}
+const DEFS={hut:{c:15,e:'🏠',pop:2},farm:{c:20,e:'🌾',food:8},barracks:{c:35,e:'⚔️',mil:3},shrine:{c:25,e:'⛩️',pop:1,gold:4}};
+function nextYear(){year++;
+// income
+let tax=0,foodGen=0;
+blds.forEach(b=>{const d=DEFS[b.t];tax+=(d.gold||0)+(d.pop?d.pop*2:0);foodGen+=d.food||0;});
+gold+=tax;food+=foodGen;
+pop=blds.reduce((a,b)=>a+(DEFS[b.t].pop||0),0);
+militia=blds.reduce((a,b)=>a+(DEFS[b.t].mil||0),0);
+food-=pop;
+if(food<0){food=0;gold=Math.max(0,gold-10);document.getElementById('msg').textContent='⚠️ Famine! Gold -10 to import grain.';}
+// raid every 3 years
+if(year%3===0){const raid=year*2;if(militia>=raid){gold+=15;document.getElementById('msg').textContent='⚔️ Raid repelled! +15 gold loot.';beep(700,.15,'triangle');}
+else{gold=Math.max(0,gold-25);document.getElementById('msg').textContent='🏴‍☠️ Raiders pillage! Gold -25 (need '+raid+' militia).';beep(130,.25,'sawtooth');}}
+if(year>10)return end(true,'');
+document.getElementById('y').textContent=year;document.getElementById('g').textContent=Math.floor(gold);
+document.getElementById('f').textContent=Math.floor(food);document.getElementById('m').textContent=militia;
+document.getElementById('h').textContent=blds.filter(b=>b.t==='hut').length;
+beep(440,.05);render();}
+function end(win){playing=false;clearInterval(timer);
+if(win&&year>best){best=year;localStorage.setItem('bk_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=win?'👑 <b style="color:#fde047">A GOLDEN REIGN OF 10 YEARS!</b><br>Treasury: '+Math.floor(gold)+' gold, '+pop+' subjects.':'The kingdom crumbles…';
+document.getElementById('btn').textContent='NEW REIGN';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=cvs.getBoundingClientRect();
+const mx=(e.clientX-r.left)/r.width*W,my=(e.clientY-r.top)/r.height*H;
+const gx=Math.round(((mx-W/2)/TS/0.9+(my-36)/TS/0.45)/2);
+const gy=Math.round(((my-36)/TS/0.45-(mx-W/2)/TS/0.9)/2);
+if(gx<0||gy<0||gx>=GW||gy>=GH)return;
+if(blds.some(b=>b.x===gx&&b.y===gy))return;
+const d=DEFS[selT]||{c:Infinity};/* FIX (PLAYNOVA repair): no tower selected yet -> DEFS[...] was undefined and clicking a build spot threw */if(gold<d.c){beep(160,.1,'sawtooth');return;}
+gold-=d.c;blds.push({x:gx,y:gy,t:selT});beep(600,.1);render();});
+document.querySelectorAll('#build [data-t]').forEach(b=>b.onclick=()=>{selT=b.dataset.t;});
+window.addEventListener('keydown',e=>{const k=e.key;if(k>='1'&&k<='4')document.querySelectorAll('#build [data-t]')[+k-1].click();if(k==='Enter'&&playing)nextYear();});
+function render(){ctx.fillStyle='#1c1917';ctx.fillRect(0,0,W,H);
+// ground tiles
+for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){const p=iso(x,y);
+ctx.fillStyle=(x+y)%2?'#292524':'#44403c';
+ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+TS*0.9,p.y+TS*0.45);ctx.lineTo(p.x,p.y+TS*0.9);ctx.lineTo(p.x-TS*0.9,p.y+TS*0.45);ctx.fill();}
+blds.forEach(b=>{const p=iso(b.x,b.y);
+ctx.font='19px serif';ctx.textAlign='center';ctx.fillText(DEFS[b.t].e,p.x,p.y+TS*0.55);});
+// castle
+const cp=iso(GW-1,0);ctx.font='26px serif';ctx.fillText('🏰',cp.x,cp.y+TS*0.5);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();render();
+clearInterval(timer);timer=setInterval(nextYear,6000);
+document.getElementById('msg').textContent='Build on the iso grid — Enter to end the year.';
+document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

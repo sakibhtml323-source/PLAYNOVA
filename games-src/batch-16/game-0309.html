@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Word Grid #309</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(8,40px);gap:2px;margin:12px}
+.c{width:40px;height:40px;background:#312e81;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;text-transform:uppercase}
+.c input{width:90%;height:90%;background:transparent;border:none;color:#eef2ff;text-align:center;font-size:1rem;font-weight:800;text-transform:uppercase;outline:none}
+.c.fixed{background:#4338ca}
+#words{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px;max-width:360px}
+.wd{padding:3px 12px;border-radius:999px;background:#312e81;font-size:.8rem;font-weight:700}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Word Grid</h1><div class="sub">Type letters into the grid — all royal words must fit across and down!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Words <b id="w">0</b>/<b id="wt">0</b></span></div>
+<div id="grid"></div>
+<div id="words"></div>
+<div id="msg"></div>
+<button id="btn">📖 New Grid</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const PUZZLES=[
+{words:['KING','KNIGHT','RING'],grid:[['K','I','N','G','','','',''],['N','','','','','','',''],['I','','','','','','',''],['G','','','','','','',''],['H','','','','','','',''],['T','','','','','','',''],['','','','','','','',''],['','','','','','','','']],coords:{'KING':[0,0,'H'],'KNIGHT':[0,0,'V'],'RING':[3,0,'V']}},
+{words:['QUEEN','CROWN','OWN'],grid:[['Q','U','E','E','N','','',''],['','','','','','','',''],['','','','','','','',''],['C','R','O','W','N','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],coords:{'QUEEN':[0,0,'H'],'CROWN':[3,0,'H'],'OWN':[3,2,'V']}}];
+let puzzle=0,inputs=[],level=1;
+function load(){const P=PUZZLES[puzzle];
+const g=document.getElementById('grid');g.innerHTML='';inputs=[];
+for(let r=0;r<8;r++)for(let c=0;c<8;c++){const d=document.createElement('div');d.className='c';
+const isFixed=P.grid[r][c]!=='';
+if(isFixed)d.classList.add('fixed');
+if(isFixed){d.textContent=P.grid[r][c];}
+else{const inp=document.createElement('input');inp.maxLength=1;
+inp.addEventListener('input',()=>{inp.value=inp.value.toUpperCase();check();beep(400+Math.random()*200,.04);});
+d.appendChild(inp);inputs.push({inp,r,c});}
+g.appendChild(d);}
+const wd=document.getElementById('words');wd.innerHTML='';
+P.words.forEach(w=>{const d=document.createElement('span');d.className='wd';d.textContent=w;d.dataset.w=w;wd.appendChild(d);});
+document.getElementById('wt').textContent=P.words.length;
+document.getElementById('l').textContent=puzzle+1;
+document.getElementById('w').textContent=0;
+msg('Fill in the royal words!');}
+function check(){const P=PUZZLES[puzzle];let found=0;
+P.words.forEach(w=>{const[sr,sc,d]=P.coords[w];
+let ok=true;
+for(let i=0;i<w.length;i++){const r=d==='V'?sr+i:sr,c=d==='H'?sc+i:sc;
+const cell=document.querySelectorAll('.c')[r*8+c];
+const val=cell.querySelector('input')?cell.querySelector('input').value:cell.textContent;
+if(val!==w[i]){ok=false;break;}}
+document.querySelectorAll('.wd').forEach(el=>{if(el.dataset.w===w){
+if(ok){el.style.background='#14532d';found++;}
+else el.style.background='';}});});
+document.getElementById('w').textContent=found;
+if(found===P.words.length){beep(880,.3,'triangle');
+msg('👑 All words found! Next puzzle…');puzzle=(puzzle+1)%PUZZLES.length;
+setTimeout(load,1200);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();load();};
+load();
+</script></body></html>

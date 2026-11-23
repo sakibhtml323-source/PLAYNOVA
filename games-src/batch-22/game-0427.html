@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Star Map #427</title><style>
+body{margin:0;font-family:system-ui;background:#0c1445;color:#e0e7ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#93c5fd;font-size:.78rem}
+canvas{background:#111936;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#0c1445;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🗺️ Desert Star Map</h1><div class="sub">The scroll shows a constellation — connect the stars in the same shape!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Stars <b id="s">0</b></span></div>
+<canvas id="cv" width="420" height="420"></canvas>
+<div id="msg"></div>
+<button id="btn">✨ New Sky</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=420;const SHAPES=[[[0.3,0.3],[0.7,0.3],[0.7,0.7],[0.3,0.7]],[[0.5,0.2],[0.2,0.6],[0.8,0.6]],[[0.3,0.7],[0.5,0.2],[0.7,0.7]],[[0.2,0.5],[0.5,0.2],[0.8,0.5],[0.5,0.8]]];
+let target=[],stars=[],path=[],level=1;
+function gen(){const shape=SHAPES[(level-1)%SHAPES.length];
+const ox=Math.random()*0.2,oy=Math.random()*0.2;
+target=shape.map(([x,y])=>({x:(x+ox)*W,y:(y+oy)*W,got:false}));
+stars=target.map(t=>({x:t.x+(Math.random()*60-30),y:t.y+(Math.random()*60-30),home:t}));
+path=[];document.getElementById('l').textContent=level;
+document.getElementById('s').textContent=0;
+draw();msg('Connect the stars in order!');}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();
+// find nearest star
+let bi=-1,bd=1e9;
+stars.forEach((s,i)=>{const d=Math.hypot(s.x-x,s.y-y);if(d<bd){bd=d;bi=i;}});
+if(bi<0||bd>26)return;
+const nextIdx=path.length;
+if(bi!==nextIdx){beep(160,.06,'sawtooth');msg('Wrong order!');return;}
+path.push(bi);beep(400+path.length*80,.08);draw();check();});
+function check(){document.getElementById('s').textContent=path.length;
+if(path.length>=stars.length){// verify shape matches (positions near targets)
+const ok=stars.every((s,i)=>Math.hypot(s.x-target[i].x,s.y-target[i].y)<60);
+if(ok){beep(880,.3,'triangle');msg('🌟 Constellation traced! Level '+(level+1));level++;
+setTimeout(gen,1000);}
+else{msg('🔀 Connected, but the shape is wrong!');beep(200,.15,'sawtooth');path=[];draw();}}}
+function draw(){ctx.fillStyle='#111936';ctx.fillRect(0,0,W,W);
+for(let i=0;i<40;i++){ctx.fillStyle='#ffffff22';ctx.fillRect((i*83)%W,(i*47)%W,2,2);}
+// faint target shape
+if(path.length===0){ctx.strokeStyle='#fbbf2422';ctx.setLineDash([4,6]);
+ctx.beginPath();target.forEach((t,i)=>i===0?ctx.moveTo(t.x,t.y):ctx.lineTo(t.x,t.y));
+ctx.stroke();ctx.setLineDash([]);}
+// lines drawn
+if(path.length>1){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+ctx.beginPath();path.forEach((pi,i)=>{const s=stars[pi];
+i===0?ctx.moveTo(s.x,s.y):ctx.lineTo(s.x,s.y);});ctx.stroke();ctx.lineWidth=1;}
+stars.forEach((s,i)=>{const done=path.includes(i);
+ctx.beginPath();ctx.arc(s.x,s.y,done?7:10,0,7);
+ctx.fillStyle=done?'#22c55e':'#fbbf24';ctx.fill();
+ctx.fillStyle='#fff';ctx.font='11px serif';ctx.textAlign='center';
+ctx.fillText(i+1,s.x,s.y-14);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

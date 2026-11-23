@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Egyptian Portal 2048 #255</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(4,62px);gap:5px;margin:12px;padding:8px;background:#292524;border-radius:12px}
+.cell{width:62px;height:62px;background:#44403c;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:800;color:#1c1917}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+#arrows{display:flex;flex-direction:column;align-items:center;margin:6px}
+.arow{display:flex;gap:6px}
+.arr{width:52px;height:44px;border-radius:10px;border:none;background:#57534e;color:#fff;font-size:1.2rem;font-weight:800;cursor:pointer}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔺 Egyptian Portal 2048</h1><div class="sub">Classic 2048 — but 🌀 portal tiles teleport to a random empty spot on spawn!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span><span>Max <b id="m">2</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<div id="arrows">
+<div class="arow"><button class="arr" data-d="u">⬆</button></div>
+<div class="arow"><button class="arr" data-d="l">⬅</button><button class="arr" data-d="d">⬇</button><button class="arr" data-d="r">➡</button></div>
+</div>
+<button id="btn">🌀 New Game</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let grid=[],score=0,best=+localStorage.getItem('p2048_best')||0;
+document.getElementById('b').textContent=best;
+const COLS={2:'#d6d3d1',4:'#a8a29e',8:'#fbbf24',16:'#f59e0b',32:'#f97316',64:'#ef4444',128:'#a855f7',256:'#7c3aed',512:'#ec4899',1024:'#22d3ee',2048:'#eab308'};
+function msg(t){document.getElementById('msg').textContent=t;}
+function init(){grid=Array.from({length:4},()=>Array(4).fill(0));score=0;
+addTile();addTile();render();msg('Swipe or use arrows!');}
+function empty(){const out=[];for(let r=0;r<4;r++)for(let c=0;c<4;c++)if(!grid[r][c])out.push([r,c]);return out;}
+function addTile(){const e=empty();if(!e.length)return;const[r,c]=e[(Math.random()*e.length)|0];
+let v=Math.random()<0.9?2:4;
+// portal mechanic: 15% chance tile is a portal that teleports immediately
+if(Math.random()<0.15){const e2=empty().filter(x=>x[0]!==r||x[1]!==c);
+if(e2.length){const[r2,c2]=e2[(Math.random()*e2.length)|0];
+grid[r2][c2]=v;msg('🌀 Portal tile teleported!');
+beep(300,.15,'triangle');render();return;}}
+grid[r][c]=v;}
+function slide(row){const arr=row.filter(v=>v);const out=[];
+for(let i=0;i<arr.length;i++){if(arr[i]===arr[i+1]){out.push(arr[i]*2);score+=arr[i]*2;i++;}else out.push(arr[i]);}
+while(out.length<4)out.push(0);return out;}
+function move(dir){const before=JSON.stringify(grid);
+if(dir==='l'){for(let r=0;r<4;r++)grid[r]=slide(grid[r]);}
+if(dir==='r'){for(let r=0;r<4;r++)grid[r]=slide(grid[r].slice().reverse()).reverse();}
+if(dir==='u'){for(let c=0;c<4;c++){const col=[grid[0][c],grid[1][c],grid[2][c],grid[3][c]];const s=slide(col);
+for(let r=0;r<4;r++)grid[r][c]=s[r];}}
+if(dir==='d'){for(let c=0;c<4;c++){const col=[grid[3][c],grid[2][c],grid[1][c],grid[0][c]];const s=slide(col).reverse();
+for(let r=0;r<4;r++)grid[r][c]=s[r];}}
+if(JSON.stringify(grid)!==before){addTile();beep(440,.06);render();
+if(score>best){best=score;localStorage.setItem('p2048_best',best);document.getElementById('b').textContent=best;}
+checkEnd();}}
+function checkEnd(){const max=Math.max(...grid.flat());
+document.getElementById('m').textContent=max;
+if(max>=2048){msg("👑 You forged the Pharaoh gem!");beep(880,.3,'triangle');return;}
+if(!empty().length){msg('💀 Board full! Score: '+score);}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<4;r++)for(let c=0;c<4;c++){const d=document.createElement('div');d.className='cell';
+const v=grid[r][c];
+if(v){d.style.background=COLS[v]||'#eab308';d.textContent=v;}else d.textContent='';
+g.appendChild(d);}
+document.getElementById('s').textContent=score;}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='arrowleft')move('l');if(k==='arrowright')move('r');
+if(k==='arrowup')move('u');if(k==='arrowdown')move('d');});
+document.querySelectorAll('.arr').forEach(b=>b.addEventListener('click',()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();move(b.dataset.d);}));
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();init();};
+init();
+</script></body></html>

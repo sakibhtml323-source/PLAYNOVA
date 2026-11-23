@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Legendary Maze</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#292524);font-family:Georgia,serif;color:#e7e5e4;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.15rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#292524;border-radius:10px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#a8a29e;min-height:1.6em;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(41,37,36,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e7e5e4;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#292524;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🏛 LEGENDARY MAZE</h1>
+<div id="hud"><span>Depth <b id="d">1</b></span><span>Steps <b id="m">0</b></span><span>⏱ <b id="t">0</b>s</span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Drag your way through the legendary labyrinth! Reach the golden exit.</div>
+<div id="ov"><h2 style="color:#fbbf24">THE LABYRINTH</h2><p id="od">An endless maze of legend! Drag (or use arrows) to steer your ball. Reach the golden exit before time runs out. Mazes grow and timers shrink!</p><button id="btn">DESCEND</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+const TS=40,N=11;
+let grid,px,py,depth,playing,steps,timeLeft,timer,best=+localStorage.getItem('lm_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){grid=[];for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=1;}
+// recursive backtracker
+const stack=[[1,1]];grid[1][1]=0;
+while(stack.length){const[c,r]=stack[stack.length-1];
+const opts=[[c+2,r],[c-2,r],[c,r+2],[c,r-2]].filter(([nc,nr])=>nc>0&&nr>0&&nc<N-1&&nr<N-1&&grid[nr][nc]===1);
+if(!opts.length){stack.pop();continue;}
+const[nc,nr]=opts[(Math.random()*opts.length)|0];
+grid[(r+nr)/2][(c+nc)/2]=0;grid[nr][nc]=0;
+stack.push([nc,nr]);}
+px=1;py=1;steps=0;
+timeLeft=Math.max(12,40-depth*3);
+document.getElementById('d').textContent=depth;document.getElementById('m').textContent=0;document.getElementById('t').textContent=timeLeft;
+clearInterval(timer);
+timer=setInterval(()=>{timeLeft--;document.getElementById('t').textContent=timeLeft;
+if(timeLeft<=0){playing=false;clearInterval(timer);beep(120,.5,'sawtooth');
+document.getElementById('od').innerHTML='🌑 Lost in the labyrinth at depth '+depth+'…';
+document.getElementById('btn').textContent='TRY AGAIN';document.getElementById('ov').style.display='flex';}},1000);
+draw();}
+function move(dx,dy){if(!playing)return;
+const nx=px+dx,ny=py+dy;
+if(grid[ny]&&grid[ny][nx]===0){px=nx;py=ny;steps++;document.getElementById('m').textContent=steps;
+beep(400,.04);draw();
+if(px===N-2&&py===N-2){depth++;if(depth>best){best=depth;localStorage.setItem('lm_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);build();}}}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*TS,y=r*TS;
+if(grid[r][c]){ctx.fillStyle='#1c1917';ctx.fillRect(x,y,TS,TS);
+ctx.fillStyle='#0c0a09';ctx.fillRect(x+5,y+5,TS-10,TS-10);}
+else{ctx.fillStyle=(r+c)%2?'#44403c':'#3f3f46';ctx.fillRect(x+1,y+1,TS-2,TS-2);}}
+// exit
+ctx.fillStyle='#fbbf24';ctx.fillRect((N-2)*TS+6,(N-2)*TS+6,TS-12,TS-12);
+// player ball
+ctx.fillStyle='#e7e5e4';ctx.beginPath();ctx.arc(px*TS+TS/2,py*TS+TS/2,12,0,7);ctx.fill();
+ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(px*TS+TS/2,py*TS+TS/2,5,0,7);ctx.fill();}
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+drag={x:(e.clientX-r.left)/r.width*N,y:(e.clientY-r.top)/r.height*N};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();
+const nx=(e.clientX-r.left)/r.width*N,ny=(e.clientY-r.top)/r.height*N;
+const dx=nx-drag.x,dy=ny-drag.y;
+if(Math.abs(dx)>0.6){move(Math.sign(dx),0);drag={x:nx,y:drag.y};}
+if(Math.abs(dy)>0.6){move(0,Math.sign(dy));drag={x:drag.x,y:ny};}});
+window.addEventListener('pointerup',()=>drag=null);
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowUp'||k==='w')move(0,-1);else if(k==='ArrowDown'||k==='s')move(0,1);
+else if(k==='ArrowLeft'||k==='a')move(-1,0);else if(k==='ArrowRight'||k==='d')move(1,0);});
+document.getElementById('btn').onclick=()=>{audio.resume();if(document.getElementById('btn').textContent==='TRY AGAIN')depth=1;
+playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

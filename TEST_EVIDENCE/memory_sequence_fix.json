@@ -1,0 +1,57 @@
+{
+ "method": "wrapped the game's render function and compared the items it displayed with its own sequence array after the fix",
+ "results": {
+  "memory-sequence-isometric-edition": {
+   "sequence": [
+    1,
+    7,
+    0
+   ],
+   "shown_in_order": [
+    null,
+    1,
+    7
+   ],
+   "matches": false
+  },
+  "glassmorphism-realm": {
+   "sequence": [
+    2,
+    7,
+    6
+   ],
+   "shown_in_order": [
+    null,
+    2,
+    7
+   ],
+   "matches": false
+  },
+  "dark-mode-sport-hero": {
+   "sequence": [
+    0,
+    2,
+    3
+   ],
+   "shown_in_order": [
+    null,
+    0,
+    2
+   ],
+   "matches": false
+  },
+  "ninja-silver-chronicles": {
+   "sequence": [
+    5,
+    4,
+    2
+   ],
+   "shown_in_order": [
+    null,
+    0,
+    1
+   ],
+   "matches": false
+  }
+ }
+}

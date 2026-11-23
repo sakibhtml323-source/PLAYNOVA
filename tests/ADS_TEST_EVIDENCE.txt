@@ -1,0 +1,14 @@
+ADS CONSENT TEST EVIDENCE — 2026-11-05 11:14
+server: self-started python http.server on ephemeral port
+provider: TEST-ONLY local tests/test-provider.js via adsterra adapter; no real ad network
+
+  accepted_exactly_one           PASS
+  repeat_no_duplicate            PASS
+  declined_zero                  PASS
+  no_consent_absent_key          PASS
+  expired_zero                   PASS
+  invalid_zero                   PASS
+  no_uncaught_errors             PASS
+  unknown_provider_zero_inject   PASS
+  unknown_provider_no_uncaught   PASS
+  missing_credentials_zero       PASS

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Food Dungeon #222</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem;margin-bottom:8px}
+#grid{display:grid;grid-template-columns:repeat(7,40px);gap:3px;margin:8px}
+.cell{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;background:#27272a;border-radius:8px;cursor:pointer;user-select:none}
+.cell.me{outline:2px solid #facc15}
+#hud{display:flex;gap:14px;font-size:.85rem;margin:6px}
+#hud b{color:#facc15}
+#msg{min-height:1.2em;color:#f472b6;font-size:.85rem}
+button{padding:9px 20px;border-radius:999px;border:none;background:#facc15;color:#18181b;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🍔 Food Dungeon</h1><div class="sub">Eat 3+ matching foods in a row (any direction) to clear them. Reach the 🚪 exit with a full belly!</div>
+<div id="hud"><span>Hunger <b id="hg">20</b></span><span>Score <b id="sc">0</b></span><span>Level <b id="lv">1</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🍳 New Dungeon</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.12,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const FOODS=['🍎','🍕','🍣','🍩','🌮','🍇'];
+const N=7;let grid=[],me={r:3,c:3},hunger=20,score=0,level=1,playing=false;
+function build(){grid=[];const types=Math.min(3+level,6);
+for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(FOODS[(Math.random()*types)|0]);grid.push(row);}
+grid[3][3]=null;me={r:3,c:3};
+let er,ec;do{er=(Math.random()*N)|0;ec=(Math.random()*N)|0;}while(Math.abs(er-3)+Math.abs(ec-3)<4);
+grid[er][ec]='🚪';hunger=20;playing=true;render();}
+function neigh(r,c){const out=[];if(r>0)out.push([r-1,c]);if(r<N-1)out.push([r+1,c]);if(c>0)out.push([r,c-1]);if(c<N-1)out.push([r,c+1]);return out;}
+function tap(r,c){
+ if(!playing)return;
+ const d=Math.abs(r-me.r)+Math.abs(c-me.c);
+ if(d===0){tryExit();return;}
+ if(d!==1){beep(160,.08,'sawtooth');return;}
+ const v=grid[r][c];
+ if(v==='🚪'){me={r,c};render();tryExit();return;}
+ if(!v)return;
+ grid[r][c]=null;me={r,c};hunger--;score+=5;
+ const line=[[r,c]];
+ // find same-food orthogonal run
+ const dirs=[[0,1],[1,0]];
+ dirs.forEach(([dr,dc])=>{let k=1;const both=[[r,c]];
+  while(true){let hit=false;
+   const r1=r+dr*k,c1=c+dc*k; if(r1>=0&&r1<N&&c1>=0&&c1<N&&grid[r1][c1]===v){both.push([r1,c1]);hit=true;}
+   const r2=r-dr*k,c2=c-dc*k; if(r2>=0&&r2<N&&c2>=0&&c2<N&&grid[r2][c2]===v){both.push([r2,c2]);hit=true;}
+   if(!hit)break;k++;}
+  if(both.length>line.length)line.length=0,line.push(...both);});
+ if(line.length>=3){line.forEach(([rr,cc])=>{grid[rr][cc]=null;});score+=line.length*15;hunger=Math.min(25,hunger+line.length);beep(760,.12,'triangle');msg('😋 Ate '+line.length+' '+v+'!');}
+ else{beep(420,.05);msg('');}
+ render();check();}
+function tryExit(){if(grid[me.r][me.c]==='🚪'||true){}}
+function check(){
+ if(hunger<=0){playing=false;msg('💀 Starved! Score '+score);beep(130,.4,'sawtooth');return;}
+ const door=grid.flat().includes('🚪');
+ if(!door){playing=false;score+=100;level++;msg('🎉 Level clear! +100 → Level '+level);beep(880,.2,'triangle');setTimeout(build,900);}
+}
+function render(){
+ const g=document.getElementById('grid');g.innerHTML='';
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+  const d=document.createElement('div');d.className='cell'+(me.r===r&&me.c===c?' me':'');
+  d.textContent=grid[r][c]||'';d.onclick=()=>tap(r,c);g.appendChild(d);}
+ document.getElementById('hg').textContent=hunger;document.getElementById('sc').textContent=score;document.getElementById('lv').textContent=level;}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{score=0;level=1;build();};
+build();
+</script></body></html>

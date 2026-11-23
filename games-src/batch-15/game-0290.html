@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Sound Board #290</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(3,110px);gap:12px;margin:14px}
+.pad{width:110px;height:110px;border-radius:14px;background:#27272a;border:3px solid #3f3f46;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;transition:all .15s}
+.pad.lit{background:#7c3aed;border-color:#a78bfa;transform:scale(1.06)}
+.pad .lbl{font-size:.7rem;color:#a1a1aa;margin-top:4px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔊 Haunted Sound Board</h1><div class="sub">Each pad makes a different sound. Watch, listen, then repeat the growing sequence!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Best <b id="b">0</b></span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">🎵 Start</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function playSound(i){const F=[262,330,392,440,494,523,587,659,740];
+try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();
+os.type=['sine','triangle','square','sawtooth','sine','triangle','square','sawtooth','sine'][i];
+os.frequency.value=F[i];
+g.gain.setValueAtTime(.14,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+.35);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+.35);}catch(e){}}
+const SOUNDS=[['👻','Ghost'],['🎃','Pumpkin'],['🦇','Bat'],['🕷️','Spider'],['💀','Skull'],['🧛','Vamp'],['⚰️','Coffin'],['🕯️','Candle'],['🌙','Moon']];
+let seq=[],idx=0,round=1,best=+localStorage.getItem('hsb_best')||0,accepting=false;
+document.getElementById('b').textContent=best;
+function build(){const b=document.getElementById('board');b.innerHTML='';
+SOUNDS.forEach(([e,n],i)=>{const d=document.createElement('div');d.className='pad';
+d.innerHTML='<span>'+e+'</span><span class="lbl">'+n+'</span>';
+d.onclick=()=>pick(i);b.appendChild(d);});}
+function flash(i){return new Promise(res=>{const el=document.querySelectorAll('.pad')[i];
+el.classList.add('lit');playSound(i);
+setTimeout(()=>{el.classList.remove('lit');setTimeout(res,140);},380);});}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+async function show(){accepting=false;msg('👀 Watch & listen…');await wait(700);
+for(const i of seq)await flash(i);
+idx=0;accepting=true;msg('🫵 Repeat it!');}
+function pick(i){if(!accepting)return;playSound(i);
+const el=document.querySelectorAll('.pad')[i];
+el.classList.add('lit');setTimeout(()=>el.classList.remove('lit'),180);
+if(i!==seq[idx]){accepting=false;
+msg('💥 Wrong! Reached round '+round);
+if(round>best){best=round;localStorage.setItem('hsb_best',best);document.getElementById('b').textContent=best;}
+return;}
+idx++;
+if(idx>=seq.length){accepting=false;msg('✅ Round '+round+' clear!');
+round++;document.getElementById('r').textContent=round;
+seq.push((Math.random()*9)|0);
+setTimeout(show,800);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{seq=[(Math.random()*9)|0];idx=0;round=1;
+document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();show();};
+build();
+</script></body></html>

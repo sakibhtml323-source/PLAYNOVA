@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Quantum Run</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050510;font-family:'Segoe UI',Arial,sans-serif;color:#22d3ee;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#f0abfc;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0a0a14;border-radius:10px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(5,5,10,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#a5f3fc;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#05050a;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⚛ QUANTUM RUN</h1>
+<div id="hud"><span>Phase <b id="p">1</b></span><span>⚡ Charge <b id="c">100</b>%</span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv"></canvas>
+<div id="ov"><h2 style="color:#f0abfc">PHASE RUNNER</h2><p id="od">Run the quantum lanes! Shift phase with ← → / A D or drag to slip through matching barriers (you pass through barriers of YOUR color 🟦/🟪). Wrong phase = hit! Charge drains — grab ⚡ orbs.</p><button id="btn">ENTANGLE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let me,walls,orbs,playing,keys,phase,charge,dist,frame,best=+localStorage.getItem('qr_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-70,r:13};walls=[];orbs=[];playing=true;keys={};phase=0;charge=100;dist=0;frame=0;
+document.getElementById('p').textContent=1;document.getElementById('c').textContent=100;}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();phase=1-phase;
+document.getElementById('p').textContent=phase+1;beep(phase?700:400,.06);}});
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.35){keys['l']=true;}else if(x>W*0.65){keys['r']=true;}else{phase=1-phase;
+document.getElementById('p').textContent=phase+1;beep(phase?700:400,.06);}});
+cvs.addEventListener('pointerup',()=>{keys['l']=false;keys['r']=false;});
+function step(){frame++;dist+=0.12;document.getElementById('p').textContent=phase+1;
+if(keys['arrowleft']||keys['a']||keys['l'])me.x-=4.6;if(keys['arrowright']||keys['d']||keys['r'])me.x+=4.6;
+me.x=Math.max(20,Math.min(W-20,me.x));
+charge-=0.12;document.getElementById('c').textContent=Math.max(0,Math.round(charge));
+if(charge<=0)return collapse();
+if(frame%Math.max(18,40-dist/8|0)===0){const w=40+Math.random()*80;
+walls.push({x:20+Math.random()*(W-40-w),y:-16,w,h:14,c:(Math.random()*2)|0});}
+if(frame%90===0)orbs.push({x:20+Math.random()*(W-40),y:-14,got:false});
+const sp=2.6+dist/400;
+walls.forEach(w2=>w2.y+=sp);orbs.forEach(o=>o.y+=sp);
+walls=walls.filter(w2=>w2.y<H+20);orbs=orbs.filter(o=>o.y<H+16&&!o.got);
+orbs.forEach(o=>{if(!o.got&&Math.hypot(o.x-me.x,o.y-me.y)<22){o.got=true;charge=Math.min(100,charge+25);
+document.getElementById('c').textContent=Math.round(charge);beep(900,.07);}});
+walls.forEach(w2=>{if(Math.abs(me.x-w2.x-w2.w/2)<w2.w/2+me.r-3&&Math.abs(me.y-w2.y)<me.r+7&&w2.c!==phase){
+collapse();}});}
+function collapse(){if(!playing)return;playing=false;const d=Math.floor(dist*10);
+if(d>best){best=d;localStorage.setItem('qr_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='💥 Wave-function collapsed at <b style="color:#f0abfc">'+d+'</b>!';
+document.getElementById('btn').textContent='RE-COLLAPSE';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+for(let i=0;i<4;i++){const y=(i*140+dist*8)%(H+140)-70;
+ctx.strokeStyle=['#22d3ee22','#f0abfc22'][i%2];ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y+20);ctx.stroke();}
+walls.forEach(w2=>{ctx.fillStyle=w2.c===0?'#22d3ee88':'#f0abfc88';ctx.fillRect(w2.x,w2.y,w2.w,w2.h);
+ctx.strokeStyle=w2.c===0?'#22d3ee':'#f0abfc';ctx.strokeRect(w2.x,w2.y,w2.w,w2.h);});
+orbs.forEach(o=>{ctx.fillStyle='#fde047';ctx.beginPath();ctx.arc(o.x,o.y,7,0,7);ctx.fill();});
+const g2=ctx.createRadialGradient(me.x,me.y,2,me.x,me.y,me.r*2.4);
+const col=phase===0?'#22d3ee':'#f0abfc';
+g2.addColorStop(0,col);g2.addColorStop(1,col+'00');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(me.x,me.y,me.r*2.4,0,7);ctx.fill();
+ctx.fillStyle=col;ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

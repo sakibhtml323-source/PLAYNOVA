@@ -1,0 +1,11 @@
+{
+ "total": 500,
+ "problems": [],
+ "duplicate_ids": [],
+ "duplicate_slugs": [],
+ "http_sample_checked": 100,
+ "http_failures": [],
+ "rechecked_after_art_regeneration": {
+  "missing_thumbnail_or_banner": 0
+ }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Legendary Minimalist Blast</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#fff;font-family:'Helvetica Neue',Arial,sans-serif;color:#111;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-weight:100;letter-spacing:8px;font-size:.95rem;color:#bbb;padding:10px}
+#hud{display:flex;gap:20px;font-size:.85rem;color:#999;margin-bottom:4px}
+canvas{background:#fff;border:1px solid #eee;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(255,255,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#333;padding:20px;z-index:5}
+button{background:#111;color:#fff;border:none;font-weight:100;letter-spacing:4px;padding:13px 40px;font-size:.95rem;cursor:pointer;margin-top:16px}
+</style>
+</head>
+<body>
+<h1>MINIMAL BLAST</h1>
+<div id="hud"><span>TIME <b id="t">0.0</b></span><span>PULSE <b id="p">1</b></span><span>BEST <b id="b">0.0</b>s</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="font-weight:100;letter-spacing:6px">BLAST</h2><p id="od">One button. Pure minimalism. Tap (or press Space) to expand a pulse ring — catch the falling dots inside your ring before they touch the line. Each level adds speed.</p><button id="btn">BEGIN</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=360,H=460;cvs.width=W;cvs.height=H;
+const LINE=H-60;
+let dots,pulse,playing,time,level,best=+localStorage.getItem('mb_best')||0;
+document.getElementById('b').textContent=best.toFixed(1);
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){dots=[];pulse=null;time=0;level=1;playing=true;}
+function blast(){if(!playing)return;if(pulse&&pulse.r<40)return;
+pulse={r:6,max:90+level*10};beep(300,.08,'sine');}
+window.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();blast();}});
+cvs.addEventListener('pointerdown',()=>{audio.resume();blast();});
+function step(){time+=1/60;document.getElementById('t').textContent=time.toFixed(1);
+level=1+Math.floor(time/6);document.getElementById('p').textContent=level;
+if(Math.random()<0.012+level*0.004)dots.push({x:16+Math.random()*(W-32),y:-10,vy:1.1+level*0.35+Math.random()*0.6,r:5});
+dots.forEach(d=>d.y+=d.vy);
+// pulse catch
+if(pulse){pulse.r+=7;
+dots.forEach(d=>{if(!d.got&&Math.abs(d.y-LINE)<26&&Math.abs(d.x-W/2)<pulse.r){d.got=true;beep(700+level*30,.07,'triangle');}});
+if(pulse.r>pulse.max)pulse=null;}
+// escape check: dots reaching line outside pulse
+dots.forEach(d=>{if(!d.got&&d.y>LINE-4){playing=false;die();}});
+dots=dots.filter(d=>d.y<H+10&&!d.got);}
+function die(){if(time>best){best=time;localStorage.setItem('mb_best',best);document.getElementById('b').textContent=best.toFixed(1);}
+document.getElementById('od').innerHTML='a dot crossed the line at <b style="font-size:1.5rem">'+time.toFixed(1)+'s</b> · pulse '+level;
+document.getElementById('btn').textContent='AGAIN';document.getElementById('ov').style.display='flex';beep(140,.4,'sawtooth');}
+function draw(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#111';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,LINE);ctx.lineTo(W,LINE);ctx.stroke();
+dots.forEach(d=>{ctx.fillStyle='#111';ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,7);ctx.fill();});
+if(pulse){ctx.strokeStyle='#111';ctx.beginPath();ctx.ellipse(W/2,LINE,pulse.r,18,0,0,7);ctx.stroke();
+ctx.fillStyle='#1111';ctx.fillRect(W/2-pulse.r,LINE-18,pulse.r*2,36);}}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

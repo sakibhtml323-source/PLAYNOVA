@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Charm Match #340</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(6,50px);gap:4px;margin:12px}
+.t{width:50px;height:50px;background:#312e81;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;user-select:none}
+.t.sel{outline:2px solid #fbbf24;transform:scale(1.08)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Charm Match</h1><div class="sub">Swap charms to match 3+ — chain reactions build combo multipliers!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Combo <b id="c">×1</b></span><span>Moves <b id="m">20</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">✨ New Board</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=6,C=6,ICONS=['👑','💍','🗝️','🏰','⚜️','💠'];
+let grid=[],sel=null,score=0,moves=20,combo=1,playing=true;
+function build(){grid=[];for(let r=0;r<R;r++){const row=[];for(let c=0;c<C;c++)row.push((Math.random()*6)|0);grid.push(row);}
+score=0;moves=20;combo=1;playing=true;
+document.getElementById('s').textContent=0;
+document.getElementById('m').textContent=20;
+document.getElementById('c').textContent='×1';
+render();msg('Swap to match!');}
+function find(){const m=new Set();
+for(let r=0;r<R;r++){let run=1;for(let c=1;c<=C;c++){
+if(c<C&&grid[r][c]===grid[r][c-1])run++;
+else{if(run>=3)for(let k=c-run;k<c;k++)m.add(r*C+k);run=1;}}}
+for(let c=0;c<C;c++){let run=1;for(let r=1;r<=R;r++){
+if(r<R&&grid[r][c]===grid[r-1][c])run++;
+else{if(run>=3)for(let k=r-run;k<r;k++)m.add(k*C+c);run=1;}}}
+return m;}
+function grav(){for(let c=0;c<C;c++){let w=R-1;
+for(let r=R-1;r>=0;r--){if(grid[r][c]!==null){grid[w][c]=grid[r][c];if(w!==r)grid[r][c]=null;w--;}}
+for(let r=w;r>=0;r--)grid[r][c]=(Math.random()*6)|0;}}
+function tap(r,c){if(!playing)return;
+if(sel&&sel.r===r&&sel.c===c){sel=null;render();return;}
+if(!sel){sel={r,c};render();return;}
+const adj=Math.abs(sel.r-r)+Math.abs(sel.c-c)===1;
+if(!adj){sel={r,c};render();return;}
+const t=grid[sel.r][sel.c];grid[sel.r][sel.c]=grid[r][c];grid[r][c]=t;
+const m=find();
+if(!m.size){grid[r][c]=grid[sel.r][sel.c];grid[sel.r][sel.c]=t;
+beep(160,.08,'sawtooth');sel=null;render();return;}
+moves--;document.getElementById('m').textContent=moves;
+let gained=0,chain=true;combo=1;
+while(chain){const mm=find();if(!mm.size)break;
+gained+=mm.size*15*combo;combo++;
+mm.forEach(i=>{grid[(i/C)|0][i%C]=null;});grav();}
+score+=gained;document.getElementById('s').textContent=score;
+document.getElementById('c').textContent='×'+(combo-1);
+beep(500,.12,'triangle');msg('💥 +'+gained+'!');
+sel=null;render();
+if(moves<=0){playing=false;beep(130,.3,'sawtooth');msg('🏁 Final: '+score);}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<R;r++)for(let c=0;c<C;c++){const d=document.createElement('div');d.className='t';
+d.className='t'+(sel&&sel.r===r&&sel.c===c?' sel':'');
+d.textContent=ICONS[grid[r][c]]||'';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();};
+build();
+</script></body></html>

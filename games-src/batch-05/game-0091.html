@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Golden Comic Book Mountain</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#fef08a;font-family:'Comic Sans MS',cursive;color:#111;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#dc2626;padding:6px;text-shadow:2px 2px #fff}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#87ceeb;border-radius:8px;border:4px solid #111;touch-action:none;box-shadow:6px 6px 0 #111}
+#ov{position:fixed;inset:0;background:rgba(254,240,138,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#111;padding:20px;z-index:5}
+button{background:#dc2626;color:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;font-family:inherit;font-weight:700;padding:12px 34px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⛰️ GOLDEN COMIC MOUNTAIN</h1>
+<div id="hud"><span>Height <b id="h">0</b>m</span><span>💥 POWs <b id="p">0</b></span><span>❤️ <b id="hp">3</b></span><span>Best <b id="b">0</b>m</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#dc2626">KA-POW CLIMB!</h2><p id="od">Climb the golden peak, comic-style! Move with A/D or arrows, jump with W/Space/tap. Punch boulders with F — they shatter in a satisfying POW! 💥 Reach 500m to plant the flag.</p><button id="btn">BAM! START!</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=480;cvs.width=W;cvs.height=H;
+let me,plats,rocks,playing,keys,height,best=+localStorage.getItem('cm2_best')||0,pows;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:0,vy:-6,onG:false,punch:0};plats=[{x:0,y:0,w:200,h:12}];rocks=[];height=0;pows=0;keys={};playing=true;
+document.getElementById('h').textContent=0;document.getElementById('p').textContent=0;document.getElementById('hp').textContent=3;}
+function jump(){if(me.onG){me.vy=-11;me.onG=false;beep(500,.05);}}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=true;
+if(k==='w'||k===' '){e.preventDefault();jump();}if(k==='f')punch();});
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.35)keys['a']=true;else if(x>W*0.65)keys['d']=true;else jump();
+setTimeout(()=>{keys['a']=false;keys['d']=false;},120);});
+function punch(){me.punch=8;beep(700,.05,'sawtooth');
+rocks.forEach(rk=>{if(!rk.dead&&Math.abs(rk.x-me.x)<40&&Math.abs(rk.y-me.y)<40){rk.dead=true;pows++;document.getElementById('p').textContent=pows;beep(200,.15,'sawtooth');}});}
+function step(){const sp=3.6;
+if(keys['a']||keys['arrowleft'])me.x-=sp;if(keys['d']||keys['arrowright'])me.x+=sp;
+me.vy+=0.5;me.y+=me.vy;me.onG=false;me.punch=Math.max(0,me.punch-1);
+plats.forEach(p=>{if(me.vy>=0&&me.x>p.x&&me.x<p.x+p.w&&me.y>=p.y-2&&me.y<=p.y+12){me.y=p.y;me.vy=-9.5;me.onG=true;}});
+height=Math.max(height,-me.y/8);document.getElementById('h').textContent=Math.floor(height);
+const last=plats[plats.length-1];
+if(last.y+last.h>me.y-H){const nw=60+Math.random()*90;const ny=last.y-(30+Math.random()*60);
+plats.push({x:Math.random()*(W-nw),y:ny,w:nw,h:10});
+if(Math.random()<0.35)rocks.push({x:20+Math.random()*(W-40),y:ny-60,r:12,dead:false});}
+plats=plats.filter(p=>p.y<me.y+H);rocks=rocks.filter(r=>r.y<me.y+H&&!r.dead);
+// rock hits
+let hp=+document.getElementById('hp').textContent;
+rocks.forEach(rk=>{if(Math.hypot(rk.x-me.x,rk.y-me.y)<24&&!rk.dead){rk.dead=true;hp--;document.getElementById('hp').textContent=hp;beep(140,.2,'sawtooth');
+if(hp<=0)die();}});
+if(height>=500)win();
+if(me.y>height*8+H+100)die();}
+function win(){playing=false;if(Math.floor(height)>best){best=Math.floor(height);localStorage.setItem('cm2_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');
+document.getElementById('od').innerHTML='🏴 <b style="color:#dc2626">FLAG PLANTED AT THE PEAK!</b><br>500m climbed with '+pows+' POWs!';
+document.getElementById('btn').textContent='CLIMB HIGHER';document.getElementById('ov').style.display='flex';}
+function die(){playing=false;const h=Math.floor(height);
+if(h>best){best=h;localStorage.setItem('cm2_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='WHAM! Down at <b style="color:#dc2626">'+h+'m</b> with '+pows+' POWs.';
+document.getElementById('btn').textContent='BAM! AGAIN!';document.getElementById('ov').style.display='flex';beep(120,.4,'sawtooth');}
+function draw(){const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#fde047');g2.addColorStop(1,'#87ceeb');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+const off=-me.y+H/2;
+// halftone dots
+ctx.fillStyle='#11111111';for(let y=0;y<H;y+=14)for(let x=(y/14%2)*7;x<W;x+=14)ctx.fillRect(x,y,2,2);
+plats.forEach(p=>{ctx.fillStyle='#111';ctx.fillRect(p.x,p.y+off,p.w,p.h);ctx.fillStyle='#dc2626';ctx.fillRect(p.x,p.y+off,p.w,3);});
+rocks.forEach(rk=>{ctx.fillStyle='#57534e';ctx.beginPath();ctx.arc(rk.x,rk.y+off,rk.r,0,7);ctx.fill();
+ctx.fillStyle='#111';ctx.fillText('!',rk.x-2,rk.y+off+4);});
+ctx.fillStyle='#2563eb';ctx.fillRect(me.x-10,me.y+off-24,20,24);
+ctx.fillStyle='#fcd34d';ctx.fillRect(me.x-10,me.y+off-24,20,7);
+ctx.fillStyle='#111';ctx.fillRect(me.x+3,me.y+off-18,4,4);
+if(me.punch>0){ctx.strokeStyle='#dc2626';ctx.lineWidth=3;ctx.beginPath();
+ctx.moveTo(me.x+10,me.y+off-16);ctx.lineTo(me.x+26,me.y+off-20);ctx.stroke();
+ctx.fillStyle='#dc2626';ctx.font='bold 12px Comic Sans MS';ctx.textAlign='center';ctx.fillText('POW!',me.x+38,me.y+off-24);}}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

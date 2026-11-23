@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Crystal Isometric Blast</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0c0a09;font-family:'Segoe UI',Arial,sans-serif;color:#e7e5e4;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#67e8f9;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#1c1917;border-radius:10px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(12,10,9,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e7e5e4;padding:20px;z-index:5}
+button{background:#67e8f9;border:none;color:#0c0a09;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>💎 CRYSTAL ISO BLAST</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Combo <b id="cb">0</b></span><span>Wave <b id="w">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#67e8f9">CRYSTAL BLAST</h2><p id="od">Tap the iso-grid to detonate crystal charges! Chain reactions across the diamond field. Bigger chains, bigger score. The field refills — the waves intensify.</p><button id="btn">DETONATE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=400;cvs.width=W;cvs.height=H;
+const N=7,TS=46;
+let grid,playing,score,combo,wave,best=+localStorage.getItem('cb3_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function iso(x,y){return{x:W/2+(x-y)*TS*0.9,y:44+(x+y)*TS*0.45};}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){grid=[];for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=1+((Math.random()*4)|0);}
+score=0;combo=0;wave=1;playing=true;
+document.getElementById('s').textContent=0;document.getElementById('cb').textContent=0;document.getElementById('w').textContent=1;draw();}
+function neigh(r,c){return[[r-1,c],[r+1,c],[r,c-1],[r,c+1]].filter(([a,b])=>a>=0&&b>=0&&a<N&&b<N);}
+function blast(r,c){if(!playing)return;const v=grid[r][c];if(!v)return;
+const seen=new Set([r+','+c]);const q=[[r,c]];
+while(q.length){const[a,b]=q.pop();neigh(a,b).forEach(([x,y])=>{const k=x+','+y;
+if(!seen.has(k)&&grid[x][y]===v){seen.add(k);q.push([x,y]);}});}
+combo=seen.size;score+=seen.size*seen.size*wave;document.getElementById('s').textContent=score;document.getElementById('cb').textContent=combo;
+seen.forEach(k=>{const[x,y]=k.split(',').map(Number);grid[x][y]=0;});
+beep(400+combo*30,.12,'triangle');
+// refill after delay with higher values
+setTimeout(()=>{seen.forEach(k=>{const[x,y]=k.split(',').map(Number);grid[x][y]=1+((Math.random()*(3+wave))|0);});
+if(score>wave*250){wave++;document.getElementById('w').textContent=wave;beep(880,.15,'triangle');}
+draw();},240);
+draw();}
+function draw(){ctx.fillStyle='#1c1917';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const p=iso(c,r);const v=grid[r][c];
+ctx.fillStyle=v?'#292524':'#1c1917';
+ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+TS*0.8,p.y+TS*0.4);ctx.lineTo(p.x,p.y+TS*0.8);ctx.lineTo(p.x-TS*0.8,p.y+TS*0.4);ctx.fill();
+if(v){const cols=['','#67e8f9','#a78bfa','#f472b6','#fbbf24','#4ade80'];
+ctx.fillStyle=cols[Math.min(v,5)];ctx.beginPath();ctx.arc(p.x,p.y+TS*0.4,7,0,7);ctx.fill();}}}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=cvs.getBoundingClientRect();
+const mx=(e.clientX-r.left)/r.width*W,my=(e.clientY-r.top)/r.height*H;
+let hit=null,hd=1e9;
+for(let rr=0;rr<N;rr++)for(let cc=0;cc<N;cc++){const p=iso(cc,rr);
+const d=Math.hypot(p.x-mx,p.y+TS*0.4-my);if(d<24&&d<hd){hd=d;hit=[rr,cc];}}
+if(hit)blast(hit[0],hit[1]);});
+window.addEventListener('keydown',e=>{if(e.key==='Enter'&&playing){const r=(Math.random()*N)|0,c=(Math.random()*N)|0;blast(r,c);}});
+function save(){if(score>best){best=score;localStorage.setItem('cb3_best',best);document.getElementById('b').textContent=best;}}
+window.addEventListener('beforeunload',save);
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

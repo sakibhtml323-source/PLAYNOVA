@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Feast Rush #359</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#guests{display:flex;gap:10px;margin:10px;flex-wrap:wrap;justify-content:center;min-height:100px}
+.guest{background:#312e81;border:2px solid #4f46e5;border-radius:12px;padding:8px 12px;text-align:center;font-size:.8rem}
+.guest .e{font-size:2rem}
+.guest .bar{height:5px;background:#1e1b4b;border-radius:3px;margin-top:4px;overflow:hidden}
+.guest .bar i{display:block;height:100%;background:#22c55e;transition:width .2s}
+#dishes{display:flex;gap:10px;margin:10px}
+.dish{font-size:2rem;width:64px;height:64px;background:#4338ca;border:2px solid #4f46e5;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🍽️ Royal Feast Rush</h1><div class="sub">Serve each guest their requested dish before their patience runs out!</div>
+<div id="hud"><span>Served <b id="s">0</b></span><span>Missed <b id="m">0</b>/3</span><span>⏱️ <b id="t">60</b>s</span></div>
+<div id="guests"></div>
+<div id="dishes"></div>
+<div id="ov"><div style="font-size:3rem">👑</div><p>Tap the dish, then the guest who ordered it!<br>60 seconds of feast frenzy!</p><button id="btn">Serve</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const DISHES=[{e:'🍗',n:'Drumstick'},{e:'🍰',n:'Cake'},{e:'🍲',n:'Stew'},{e:'🍤',n:'Shrimp'}];
+const GUESTS=['🫅','👸','🤴','👵','🧙','🛡️'];
+let guests=[],selDish=null,served=0,missed=0,playing=false,timer=null,time=60;
+function buildDishes(){const d=document.getElementById('dishes');d.innerHTML='';
+DISHES.forEach((di,i)=>{const b=document.createElement('div');b.className='dish';
+b.textContent=di.e;
+b.onclick=()=>{if(!playing)return;selDish=i;beep(400+i*60,.07);
+document.querySelectorAll('.dish').forEach(x=>x.style.borderColor='#4f46e5');
+b.style.borderColor='#fbbf24';};
+d.appendChild(b);});}
+function spawn(){if(guests.length>=4)return;
+const want=(Math.random()*DISHES.length)|0;
+guests.push({e:GUESTS[(Math.random()*GUESTS.length)|0],want,life:8000+Math.random()*4000});}
+function tick(){if(!playing)return;
+time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);beep(880,.3,'triangle');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🏁 Feast over!<br>Served: <b style="color:#fbbf14">'+served+'</b>';
+return;}
+guests.forEach(g=>{g.life-=250;});
+guests=guests.filter(g=>{
+if(g.life<=0){missed++;document.getElementById('m').textContent=missed;
+beep(150,.2,'sawtooth');return false;}return true;});
+if(missed>=3){playing=false;clearInterval(timer);beep(130,.35,'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='💔 Three guests stormed out!<br>Served: '+served;return;}
+if(Math.random()<0.12)spawn();
+render();}
+function render(){const g=document.getElementById('guests');g.innerHTML='';
+guests.forEach((gst,i)=>{const d=document.createElement('div');d.className='guest';
+d.innerHTML='<div class="e">'+gst.e+'</div><div>wants '+DISHES[gst.want].e+'</div><div class="bar"><i style="width:'+(gst.life/120)+'%"></i></div>';
+d.onclick=()=>{if(!playing||selDish===null)return;
+if(selDish===gst.want){served++;document.getElementById('s').textContent=served;
+beep(600+served*10,.1,'triangle');guests.splice(i,1);}
+else{beep(200,.1,'sawtooth');}
+selDish=null;
+document.querySelectorAll('.dish').forEach(x=>x.style.borderColor='#4f46e5');};
+g.appendChild(d);});}
+document.getElementById('btn').onclick=()=>{guests=[];selDish=null;served=0;missed=0;time=60;
+document.getElementById('s').textContent=0;document.getElementById('m').textContent=0;
+document.getElementById('t').textContent=60;document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();buildDishes();
+for(let i=0;i<3;i++)spawn();render();
+clearInterval(timer);timer=setInterval(tick,250);};
+</script></body></html>

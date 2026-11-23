@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Jewel Weigh #430</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem;max-width:330px;text-align:center}
+#scale{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px;font-size:2rem}
+#scale .pan{min-width:110px;min-height:56px;background:#312e81;border:2px solid #4f46e5;border-radius:12px;display:flex;flex-wrap:wrap;gap:3px;padding:6px;justify-content:center}
+#jewels{display:flex;gap:8px;margin:12px;flex-wrap:wrap;justify-content:center}
+.j{width:48px;height:48px;background:#4338ca;border:2px solid #6366f1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer}
+.j.sel{outline:3px solid #fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>⚖️ Royal Jewel Weigh</h1><div class="sub">One jewel is fake (lighter). Use the balance — tap jewels for each pan, then Weigh!</div>
+<div id="hud"><span>Weighs <b id="w">2</b></span><span>Jewels <b id="n">8</b></span></div>
+<div id="scale"><div class="pan" id="L"></div><div>⚖️</div><div class="pan" id="R"></div></div>
+<div id="jewels"></div>
+<div id="msg"></div>
+<button id="weigh">⚖️ Weigh</button>
+<button id="btn">👑 New Vault</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let jewels=[],fake=0,weighs=2,selL=[],selR=[],level=1;
+function gen(){const n=8;jewels=[];fake=(Math.random()*n)|0;
+for(let i=0;i<n;i++)jewels.push({i,lit:false});
+weighs=2;selL=[];selR=[];
+document.getElementById('w').textContent=2;document.getElementById('n').textContent=n;
+render();msg('Find the fake (lighter) jewel!');}
+function tap(i){const j=jewels[i];
+if(j.lit){// accuse
+if(i===fake){beep(880,.3,'triangle');
+msg('👑 Found the fake! Level '+(level+1));level++;
+setTimeout(gen,1000);}
+else{beep(150,.2,'sawtooth');msg('❌ That one is real! Game over.');
+setTimeout(gen,1500);}
+return;}
+// select for pan
+if(selL.includes(i)||selR.includes(i)){selL=selL.filter(x=>x!==i);selR=selR.filter(x=>x!==i);}
+else if(selL.length<=selR.length)selL.push(i);else selR.push(i);
+beep(400,.05);render();}
+document.getElementById('weigh').onclick=()=>{
+if(!selL.length&&!selR.length)return;
+if(weighs<=0){beep(160,.1,'sawtooth');msg('No weighs left!');return;}
+weighs--;document.getElementById('w').textContent=weighs;
+const lw=selL.reduce((a,i)=>a+(i===fake?0.9:1),0);
+const rw=selR.reduce((a,i)=>a+(i===fake?0.9:1),0);
+if(Math.abs(lw-rw)<0.01){msg('⚖️ Balanced! Fake is NOT on the scale.');
+beep(500,.1);}
+else{const light=lw<rw?'LEFT':'RIGHT';
+msg('⚖️ '+light+' pan is lighter! Fake is among those.');
+beep(600,.12);}
+selL=[];selR=[];render();};
+function render(){const jw=document.getElementById('jewels');jw.innerHTML='';
+jewels.forEach((j,i)=>{const d=document.createElement('div');d.className='j';
+d.textContent='💎';
+if(selL.includes(i))d.style.background='#1e3a8a';
+if(selR.includes(i))d.style.background='#4c1d95';
+if(j.lit)d.style.opacity=0.4;
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+jw.appendChild(d);});
+document.getElementById('L').textContent=selL.map(i=>'💎').join('')||'…';
+document.getElementById('R').textContent=selR.map(i=>'💎').join('')||'…';}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

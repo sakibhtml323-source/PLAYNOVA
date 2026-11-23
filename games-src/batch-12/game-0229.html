@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Hex Duel #229</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:12px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#board{display:flex;flex-wrap:wrap;justify-content:center;max-width:340px;margin:10px}
+.hex{width:34px;height:38px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+background:#1e293b;margin:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px}
+.hex.p1{background:#7c3aed}.hex.p2{background:#dc2626}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600;margin:4px}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Crystal Hex Duel</h1><div class="sub">Claim hexes adjacent to your own. Most crystals when board fills wins!</div>
+<div id="hud"><span>You <b id="s1">0</b></span><span>AI <b id="s2">0</b></span><span>Turn <b id="t">1</b></span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">New Crystal Field</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.08,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=8,C=8;let own=[],playing=false,turn=1;
+function neigh(i){const r=(i/C)|0,c=i%C;const out=[];
+if(r>0)out.push(i-C);if(r<R-1)out.push(i+C);if(c>0)out.push(i-1);if(c<C-1)out.push(i+1);
+if(r>0&&c>0)out.push(i-C-1);if(r<R-1&&c<C-1)out.push(i+C+1);return out;}
+function init(){own=Array(64).fill(0);
+own[27]=1;own[28]=1;own[35]=2;own[36]=2;turn=1;playing=true;render();msg('Your move!');}
+function claimable(p){const out=[];for(let i=0;i<64;i++){if(own[i])continue;
+if(neigh(i).some(n=>own[n]===p))out.push(i);}return out;}
+function tap(i){if(!playing||own[i])return;
+if(!claimable(1).includes(i)){beep(160,.08,'sawtooth');msg('Must claim next to your crystals!');return;}
+own[i]=1;beep(500,.08);render();
+if(checkFull())return;
+msg('AI thinking…');setTimeout(()=>{const opts=claimable(2);
+if(!opts.length){checkFull();return;}
+const scored=opts.map(o=>({o,s:neigh(o).filter(n=>own[n]===2).length+Math.random()}));
+scored.sort((a,b)=>b.s-a.s);own[scored[0].o]=2;beep(320,.08);
+turn++;document.getElementById('t').textContent=turn;render();checkFull();},450);}
+function checkFull(){const p1=own.filter(x=>x===1).length,p2=own.filter(x=>x===2).length;
+document.getElementById('s1').textContent=p1;document.getElementById('s2').textContent=p2;
+const opts1=claimable(1),opts2=claimable(2);
+if(p1+p2>=64||(!opts1.length&&!opts2.length)){playing=false;
+const w=p1>p2?'🏆 You dominate the crystal field!':p2>p1?'💀 The AI out-crystals you…':'🤝 Draw!';
+msg(w);beep(p1>=p2?880:200,.25,p1>=p2?'triangle':'sawtooth');return true;}
+if(!opts1.length){msg('No moves — AI wins by default! 💀');playing=false;return true;}
+return false;}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+for(let i=0;i<64;i++){const d=document.createElement('div');
+d.className='hex'+(own[i]===1?' p1':own[i]===2?' p2':'');
+d.textContent=own[i]===1?'💜':own[i]===2?'❤️':'';
+d.onclick=()=>tap(i);b.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();init();};
+init();
+</script></body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Mystic Physics Sandbox</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#fafafa;font-family:'Segoe UI',Arial,sans-serif;color:#333;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;font-weight:300;letter-spacing:2px;padding:8px;color:#555}
+#tools{display:flex;gap:8px;margin:6px;flex-wrap:wrap;justify-content:center}
+#tools button{border:1px solid #ddd;background:#fff;border-radius:20px;padding:6px 14px;cursor:pointer;font-size:.85rem}
+#tools button.sel{background:#333;color:#fff;border-color:#333}
+canvas{background:#fff;border-top:1px solid #eee;touch-action:none;cursor:crosshair}
+#tip{font-size:.75rem;color:#999;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(250,250,250,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#444;padding:20px;z-index:5}
+button.big{background:#333;color:#fff;border:none;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>MYSTIC PHYSICS SANDBOX</h1>
+<div id="tools">
+<button class="sel" data-m="ball">⚪ Ball</button><button data-m="box">⬛ Box</button>
+<button data-m="wall">▬ Wall</button><button data-m="erase">✖ Erase</button>
+<button id="grav">🌍 Gravity: ON</button><button id="clear">↺ Clear</button>
+</div>
+<canvas id="c"></canvas>
+<div id="tip">Tap to place. Drag to draw walls. Right-side buttons change the world.</div>
+<div id="ov"><h1 style="font-weight:300">PHYSICS SANDBOX</h1><p id="od">A tiny mystic world: balls bounce, boxes tumble, walls stand. Build Rube Goldberg machines, then flip gravity to wreak gentle havoc. Saves automatically.</p><button class="big" id="btn">ENTER SANDBOX</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+let W=innerWidth,H=innerHeight-110;cvs.width=W;cvs.height=H;
+let bodies=[],mode='ball',gravity=true,drawing=false;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.04){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.05;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+document.querySelectorAll('#tools [data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('#tools [data-m]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');});
+document.getElementById('grav').onclick=e=>{gravity=!gravity;e.target.textContent='🌍 Gravity: '+(gravity?'ON':'OFF');};
+document.getElementById('clear').onclick=()=>{bodies=[];localStorage.removeItem('ps_save');};
+function resize(){W=innerWidth;H=Math.max(200,innerHeight-110);cvs.width=W;cvs.height=H;}
+window.addEventListener('resize',resize);
+function pos(e){const r=cvs.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
+let drawStart=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const p=pos(e);
+if(mode==='ball'){bodies.push({t:'b',x:p.x,y:p.y,vx:(Math.random()-.5)*4,vy:0,r:9+Math.random()*10,c:'hsl('+((Math.random()*360)|0)+',60%,60%)'});beep(500+Math.random()*300);}
+else if(mode==='box'){bodies.push({t:'x',x:p.x,y:p.y,vx:0,vy:0,s:12+Math.random()*14,rot:Math.random()*6,vr:(Math.random()-.5)*0.2,c:'#555'});}
+else if(mode==='wall'){drawing=true;drawStart=p;}
+else if(mode==='erase'){bodies=bodies.filter(b=>{if(b.t==='w')return !(p.x>b.x&&p.x<b.x2&&p.y>b.y&&p.y<b.y2);return Math.hypot(b.x-p.x,(b.y||0)-p.y)>(b.r||b.s||30);});}
+save();});
+cvs.addEventListener('pointerup',e=>{if(drawing&&drawStart){const p=pos(e);
+if(Math.hypot(p.x-drawStart.x,p.y-drawStart.y)>8){bodies.push({t:'w',x:Math.min(drawStart.x,p.x),y:Math.min(drawStart.y,p.y),x2:Math.max(drawStart.x,p.x),y2:Math.max(drawStart.y,p.y)});save();}
+drawing=false;drawStart=null;}});
+function save(){try{localStorage.setItem('ps_save',JSON.stringify(bodies.slice(-120)));}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('ps_save'));if(d)bodies=d;}catch(e){}}
+load();
+function step(){bodies.forEach(b=>{
+if(b.t==='w')return;
+b.vy+=gravity?0.35:0;b.x+=b.vx;b.y+=b.vy;if(b.t==='x')b.rot+=b.vr;
+const r=b.r||b.s||8;
+if(b.x<r){b.x=r;b.vx*=-0.7;}if(b.x>W-r){b.x=W-r;b.vx*=-0.7;}
+if(b.y<H-r&&b.y>r){}if(b.y>H-r){b.y=H-r;b.vy*=-0.72;b.vx*=0.99;if(Math.abs(b.vy)<0.4)b.vy=0;}
+if(b.y<r){b.y=r;b.vy*=-0.7;}
+// walls
+bodies.forEach(w=>{if(w.t!=='w')return;
+if(b.x>w.x-r&&b.x<w.x2+r&&b.y>w.y-r&&b.y<w.y2+r){
+const dl=b.x-(w.x-r),dr=(w.x2+r)-b.x,dt=b.y-(w.y-r),db=(w.y2+r)-b.y;
+const m=Math.min(dl,dr,dt,db);
+if(m===dl){b.x=w.x-r;b.vx*=-0.6;}else if(m===dr){b.x=w.x2+r;b.vx*=-0.6;}
+else if(m===dt){b.y=w.y-r;b.vy*=-0.6;}else{b.y=w.y2+r;b.vy*=-0.6;}}});});}
+function draw(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#eee';ctx.beginPath();ctx.moveTo(0,H-0.5);ctx.lineTo(W,H-0.5);ctx.stroke();
+bodies.forEach(b=>{if(b.t==='w'){ctx.fillStyle='#333';ctx.fillRect(b.x,b.y,b.x2-b.x,b.y2-b.y);}
+else{ctx.fillStyle=b.c;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fill();}
+if(b.t==='x'){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);ctx.fillStyle=b.c;ctx.fillRect(-b.s/2,-b.s/2,b.s,b.s);ctx.restore();}});
+if(drawing&&drawStart){const p=lastP;ctx.strokeStyle='#333';ctx.setLineDash([4,4]);ctx.strokeRect(drawStart.x,drawStart.y,(p?p.x:drawStart.x)-drawStart.x,(p?p.y:drawStart.y)-drawStart.y);ctx.setLineDash([]);}}
+let lastP=null;
+cvs.addEventListener('pointermove',e=>lastP=pos(e));
+function loop(){step();draw();requestAnimationFrame(loop);}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='b')document.querySelector('[data-m=ball]').click();
+if(k==='x')document.querySelector('[data-m=box]').click();
+if(k==='w')document.querySelector('[data-m=wall]').click();
+if(k==='e')document.querySelector('[data-m=erase]').click();
+if(k==='g')document.getElementById('grav').click();
+if(k==='c')document.getElementById('clear').click();});
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

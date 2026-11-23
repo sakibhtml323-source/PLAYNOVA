@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Bell Ring #410</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#bells{display:flex;gap:10px;margin:14px;flex-wrap:wrap;justify-content:center}
+.bell{width:80px;height:96px;background:#27272a;border:3px solid #3f3f46;border-radius:50% 50% 12px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:30px;transition:transform .08s}
+.bell.ring{transform:scale(1.08);border-color:#facc15;background:#3f3f46}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔔 Haunted Bell Ring</h1><div class="sub">Ring the bells low→high — then the ghost demands the REVERSE order!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Phase <b id="p">⬆</b></span><span>Best <b id="b">0</b></span></div>
+<div id="bells"></div>
+<div id="msg"></div>
+<button id="btn">🎵 Begin</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function bell(i){const F=[294,370,440,554,659,740];
+try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();
+os.type='sine';os.frequency.value=F[i];
+g.gain.setValueAtTime(.15,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+.55);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+.55);}catch(e){}}
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=6;let order=[],phase='up',idx=0,round=1,best=+localStorage.getItem('hbr_best')||0;
+document.getElementById('b').textContent=best;
+function build(){const b=document.getElementById('bells');b.innerHTML='';
+const sh=[...Array(N).keys()].sort(()=>Math.random()-.5);
+order=sh;
+sh.forEach(i=>{const d=document.createElement('div');d.className='bell';
+d.textContent='🔔';
+d.onclick=()=>ring(i);b.appendChild(d);});
+phase='up';idx=0;document.getElementById('p').textContent='⬆ Up';
+msg('Ring from LOWEST to HIGHEST!');}
+function ring(i){bell(i);
+const el=[...document.querySelectorAll('.bell')].find(x=>+x.dataset.i===i);
+// find by index in order
+const pos=order.indexOf(i);
+const el2=document.querySelectorAll('.bell')[order.indexOf(i)];
+el2.classList.add('ring');setTimeout(()=>el2.classList.remove('ring'),160);
+const seq=phase==='up'?order.slice().sort((a,b)=>a-b):order.slice().sort((a,b)=>b-a);
+if(i!==seq[idx]){beep(130,.3,'sawtooth');
+msg('💥 Wrong bell! Round '+round);
+if(round>best){best=round;localStorage.setItem('hbr_best',best);document.getElementById('b').textContent=best;}
+return;}
+idx++;
+if(idx>=seq.length){
+if(phase==='up'){phase='down';idx=0;
+document.getElementById('p').textContent='⬇ Down';
+beep(600,.15,'triangle');msg('👻 Now REVERSE — highest to lowest!');}
+else{round++;document.getElementById('r').textContent=round;
+beep(880,.25,'triangle');msg('✅ Round '+round+'!');setTimeout(build,900);}}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();};
+</script></body></html>

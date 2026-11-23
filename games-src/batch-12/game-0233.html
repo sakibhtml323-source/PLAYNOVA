@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Maze Sprint #233</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(9,34px);gap:1px;margin:10px}
+.c{width:34px;height:34px;background:#1e293b;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.c.wall{background:#475569}.c.me{background:#7c3aed}.c.goal{background:#14532d}.c.seen{background:#334155}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🥷 Ninja Maze Sprint</h1><div class="sub">Reach the scroll before time runs out — walls hide beyond your torchlight!</div>
+<div id="hud"><span>⏱️ <b id="t">30</b>s</span><span>Level <b id="l">1</b></span><span>Steps <b id="s">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🌀 New Maze</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=9;let grid=[],me={r:1,c:1},goal={r:7,c:7},time=30,steps=0,level=1,timer=null,seen=new Set();
+function gen(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(r%2===0&&c%2===0&&Math.random()<0.55?1:0);grid.push(row);}
+// ensure border walls
+for(let i=0;i<N;i++){grid[0][i]=1;grid[N-1][i]=1;grid[i][0]=1;grid[i][N-1]=1;}
+grid[1][1]=0;grid[7][7]=0;me={r:1,c:1};seen=new Set();reveal();}
+function reveal(){seen=new Set();
+for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const r=me.r+dr,c=me.c+dc;
+if(r>=0&&r<N&&c>=0&&c<N)seen.add(r*N+c);}}
+function move(dr,dc){const r=me.r+dr,c=me.c+dc;
+if(r<0||r>=N||c<0||c>=N||grid[r][c]){beep(160,.06,'sawtooth');return;}
+me={r,c};steps++;document.getElementById('s').textContent=steps;reveal();render();
+if(r===goal.r&&c===goal.c){clearInterval(timer);beep(880,.2,'triangle');msg('🎉 Scroll claimed! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;document.getElementById('l').textContent=level;setTimeout(start,900);return;}
+beep(400+((r+c)*37)%200,.04);}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+const vis=seen.has(r*N+c);
+d.className='c'+(grid[r][c]&&vis?' wall':vis?' seen':'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🥷';}
+else if(r===goal.r&&c===goal.c&&vis){d.classList.add('goal');d.textContent='📜';}
+d.onclick=()=>{const dr=r-me.r,dc=c-me.c;if(Math.abs(dr)+Math.abs(dc)===1)move(dr,dc);};
+g.appendChild(d);}}
+function start(){gen();steps=0;document.getElementById('s').textContent=0;
+time=Math.max(12,30-level*2);document.getElementById('t').textContent=time;
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);beep(130,.3,'sawtooth');msg('⏰ Caught by the guards!');}},1000);render();}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='arrowup'||k==='w')move(-1,0);if(k==='arrowdown'||k==='s')move(1,0);
+if(k==='arrowleft'||k==='a')move(0,-1);if(k==='arrowright'||k==='d')move(0,1);});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();start();};
+start();
+</script></body></html>

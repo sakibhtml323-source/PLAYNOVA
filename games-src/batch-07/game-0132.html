@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Food Dragon Island</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fff7ed,#ffedd5);font-family:Georgia,serif;color:#7c2d12;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#c2410c;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:12px}
+#q{font-size:1.25rem;text-align:center;margin:16px 0;min-height:2.4em;line-height:1.5}
+#opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(480px,94vw)}
+#opts button{background:#fff;border:3px solid #fdba74;border-radius:14px;padding:14px;font-family:inherit;font-size:.95rem;cursor:pointer;color:#7c2d12}
+#opts button:hover{background:#fff7ed}
+#opts button.ok{background:#bbf7d0;border-color:#16a34a}
+#opts button.bad{background:#fecaca;border-color:#dc2626}
+#fb{text-align:center;min-height:1.6em;margin-top:12px;font-weight:700}
+#ov{position:fixed;inset:0;background:rgba(255,247,237,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#7c2d12;padding:20px;z-index:5}
+button.big{background:#c2410c;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🐉 FOOD DRAGON ISLAND</h1>
+<div id="hud"><span>Feast <b id="n">1</b>/10</span><span>Score <b id="sc">0</b></span><span>🔥 Dragon mood <b id="dm">😊</b></span><span>Best <b id="b">0</b></span></div>
+<div id="q">Feed the dragon correct answers!</div>
+<div id="opts"></div>
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#c2410c">FEED THE DRAGON</h2><p id="od">A dragon guards a treasure of food trivia! Answer correctly to feed it — wrong answers make it hangry 😠. Three hangry roars and it eats the feast (and you).</p><button class="big" id="btn">APPROACH THE DRAGON</button></div>
+<script>
+"use strict";
+const QS=[
+{q:'Which vitamin is abundant in oranges?',o:['Vitamin C','Vitamin D','Iron','Calcium'],a:0},
+{q:'Bread is made primarily from…?',o:['Rice','Wheat','Corn','Oats'],a:1},
+{q:'What gives hot peppers their heat?',o:['Capsaicin','Caffeine','Sucrose','Gluten'],a:0},
+{q:'Saffron comes from which flower?',o:['Rose','Crocus','Tulip','Lily'],a:1},
+{q:'What is the main ingredient of tofu?',o:['Rice','Soybeans','Chickpeas','Almonds'],a:1},
+{q:'Which fruit has its seeds on the outside?',o:['Strawberry','Apple','Peach','Cherry'],a:0},
+{q:'Baking soda is also called…?',o:['Sodium chloride','Sodium bicarbonate','Potassium','Yeast'],a:1},
+{q:'Green tea originates from…?',o:['India','Japan','China','Korea'],a:2},
+{q:'Which nut is used in marzipan?',o:['Walnut','Almond','Peanut','Cashew'],a:1},
+{q:'The dragon\'s favorite food is…?',o:['Sheep','Treasure','Knowledge','Spicy trivia answers'],a:3}];
+let idx,score,anger,playing,best=+localStorage.getItem('fd_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function mood(){document.getElementById('dm').textContent=anger===0?'😊':anger===1?'😐':'😠';}
+function ask(){if(idx>=10)return end();const q=QS[idx];
+document.getElementById('n').textContent=idx+1;document.getElementById('q').textContent=q.q;
+const o=document.getElementById('opts');o.innerHTML='';
+q.o.forEach((opt,i)=>{const b=document.createElement('button');b.textContent=opt;
+b.onclick=()=>pick(i);o.appendChild(b);});}
+function pick(i){const q=QS[idx];
+[...document.getElementById('opts').children].forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('ok');else if(j===i)b.classList.add('bad');});
+if(i===q.a){score+=15;document.getElementById('sc').textContent=score;beep(660,.1,'triangle');
+document.getElementById('fb').textContent='✓ The dragon purrs! +15';document.getElementById('fb').style.color='#16a34a';}
+else{anger++;mood();beep(150,.25,'sawtooth');
+document.getElementById('fb').textContent='✗ The dragon growls… It was: '+q.o[q.a];document.getElementById('fb').style.color='#dc2626';
+if(anger>=3)return roasted();}
+idx++;setTimeout(ask,1200);}
+function end(){playing=false;if(score>best){best=score;localStorage.setItem('fd_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);
+document.getElementById('od').innerHTML='🐉 <b style="color:#c2410c">THE DRAGON SHARES ITS TREASURE!</b><br>Feast score: '+score;
+document.getElementById('btn').textContent='VISIT AGAIN';document.getElementById('ov').style.display='flex';}
+function roasted(){playing=false;beep(90,.6,'sawtooth');
+document.getElementById('od').innerHTML='🔥 <b>ROASTED BY THE HANGRY DRAGON.</b><br>It only wanted snacks…';
+document.getElementById('btn').textContent='REVIVE AT THE SHORE';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;
+if(e.key>='1'&&e.key<='4'){const b=document.querySelectorAll('#opts button')[+e.key-1];if(b&&!b.disabled)b.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();idx=0;score=0;anger=0;playing=true;mood();
+document.getElementById('sc').textContent=0;document.getElementById('fb').textContent='';
+document.getElementById('ov').style.display='none';ask();};
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+:root{--bg:#1b1464;--ink:#fff;--mut:#b9b6ee;--card:#2a2190;--line:rgba(255,255,255,.12);--acc:#00e5ff;--acc2:#7c4dff;--gold:#ffc83d}
+body{background:linear-gradient(180deg,#2b1c9c 0,#1b1464 420px,#140e4a);color:#fff;background-attachment:fixed}
+.navpill{background:rgba(20,14,74,.88);border-color:var(--line);color:#fff}
+.navpill input{color:#fff}.search{background:rgba(255,255,255,.12);border-radius:999px;color:#fff}
+.mainnav a{border-radius:999px;padding:8px 14px;font-weight:700}.mainnav a:hover,.mainnav a.on{background:var(--acc);color:#10104a}
+.logo b{color:var(--acc)}
+.hero .panel{background:linear-gradient(120deg,#6a38ff,#00b8ff);border-radius:28px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-flow:dense;gap:12px}
+@media(min-width:720px){.grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}.grid>.card:nth-child(11n+1){grid-column:span 2;grid-row:span 2}}
+.card{position:relative;overflow:hidden;border-radius:20px;background:var(--card);aspect-ratio:4/3;transition:transform .18s,box-shadow .18s;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.grid>.card:nth-child(11n+1){aspect-ratio:auto}
+.card:hover,.card:focus-within{transform:scale(1.045);box-shadow:0 0 0 3px var(--acc),0 14px 30px rgba(0,0,0,.5);z-index:2}
+.card .cover,.card .cover img{display:block;width:100%;height:100%;object-fit:cover}
+.card .bd{position:absolute;inset:auto 0 0 0;padding:26px 10px 8px;background:linear-gradient(transparent,rgba(10,6,50,.92));transition:transform .18s}
+@media(hover:hover){.card .bd{transform:translateY(62%)}.card:hover .bd,.card:focus-within .bd{transform:none}}
+.card h3{font-size:.9rem;font-weight:800;color:#fff;line-height:1.2}
+.card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:.72rem}
+.card .badges{display:none}.card .fav{position:static;background:rgba(255,255,255,.18);border:0;border-radius:50%;width:30px;height:30px;color:#fff;opacity:.7}.card .fav.on{opacity:1;background:var(--gold)}
+.btn.pri{background:linear-gradient(135deg,var(--acc),#00a2ff);color:#08083a;border-radius:999px;font-weight:800}
+h2,h3{color:#fff}.section h2{font-weight:900}
+.pn-toast{position:fixed;left:50%;top:76px;pointer-events:none;transform:translateX(-50%);background:#10104a;border:2px solid var(--acc);color:#fff;padding:12px 18px;border-radius:16px;z-index:9999;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:90vw}
+.pn-wrap{max-width:1000px;margin:20px auto;padding:0 14px;width:100%}
+.pn-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}.pn-tabs button{flex:none;background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:800}.pn-tabs button.on{background:var(--acc);color:#10104a}
+.pn-card{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
+.pn-bar{height:14px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}.pn-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.pn-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.pn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pn-btn{background:var(--acc);color:#10104a;border:0;border-radius:999px;padding:9px 16px;font-weight:800;min-height:40px}.pn-btn[disabled]{opacity:.45}.pn-btn.alt{background:rgba(255,255,255,.15);color:#fff}
+.pn-av{font-size:2.4rem}.pn-lvl{animation:pnpop .6s}@keyframes pnpop{from{transform:scale(.6)}50%{transform:scale(1.2)}to{transform:scale(1)}}
+body[data-pn-theme=sunset]{background:linear-gradient(180deg,#a8326b,#4a1450)}body[data-pn-theme=forest]{background:linear-gradient(180deg,#1b6b4a,#0a2e2a)}
+.pn-frame-gold{box-shadow:0 0 0 3px var(--gold)}
+/* touch targets >= 40px */
+.card .fav{width:40px;height:40px;font-size:1.1rem}
+.pager button,#pager button,.btn,.mainnav a,select,.pn-tabs button{min-height:40px;min-width:40px}
+input[type=search],input[type=text],.search input{min-height:40px}
+/* keyboard focus + skip link */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid #00e5ff!important;outline-offset:2px!important}
+.pn-skip{position:absolute;left:8px;top:-60px;background:#00e5ff;color:#10104a;padding:10px 16px;border-radius:12px;font-weight:800;z-index:10000}
+.pn-skip:focus{top:8px}
+/* the cookie/consent bar must never cover game controls: on player pages it flows at the end of the page */
+body.player-mode #consentBar{position:static!important;margin:12px auto;max-width:960px}
+
+#pnDrawer{position:fixed;inset:0;z-index:9500;background:rgba(14,8,60,.97);overflow:auto;padding:14px;-webkit-overflow-scrolling:touch}
+#pnDrawer[hidden]{display:none}
+.pn-dbody{max-width:900px;margin:12px auto 40px}
+#pnDrawer #related h2{margin:18px 0 8px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.card:hover,.card:focus-within{transform:none}}
+/* contrast fixes (found by the pixel-based contrast audit) */
+.legal{color:#ecebff!important;background:rgba(255,255,255,.07)!important;border-color:rgba(255,255,255,.16)!important}
+.legal h1,.legal h2,.legal h3,.legal strong,.legal b{color:#fff!important}
+.legal a{color:#8fe8ff!important;text-decoration:underline}
+.legal code{background:rgba(0,0,0,.35);color:#fff;padding:1px 6px;border-radius:6px}
+.legal .updated{color:#cfcdfa!important}
+nav.mainnav a{color:#d6d3ff}
+nav.mainnav a.on{color:#10104a!important;font-weight:800}
+nav.mainnav a:hover{color:#fff;background:rgba(255,255,255,.14)}
+.tagcat{box-shadow:inset 0 0 0 999px rgba(10,6,50,.55);color:#fff}
+.hero .panel{background:linear-gradient(120deg,#5a2fe0,#0b64c9)}
+.hero .btn.ghost,.btn.ghost{background:rgba(10,6,50,.4);color:#fff;border-color:rgba(255,255,255,.35)}
+footer,footer a,.site-foot,.site-foot a{color:#d6d3ff}
+.crumbs,.crumbs a,.meta,.updated{color:#cfcdfa}
+/* category sections: the original pastel backgrounds made the (white) headings invisible on the dark theme */
+.bg-Action{background:linear-gradient(120deg,rgba(255,93,93,.34),rgba(163,21,63,.22) 60%,rgba(20,14,74,.2))}
+.bg-Puzzle{background:linear-gradient(120deg,rgba(155,107,255,.38),rgba(61,29,156,.24) 60%,rgba(20,14,74,.2))}
+.bg-Brain{background:linear-gradient(120deg,rgba(34,211,238,.30),rgba(14,94,156,.24) 60%,rgba(20,14,74,.2))}
+.bg-Casual{background:linear-gradient(120deg,rgba(255,179,71,.30),rgba(232,89,12,.20) 60%,rgba(20,14,74,.2))}
+.bg-Strategy{background:linear-gradient(120deg,rgba(94,226,122,.28),rgba(11,107,74,.24) 60%,rgba(20,14,74,.2))}
+.bg-Simulation{background:linear-gradient(120deg,rgba(255,143,196,.30),rgba(160,42,122,.24) 60%,rgba(20,14,74,.2))}
+.bg-Arcade{background:linear-gradient(120deg,rgba(255,212,59,.26),rgba(232,89,12,.2) 60%,rgba(20,14,74,.2))}
+.bg-Multiplayer,.bg-Multiplayer-Local{background:linear-gradient(120deg,rgba(108,140,255,.32),rgba(42,47,168,.24) 60%,rgba(20,14,74,.2))}
+.catsec h2.sec,.catsec h2.sec a.more{color:#fff}
+/* card titles sit on top of the thumbnail: darker, taller scrim so the white text always reaches AA contrast */
+.card .bd{background:linear-gradient(transparent,rgba(10,6,50,.78) 26%,rgba(10,6,50,.97));padding-top:34px}
+.card h3,.card h3 a{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.logo b{color:#4fecff}
+.hero .badge,.hero .panel span{background:rgba(10,6,50,.35)}
+@media (max-width:520px){.card{aspect-ratio:1/1.02}.card .meta .tagcat{display:none}.card .meta{justify-content:flex-end}.card .bd{padding-top:26px}.card h3{font-size:.85rem}}
+/* game page control strip was white (old light theme) - make it dark and readable */
+.infostrip,body.player-mode .infostrip{background:rgba(10,6,50,.97)!important;color:#fff;border-color:rgba(255,255,255,.14)!important}
+.infostrip .by{color:#cfcdfa!important}
+.infostrip .by b,.infostrip h2,.infostrip h3{color:#fff!important}
+body .btn.pri,body.player-mode .btn.pri{color:#08083a!important}
+body.player-mode .btn.sec,body.player-mode .btn.ghost{background:rgba(255,255,255,.14);color:#fff!important;border:1px solid rgba(255,255,255,.28)}
+body.player-mode .btn[disabled]{opacity:.55}
+body.player-mode .pcontrols{flex-wrap:wrap;gap:6px;overflow:visible}
+.card .bd{background:linear-gradient(transparent,rgba(10,6,50,.9) 20%,rgba(10,6,50,.98))!important}
+.logo b,.logo span b{color:#8ff5ff!important}
+#consentBar a{color:#9fe9ff!important}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Match Towers #274</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#stacks{display:flex;gap:12px;margin:12px;align-items:flex-end;min-height:200px}
+.stack{display:flex;flex-direction:column-reverse;width:52px;min-height:40px;background:#312e81;border-radius:0 0 10px 10px;padding:3px;cursor:pointer;border-bottom:4px solid #4f46e5}
+.blk{width:44px;height:26px;border-radius:6px;margin:1px auto}
+#next{font-size:2rem;margin:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Match Towers</h1><div class="sub">Place blocks on towers — but never make 3 of the same color touch. Overload = collapse!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Blocks <b id="b">0</b></span><span>Best <b id="be">0</b></span></div>
+<div id="next">🧱</div>
+<div id="stacks"></div>
+<div id="msg"></div>
+<button id="btn">🏰 New Court</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const COLS=['🟥','🟦','🟨','🟩'];
+const CCOL=['#dc2626','#2563eb','#eab308','#16a34a'];
+const NST=4,MAXH=8;
+let stacks=[],cur=null,score=0,placed=0,best=+localStorage.getItem('rmt_best')||0;
+document.getElementById('be').textContent=best;
+function newBlock(){cur=(Math.random()*4)|0;document.getElementById('next').textContent=COLS[cur];}
+function newGame(){stacks=Array.from({length:NST},()=>[]);score=0;placed=0;
+document.getElementById('s').textContent=0;document.getElementById('b').textContent=0;newBlock();render();msg('Tap a tower to place the block!');}
+function tap(i){const st=stacks[i];
+if(st.length>=MAXH){beep(130,.25,'sawtooth');msg('💥 Tower overloaded! Game over.');
+if(score>best){best=score;localStorage.setItem('rmt_best',best);document.getElementById('be').textContent=best;}return;}
+st.push(cur);placed++;score+=5;
+// check 3 in a row (vertically)
+const n=st.length;
+if(n>=3&&st[n-1]===st[n-2]&&st[n-2]===st[n-3]){
+// collapse: remove those 3
+st.splice(n-3,3);score+=30;beep(300,.2,'sawtooth');msg('💥 Three matched — collapsed! +30');}
+else{beep(400+st.length*30,.06);}
+if(score>best){best=score;localStorage.setItem('rmt_best',best);document.getElementById('be').textContent=best;}
+document.getElementById('s').textContent=score;document.getElementById('b').textContent=placed;
+newBlock();render();}
+function render(){const w=document.getElementById('stacks');w.innerHTML='';
+stacks.forEach((st,i)=>{const d=document.createElement('div');d.className='stack';
+st.forEach(b=>{const blk=document.createElement('div');blk.className='blk';blk.style.background=CCOL[b];d.appendChild(blk);});
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+w.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newGame();};
+newGame();
+</script></body></html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Dot Pop #292</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(7,42px);gap:3px;margin:12px}
+.dot{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:transform .1s}
+.dot:hover{transform:scale(1.12)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💠 Crystal Dot Pop</h1><div class="sub">Tap groups of 2+ same-colored dots to pop them. Clear the target score before moves run out!</div>
+<div id="hud"><span>Score <b id="s">0</b>/<b id="tg">300</b></span><span>Moves <b id="m">15</b></span><span>Level <b id="l">1</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">✨ New Board</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=7,C=7,COLORS=['💜','❤️','💙','💚','💛'];
+let grid=[],score=0,moves=15,level=1,playing=true;
+function build(){grid=[];for(let r=0;r<R;r++){const row=[];for(let c=0;c<C;c++)row.push((Math.random()*5)|0);grid.push(row);}
+score=0;moves=15;playing=true;
+document.getElementById('s').textContent=0;
+document.getElementById('m').textContent=15;
+document.getElementById('l').textContent=level;
+document.getElementById('tg').textContent=300+(level-1)*200;
+render();msg('Pop groups of 2+!');}
+function group(r,c){const v=grid[r][c];if(v===null)return[];
+const q=[[r,c]],seen=new Set([r*C+c]),out=[];
+while(q.length){const[rr,cc]=q.pop();out.push([rr,cc]);
+[[rr-1,cc],[rr+1,cc],[rr,cc-1],[rr,cc+1]].forEach(([nr,nc])=>{
+if(nr>=0&&nr<R&&nc>=0&&nc<C&&grid[nr][nc]===v&&!seen.has(nr*C+nc)){
+seen.add(nr*C+nc);q.push([nr,nc]);}});}
+return out;}
+function tap(r,c){if(!playing||grid[r][c]===null)return;
+const g=group(r,c);
+if(g.length<2){beep(160,.08,'sawtooth');msg('Need 2+ connected dots!');return;}
+g.forEach(([rr,cc])=>{grid[rr][cc]=null;});
+moves--;document.getElementById('m').textContent=moves;
+const gained=g.length*g.length*5;
+score+=gained;
+beep(400+g.length*40,.1,'triangle');msg('💥 +'+gained+'!');
+// gravity
+for(let c=0;c<C;c++){let w=R-1;
+for(let r=R-1;r>=0;r--){if(grid[r][c]!==null){grid[w][c]=grid[r][c];if(w!==r)grid[r][c]=null;w--;}}
+for(let r=w;r>=0;r--)grid[r][c]=null;}
+document.getElementById('s').textContent=score;render();
+const target=300+(level-1)*200;
+if(score>=target){playing=false;beep(880,.3,'triangle');
+msg('🎉 Target hit! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(build,1000);return;}
+if(moves<=0){playing=false;beep(130,.3,'sawtooth');
+msg('💨 Out of moves! Score: '+score);}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<R;r++)for(let c=0;c<C;c++){const d=document.createElement('div');d.className='dot';
+if(grid[r][c]!==null){d.textContent=COLORS[grid[r][c]];}
+else d.style.opacity=0;d.style.cursor=grid[r][c]!==null?'pointer':'default';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();};
+build();
+</script></body></html>

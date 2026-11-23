@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Oasis Defense #302</title><style>
+body{margin:0;font-family:system-ui;background:#0c4a6e;color:#e0f2fe;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#7dd3fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,60px);gap:5px;margin:12px}
+.p{width:60px;height:60px;background:#075985;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:24px}
+.p .bar{width:44px;height:5px;background:#0c4a6e;border-radius:2px;margin-top:3px;overflow:hidden}
+.p .bar i{display:block;height:100%;background:#22c55e}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#38bdf8;color:#0c4a6e;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🌴 Desert Oasis Defense</h1><div class="sub">Water your palms — sandstorms dry them out. Keep the oasis alive!</div>
+<div id="hud"><span>💧 <b id="w">100</b></span><span>🌴 <b id="a">5</b></span><span>Wave <b id="wv">1</b></span><span>Score <b id="s">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🌪️ Start Storm</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5;let plants=[],water=100,wave=1,score=0,playing=false,timer=null;
+function gen(){plants=[];for(let i=0;i<N;i++){const row=[];for(let j=0;j<N;j++)
+row.push({water:100,alive:true,type:(Math.random()*3)|0});plants.push(row);}
+water=100;wave=1;score=0;
+document.getElementById('w').textContent=100;
+document.getElementById('a').textContent=N*N;
+document.getElementById('wv').textContent=1;
+document.getElementById('s').textContent=0;
+render();msg('Tap a plant to water it (10💰)!');}
+function tap(r,c){const p=plants[r][c];
+if(!p.alive||water<10){beep(160,.06,'sawtooth');return;}
+water-=10;p.water=Math.min(100,p.water+45);
+document.getElementById('w').textContent=water;
+beep(500,.08,'triangle');render();}
+function step(){// storms dry plants
+const dryAmt=0.6+wave*0.4;
+let alive=0;
+plants.forEach(row=>row.forEach(p=>{
+if(!p.alive)return;
+p.water-=dryAmt;
+if(p.water<=0){p.alive=false;beep(150,.15,'sawtooth');}
+else alive++;}));
+// water regen
+water=Math.min(100,water+2);
+document.getElementById('w').textContent=Math.floor(water);
+document.getElementById('a').textContent=alive;
+document.getElementById('s').textContent=score=alive*10+wave*50;
+render();
+if(alive===0){playing=false;clearInterval(timer);beep(130,.35,'sawtooth');
+msg('🏜️ The oasis is gone… Survived to wave '+wave);return;}
+if(Math.random()<0.005){wave++;document.getElementById('wv').textContent=wave;
+beep(200,.2,'sawtooth');msg('🌪️ Storm wave '+wave+' — plants dry faster!');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+const EMO=['🌴','🌵','🌿'];
+plants.forEach((row,r)=>row.forEach((p,c)=>{const d=document.createElement('div');d.className='p';
+d.innerHTML='<div>'+(p.alive?EMO[p.type]:'💀')+'</div><div class="bar"><i style="width:'+Math.max(0,p.water)+'%"></i></div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}));}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('btn').textContent='🌪️ Surviving…';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;
+clearInterval(timer);timer=setInterval(step,120);};
+gen();
+</script></body></html>

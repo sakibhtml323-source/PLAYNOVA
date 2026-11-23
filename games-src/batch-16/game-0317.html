@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Jewel Merge #317</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(6,54px);gap:4px;margin:12px}
+.c{width:54px;height:54px;background:#312e81;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Royal Jewel Merge</h1><div class="sub">Tap an empty cell to spawn a jewel — identical neighbors merge upward!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">👑 New Board</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=6,C=6,GEMS=['💎','🔮','👑','⚜️','🌟','💠','🪩'];
+let grid=[],score=0,best=+localStorage.getItem('rjm_best')||0;
+document.getElementById('b').textContent=best;
+function gen(){grid=Array.from({length:R},()=>Array(C).fill(null));score=0;
+document.getElementById('s').textContent=0;render();msg('Tap empty cells to spawn jewels!');}
+function tap(r,c){if(grid[r][c]!==null)return;grid[r][c]=0;beep(400,.06);resolve(r,c);render();checkEnd();}
+function resolve(r,c){let changed=true;while(changed){changed=false;
+const v=grid[r][c];if(v===null)return;
+const same=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+if(!dr&&!dc)continue;const rr=r+dr,cc=c+dc;
+if(rr>=0&&rr<R&&cc>=0&&cc<C&&grid[rr][cc]===v)same.push([rr,cc]);}
+if(same.length){grid[r][c]=v+1;same.forEach(([rr,cc])=>{grid[rr][cc]=null;});
+score+=20*(v+1);document.getElementById('s').textContent=score;
+if(score>best){best=score;localStorage.setItem('rjm_best',best);document.getElementById('b').textContent=best;}
+beep(440+(v+1)*60,.09);changed=true;}}}
+function checkEnd(){if(grid.every(row=>row.every(v=>v!==null))){beep(130,.3,'sawtooth');msg('💀 Board full! Final: '+score);}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<R;r++)for(let c=0;c<C;c++){const d=document.createElement('div');d.className='c';
+d.textContent=grid[r][c]!==null?GEMS[Math.min(grid[r][c],6)]:'';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

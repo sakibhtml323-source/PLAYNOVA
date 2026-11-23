@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Checkers Blitz #234</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(8,38px);gap:0;margin:10px;border:3px solid #4f46e5;border-radius:8px;overflow:hidden}
+.sq{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;user-select:none}
+.sq.dk{background:#4338ca}.sq.lt{background:#c7d2fe}
+.sq.sel{outline:2px solid #fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Checkers Blitz</h1><div class="sub">Capture as many pieces as you can in 60 seconds — most captures wins!</div>
+<div id="hud"><span>⏱️ <b id="t">60</b>s</span><span>You <b id="s1">0</b></span><span>AI <b id="s2">0</b></span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">⚔️ New Blitz</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=8;let grid=[],sel=null,cap1=0,cap2=0,time=60,timer=null,playing=true;
+function init(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++){
+let v=null;if((r+c)%2===1){if(r<3)v={p:2,k:false};else if(r>4)v={p:1,k:false};}row.push(v);}grid.push(row);}
+sel=null;cap1=0;cap2=0;time=60;playing=true;
+document.getElementById('s1').textContent=0;document.getElementById('s2').textContent=0;
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0)end();},1000);render();function msg(t){document.getElementById('msg').textContent=t;}
+msg('Your move — capture fast!');}
+function end(){playing=false;clearInterval(timer);
+const w=cap1>cap2?'🏆 You win the blitz!':cap2>cap1?'💀 AI wins the blitz…':'🤝 Draw!';
+msg(w+'  '+cap1+'–'+cap2);beep(cap1>=cap2?880:200,.25,cap1>=cap2?'triangle':'sawtooth');}
+function moves(r,c){const p=grid[r][c];if(!p)return[];
+const out=[];const dirs=p.p===1?[-1]:p.k?[-1,1]:[1];
+dirs.forEach(dr=>{[-1,1].forEach(dc=>{const r2=r+dr,c2=c+dc;
+if(r2<0||r2>=N||c2<0||c2>=N)return;
+if(!grid[r2][c2])out.push({r:r2,c:c2,jump:null});
+else if(grid[r2][c2].p!==p.p){const r3=r2+dr,c3=c2+dc;
+if(r3>=0&&r3<N&&c3>=0&&c3<N&&!grid[r3][c3])out.push({r:r3,c:c3,jump:[r2,c2]});}});});
+return out;}
+function tap(r,c){if(!playing||!grid[r][c]||grid[r][c].p!==1)return;
+if(sel&&sel.r===r&&sel.c===c){sel=null;render();return;}
+sel={r,c};render();}
+function tapMove(r,c){if(!sel)return;const mv=moves(sel.r,sel.c).find(m=>m.r===r&&m.c===c);
+if(!mv){beep(160,.06,'sawtooth');return;}
+const p=grid[sel.r][sel.c];grid[sel.r][sel.c]=null;grid[r][c]=p;
+if(mv.jump){grid[mv.jump[0]][mv.jump[1]]=null;cap1++;document.getElementById('s1').textContent=cap1;beep(760,.1,'triangle');}
+else beep(420,.06);
+if(r===0)p.k=true;
+sel=null;render();
+if(time<=0)return;
+msg('AI moves…');setTimeout(ai,350);}
+function ai(){if(!playing)return;const all=[];let cap=null;
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const p=grid[r][c];if(!p||p.p!==2)continue;
+moves(r,c).forEach(m=>{all.push({r,c,m});if(m.jump&&!cap)cap={r,c,m};});}
+if(!all.length){end();return;}
+const pick=cap||all[(Math.random()*all.length)|0];
+const p=grid[pick.r][pick.c];grid[pick.r][pick.c]=null;grid[pick.m.r][pick.m.c]=p;
+if(pick.m.jump){grid[pick.m.jump[0]][pick.m.jump[1]]=null;cap2++;document.getElementById('s2').textContent=cap2;beep(300,.1,'sawtooth');}
+if(pick.m.r===N-1)p.k=true;
+render();msg('Your move!');}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='sq '+((r+c)%2?'dk':'lt');
+if(sel&&sel.r===r&&sel.c===c)d.classList.add('sel');
+const p=grid[r][c];
+if(p)d.textContent=p.p===1?(p.k?'👑':'🔵'):(p.k?'🖤':'🔴');
+d.onclick=()=>{if(grid[r][c]&&grid[r][c].p===1)tap(r,c);else tapMove(r,c);};
+b.appendChild(d);}}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();init();};
+init();
+</script></body></html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Epic Egyptian School Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fef3c7,#fde68a);font-family:Georgia,serif;color:#78350f;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#b45309;padding:6px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.85rem}
+#stats span{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:4px 10px}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:60px}
+.card{background:#fffbeb;border:1px solid #fcd34d;border-radius:14px;padding:12px}
+.card h3{color:#92400e;font-size:.9rem;margin-bottom:8px}
+.stu{display:flex;align-items:center;gap:8px;background:#fef3c7;border-radius:8px;padding:6px;margin-bottom:4px;font-size:.85rem}
+.stu .bar{flex:1;height:8px;background:#fde68a;border-radius:4px;overflow:hidden}
+.stu .bar i{display:block;height:100%;background:#22c55e}
+.stu button{background:#d97706;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:.75rem;cursor:pointer}
+#qcard{text-align:center}
+#q{font-size:1.2rem;margin:8px 0}
+#ans{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#ans button{background:#b45309;color:#fff;border:none;border-radius:8px;padding:8px 18px;cursor:pointer;font-family:inherit}
+#log{font-size:.8rem;color:#a16207;min-height:2em;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(254,243,199,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#78350f;padding:20px;z-index:5}
+button.big{background:#b45309;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:480px){#stats{font-size:.7rem}}
+</style>
+</head>
+<body>
+<h1>📜 EPIC EGYPTIAN SCHOOL SIMULATOR</h1>
+<div id="stats"><span>📅 Day <b id="day">1</b>/5</span><span>⭐ Reputation <b id="rep">10</b></span><span>👨‍👩‍👧 Students <b id="ns">3</b></span><span>🏆 Best rep <b id="b">0</b></span></div>
+<main>
+<div class="card"><h3>🏫 YOUR CLASS</h3><div id="class"></div></div>
+<div class="card" id="qcard"><h3>📝 POP QUIZ — answer to teach!</h3><div id="q">Press START</div><div id="ans"></div><div id="log"></div></div>
+</main>
+<div id="ov"><h2 style="color:#b45309">SCHOOL OF THE PHARAOH</h2><p id="od">Run the royal school for 5 days! Pop quizzes teach your students (right answer = +knowledge for everyone). Wrong answers and ignored students hurt your reputation. Finish with 20+ rep for glory.</p><button class="big" id="btn">OPEN SCHOOL</button></div>
+<script>
+"use strict";
+const NAMES=['Khufu','Neferti','Ramses','Ankhu','Sobek','Hatshep','Ptah','Merit'];
+const QS=[['What is 7 × 8?',['54','56','64','48'],1],['Hieroglyph for "sun"?',['☀️ Ra','🌊 Nile','🐈 Bastet','⚔️ Anubis'],0],
+['How many sides on a pyramid?',['3','5','4','6'],2],['The Nile floods bring…?',['Drought','Famine','Silt & crops','Sandstorms'],2],
+['Who weighs the heart of the dead?',['Osiris','Anubis','Horus','Set'],1],['12 + 15 = ?',['27','26','25','29'],0],
+['Papyrus is made from…?',['Reeds','Palm bark','Linen','Clay'],0],['Which is NOT an Egyptian god?',['Thoth','Ra','Odin','Isis'],2]];
+let S,quiz;
+let best=+localStorage.getItem('es_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function load(){try{const d=JSON.parse(localStorage.getItem('es_save'));if(d){S=d;return;}}catch(e){}
+S={day:1,rep:10,stu:NAMES.slice(0,3).map(n=>({n,k:20,mood:70}))};}
+function save(){localStorage.setItem('es_save',JSON.stringify(S));}
+load();
+function render(){document.getElementById('day').textContent=S.day;document.getElementById('rep').textContent=Math.floor(S.rep);document.getElementById('ns').textContent=S.stu.length;
+const c=document.getElementById('class');c.innerHTML='';
+S.stu.forEach((s,i)=>{const row=document.createElement('div');row.className='stu';
+row.innerHTML='<span>🧑‍🎓</span><b>'+s.n+'</b><div class="bar"><i style="width:'+Math.min(100,s.k)+'%;background:'+(s.k>60?'#22c55e':s.k>30?'#eab308':'#ef4444')+'"></i></div><small>'+Math.floor(s.k)+'</small>';
+const b=document.createElement('button');b.textContent='Tutor (3 rep)';
+b.disabled=S.rep<3;b.onclick=()=>{audio.resume();S.rep-=3;s.k+=12;beep(560,.08);log('You tutor '+s.n+' (+12 knowledge).');render();save();};
+row.appendChild(b);c.appendChild(row);});}
+function log(t){document.getElementById('log').textContent='» '+t;}
+function ask(){if(S.day>5)return endDay(false);
+const q=QS[(Math.random()*QS.length)|0];document.getElementById('q').textContent='Day '+S.day+' — '+q[0];
+const a=document.getElementById('ans');a.innerHTML='';
+q[1].forEach((opt,i)=>{const b=document.createElement('button');b.textContent=opt;
+b.onclick=()=>{if(i===q[2]){S.rep+=2;S.stu.forEach(s=>s.k+=6);beep(660,.1,'triangle');log('Correct! The class nods sagely (+2 rep, all +6 knowledge).');}
+else{S.rep-=3;beep(160,.2,'sawtooth');log('Wrong! The students whisper… (-3 rep).');}
+nextTurn();};a.appendChild(b);});}
+function nextTurn(){S.stu.forEach(s=>{s.k-=4;if(Math.random()<0.3)s.mood-=10;});
+const drop=S.stu.filter(s=>s.k<=0);drop.forEach(s=>{S.rep-=5;S.stu.splice(S.stu.indexOf(s),1);log('💔 '+s.n+' was sent to the crocodiles (knowledge 0, -5 rep).');});
+if(S.stu.length<3&&S.day<5&&NAMES.length>S.stu.length){const nn=NAMES.find(n=>!S.stu.some(s=>s.n===n));if(nn){S.stu.push({n:nn,k:20,mood:70});log('🎉 New student enrolled: '+nn+'!');}}
+if(Math.floor(S.rep)<=0){endDay(true);return;}
+S.day++;render();save();ask();}
+function endDay(fired){const win=!fired&&S.day>5&&S.rep>=20;
+if(S.rep>best){best=Math.floor(S.rep);localStorage.setItem('es_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=fired?'🏜️ <b>Your reputation crumbled to dust.</b> The Pharaoh is not amused.':win?'👑 <b style="color:#16a34a">SCHOOL OF LEGEND!</b> Final rep '+Math.floor(S.rep)+' — the Pharaoh grants you gold!':'📜 School year over. Final rep: <b>'+Math.floor(S.rep)+'</b>'+(S.rep<20?' — the Pharaoh expected better.':'');
+document.getElementById('btn').textContent='NEW SCHOOL';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);}localStorage.removeItem('es_save');}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;const k=e.key;
+if(k>='1'&&k<='8'){const b=document.querySelectorAll('.stu button')[+k-1];if(b&&!b.disabled)b.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW SCHOOL'){S={day:1,rep:10,stu:NAMES.slice(0,3).map(n=>({n,k:20,mood:70}))};}
+render();document.getElementById('ov').style.display='none';ask();};
+</script>
+</body>
+</html>

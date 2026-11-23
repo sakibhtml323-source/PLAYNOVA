@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gravity Shift Merge #163</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fef3c7,#fde68a);font-family:Georgia,serif;color:#78350f;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px}
+h1{font-size:1.15rem;color:#b45309;padding:6px}
+#hud{display:flex;gap:16px;font-size:.9rem;margin-bottom:10px}
+#grid{display:grid;grid-template-columns:repeat(4,74px);gap:8px;touch-action:none}
+.tile{width:74px;height:74px;border-radius:14px;background:#fff;border:2px solid #d97706;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s}
+.tile:active{transform:scale(.94)}
+.tile .e{font-size:1.5rem}
+.tile .v{font-size:.65rem;color:#b45309}
+#msg{text-align:center;font-size:.85rem;color:#a16207;margin-top:10px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(254,243,199,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#78350f;padding:20px;z-index:5}
+button{background:#d97706;border:none;color:#fff;font-family:inherit;font-weight:700;padding:13px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:360px){#grid{grid-template-columns:repeat(4,60px)}.tile{width:60px;height:60px}}
+</style>
+</head>
+<body>
+<h1>🏺 EGYPTIAN ULTIMATE MERGE</h1>
+<div id="hud"><span>Gold <b id="s">0</b></span><span>Best relic <b id="b">0</b></span><span>Merges <b id="m">0</b></span><span>Gravity <b id="g">⬇️</b></span></div>
+<div id="grid"></div>
+<div id="msg">Merge the treasures of the Nile! Tap to place, merge equals into greater relics!</div>
+<div id="ov"><h2 style="color:#b45309">PHARAOH'S MERGE</h2><p id="od">A 4×4 board of Egyptian treasures! Place pieces, merge equals, forge up to the Eye of Ra 👁. The board fills — plan like an architect of the pyramids!</p><button id="btn">ENTER THE VAULT</button></div>
+<script>
+"use strict";
+const LV=[['🪨',2],['🪙',4],['🐪',8],['🏺',16],['🗿',32],['🐈',64],['🛕',128],['🐍',256],['👑',512],['👁',1024]];
+let grid,playing,score,merges,topT,best=+localStorage.getItem('em_best')||0,grav=0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=Array(16).fill(null);playing=true;score=0;merges=0;topT=0;
+spawn();spawn();document.getElementById('s').textContent=0;document.getElementById('m').textContent=0;render();}
+function spawn(){const empty=grid.map((v,i)=>v===null?i:-1).filter(i=>i>=0);
+if(!empty.length)return false;
+grid[empty[(Math.random()*empty.length)|0]]=0;return true;}
+function neigh(i){const r=(i/4)|0,c=i%4,o=[];if(r>0)o.push(i-4);if(r<3)o.push(i+4);if(c>0)o.push(i-1);if(c<3)o.push(i+1);return o;}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+grid.forEach((v,i)=>{const t=document.createElement('div');t.className='tile';
+if(v!==null){t.innerHTML='<span class="e">'+LV[v][0]+'</span><span class="v">'+LV[v][1]+'</span>';}
+else{t.innerHTML='<span class="e" style="opacity:.25">＋</span>';}
+t.onclick=()=>tap(i);g.appendChild(t);});}
+function tap(i){if(!playing||grid[i]!==null)return;audio.resume();
+grid[i]=0;beep(420,.05);render();
+let changed=true;
+while(changed){changed=false;
+for(let j=0;j<16;j++){if(grid[j]===null)continue;
+const same=neigh(j).filter(k=>grid[k]===grid[j]);
+if(same.length){const k=same[0];grid[k]=grid[j]+1;grid[j]=null;
+merges++;score+=LV[grid[k]][1];topT=Math.max(topT,grid[k]);changed=true;break;}}}
+document.getElementById('s').textContent=score;document.getElementById('m').textContent=merges;render();
+if(topT>=9){win();return;}
+if(!grid.includes(null)){over();return;}
+grav=(grav+1)%4;applyGravity();render();
+document.getElementById('g').textContent=['⬇️','⬅️','⬆️','➡️'][grav];}
+function applyGravity(){const N=4;
+for(let pass=0;pass<3;pass++){
+for(let i=0;i<16;i++){
+if(grid[i]===null)continue;
+const r=(i/N)|0,c=i%N;let ti=-1;
+if(grav===0&&r<3)ti=i+N;if(grav===1&&c>0)ti=i-1;if(grav===2&&r>0)ti=i-N;if(grav===3&&c<3)ti=i+1;
+if(ti>=0&&grid[ti]===null){grid[ti]=grid[i];grid[i]=null;}}}}
+
+function win(){playing=false;if(score>best){best=score;localStorage.setItem('em_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),180);
+document.getElementById('od').innerHTML='👁 <b style="color:#b45309">THE EYE OF RA IS FORGED!</b><br>Gold score: '+score;
+document.getElementById('btn').textContent='MERGE ANEW';document.getElementById('ov').style.display='flex';}
+function over(){playing=false;if(score>best){best=score;localStorage.setItem('em_best',best);document.getElementById('b').textContent=best;}
+beep(120,.4,'sawtooth');
+document.getElementById('od').innerHTML='🏺 <b>The vault is full!</b><br>Final gold: '+score+' in '+merges+' merges.';
+document.getElementById('btn').textContent='REOPEN';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;const t=document.querySelectorAll('.tile')[i];if(t)t.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

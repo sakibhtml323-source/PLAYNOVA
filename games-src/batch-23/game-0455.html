@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Procession #455</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#parade{display:flex;gap:6px;margin:16px;align-items:flex-end;min-height:170px;max-width:94vw;flex-wrap:wrap;justify-content:center}
+.fig{width:52px;background:#4338ca;border:2px solid #6366f1;border-radius:10px 10px 0 0;text-align:center;cursor:pointer;transition:transform .1s;display:flex;flex-direction:column;justify-content:flex-end}
+.fig .e{font-size:1.7rem}
+.fig .h{font-size:.65rem;color:#a5b4fc;padding:2px}
+.fig.sel{transform:translateY(-12px);outline:3px solid #fbbf24}
+.fig.ok{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎪 Royal Procession</h1><div class="sub">Arrange the parade tallest-to-shortest — swap figures to form the perfect procession!</div>
+<div id="hud"><span>Correct <b id="c">0</b>/6</span><span>Moves <b id="m">0</b></span></div>
+<div id="parade"></div>
+<div id="msg"></div>
+<button id="btn">👑 New Parade</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const FIGS=[{e:'🦒',n:'Giraffe',h:98},{e:'🐘',n:'Elephant',h:85},{e:'🐎',n:'Horse',h:70},
+{e:'🐪',n:'Camel',h:62},{e:'🐕',n:'Hound',h:40},{e:'🐈',n:'Cat',h:25}];
+let parade=[],sel=null,moves=0;
+function gen(){parade=FIGS.slice().sort(()=>Math.random()-.5);
+sel=null;moves=0;document.getElementById('m').textContent=0;
+render();msg('Tallest first!');}
+function tap(i){if(sel===null){sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+[parade[sel],parade[i]]=[parade[i],parade[sel]];
+sel=null;moves++;document.getElementById('m').textContent=moves;
+beep(400,.06);render();check();}
+function check(){const n=parade.filter((f,i)=>i===0||parade[i-1].h>=f.h).length;
+document.getElementById('c').textContent=n;
+if(parade.every((f,i)=>i===0||parade[i-1].h>=f.h)){beep(880,.3,'triangle');
+msg('👑 The crowd cheers! '+moves+' moves');}}
+function render(){const p=document.getElementById('parade');p.innerHTML='';
+parade.forEach((f,i)=>{const d=document.createElement('div');d.className='fig';
+const ok=i===0||parade[i-1].h>=f.h;
+if(ok)d.classList.add('ok');
+if(sel===i)d.classList.add('sel');
+d.style.height=(f.h*1.3)+'px';
+d.innerHTML='<div class="e">'+f.e+'</div><div class="h">'+f.n+'<br>'+f.h+'</div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+p.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

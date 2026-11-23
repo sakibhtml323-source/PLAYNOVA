@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Cel-shaded Space War: 2P Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050510;font-family:Georgia,serif;color:#c7d2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#818cf8;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0f0f23;border-radius:10px;border:2px solid #312e81;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(5,5,16,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#c7d2fe;padding:20px;z-index:5}
+button{background:#818cf8;border:none;color:#0f0f23;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🚀 CEL-SHADED SPACE WAR</h1>
+<div id="hud"><span>🟦 <b id="h1">5</b></span><span>Round <b id="r">1</b></span><span>🟥 <b id="h2">5</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#818cf8">SPACE WAR</h2><p id="od">2 players, cel-shaded ships! 🟦 P1: A/D rotate, W thrust, F fire. 🟥 P2: ←/→ rotate, ↑ thrust, K fire. First to 3 rounds!</p><button id="btn">ENGAGE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=520,H=380;cvs.width=W;cvs.height=H;
+let ships,shots,playing,keys,round,wins,frame;let sw7=+localStorage.getItem('sw_w1')||0,sw72=+localStorage.getItem('sw_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mkShip(x,c2,a){return{x,y:H/2,a,vx:0,vy:0,hp:5,c:c2,cd:0,thr:0};}
+function init(r){ships=[mkShip(80,'#60a5fa',0),mkShip(W-80,'#f87171',Math.PI)];shots=[];keys={};playing=true;round=r;frame=0;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+function step(){frame++;
+ships.forEach((s,i)=>{s.cd--;
+const ct=i===0?{l:keys['a'],r:keys['d'],t:keys['w'],f:keys['f']}:{l:keys['arrowleft'],r:keys['arrowright'],t:keys['arrowup'],f:keys['k']};
+if(ct.l)s.a-=0.08;if(ct.r)s.a+=0.08;
+if(ct.t){s.vx+=Math.cos(s.a)*0.25;s.vy+=Math.sin(s.a)*0.25;s.thr=4;}else s.thr=Math.max(0,s.thr-1);
+s.vx*=0.985;s.vy*=0.985;s.x+=s.vx;s.y+=s.vy;
+if(s.x<14){s.x=14;s.vx*=-0.7;}if(s.x>W-14){s.x=W-14;s.vx*=-0.7;}
+if(s.y<14){s.y=14;s.vy*=-0.7;}if(s.y>H-14){s.y=H-14;s.vy*=-0.7;}
+if(ct.f&&s.cd<=0){s.cd=18;shots.push({x:s.x+Math.cos(s.a)*16,y:s.y+Math.sin(s.a)*16,vx:Math.cos(s.a)*6+s.vx,vy:Math.sin(s.a)*6+s.vy,own:i});beep(i===0?500:700,.05);}});
+shots.forEach(sh=>{sh.x+=sh.vx;sh.y+=sh.vy;
+ships.forEach((s,i)=>{if(i!==sh.own&&Math.hypot(s.x-sh.x,s.y-sh.y)<13){s.hp--;shots.splice(shots.indexOf(sh),1);beep(150,.15,'sawtooth');upd();
+if(s.hp<=0)roundEnd(1-i);}});});
+shots=shots.filter(sh=>sh.x>-10&&sh.x<W+10&&sh.y>-10&&sh.y<H+10);}
+function upd(){document.getElementById('h1').textContent=ships[0].hp;document.getElementById('h2').textContent=ships[1].hp;}
+function roundEnd(w){playing=false;wins[w]++;beep(w===0?660:440,.2,'triangle');
+if(wins[w]>=3){if(w===0){sw7++;localStorage.setItem('sw_w1',sw7);}else{sw72++;localStorage.setItem('sw_w2',sw72);}
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">PLAYER '+(w+1)+' RULES THE STARS '+wins[w]+'—'+wins[1-w]+'!</b>';
+document.getElementById('btn').textContent='REMATCH';wins=[0,0];}
+else{document.getElementById('od').innerHTML='💥 Player '+(w+1)+' takes round '+round+'!<br>'+wins[0]+' — '+wins[1];
+document.getElementById('btn').textContent='NEXT ROUND';}
+document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#0f0f23';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#fff';for(let i=0;i<30;i++)ctx.fillRect((i*97)%W,(i*61)%H,2,2);
+shots.forEach(sh=>{ctx.strokeStyle=sh.own===0?'#60a5fa':'#f87171';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(sh.x-sh.vx,sh.y-sh.vy);ctx.lineTo(sh.x,sh.y);ctx.stroke();ctx.lineWidth=1;});
+ships.forEach(s=>{ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.a);
+ctx.fillStyle=s.c;ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(-10,-9);ctx.lineTo(-6,0);ctx.lineTo(-10,9);ctx.closePath();ctx.fill();
+if(s.thr>0){ctx.fillStyle='#fde047';ctx.beginPath();ctx.moveTo(-8,3);ctx.lineTo(-14-Math.random()*6,0);ctx.lineTo(-8,-3);ctx.fill();}
+ctx.restore();});}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();if(!wins)wins=[0,0];init(round||1);upd();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

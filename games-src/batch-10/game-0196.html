@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Desert Math Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fefce8,#fef9c3);font-family:Georgia,serif;color:#713f12;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#a16207;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#q{font-size:1.4rem;text-align:center;margin:18px 0;min-height:2em;color:#92400e}
+#ans{width:min(360px,90vw);padding:14px;border:3px solid #fde68a;border-radius:14px;font-size:1.5rem;text-align:center;font-family:inherit;color:#713f12;outline:none}
+#ans:focus{border-color:#a16207}
+#fb{text-align:center;min-height:1.6em;margin-top:12px;font-weight:700}
+#ov{position:fixed;inset:0;background:rgba(254,252,232,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#713f12;padding:20px;z-index:5}
+button{background:#a16207;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏜 DESERT MATH PUZZLE</h1>
+<div id="hud"><span>Oasis <b id="n">1</b></span><span>Score <b id="sc">0</b></span><span>Streak <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="q">Press START</div>
+<input id="ans" placeholder="Your answer…" autocomplete="off" inputmode="numeric">
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#a16207">MATH OASES</h2><p id="od">Cross the number desert! Solve each oasis puzzle to advance — the math gets harder and the sun drains your streak on wrong answers. Reach oasis 15 for the legendary well!</p><button id="btn">START THE CROSSING</button></div>
+<script>
+"use strict";
+let n,score,streak,playing,cur,best=+localStorage.getItem('dmp_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const ans=document.getElementById('ans');
+function mk(){const lv=Math.min(5,1+(n/3|0));
+const a=2+((Math.random()*7*lv)|0),b=2+((Math.random()*7*lv)|0);const t=(Math.random()*5)|0;
+if(t===0)return{q:a+' + '+b+' = ?',a:a+b};
+if(t===1)return{q:Math.max(a,b)+' − '+Math.min(a,b)+' = ?',a:Math.max(a,b)-Math.min(a,b)};
+if(t===2)return{q:a+' × '+b+' = ?',a:a*b};
+if(t===3)return{q:(a*b)+' ÷ '+b+' = ?',a:a};
+return{q:a+'² = ?',a:a*a};}
+function start(){n=1;score=0;streak=0;playing=true;
+document.getElementById('sc').textContent=0;document.getElementById('st').textContent=0;document.getElementById('n').textContent=1;ask();}
+function ask(){if(n>15)return win();cur=mk();
+document.getElementById('q').textContent='Oasis '+n+' — '+cur.q;ans.value='';ans.focus();}
+ans.addEventListener('keydown',e=>{if(e.key==='Enter'&&playing){audio.resume();
+if(+ans.value===cur.a){streak++;const pts=10+streak*3;score+=pts;
+document.getElementById('sc').textContent=score;document.getElementById('st').textContent=streak;
+document.getElementById('fb').textContent='✓ +'+pts;document.getElementById('fb').style.color='#16a34a';
+beep(600+streak*35,.08,'triangle');n++;document.getElementById('n').textContent=n;}
+else{streak=0;document.getElementById('st').textContent=0;
+document.getElementById('fb').textContent='✗ It was '+cur.a;document.getElementById('fb').style.color='#dc2626';
+beep(150,.18,'sawtooth');}
+ask();}});
+function win(){playing=false;if(score>best){best=score;localStorage.setItem('dmp_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);
+document.getElementById('od').innerHTML='🏆 <b style="color:#a16207">THE LEGENDARY WELL!</b><br>15 oases crossed · Score '+score;
+document.getElementById('btn').textContent='CROSS AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('fb').textContent='';start();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

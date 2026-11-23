@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Dice Stack #375</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#tower{display:flex;flex-direction:column-reverse;align-items:center;margin:14px;min-height:300px;justify-content:flex-start}
+.die{width:64px;height:64px;background:#4338ca;border:2px solid #6366f1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin:2px;cursor:default}
+#next{font-size:2.4rem;margin:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎲 Royal Dice Stack</h1><div class="sub">Stack the dice — same number on touching faces MERGES and scores big!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Stack <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="next">🎲</div>
+<div id="tower"></div>
+<div id="msg"></div>
+<button id="btn">👑 Roll Again</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let tower=[],cur=1,score=0,best=+localStorage.getItem('rds_best')||0;
+document.getElementById('b').textContent=best;
+function roll(){cur=1+((Math.random()*6)|0);
+document.getElementById('next').textContent='🎲 '+cur;
+render();}
+function place(){tower.push(cur);beep(400+tower.length*20,.07);
+// merge check: top two same
+const n=tower.length;
+if(n>=2&&tower[n-1]===tower[n-2]){
+const v=tower[n-1];tower.splice(n-2,2);
+score+=v*20;document.getElementById('s').textContent=score;
+beep(700,.15,'triangle');msg('✨ Two '+v+'s merge! +'+v*20);
+if(score>best){best=score;localStorage.setItem('rds_best',best);document.getElementById('b').textContent=best;}}
+else{score+=5;document.getElementById('s').textContent=score;}
+document.getElementById('st').textContent=tower.length;
+render();roll();}
+function render(){const t=document.getElementById('tower');t.innerHTML='';
+tower.forEach(v=>{const d=document.createElement('div');d.className='die';
+d.textContent=v;t.appendChild(d);});}
+document.getElementById('next').onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();place();};
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{tower=[];score=0;
+document.getElementById('s').textContent=0;document.getElementById('st').textContent=0;msg('');
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();roll();};
+roll();
+</script></body></html>

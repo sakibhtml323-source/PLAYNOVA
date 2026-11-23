@@ -1,0 +1,85 @@
+{
+ "generated_by": "automated Playwright run against local build",
+ "tests": [
+  {
+   "test": "wallet starts at 0",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "purchase blocked when insufficient",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "purchase deducts exactly price once",
+   "result": "PASS",
+   "detail": "(305, 255)"
+  },
+  {
+   "test": "duplicate purchase blocked, no second deduction",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "balance never negative",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "ledger records spend",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "balance persists after reload",
+   "result": "PASS",
+   "detail": "255"
+  },
+  {
+   "test": "owned item persists after reload",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "corrupt storage recovers to fresh profile",
+   "result": "PASS",
+   "detail": "raw corrupt value saved to pn_data_corrupt_backup. First run FAILED (bug: backup skipped on JSON parse errors); fixed in playnova-core.js and re-run"
+  },
+  {
+   "test": "import rejects invalid JSON",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "import rejects wrong schema",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "export then import round-trip",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "IndexedDB database is created and written",
+   "result": "PASS",
+   "detail": "[10, 25]"
+  },
+  {
+   "test": "progress restored from IndexedDB after localStorage is cleared",
+   "result": "PASS",
+   "detail": "before=[10, 25] after=[10, 25]"
+  },
+  {
+   "test": "reset also clears the IndexedDB copy (no resurrection)",
+   "result": "PASS",
+   "detail": "[0, 0]"
+  },
+  {
+   "test": "no page errors",
+   "result": "PASS",
+   "detail": "[]"
+  }
+ ]
+}

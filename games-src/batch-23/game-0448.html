@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Banner Weave #448</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+canvas{background:#312e81;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎏 Royal Banner Weave</h1><div class="sub">Trace the golden thread through the loom — don't cross your own path!</div>
+<div id="hud"><span>Progress <b id="p">0</b>%</span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">🧵 New Loom</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,N=6,CELL=W/N;let thread=[],target=[],level=1;
+function gen(){target=[];thread=[];
+// random path visiting all cells (snake-like)
+const cells=[];for(let r=0;r<N;r++){const row=[];
+for(let c=0;c<N;c++)row.push(r*N+c);
+if(r%2===1)row.reverse();
+cells.push(...row);}
+// take a subset path from random start
+const start=(Math.random()*cells.length)|0;
+target=cells.slice(start).concat(cells.slice(0,start));
+document.getElementById('l').textContent=level;
+draw();msg('Trace the thread through every peg!');}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*N),rr=Math.floor((e.clientY-r.top)/r.height*N);
+tap(rr,c);});
+function tap(r,c){const cell=r*N+c;const next=target[thread.length];
+// backtrack allowed
+if(thread.length>1&&cell===thread[thread.length-2]){thread.pop();beep(300,.05);draw();return;}
+if(thread.includes(cell)){beep(160,.06,'sawtooth');return;}
+if(cell!==next){beep(160,.06,'sawtooth');msg('Follow the golden order!');return;}
+thread.push(cell);beep(400+thread.length*25,.06);draw();check();}
+function check(){document.getElementById('p').textContent=Math.round(thread.length/target.length*100);
+if(thread.length>=target.length){beep(880,.3,'triangle');msg('🎏 Banner woven! Level '+(level+1));level++;
+setTimeout(gen,1000);}}
+function draw(){ctx.fillStyle='#312e81';ctx.fillRect(0,0,W,W);
+// grid
+ctx.strokeStyle='#4338ca';
+for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,W);ctx.stroke();
+ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(W,i*CELL);ctx.stroke();}
+// target hint (next peg)
+if(thread.length<target.length){const t=target[thread.length];
+ctx.strokeStyle='#fbbf2466';ctx.lineWidth=3;
+ctx.strokeRect((t%N)*CELL+6,((t/N)|0)*CELL+6,CELL-12,CELL-12);ctx.lineWidth=1;}
+// thread
+if(thread.length>1){ctx.strokeStyle='#fbbf24';ctx.lineWidth=5;ctx.lineCap='round';
+ctx.beginPath();thread.forEach((cell,i)=>{const x=(cell%N)*CELL+CELL/2,y=((cell/N)|0)*CELL+CELL/2;
+i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();ctx.lineWidth=1;}
+thread.forEach(cell=>{const x=(cell%N)*CELL+CELL/2,y=((cell/N)|0)*CELL+CELL/2;
+ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fillStyle='#fbbf24';ctx.fill();});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

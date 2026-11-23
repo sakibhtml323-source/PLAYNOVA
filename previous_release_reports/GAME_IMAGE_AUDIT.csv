@@ -1,0 +1,501 @@
+id,title,thumbnail,banner,thumb_dim,banner_dim,file_validity,relevance_status,final_result
+0001,Jungle Farm - Puzzle,assets/img/thumbs/jungle-farm-puzzle.webp,assets/img/banners/jungle-farm-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0002,Viking Farming Sim Adventure,assets/img/thumbs/viking-farming-sim-adventure.webp,assets/img/banners/viking-farming-sim-adventure.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0003,Iron Gunner,assets/img/thumbs/iron-gunner.webp,assets/img/banners/iron-gunner.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0004,Thunder Retro Chronicles,assets/img/thumbs/thunder-retro-chronicles.webp,assets/img/banners/thunder-retro-chronicles.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0005,Cosmic Medieval War,assets/img/thumbs/cosmic-medieval-war.webp,assets/img/banners/cosmic-medieval-war.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0006,IQ Test: Samurai Edition,assets/img/thumbs/iq-test-samurai-edition.webp,assets/img/banners/iq-test-samurai-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0007,Quantum Samurai Coloring Book,assets/img/thumbs/quantum-samurai-coloring-book.webp,assets/img/banners/quantum-samurai-coloring-book.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0008,Infinity Party Game,assets/img/thumbs/infinity-party-game.webp,assets/img/banners/infinity-party-game.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0009,Royal Desert Party Game,assets/img/thumbs/royal-desert-party-game.webp,assets/img/banners/royal-desert-party-game.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0010,Eternal Halloween Tycoon,assets/img/thumbs/eternal-halloween-tycoon.webp,assets/img/banners/eternal-halloween-tycoon.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0011,Watercolor Galaxy,assets/img/thumbs/watercolor-galaxy.webp,assets/img/banners/watercolor-galaxy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0012,Royal Cooking,assets/img/thumbs/royal-cooking.webp,assets/img/banners/royal-cooking.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0013,Thunder Sports Zombie Survival,assets/img/thumbs/thunder-sports-zombie-survival.webp,assets/img/banners/thunder-sports-zombie-survival.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0014,Iron Minimalist Logic Gates,assets/img/thumbs/iron-minimalist-logic-gates.webp,assets/img/banners/iron-minimalist-logic-gates.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0015,Crazy Jungle Forest,assets/img/thumbs/crazy-jungle-forest.webp,assets/img/banners/crazy-jungle-forest.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0016,Neumorphism Phantom Rush,assets/img/thumbs/neumorphism-phantom-rush.webp,assets/img/banners/neumorphism-phantom-rush.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0017,Swift Watercolor Typing Speed,assets/img/thumbs/swift-watercolor-typing-speed.webp,assets/img/banners/swift-watercolor-typing-speed.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0018,Crystal Horror Flappy,assets/img/thumbs/crystal-horror-flappy.webp,assets/img/banners/crystal-horror-flappy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0019,Fighting: Robot Edition,assets/img/thumbs/fighting-robot-edition.webp,assets/img/banners/fighting-robot-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0020,Halloween Epic Arena,assets/img/thumbs/halloween-epic-arena.webp,assets/img/banners/halloween-epic-arena.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0021,Crazy Pastel Reaction Time,assets/img/thumbs/crazy-pastel-reaction-time.webp,assets/img/banners/crazy-pastel-reaction-time.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0022,Ocean Spot the Difference Empire,assets/img/thumbs/ocean-spot-the-difference-empire.webp,assets/img/banners/ocean-spot-the-difference-empire.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0023,Space Resource Management Fury,assets/img/thumbs/space-resource-management-fury.webp,assets/img/banners/space-resource-management-fury.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0024,Lightning Ladder: Storm Reflexes #24,assets/img/thumbs/lightning-ladder-storm-reflexes-24.webp,assets/img/banners/lightning-ladder-storm-reflexes-24.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0025,Tile Rotation: Arctic Edition,assets/img/thumbs/tile-rotation-arctic-edition.webp,assets/img/banners/tile-rotation-arctic-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0026,Greek Myth Endless Runner Fury,assets/img/thumbs/greek-myth-endless-runner-fury.webp,assets/img/banners/greek-myth-endless-runner-fury.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0027,Mega Hotseat Strategy,assets/img/thumbs/mega-hotseat-strategy.webp,assets/img/banners/mega-hotseat-strategy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0028,Mystic Physics Sandbox,assets/img/thumbs/mystic-physics-sandbox.webp,assets/img/banners/mystic-physics-sandbox.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0029,Turbo Christmas Ball Bounce,assets/img/thumbs/turbo-christmas-ball-bounce.webp,assets/img/banners/turbo-christmas-ball-bounce.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0030,Minimalist Intense Puzzle,assets/img/thumbs/minimalist-intense-puzzle.webp,assets/img/banners/minimalist-intense-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0031,Clever Tycoon,assets/img/thumbs/clever-tycoon.webp,assets/img/banners/clever-tycoon.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0032,Epic Egyptian School Simulator,assets/img/thumbs/epic-egyptian-school-simulator.webp,assets/img/banners/epic-egyptian-school-simulator.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0033,Airport Manager: Glassmorphism Edition,assets/img/thumbs/airport-manager-glassmorphism-edition.webp,assets/img/banners/airport-manager-glassmorphism-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0034,Samurai Zombie Survival Blast,assets/img/thumbs/samurai-zombie-survival-blast.webp,assets/img/banners/samurai-zombie-survival-blast.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0035,Desert Legendary Galaxy,assets/img/thumbs/desert-legendary-galaxy.webp,assets/img/banners/desert-legendary-galaxy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0036,Super Christmas Blast,assets/img/thumbs/super-christmas-blast.webp,assets/img/banners/super-christmas-blast.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0037,Combo Clicker #37 (Active Only),assets/img/thumbs/combo-clicker-37-active-only.webp,assets/img/banners/combo-clicker-37-active-only.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0038,Silver Horror Hexagon Puzzle,assets/img/thumbs/silver-horror-hexagon-puzzle.webp,assets/img/banners/silver-horror-hexagon-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0039,Dragon Dark Mode Riddle Solver,assets/img/thumbs/dragon-dark-mode-riddle-solver.webp,assets/img/banners/dragon-dark-mode-riddle-solver.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0040,Gunner: Watercolor Edition,assets/img/thumbs/gunner-watercolor-edition.webp,assets/img/banners/gunner-watercolor-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0041,Wild Glassmorphism Nonogram,assets/img/thumbs/wild-glassmorphism-nonogram.webp,assets/img/banners/wild-glassmorphism-nonogram.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0042,Ultimate Desert Dungeon,assets/img/thumbs/ultimate-desert-dungeon.webp,assets/img/banners/ultimate-desert-dungeon.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0043,Base Defense: Isometric Edition,assets/img/thumbs/base-defense-isometric-edition.webp,assets/img/banners/base-defense-isometric-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0044,Idle Clicker: Minimalist Edition,assets/img/thumbs/idle-clicker-minimalist-edition.webp,assets/img/banners/idle-clicker-minimalist-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0045,Versus Puzzle: Horror Edition,assets/img/thumbs/versus-puzzle-horror-edition.webp,assets/img/banners/versus-puzzle-horror-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0046,Arctic Hidden Object Storm,assets/img/thumbs/arctic-hidden-object-storm.webp,assets/img/banners/arctic-hidden-object-storm.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0047,Desert Rhythm Tap Empire,assets/img/thumbs/desert-rhythm-tap-empire.webp,assets/img/banners/desert-rhythm-tap-empire.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0048,Isometric Mystic City,assets/img/thumbs/isometric-mystic-city.webp,assets/img/banners/isometric-mystic-city.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0049,Infinity Physics Sandbox: Pirate Seas,assets/img/thumbs/infinity-physics-sandbox-pirate-seas.webp,assets/img/banners/infinity-physics-sandbox-pirate-seas.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0050,Wild Desert Storm,assets/img/thumbs/wild-desert-storm.webp,assets/img/banners/wild-desert-storm.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0051,Watercolor Tales,assets/img/thumbs/watercolor-tales.webp,assets/img/banners/watercolor-tales.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0052,Ninja Hotseat Strategy Battle,assets/img/thumbs/ninja-hotseat-strategy-battle.webp,assets/img/banners/ninja-hotseat-strategy-battle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0053,Legendary Modern Flat War,assets/img/thumbs/legendary-modern-flat-war.webp,assets/img/banners/legendary-modern-flat-war.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0054,Resource Management: Robot Edition,assets/img/thumbs/resource-management-robot-edition.webp,assets/img/banners/resource-management-robot-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0055,Dash Brawler #55,assets/img/thumbs/dash-brawler-55.webp,assets/img/banners/dash-brawler-55.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0056,Chill Greek Myth Sudoku,assets/img/thumbs/chill-greek-myth-sudoku.webp,assets/img/banners/chill-greek-myth-sudoku.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0057,Robot Fighting Gate,assets/img/thumbs/robot-fighting-gate.webp,assets/img/banners/robot-fighting-gate.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0058,Super Desert Shared Screen Racing,assets/img/thumbs/super-desert-shared-screen-racing.webp,assets/img/banners/super-desert-shared-screen-racing.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0059,Intense Pixel Art Rise,assets/img/thumbs/intense-pixel-art-rise.webp,assets/img/banners/intense-pixel-art-rise.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0060,Horror Neon Forest,assets/img/thumbs/horror-neon-forest.webp,assets/img/banners/horror-neon-forest.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0061,Shadow Christmas 2-Player Battle,assets/img/thumbs/shadow-christmas-2-player-battle.webp,assets/img/banners/shadow-christmas-2-player-battle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0062,Dark Mode Anagram Puzzle,assets/img/thumbs/dark-mode-anagram-puzzle.webp,assets/img/banners/dark-mode-anagram-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0063,Party Game: Neon Edition,assets/img/thumbs/party-game-neon-edition.webp,assets/img/banners/party-game-neon-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0064,Parkour: Cute Animals Edition,assets/img/thumbs/parkour-cute-animals-edition.webp,assets/img/banners/parkour-cute-animals-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0065,Neumorphism Hotseat Strategy: Sky,assets/img/thumbs/neumorphism-hotseat-strategy-sky.webp,assets/img/banners/neumorphism-hotseat-strategy-sky.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0066,Focus Trainer: Comic Book Edition,assets/img/thumbs/focus-trainer-comic-book-edition.webp,assets/img/banners/focus-trainer-comic-book-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0067,Legendary Minimalist Blast,assets/img/thumbs/legendary-minimalist-blast.webp,assets/img/banners/legendary-minimalist-blast.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0068,Swift Color Sorting: Pirate Edition,assets/img/thumbs/swift-color-sorting-pirate-edition.webp,assets/img/banners/swift-color-sorting-pirate-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0069,Row Slide Puzzle #69,assets/img/thumbs/row-slide-puzzle-69.webp,assets/img/banners/row-slide-puzzle-69.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0070,Royal Gradient Traffic Control,assets/img/thumbs/royal-gradient-traffic-control.webp,assets/img/banners/royal-gradient-traffic-control.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0071,Intense Horror Rise,assets/img/thumbs/intense-horror-rise.webp,assets/img/banners/intense-horror-rise.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0072,Phoenix Cute Animals Island,assets/img/thumbs/phoenix-cute-animals-island.webp,assets/img/banners/phoenix-cute-animals-island.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0073,Cosmic Jungle Hero,assets/img/thumbs/cosmic-jungle-hero.webp,assets/img/banners/cosmic-jungle-hero.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0074,Halloween Hyper Portal,assets/img/thumbs/halloween-hyper-portal.webp,assets/img/banners/halloween-hyper-portal.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0075,Arctic Crazy Universe,assets/img/thumbs/arctic-crazy-universe.webp,assets/img/banners/arctic-crazy-universe.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0076,Time Killer: Pirates,assets/img/thumbs/time-killer-pirates.webp,assets/img/banners/time-killer-pirates.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0077,Intense Infinite Runner,assets/img/thumbs/intense-infinite-runner.webp,assets/img/banners/intense-infinite-runner.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0078,Endless Strategy: Greek Myth,assets/img/thumbs/endless-strategy-greek-myth.webp,assets/img/banners/endless-strategy-greek-myth.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0079,Hyper Tile Puzzle: Watercolor,assets/img/thumbs/hyper-tile-puzzle-watercolor.webp,assets/img/banners/hyper-tile-puzzle-watercolor.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0080,Zombie Puzzle: Liquid Glass,assets/img/thumbs/zombie-puzzle-liquid-glass.webp,assets/img/banners/zombie-puzzle-liquid-glass.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0081,Crystal Isometric Blast,assets/img/thumbs/crystal-isometric-blast.webp,assets/img/banners/crystal-isometric-blast.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0082,Watercolor Quantum Dash,assets/img/thumbs/watercolor-quantum-dash.webp,assets/img/banners/watercolor-quantum-dash.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0083,Leak Pressure Pipes #83,assets/img/thumbs/leak-pressure-pipes-83.webp,assets/img/banners/leak-pressure-pipes-83.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0084,High Stakes Quiz #84,assets/img/thumbs/high-stakes-quiz-84.webp,assets/img/banners/high-stakes-quiz-84.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0085,Horror Cosmic Merge,assets/img/thumbs/horror-cosmic-merge.webp,assets/img/banners/horror-cosmic-merge.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0086,Desert Math Challenge: Ocean Edition,assets/img/thumbs/desert-math-challenge-ocean-edition.webp,assets/img/banners/desert-math-challenge-ocean-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0087,Pirate Fruit Ninja Farm,assets/img/thumbs/pirate-fruit-ninja-farm.webp,assets/img/banners/pirate-fruit-ninja-farm.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0088,Checkers AI: Pastel Edition,assets/img/thumbs/checkers-ai-pastel-edition.webp,assets/img/banners/checkers-ai-pastel-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0089,Pixel Art Golden Challenge,assets/img/thumbs/pixel-art-golden-challenge.webp,assets/img/banners/pixel-art-golden-challenge.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0090,Hero Defense #90,assets/img/thumbs/hero-defense-90.webp,assets/img/banners/hero-defense-90.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0091,Golden Comic Book Mountain,assets/img/thumbs/golden-comic-book-mountain.webp,assets/img/banners/golden-comic-book-mountain.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0092,Top-Down Shooter: Magic Edition,assets/img/thumbs/top-down-shooter-magic-edition.webp,assets/img/banners/top-down-shooter-magic-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0093,Ocean Brave Puzzle,assets/img/thumbs/ocean-brave-puzzle.webp,assets/img/banners/ocean-brave-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0094,Magic Rise,assets/img/thumbs/magic-rise.webp,assets/img/banners/magic-rise.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0095,Wild Rise,assets/img/thumbs/wild-rise.webp,assets/img/banners/wild-rise.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0096,Wild Greek Myth Shooter,assets/img/thumbs/wild-greek-myth-shooter.webp,assets/img/banners/wild-greek-myth-shooter.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0097,Simulation: Norse,assets/img/thumbs/simulation-norse.webp,assets/img/banners/simulation-norse.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0098,Board Game: Greek Myth,assets/img/thumbs/board-game-greek-myth.webp,assets/img/banners/board-game-greek-myth.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0099,Endless Hotseat Strategy #########,assets/img/thumbs/endless-hotseat-strategy.webp,assets/img/banners/endless-hotseat-strategy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0100,Wild Color Match: Infinite,assets/img/thumbs/wild-color-match-infinite.webp,assets/img/banners/wild-color-match-infinite.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0101,Western Physics Sandbox Empire,assets/img/thumbs/western-physics-sandbox-empire.webp,assets/img/banners/western-physics-sandbox-empire.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0102,Wrap Pipes #102,assets/img/thumbs/wrap-pipes-102.webp,assets/img/banners/wrap-pipes-102.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0103,Phantom Isometric Hidden Object,assets/img/thumbs/phantom-isometric-hidden-object.webp,assets/img/banners/phantom-isometric-hidden-object.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0104,Brave Traffic Control: Samurai Edition,assets/img/thumbs/brave-traffic-control-samurai-edition.webp,assets/img/banners/brave-traffic-control-samurai-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0105,Airport Manager: Greek Myth Edition,assets/img/thumbs/airport-manager-greek-myth-edition.webp,assets/img/banners/airport-manager-greek-myth-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0106,Vibrant Mega Ocean,assets/img/thumbs/vibrant-mega-ocean.webp,assets/img/banners/vibrant-mega-ocean.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0107,Party Game: Egyptian Edition,assets/img/thumbs/party-game-egyptian-edition.webp,assets/img/banners/party-game-egyptian-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0108,Anagram: Sports Edition,assets/img/thumbs/anagram-sports-edition.webp,assets/img/banners/anagram-sports-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0109,Epic Arctic Versus Puzzle,assets/img/thumbs/epic-arctic-versus-puzzle.webp,assets/img/banners/epic-arctic-versus-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0110,Ninja Silver Chronicles,assets/img/thumbs/ninja-silver-chronicles.webp,assets/img/banners/ninja-silver-chronicles.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0111,Phantom Side-Scroller,assets/img/thumbs/phantom-side-scroller.webp,assets/img/banners/phantom-side-scroller.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0112,Retro 16-bit Quantum Dash,assets/img/thumbs/retro-16-bit-quantum-dash.webp,assets/img/banners/retro-16-bit-quantum-dash.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0113,Retro Lives Arena #113,assets/img/thumbs/retro-lives-arena-113.webp,assets/img/banners/retro-lives-arena-113.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0114,Gradient Heavy Super Race,assets/img/thumbs/gradient-heavy-super-race.webp,assets/img/banners/gradient-heavy-super-race.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0115,Tower Forge #115 (click tower to upgrade),assets/img/thumbs/tower-forge-115-click-tower-to-upgrade.webp,assets/img/banners/tower-forge-115-click-tower-to-upgrade.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0116,Intense 2-Player Strategy,assets/img/thumbs/intense-2-player-strategy.webp,assets/img/banners/intense-2-player-strategy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0117,Snowboarder: Neon Chronicles,assets/img/thumbs/snowboarder-neon-chronicles.webp,assets/img/banners/snowboarder-neon-chronicles.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0118,Overheat Clicker #118,assets/img/thumbs/overheat-clicker-118.webp,assets/img/banners/overheat-clicker-118.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0119,Silver Celtic Merge,assets/img/thumbs/silver-celtic-merge.webp,assets/img/banners/silver-celtic-merge.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0120,Super Halloween Farming Simulator,assets/img/thumbs/super-halloween-farming-simulator.webp,assets/img/banners/super-halloween-farming-simulator.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0121,Clever Arctic Tales,assets/img/thumbs/clever-arctic-tales.webp,assets/img/banners/clever-arctic-tales.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0122,Eternal Number Merge,assets/img/thumbs/eternal-number-merge.webp,assets/img/banners/eternal-number-merge.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0123,Robot World,assets/img/thumbs/robot-world.webp,assets/img/banners/robot-world.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0124,Robot Intense Dash,assets/img/thumbs/robot-intense-dash.webp,assets/img/banners/robot-intense-dash.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0125,Coloring Book: Cyberpunk Edition,assets/img/thumbs/coloring-book-cyberpunk-edition.webp,assets/img/banners/coloring-book-cyberpunk-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0126,Intense Sports Rush,assets/img/thumbs/intense-sports-rush.webp,assets/img/banners/intense-sports-rush.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0127,Eternal Egyptian Dungeon,assets/img/thumbs/eternal-egyptian-dungeon.webp,assets/img/banners/eternal-egyptian-dungeon.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0128,Pirate Idle Clicker Fury,assets/img/thumbs/pirate-idle-clicker-fury.webp,assets/img/banners/pirate-idle-clicker-fury.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0129,Hospital Tycoon: Fantasy Edition,assets/img/thumbs/hospital-tycoon-fantasy-edition.webp,assets/img/banners/hospital-tycoon-fantasy-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0130,Intense School Simulator,assets/img/thumbs/intense-school-simulator.webp,assets/img/banners/intense-school-simulator.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0131,Villager Escort #131,assets/img/thumbs/villager-escort-131.webp,assets/img/banners/villager-escort-131.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0132,Food Dragon Island,assets/img/thumbs/food-dragon-island.webp,assets/img/banners/food-dragon-island.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0133,Western Shared Screen Racing Hero,assets/img/thumbs/western-shared-screen-racing-hero.webp,assets/img/banners/western-shared-screen-racing-hero.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0134,Golden Neon Forest,assets/img/thumbs/golden-neon-forest.webp,assets/img/banners/golden-neon-forest.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0135,Super Cooking: Samurai Edition,assets/img/thumbs/super-cooking-samurai-edition.webp,assets/img/banners/super-cooking-samurai-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0136,Watercolor Color Match: Infinite,assets/img/thumbs/watercolor-color-match-infinite.webp,assets/img/banners/watercolor-color-match-infinite.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0137,Intense Cooking: Infinity Edition,assets/img/thumbs/intense-cooking-infinity-edition.webp,assets/img/banners/intense-cooking-infinity-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0138,Air Hockey: Pirate Theme,assets/img/thumbs/air-hockey-pirate-theme.webp,assets/img/banners/air-hockey-pirate-theme.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0139,Gravity Puzzle: Pirate Edition,assets/img/thumbs/gravity-puzzle-pirate-edition.webp,assets/img/banners/gravity-puzzle-pirate-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0140,Decoy Spotter #140,assets/img/thumbs/decoy-spotter-140.webp,assets/img/banners/decoy-spotter-140.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0141,Minimalist Vehicle Combat Rush,assets/img/thumbs/minimalist-vehicle-combat-rush.webp,assets/img/banners/minimalist-vehicle-combat-rush.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0142,Flying Kings Checkers #142,assets/img/thumbs/flying-kings-checkers-142.webp,assets/img/banners/flying-kings-checkers-142.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0143,Turbo Airport Manager: Steampunk Edition,assets/img/thumbs/turbo-airport-manager-steampunk-edition.webp,assets/img/banners/turbo-airport-manager-steampunk-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0144,Ultimate Match-3: Fantasy Edition,assets/img/thumbs/ultimate-match-3-fantasy-edition.webp,assets/img/banners/ultimate-match-3-fantasy-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0145,Modern Flat Mystic Master,assets/img/thumbs/modern-flat-mystic-master.webp,assets/img/banners/modern-flat-mystic-master.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0146,Phantom Glassmorphism Hotseat Strategy,assets/img/thumbs/phantom-glassmorphism-hotseat-strategy.webp,assets/img/banners/phantom-glassmorphism-hotseat-strategy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0147,Losing Checkers #147 (lose all pieces to win!),assets/img/thumbs/losing-checkers-147-lose-all-pieces-to-win.webp,assets/img/banners/losing-checkers-147-lose-all-pieces-to-win.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0148,Swift Neon Gunner,assets/img/thumbs/swift-neon-gunner.webp,assets/img/banners/swift-neon-gunner.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0149,King Rush Checkers #149,assets/img/thumbs/king-rush-checkers-149.webp,assets/img/banners/king-rush-checkers-149.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0150,Eternal Robot Room Escape,assets/img/thumbs/eternal-robot-room-escape.webp,assets/img/banners/eternal-robot-room-escape.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0151,Intense Samurai Vehicle Combat,assets/img/thumbs/intense-samurai-vehicle-combat.webp,assets/img/banners/intense-samurai-vehicle-combat.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0152,Isometric Brave Kingdom,assets/img/thumbs/isometric-brave-kingdom.webp,assets/img/banners/isometric-brave-kingdom.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0153,Cosmic Monochrome Farming Sim,assets/img/thumbs/cosmic-monochrome-farming-sim.webp,assets/img/banners/cosmic-monochrome-farming-sim.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0154,Storm Jungle Puzzle,assets/img/thumbs/storm-jungle-puzzle.webp,assets/img/banners/storm-jungle-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0155,Viking Merge: Watercolor Edition,assets/img/thumbs/viking-merge-watercolor-edition.webp,assets/img/banners/viking-merge-watercolor-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0156,Ultimate Endless Runner: Pirate Edition,assets/img/thumbs/ultimate-endless-runner-pirate-edition.webp,assets/img/banners/ultimate-endless-runner-pirate-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0157,Cel-shaded Space War: 2P Edition,assets/img/thumbs/cel-shaded-space-war-2p-edition.webp,assets/img/banners/cel-shaded-space-war-2p-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0158,Modern Flat Puzzle: Norse Edition,assets/img/thumbs/modern-flat-puzzle-norse-edition.webp,assets/img/banners/modern-flat-puzzle-norse-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0159,Epic Time Management: Infinity,assets/img/thumbs/epic-time-management-infinity.webp,assets/img/banners/epic-time-management-infinity.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0160,Lives & Lens Spotter #160,assets/img/thumbs/lives-lens-spotter-160.webp,assets/img/banners/lives-lens-spotter-160.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0161,Mega Magic Logic Gates,assets/img/thumbs/mega-magic-logic-gates.webp,assets/img/banners/mega-magic-logic-gates.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0162,Cosmic Magic Riddle Solver,assets/img/thumbs/cosmic-magic-riddle-solver.webp,assets/img/banners/cosmic-magic-riddle-solver.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0163,Gravity Shift Merge #163,assets/img/thumbs/gravity-shift-merge-163.webp,assets/img/banners/gravity-shift-merge-163.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0164,Neon Party Game: Race Edition,assets/img/thumbs/neon-party-game-race-edition.webp,assets/img/banners/neon-party-game-race-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0165,Splitter Defense #165,assets/img/thumbs/splitter-defense-165.webp,assets/img/banners/splitter-defense-165.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0166,Royal Hidden Object,assets/img/thumbs/royal-hidden-object.webp,assets/img/banners/royal-hidden-object.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0167,Glassmorphism Realm,assets/img/thumbs/glassmorphism-realm.webp,assets/img/banners/glassmorphism-realm.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0168,Overtime Trivia #168,assets/img/thumbs/overtime-trivia-168.webp,assets/img/banners/overtime-trivia-168.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0169,Cute Animals Rise,assets/img/thumbs/cute-animals-rise.webp,assets/img/banners/cute-animals-rise.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0170,Memory Sequence: Isometric Edition,assets/img/thumbs/memory-sequence-isometric-edition.webp,assets/img/banners/memory-sequence-isometric-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0171,Arctic Flappy: Universe Edition,assets/img/thumbs/arctic-flappy-universe-edition.webp,assets/img/banners/arctic-flappy-universe-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0172,Dress Up: Glassmorphism Edition,assets/img/thumbs/dress-up-glassmorphism-edition.webp,assets/img/banners/dress-up-glassmorphism-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0173,Roundabout Yield #173,assets/img/thumbs/roundabout-yield-173.webp,assets/img/banners/roundabout-yield-173.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0174,Retro 8-bit School Simulator Rush,assets/img/thumbs/retro-8-bit-school-simulator-rush.webp,assets/img/banners/retro-8-bit-school-simulator-rush.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0175,Versus Puzzle: Food Edition,assets/img/thumbs/versus-puzzle-food-edition.webp,assets/img/banners/versus-puzzle-food-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0176,Golden Watercolor Portal,assets/img/thumbs/golden-watercolor-portal.webp,assets/img/banners/golden-watercolor-portal.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0177,Watercolor Physics Sandbox,assets/img/thumbs/watercolor-physics-sandbox.webp,assets/img/banners/watercolor-physics-sandbox.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0178,Dark Mode Sport Hero,assets/img/thumbs/dark-mode-sport-hero.webp,assets/img/banners/dark-mode-sport-hero.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0179,Epic Cozy Merge: 2P Edition,assets/img/thumbs/epic-cozy-merge-2p-edition.webp,assets/img/banners/epic-cozy-merge-2p-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0180,Halloween Intense Puzzle,assets/img/thumbs/halloween-intense-puzzle.webp,assets/img/banners/halloween-intense-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0181,Turbo Christmas Legend,assets/img/thumbs/turbo-christmas-legend.webp,assets/img/banners/turbo-christmas-legend.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0182,Glassmorphism Golden Adventure,assets/img/thumbs/glassmorphism-golden-adventure.webp,assets/img/banners/glassmorphism-golden-adventure.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0183,Ball Bounce: Glassmorphism Edition,assets/img/thumbs/ball-bounce-glassmorphism-edition.webp,assets/img/banners/ball-bounce-glassmorphism-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0184,Focus Trainer: Pixel Art Edition,assets/img/thumbs/focus-trainer-pixel-art-edition.webp,assets/img/banners/focus-trainer-pixel-art-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0185,Coloring Book: Glassmorphism Edition,assets/img/thumbs/coloring-book-glassmorphism-edition.webp,assets/img/banners/coloring-book-glassmorphism-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0186,Dual Source Pipes #186,assets/img/thumbs/dual-source-pipes-186.webp,assets/img/banners/dual-source-pipes-186.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0187,Legendary Traffic Control: Food Edition,assets/img/thumbs/legendary-traffic-control-food-edition.webp,assets/img/banners/legendary-traffic-control-food-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0188,Mega Halloween Airport Manager,assets/img/thumbs/mega-halloween-airport-manager.webp,assets/img/banners/mega-halloween-airport-manager.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0189,Medieval Arena,assets/img/thumbs/medieval-arena.webp,assets/img/banners/medieval-arena.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0190,Phoenix Arctic Legend,assets/img/thumbs/phoenix-arctic-legend.webp,assets/img/banners/phoenix-arctic-legend.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0191,Epic Vehicle Combat: Horror Edition,assets/img/thumbs/epic-vehicle-combat-horror-edition.webp,assets/img/banners/epic-vehicle-combat-horror-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0192,Storm Jungle Word Search,assets/img/thumbs/storm-jungle-word-search.webp,assets/img/banners/storm-jungle-word-search.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0193,Norse Shared Screen Racing,assets/img/thumbs/norse-shared-screen-racing.webp,assets/img/banners/norse-shared-screen-racing.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0194,Chain Combo Merge #194,assets/img/thumbs/chain-combo-merge-194.webp,assets/img/banners/chain-combo-merge-194.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0195,Legendary Maze,assets/img/thumbs/legendary-maze.webp,assets/img/banners/legendary-maze.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0196,Desert Math Puzzle,assets/img/thumbs/desert-math-puzzle.webp,assets/img/banners/desert-math-puzzle.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0197,Rune Tree Idle #197,assets/img/thumbs/rune-tree-idle-197.webp,assets/img/banners/rune-tree-idle-197.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0198,Side-Scroller: Arctic Edition,assets/img/thumbs/side-scroller-arctic-edition.webp,assets/img/banners/side-scroller-arctic-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0199,Desert Logic Gates,assets/img/thumbs/desert-logic-gates.webp,assets/img/banners/desert-logic-gates.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0200,Super Hotseat Strategy: Christmas Edition,assets/img/thumbs/super-hotseat-strategy-christmas-edition.webp,assets/img/banners/super-hotseat-strategy-christmas-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0201,Comic Book Chronicles,assets/img/thumbs/comic-book-chronicles.webp,assets/img/banners/comic-book-chronicles.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0202,Zen Vibrant Master,assets/img/thumbs/zen-vibrant-master.webp,assets/img/banners/zen-vibrant-master.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0203,Epic Pixel Art Tower,assets/img/thumbs/epic-pixel-art-tower.webp,assets/img/banners/epic-pixel-art-tower.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0204,Low-poly Fall,assets/img/thumbs/low-poly-fall.webp,assets/img/banners/low-poly-fall.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0205,Turbo Magic Parkour,assets/img/thumbs/turbo-magic-parkour.webp,assets/img/banners/turbo-magic-parkour.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0206,Coloring Book: Food Edition,assets/img/thumbs/coloring-book-food-edition.webp,assets/img/banners/coloring-book-food-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0207,Quantum Viking Merge,assets/img/thumbs/quantum-viking-merge.webp,assets/img/banners/quantum-viking-merge.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0208,Silent Music Galaxy,assets/img/thumbs/silent-music-galaxy.webp,assets/img/banners/silent-music-galaxy.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0209,Cyberpunk Sky,assets/img/thumbs/cyberpunk-sky.webp,assets/img/banners/cyberpunk-sky.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0210,Robot Rush,assets/img/thumbs/robot-rush.webp,assets/img/banners/robot-rush.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0211,Royal Cooking Party Game,assets/img/thumbs/royal-cooking-party-game.webp,assets/img/banners/royal-cooking-party-game.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0212,Train Crossing #212,assets/img/thumbs/train-crossing-212.webp,assets/img/banners/train-crossing-212.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0213,Epic Magic Coloring Book,assets/img/thumbs/epic-magic-coloring-book.webp,assets/img/banners/epic-magic-coloring-book.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0214,Intense Brain Puzzle Saga (Daily Seed),assets/img/thumbs/intense-brain-puzzle-saga-daily-seed.webp,assets/img/banners/intense-brain-puzzle-saga-daily-seed.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0215,Fog of War Checkers #215,assets/img/thumbs/fog-of-war-checkers-215.webp,assets/img/banners/fog-of-war-checkers-215.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0216,Quantum Run,assets/img/thumbs/quantum-run.webp,assets/img/banners/quantum-run.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0217,Token Hunt Slide #217,assets/img/thumbs/token-hunt-slide-217.webp,assets/img/banners/token-hunt-slide-217.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0218,Halloween King,assets/img/thumbs/halloween-king.webp,assets/img/banners/halloween-king.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0219,Intense Maze,assets/img/thumbs/intense-maze.webp,assets/img/banners/intense-maze.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0220,Watercolor Merge: Holiday Edition,assets/img/thumbs/watercolor-merge-holiday-edition.webp,assets/img/banners/watercolor-merge-holiday-edition.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0221,Ninja Dress Up #221,assets/img/thumbs/ninja-dress-up-221.webp,assets/img/banners/ninja-dress-up-221.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0222,Food Dungeon #222,assets/img/thumbs/food-dungeon-222.webp,assets/img/banners/food-dungeon-222.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0223,Egyptian Gate Traffic #223,assets/img/thumbs/egyptian-gate-traffic-223.webp,assets/img/banners/egyptian-gate-traffic-223.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0224,Haunted Simon Duel #224,assets/img/thumbs/haunted-simon-duel-224.webp,assets/img/banners/haunted-simon-duel-224.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0225,Ninja Coin Tower #225,assets/img/thumbs/ninja-coin-tower-225.webp,assets/img/banners/ninja-coin-tower-225.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0226,Desert Forge Idle #226,assets/img/thumbs/desert-forge-idle-226.webp,assets/img/banners/desert-forge-idle-226.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0227,Haunted Row Slide #227,assets/img/thumbs/haunted-row-slide-227.webp,assets/img/banners/haunted-row-slide-227.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0228,Royal Cooking Dash #228,assets/img/thumbs/royal-cooking-dash-228.webp,assets/img/banners/royal-cooking-dash-228.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0229,Crystal Hex Duel #229,assets/img/thumbs/crystal-hex-duel-229.webp,assets/img/banners/crystal-hex-duel-229.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0230,Haunted Obby Run #230,assets/img/thumbs/haunted-obby-run-230.webp,assets/img/banners/haunted-obby-run-230.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0231,Egyptian Wrap Pipes #231,assets/img/thumbs/egyptian-wrap-pipes-231.webp,assets/img/banners/egyptian-wrap-pipes-231.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0232,Desert Reflection #232,assets/img/thumbs/desert-reflection-232.webp,assets/img/banners/desert-reflection-232.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0233,Ninja Maze Sprint #233,assets/img/thumbs/ninja-maze-sprint-233.webp,assets/img/banners/ninja-maze-sprint-233.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0234,Royal Checkers Blitz #234,assets/img/thumbs/royal-checkers-blitz-234.webp,assets/img/banners/royal-checkers-blitz-234.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0235,Haunted Hotseat Conquest #235,assets/img/thumbs/haunted-hotseat-conquest-235.webp,assets/img/banners/haunted-hotseat-conquest-235.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0236,Crystal Match Blast #236,assets/img/thumbs/crystal-match-blast-236.webp,assets/img/banners/crystal-match-blast-236.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0237,Idle Pharaoh #237,assets/img/thumbs/idle-pharaoh-237.webp,assets/img/banners/idle-pharaoh-237.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0238,Ninja Reaction #238,assets/img/thumbs/ninja-reaction-238.webp,assets/img/banners/ninja-reaction-238.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0239,Royal Word Ladder #239,assets/img/thumbs/royal-word-ladder-239.webp,assets/img/banners/royal-word-ladder-239.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0240,Desert Gravity Flip #240,assets/img/thumbs/desert-gravity-flip-240.webp,assets/img/banners/desert-gravity-flip-240.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0241,Desert Mega Hero #241,assets/img/thumbs/desert-mega-hero-241.webp,assets/img/banners/desert-mega-hero-241.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0242,Music Versus #242,assets/img/thumbs/music-versus-242.webp,assets/img/banners/music-versus-242.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0243,Pixel Checkers Fog #243,assets/img/thumbs/pixel-checkers-fog-243.webp,assets/img/banners/pixel-checkers-fog-243.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0244,Haunted Calculator #244,assets/img/thumbs/haunted-calculator-244.webp,assets/img/banners/haunted-calculator-244.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0245,Crystal Ball Sort #245,assets/img/thumbs/crystal-ball-sort-245.webp,assets/img/banners/crystal-ball-sort-245.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0246,Ninja Math Sprint #246,assets/img/thumbs/ninja-math-sprint-246.webp,assets/img/banners/ninja-math-sprint-246.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0247,Royal Court Word Duel #247,assets/img/thumbs/royal-court-word-duel-247.webp,assets/img/banners/royal-court-word-duel-247.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0248,Desert Memory Match #248,assets/img/thumbs/desert-memory-match-248.webp,assets/img/banners/desert-memory-match-248.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0249,Music Sequence Builder #249,assets/img/thumbs/music-sequence-builder-249.webp,assets/img/banners/music-sequence-builder-249.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0250,Haunted Merge Blast #250,assets/img/thumbs/haunted-merge-blast-250.webp,assets/img/banners/haunted-merge-blast-250.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0251,Crystal Balance #251,assets/img/thumbs/crystal-balance-251.webp,assets/img/banners/crystal-balance-251.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0252,Ninja Quiz Blitz #252,assets/img/thumbs/ninja-quiz-blitz-252.webp,assets/img/banners/ninja-quiz-blitz-252.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0253,Royal Idle Kingdom #253,assets/img/thumbs/royal-idle-kingdom-253.webp,assets/img/banners/royal-idle-kingdom-253.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0254,Haunted Spot Shift #254,assets/img/thumbs/haunted-spot-shift-254.webp,assets/img/banners/haunted-spot-shift-254.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0255,Egyptian Portal 2048 #255,assets/img/thumbs/egyptian-portal-2048-255.webp,assets/img/banners/egyptian-portal-2048-255.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0256,Ninja Reflex Duel #256,assets/img/thumbs/ninja-reflex-duel-256.webp,assets/img/banners/ninja-reflex-duel-256.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0257,Royal Pipe Connect #257,assets/img/thumbs/royal-pipe-connect-257.webp,assets/img/banners/royal-pipe-connect-257.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0258,Crystal Word Search #258,assets/img/thumbs/crystal-word-search-258.webp,assets/img/banners/crystal-word-search-258.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0259,Desert Snake Trail #259,assets/img/thumbs/desert-snake-trail-259.webp,assets/img/banners/desert-snake-trail-259.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0260,Haunted Tower Stack #260,assets/img/thumbs/haunted-tower-stack-260.webp,assets/img/banners/haunted-tower-stack-260.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0261,Ninja Stealth Grid #261,assets/img/thumbs/ninja-stealth-grid-261.webp,assets/img/banners/ninja-stealth-grid-261.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0262,Desert Dual Defense #262,assets/img/thumbs/desert-dual-defense-262.webp,assets/img/banners/desert-dual-defense-262.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0263,Crystal Rhythm Grid #263,assets/img/thumbs/crystal-rhythm-grid-263.webp,assets/img/banners/crystal-rhythm-grid-263.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0264,Egyptian Math Pyramid #264,assets/img/thumbs/egyptian-math-pyramid-264.webp,assets/img/banners/egyptian-math-pyramid-264.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0265,Haunted Whack-A-Ghost #265,assets/img/thumbs/haunted-whack-a-ghost-265.webp,assets/img/banners/haunted-whack-a-ghost-265.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0266,Royal Chess Puzzles #266,assets/img/thumbs/royal-chess-puzzles-266.webp,assets/img/banners/royal-chess-puzzles-266.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0267,Ninja Ice Slide #267,assets/img/thumbs/ninja-ice-slide-267.webp,assets/img/banners/ninja-ice-slide-267.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0268,Desert Draw Path #268,assets/img/thumbs/desert-draw-path-268.webp,assets/img/banners/desert-draw-path-268.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0269,Crystal Cipher #269,assets/img/thumbs/crystal-cipher-269.webp,assets/img/banners/crystal-cipher-269.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0270,Ninja Arena King #270,assets/img/thumbs/ninja-arena-king-270.webp,assets/img/banners/ninja-arena-king-270.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0271,Haunted Anagram Arena #271,assets/img/thumbs/haunted-anagram-arena-271.webp,assets/img/banners/haunted-anagram-arena-271.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0272,Desert Snake Pit #272,assets/img/thumbs/desert-snake-pit-272.webp,assets/img/banners/desert-snake-pit-272.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0273,Ninja Logic Gates #273,assets/img/thumbs/ninja-logic-gates-273.webp,assets/img/banners/ninja-logic-gates-273.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0274,Royal Match Towers #274,assets/img/thumbs/royal-match-towers-274.webp,assets/img/banners/royal-match-towers-274.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0275,Haunted Wave Composer #275,assets/img/thumbs/haunted-wave-composer-275.webp,assets/img/banners/haunted-wave-composer-275.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0276,Crystal Dot Link #276,assets/img/thumbs/crystal-dot-link-276.webp,assets/img/banners/crystal-dot-link-276.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0277,Desert Rhythm Runner #277,assets/img/thumbs/desert-rhythm-runner-277.webp,assets/img/banners/desert-rhythm-runner-277.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0278,Royal Deck Duel #278,assets/img/thumbs/royal-deck-duel-278.webp,assets/img/banners/royal-deck-duel-278.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0279,Haunted Falling Blocks #279,assets/img/thumbs/haunted-falling-blocks-279.webp,assets/img/banners/haunted-falling-blocks-279.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0280,Ninja Mirror Maze #280,assets/img/thumbs/ninja-mirror-maze-280.webp,assets/img/banners/ninja-mirror-maze-280.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0281,Desert Bounce Quest #281,assets/img/thumbs/desert-bounce-quest-281.webp,assets/img/banners/desert-bounce-quest-281.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0282,Crystal Memory Matrix #282,assets/img/thumbs/crystal-memory-matrix-282.webp,assets/img/banners/crystal-memory-matrix-282.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0283,Royal Number Maze #283,assets/img/thumbs/royal-number-maze-283.webp,assets/img/banners/royal-number-maze-283.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0284,Haunted Pattern Shift #284,assets/img/thumbs/haunted-pattern-shift-284.webp,assets/img/banners/haunted-pattern-shift-284.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0285,Ninja Color Flood #285,assets/img/thumbs/ninja-color-flood-285.webp,assets/img/banners/ninja-color-flood-285.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0286,Desert Vault #286,assets/img/thumbs/desert-vault-286.webp,assets/img/banners/desert-vault-286.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0287,Crystal Laser Alignment #287,assets/img/thumbs/crystal-laser-alignment-287.webp,assets/img/banners/crystal-laser-alignment-287.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0288,Ninja Pixel Painter #288,assets/img/thumbs/ninja-pixel-painter-288.webp,assets/img/banners/ninja-pixel-painter-288.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0289,Royal Tile Swap #289,assets/img/thumbs/royal-tile-swap-289.webp,assets/img/banners/royal-tile-swap-289.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0290,Haunted Sound Board #290,assets/img/thumbs/haunted-sound-board-290.webp,assets/img/banners/haunted-sound-board-290.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0291,Desert Caravan Trade #291,assets/img/thumbs/desert-caravan-trade-291.webp,assets/img/banners/desert-caravan-trade-291.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0292,Crystal Dot Pop #292,assets/img/thumbs/crystal-dot-pop-292.webp,assets/img/banners/crystal-dot-pop-292.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0293,Ninja Target Skipper #293,assets/img/thumbs/ninja-target-skipper-293.webp,assets/img/banners/ninja-target-skipper-293.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0294,Royal Word Search Blitz #294,assets/img/thumbs/royal-word-search-blitz-294.webp,assets/img/banners/royal-word-search-blitz-294.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0295,Desert Balance Beam #295,assets/img/thumbs/desert-balance-beam-295.webp,assets/img/banners/desert-balance-beam-295.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0296,Ninja Shadow Match #296,assets/img/thumbs/ninja-shadow-match-296.webp,assets/img/banners/ninja-shadow-match-296.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0297,Crystal Path Finder #297,assets/img/thumbs/crystal-path-finder-297.webp,assets/img/banners/crystal-path-finder-297.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0298,Royal Rhythm Taps #298,assets/img/thumbs/royal-rhythm-taps-298.webp,assets/img/banners/royal-rhythm-taps-298.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0299,Haunted Maze Chase #299,assets/img/thumbs/haunted-maze-chase-299.webp,assets/img/banners/haunted-maze-chase-299.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0300,Crystal Defense Grid #300,assets/img/thumbs/crystal-defense-grid-300.webp,assets/img/banners/crystal-defense-grid-300.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0301,Ninja Spell Chain #301,assets/img/thumbs/ninja-spell-chain-301.webp,assets/img/banners/ninja-spell-chain-301.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0302,Desert Oasis Defense #302,assets/img/thumbs/desert-oasis-defense-302.webp,assets/img/banners/desert-oasis-defense-302.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0303,Crystal Reflex Grid #303,assets/img/thumbs/crystal-reflex-grid-303.webp,assets/img/banners/crystal-reflex-grid-303.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0304,Royal Joust #304,assets/img/thumbs/royal-joust-304.webp,assets/img/banners/royal-joust-304.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0305,Haunted Bubble Pop #305,assets/img/thumbs/haunted-bubble-pop-305.webp,assets/img/banners/haunted-bubble-pop-305.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0306,Crystal Shift Puzzle #306,assets/img/thumbs/crystal-shift-puzzle-306.webp,assets/img/banners/crystal-shift-puzzle-306.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0307,Desert Train Switch #307,assets/img/thumbs/desert-train-switch-307.webp,assets/img/banners/desert-train-switch-307.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0308,Ninja Stack Sort #308,assets/img/thumbs/ninja-stack-sort-308.webp,assets/img/banners/ninja-stack-sort-308.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0309,Royal Word Grid #309,assets/img/thumbs/royal-word-grid-309.webp,assets/img/banners/royal-word-grid-309.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0310,Haunted Ghost Maze #310,assets/img/thumbs/haunted-ghost-maze-310.webp,assets/img/banners/haunted-ghost-maze-310.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0311,Crystal Dice Duel #311,assets/img/thumbs/crystal-dice-duel-311.webp,assets/img/banners/crystal-dice-duel-311.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0312,Ninja Orchard Harvest #312,assets/img/thumbs/ninja-orchard-harvest-312.webp,assets/img/banners/ninja-orchard-harvest-312.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0313,Haunted Spot Pop #313,assets/img/thumbs/haunted-spot-pop-313.webp,assets/img/banners/haunted-spot-pop-313.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0314,Royal Card Count #314,assets/img/thumbs/royal-card-count-314.webp,assets/img/banners/royal-card-count-314.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0315,Desert Mirror Path #315,assets/img/thumbs/desert-mirror-path-315.webp,assets/img/banners/desert-mirror-path-315.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0316,Ninja Star Catch #0316,assets/img/thumbs/ninja-star-catch-0316.webp,assets/img/banners/ninja-star-catch-0316.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0317,Royal Jewel Merge #317,assets/img/thumbs/royal-jewel-merge-317.webp,assets/img/banners/royal-jewel-merge-317.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0318,Haunted Tile Runner #0318,assets/img/thumbs/haunted-tile-runner-0318.webp,assets/img/banners/haunted-tile-runner-0318.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0319,Crystal Number Drop #319,assets/img/thumbs/crystal-number-drop-319.webp,assets/img/banners/crystal-number-drop-319.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0320,Desert Rhythm Tap #320,assets/img/thumbs/desert-rhythm-tap-320.webp,assets/img/banners/desert-rhythm-tap-320.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0321,Ninja Dart Board #321,assets/img/thumbs/ninja-dart-board-321.webp,assets/img/banners/ninja-dart-board-321.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0322,Desert Sand Draw #322,assets/img/thumbs/desert-sand-draw-322.webp,assets/img/banners/desert-sand-draw-322.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0323,Crystal Color Chain #323,assets/img/thumbs/crystal-color-chain-323.webp,assets/img/banners/crystal-color-chain-323.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0324,Royal Egg Catch #324,assets/img/thumbs/royal-egg-catch-324.webp,assets/img/banners/royal-egg-catch-324.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0325,Haunted Grid Crawler #325,assets/img/thumbs/haunted-grid-crawler-325.webp,assets/img/banners/haunted-grid-crawler-325.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0326,Desert Oasis Match #326,assets/img/thumbs/desert-oasis-match-326.webp,assets/img/banners/desert-oasis-match-326.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0327,Ninja Wind Sprint #327,assets/img/thumbs/ninja-wind-sprint-327.webp,assets/img/banners/ninja-wind-sprint-327.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0328,Royal Candle Light #328,assets/img/thumbs/royal-candle-light-328.webp,assets/img/banners/royal-candle-light-328.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0329,Desert Scroll Roll #329,assets/img/thumbs/desert-scroll-roll-329.webp,assets/img/banners/desert-scroll-roll-329.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0330,Crystal Code Breaker #330,assets/img/thumbs/crystal-code-breaker-330.webp,assets/img/banners/crystal-code-breaker-330.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0331,Ninja Balance Tower #331,assets/img/thumbs/ninja-balance-tower-331.webp,assets/img/banners/ninja-balance-tower-331.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0332,Royal Music Tiles #332,assets/img/thumbs/royal-music-tiles-332.webp,assets/img/banners/royal-music-tiles-332.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0333,Desert Dot Trail #333,assets/img/thumbs/desert-dot-trail-333.webp,assets/img/banners/desert-dot-trail-333.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0334,Ninja Windmill #334,assets/img/thumbs/ninja-windmill-334.webp,assets/img/banners/ninja-windmill-334.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0335,Royal Gate Keeper #335,assets/img/thumbs/royal-gate-keeper-335.webp,assets/img/banners/royal-gate-keeper-335.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0336,Crystal Ice Break #336,assets/img/thumbs/crystal-ice-break-336.webp,assets/img/banners/crystal-ice-break-336.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0337,Desert Scarab Rush #337,assets/img/thumbs/desert-scarab-rush-337.webp,assets/img/banners/desert-scarab-rush-337.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0338,Haunted Mirror Match #338,assets/img/thumbs/haunted-mirror-match-338.webp,assets/img/banners/haunted-mirror-match-338.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0339,Ninja Lantern Light #339,assets/img/thumbs/ninja-lantern-light-339.webp,assets/img/banners/ninja-lantern-light-339.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0340,Royal Charm Match #340,assets/img/thumbs/royal-charm-match-340.webp,assets/img/banners/royal-charm-match-340.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0341,Ninja Wind Blade #341,assets/img/thumbs/ninja-wind-blade-341.webp,assets/img/banners/ninja-wind-blade-341.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0342,Desert Coin Pusher #342,assets/img/thumbs/desert-coin-pusher-342.webp,assets/img/banners/desert-coin-pusher-342.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0343,Crystal Path Defense #343,assets/img/thumbs/crystal-path-defense-343.webp,assets/img/banners/crystal-path-defense-343.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0344,Haunted Number Path #344,assets/img/thumbs/haunted-number-path-344.webp,assets/img/banners/haunted-number-path-344.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0345,Royal Jester Juggle #345,assets/img/thumbs/royal-jester-juggle-345.webp,assets/img/banners/royal-jester-juggle-345.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0346,Crystal Stack Sort #346,assets/img/thumbs/crystal-stack-sort-346.webp,assets/img/banners/crystal-stack-sort-346.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0347,Desert Rhythm Hop #347,assets/img/thumbs/desert-rhythm-hop-347.webp,assets/img/banners/desert-rhythm-hop-347.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0348,Haunted Clock Tower #348,assets/img/thumbs/haunted-clock-tower-348.webp,assets/img/banners/haunted-clock-tower-348.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0349,Royal Crown Tower #349,assets/img/thumbs/royal-crown-tower-349.webp,assets/img/banners/royal-crown-tower-349.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0350,Ninja Shadow Step #350,assets/img/thumbs/ninja-shadow-step-350.webp,assets/img/banners/ninja-shadow-step-350.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0351,Crystal Flow #351,assets/img/thumbs/crystal-flow-351.webp,assets/img/banners/crystal-flow-351.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0352,Desert Camel Race #352,assets/img/thumbs/desert-camel-race-352.webp,assets/img/banners/desert-camel-race-352.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0353,Royal Anagram Battle #353,assets/img/thumbs/royal-anagram-battle-353.webp,assets/img/banners/royal-anagram-battle-353.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0354,Beat Bell #354,assets/img/thumbs/beat-bell-354.webp,assets/img/banners/beat-bell-354.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0355,Crystal Puzzle Grid #355,assets/img/thumbs/crystal-puzzle-grid-355.webp,assets/img/banners/crystal-puzzle-grid-355.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0356,Ninja Star Throw #356,assets/img/thumbs/ninja-star-throw-356.webp,assets/img/banners/ninja-star-throw-356.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0357,Desert Coin Flip #357,assets/img/thumbs/desert-coin-flip-357.webp,assets/img/banners/desert-coin-flip-357.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0358,Haunted Crystal Ball #358,assets/img/thumbs/haunted-crystal-ball-358.webp,assets/img/banners/haunted-crystal-ball-358.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0359,Royal Feast Rush #359,assets/img/thumbs/royal-feast-rush-359.webp,assets/img/banners/royal-feast-rush-359.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0360,Ninja Scroll Cargo #360,assets/img/thumbs/ninja-scroll-cargo-360.webp,assets/img/banners/ninja-scroll-cargo-360.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0361,Desert Ant Farm #361,assets/img/thumbs/desert-ant-farm-361.webp,assets/img/banners/desert-ant-farm-361.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0362,Crystal Grid Shift #362,assets/img/thumbs/crystal-grid-shift-362.webp,assets/img/banners/crystal-grid-shift-362.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0363,Royal Bee Garden #363,assets/img/thumbs/royal-bee-garden-363.webp,assets/img/banners/royal-bee-garden-363.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0364,Ninja Word Scroll #364,assets/img/thumbs/ninja-word-scroll-364.webp,assets/img/banners/ninja-word-scroll-364.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0365,Desert Mine Cart #365,assets/img/thumbs/desert-mine-cart-365.webp,assets/img/banners/desert-mine-cart-365.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0366,Haunted Painting #366,assets/img/thumbs/haunted-painting-366.webp,assets/img/banners/haunted-painting-366.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0367,Ninja Ice Flow #367,assets/img/thumbs/ninja-ice-flow-367.webp,assets/img/banners/ninja-ice-flow-367.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0368,Royal Soup Stir #368,assets/img/thumbs/royal-soup-stir-368.webp,assets/img/banners/royal-soup-stir-368.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0369,Desert Sand Timer #369,assets/img/thumbs/desert-sand-timer-369.webp,assets/img/banners/desert-sand-timer-369.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0370,Ninja Lantern Maze #370,assets/img/thumbs/ninja-lantern-maze-370.webp,assets/img/banners/ninja-lantern-maze-370.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0371,Royal Chess Knight #371,assets/img/thumbs/royal-chess-knight-371.webp,assets/img/banners/royal-chess-knight-371.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0372,Desert Firefly Catch #372,assets/img/thumbs/desert-firefly-catch-372.webp,assets/img/banners/desert-firefly-catch-372.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0373,Haunted Mirror Path #373,assets/img/thumbs/haunted-mirror-path-373.webp,assets/img/banners/haunted-mirror-path-373.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0374,Ninja Water Drop #374,assets/img/thumbs/ninja-water-drop-374.webp,assets/img/banners/ninja-water-drop-374.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0375,Royal Dice Stack #375,assets/img/thumbs/royal-dice-stack-375.webp,assets/img/banners/royal-dice-stack-375.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0376,Desert Scorpion Sting #376,assets/img/thumbs/desert-scorpion-sting-376.webp,assets/img/banners/desert-scorpion-sting-376.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0377,Crystal Harmony #377,assets/img/thumbs/crystal-harmony-377.webp,assets/img/banners/crystal-harmony-377.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0378,Royal Portrait Mix #378,assets/img/thumbs/royal-portrait-mix-378.webp,assets/img/banners/royal-portrait-mix-378.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0379,Ninja Smoke Bomb #379,assets/img/thumbs/ninja-smoke-bomb-379.webp,assets/img/banners/ninja-smoke-bomb-379.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0380,Royal Crown Jewels #380,assets/img/thumbs/royal-crown-jewels-380.webp,assets/img/banners/royal-crown-jewels-380.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0381,Ninja Leaf Glide #381,assets/img/thumbs/ninja-leaf-glide-381.webp,assets/img/banners/ninja-leaf-glide-381.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0382,Desert Gear Puzzle #382,assets/img/thumbs/desert-gear-puzzle-382.webp,assets/img/banners/desert-gear-puzzle-382.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0383,Royal Recipe Mix #383,assets/img/thumbs/royal-recipe-mix-383.webp,assets/img/banners/royal-recipe-mix-383.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0384,Haunted Echo #384,assets/img/thumbs/haunted-echo-384.webp,assets/img/banners/haunted-echo-384.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0385,Ninja Star Link #385,assets/img/thumbs/ninja-star-link-385.webp,assets/img/banners/ninja-star-link-385.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0386,Desert Camel Choir #386,assets/img/thumbs/desert-camel-choir-386.webp,assets/img/banners/desert-camel-choir-386.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0387,Royal Card Castle #387,assets/img/thumbs/royal-card-castle-387.webp,assets/img/banners/royal-card-castle-387.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0388,Desert Oasis Hop #388,assets/img/thumbs/desert-oasis-hop-388.webp,assets/img/banners/desert-oasis-hop-388.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0389,Ninja Lantern Catch #389,assets/img/thumbs/ninja-lantern-catch-389.webp,assets/img/banners/ninja-lantern-catch-389.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0390,Royal Throne Sort #390,assets/img/thumbs/royal-throne-sort-390.webp,assets/img/banners/royal-throne-sort-390.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0391,Royal Key Turn #391,assets/img/thumbs/royal-key-turn-391.webp,assets/img/banners/royal-key-turn-391.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0392,Desert Sand Storm #392,assets/img/thumbs/desert-sand-storm-392.webp,assets/img/banners/desert-sand-storm-392.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0393,Ninja Torch Trail #393,assets/img/thumbs/ninja-torch-trail-393.webp,assets/img/banners/ninja-torch-trail-393.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0394,Royal Feast Balance #394,assets/img/thumbs/royal-feast-balance-394.webp,assets/img/banners/royal-feast-balance-394.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0395,Haunted Library #395,assets/img/thumbs/haunted-library-395.webp,assets/img/banners/haunted-library-395.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0396,Desert Scarab Maze #396,assets/img/thumbs/desert-scarab-maze-396.webp,assets/img/banners/desert-scarab-maze-396.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0397,Ninja Mask Match #397,assets/img/thumbs/ninja-mask-match-397.webp,assets/img/banners/ninja-mask-match-397.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0398,Royal Rainbow #398,assets/img/thumbs/royal-rainbow-398.webp,assets/img/banners/royal-rainbow-398.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0399,Desert Moon Phase #399,assets/img/thumbs/desert-moon-phase-399.webp,assets/img/banners/desert-moon-phase-399.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0400,Ninja Storm Dodge #400,assets/img/thumbs/ninja-storm-dodge-400.webp,assets/img/banners/ninja-storm-dodge-400.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0401,Ninja Sand Sprint #401,assets/img/thumbs/ninja-sand-sprint-401.webp,assets/img/banners/ninja-sand-sprint-401.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0402,Desert Night Watch #402,assets/img/thumbs/desert-night-watch-402.webp,assets/img/banners/desert-night-watch-402.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0403,Royal Sword Pull #403,assets/img/thumbs/royal-sword-pull-403.webp,assets/img/banners/royal-sword-pull-403.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0404,Haunted Hourglass Race #404,assets/img/thumbs/haunted-hourglass-race-404.webp,assets/img/banners/haunted-hourglass-race-404.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0405,Crystal Pond Ripple #405,assets/img/thumbs/crystal-pond-ripple-405.webp,assets/img/banners/crystal-pond-ripple-405.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0406,Desert Star Navigate #406,assets/img/thumbs/desert-star-navigate-406.webp,assets/img/banners/desert-star-navigate-406.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0407,Royal Cannon Aim #407,assets/img/thumbs/royal-cannon-aim-407.webp,assets/img/banners/royal-cannon-aim-407.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0408,Ninja Web Swing #408,assets/img/thumbs/ninja-web-swing-408.webp,assets/img/banners/ninja-web-swing-408.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0409,Desert Solar Align #409,assets/img/thumbs/desert-solar-align-409.webp,assets/img/banners/desert-solar-align-409.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0410,Haunted Bell Ring #410,assets/img/thumbs/haunted-bell-ring-410.webp,assets/img/banners/haunted-bell-ring-410.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0411,Desert Dune Board #411,assets/img/thumbs/desert-dune-board-411.webp,assets/img/banners/desert-dune-board-411.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0412,Royal Joust Duel #412,assets/img/thumbs/royal-joust-duel-412.webp,assets/img/banners/royal-joust-duel-412.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0413,Ninja Shadow Clone #413,assets/img/thumbs/ninja-shadow-clone-413.webp,assets/img/banners/ninja-shadow-clone-413.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0414,Desert Wind Chime #414,assets/img/thumbs/desert-wind-chime-414.webp,assets/img/banners/desert-wind-chime-414.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0415,Royal Torch Run #415,assets/img/thumbs/royal-torch-run-415.webp,assets/img/banners/royal-torch-run-415.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0416,Haunted Clock Hands #416,assets/img/thumbs/haunted-clock-hands-416.webp,assets/img/banners/haunted-clock-hands-416.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0417,Desert Frog Leap #417,assets/img/thumbs/desert-frog-leap-417.webp,assets/img/banners/desert-frog-leap-417.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0418,Crystal Grid Slide #418,assets/img/thumbs/crystal-grid-slide-418.webp,assets/img/banners/crystal-grid-slide-418.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0419,Haunted Attic Sort #419,assets/img/thumbs/haunted-attic-sort-419.webp,assets/img/banners/haunted-attic-sort-419.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0420,Crystal Comet Catch #420,assets/img/thumbs/crystal-comet-catch-420.webp,assets/img/banners/crystal-comet-catch-420.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0421,Ninja Silent Step #421,assets/img/thumbs/ninja-silent-step-421.webp,assets/img/banners/ninja-silent-step-421.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0422,Desert Sun Dial #422,assets/img/thumbs/desert-sun-dial-422.webp,assets/img/banners/desert-sun-dial-422.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0423,Royal Goblet Guess #423,assets/img/thumbs/royal-goblet-guess-423.webp,assets/img/banners/royal-goblet-guess-423.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0424,Haunted Portrait Row #424,assets/img/thumbs/haunted-portrait-row-424.webp,assets/img/banners/haunted-portrait-row-424.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0425,Crystal Flood Gate #425,assets/img/thumbs/crystal-flood-gate-425.webp,assets/img/banners/crystal-flood-gate-425.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0426,Royal Fan Fare #426,assets/img/thumbs/royal-fan-fare-426.webp,assets/img/banners/royal-fan-fare-426.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0427,Desert Star Map #427,assets/img/thumbs/desert-star-map-427.webp,assets/img/banners/desert-star-map-427.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0428,Ninja Lantern Toss #428,assets/img/thumbs/ninja-lantern-toss-428.webp,assets/img/banners/ninja-lantern-toss-428.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0429,Desert Oasis Guard #429,assets/img/thumbs/desert-oasis-guard-429.webp,assets/img/banners/desert-oasis-guard-429.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0430,Royal Jewel Weigh #430,assets/img/thumbs/royal-jewel-weigh-430.webp,assets/img/banners/royal-jewel-weigh-430.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0431,Haunted Painting Find #431,assets/img/thumbs/haunted-painting-find-431.webp,assets/img/banners/haunted-painting-find-431.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0432,Desert Camel Bell #432,assets/img/thumbs/desert-camel-bell-432.webp,assets/img/banners/desert-camel-bell-432.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0433,Crystal Pool Shot #433,assets/img/thumbs/crystal-pool-shot-433.webp,assets/img/banners/crystal-pool-shot-433.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0434,Haunted Door Guard #434,assets/img/thumbs/haunted-door-guard-434.webp,assets/img/banners/haunted-door-guard-434.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0435,Desert Masked Dancer #435,assets/img/thumbs/desert-masked-dancer-435.webp,assets/img/banners/desert-masked-dancer-435.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0436,Crystal Tide Pool #436,assets/img/thumbs/crystal-tide-pool-436.webp,assets/img/banners/crystal-tide-pool-436.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0437,Royal Archer Range #437,assets/img/thumbs/royal-archer-range-437.webp,assets/img/banners/royal-archer-range-437.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0438,Haunted Attic Crawl #438,assets/img/thumbs/haunted-attic-crawl-438.webp,assets/img/banners/haunted-attic-crawl-438.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0439,Desert Sun Catch #439,assets/img/thumbs/desert-sun-catch-439.webp,assets/img/banners/desert-sun-catch-439.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0440,Royal Throne Path #440,assets/img/thumbs/royal-throne-path-440.webp,assets/img/banners/royal-throne-path-440.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0441,Ninja Fog Walk #441,assets/img/thumbs/ninja-fog-walk-441.webp,assets/img/banners/ninja-fog-walk-441.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0442,Desert Star Fall #442,assets/img/thumbs/desert-star-fall-442.webp,assets/img/banners/desert-star-fall-442.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0443,Royal Trumpet Call #443,assets/img/thumbs/royal-trumpet-call-443.webp,assets/img/banners/royal-trumpet-call-443.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0444,Haunted Organ #444,assets/img/thumbs/haunted-organ-444.webp,assets/img/banners/haunted-organ-444.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0445,Desert Scarab Push #445,assets/img/thumbs/desert-scarab-push-445.webp,assets/img/banners/desert-scarab-push-445.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0446,Crystal Gem Grid #446,assets/img/thumbs/crystal-gem-grid-446.webp,assets/img/banners/crystal-gem-grid-446.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0447,Desert Wind Ladder #447,assets/img/thumbs/desert-wind-ladder-447.webp,assets/img/banners/desert-wind-ladder-447.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0448,Royal Banner Weave #448,assets/img/thumbs/royal-banner-weave-448.webp,assets/img/banners/royal-banner-weave-448.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0449,Haunted Tower Stack #449,assets/img/thumbs/haunted-tower-stack-449.webp,assets/img/banners/haunted-tower-stack-449.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0450,Desert Echo Shout #450,assets/img/thumbs/desert-echo-shout-450.webp,assets/img/banners/desert-echo-shout-450.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0451,Royal Bell Tower #451,assets/img/thumbs/royal-bell-tower-451.webp,assets/img/banners/royal-bell-tower-451.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0452,Crystal Pool Dive #452,assets/img/thumbs/crystal-pool-dive-452.webp,assets/img/banners/crystal-pool-dive-452.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0453,Haunted Attic Stack #453,assets/img/thumbs/haunted-attic-stack-453.webp,assets/img/banners/haunted-attic-stack-453.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0454,Desert Snake Charmer #454,assets/img/thumbs/desert-snake-charmer-454.webp,assets/img/banners/desert-snake-charmer-454.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0455,Royal Procession #455,assets/img/thumbs/royal-procession-455.webp,assets/img/banners/royal-procession-455.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0456,Ninja Star Pin #456,assets/img/thumbs/ninja-star-pin-456.webp,assets/img/banners/ninja-star-pin-456.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0457,Desert Cactus Guard #457,assets/img/thumbs/desert-cactus-guard-457.webp,assets/img/banners/desert-cactus-guard-457.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0458,Ninja Scroll Balance #458,assets/img/thumbs/ninja-scroll-balance-458.webp,assets/img/banners/ninja-scroll-balance-458.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0459,Desert Moon Jump #459,assets/img/thumbs/desert-moon-jump-459.webp,assets/img/banners/desert-moon-jump-459.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0460,Royal Crown Catch #460,assets/img/thumbs/royal-crown-catch-460.webp,assets/img/banners/royal-crown-catch-460.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0461,Ninja Leaf Sweep #461,assets/img/thumbs/ninja-leaf-sweep-461.webp,assets/img/banners/ninja-leaf-sweep-461.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0462,Desert Camel Market #462,assets/img/thumbs/desert-camel-market-462.webp,assets/img/banners/desert-camel-market-462.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0463,Crystal Prism Split #463,assets/img/thumbs/crystal-prism-split-463.webp,assets/img/banners/crystal-prism-split-463.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0464,Desert Night Patrol #464,assets/img/thumbs/desert-night-patrol-464.webp,assets/img/banners/desert-night-patrol-464.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0465,Haunted Graveyard #465,assets/img/thumbs/haunted-graveyard-465.webp,assets/img/banners/haunted-graveyard-465.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0466,Desert Oasis Rope #466,assets/img/thumbs/desert-oasis-rope-466.webp,assets/img/banners/desert-oasis-rope-466.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0467,Ninja Star Trace #467,assets/img/thumbs/ninja-star-trace-467.webp,assets/img/banners/ninja-star-trace-467.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0468,Desert Hawk Dive #468,assets/img/thumbs/desert-hawk-dive-468.webp,assets/img/banners/desert-hawk-dive-468.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0469,Royal Tapestry #469,assets/img/thumbs/royal-tapestry-469.webp,assets/img/banners/royal-tapestry-469.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0470,Haunted Ballroom #470,assets/img/thumbs/haunted-ballroom-470.webp,assets/img/banners/haunted-ballroom-470.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0471,Desert Sun Dial Run #471,assets/img/thumbs/desert-sun-dial-run-471.webp,assets/img/banners/desert-sun-dial-run-471.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0472,Crystal Golem Path #472,assets/img/thumbs/crystal-golem-path-472.webp,assets/img/banners/crystal-golem-path-472.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0473,Haunted Garden Tend #473,assets/img/thumbs/haunted-garden-tend-473.webp,assets/img/banners/haunted-garden-tend-473.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0474,Royal Vault Spin #474,assets/img/thumbs/royal-vault-spin-474.webp,assets/img/banners/royal-vault-spin-474.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0475,Desert Fire Dance #475,assets/img/thumbs/desert-fire-dance-475.webp,assets/img/banners/desert-fire-dance-475.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0476,Haunted Mirror Hall #476,assets/img/thumbs/haunted-mirror-hall-476.webp,assets/img/banners/haunted-mirror-hall-476.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0477,Desert Rain Catch #477,assets/img/thumbs/desert-rain-catch-477.webp,assets/img/banners/desert-rain-catch-477.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0478,Ninja Wind Blade Dance #478,assets/img/thumbs/ninja-wind-blade-dance-478.webp,assets/img/banners/ninja-wind-blade-dance-478.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0479,Desert Oasis Ring #479,assets/img/thumbs/desert-oasis-ring-479.webp,assets/img/banners/desert-oasis-ring-479.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0480,Royal Feast Balance #480,assets/img/thumbs/royal-feast-balance-480.webp,assets/img/banners/royal-feast-balance-480.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0481,Ninja Smoke Maze #481,assets/img/thumbs/ninja-smoke-maze-481.webp,assets/img/banners/ninja-smoke-maze-481.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0482,Desert Sun Race #482,assets/img/thumbs/desert-sun-race-482.webp,assets/img/banners/desert-sun-race-482.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0483,Royal Goblin Market #483,assets/img/thumbs/royal-goblin-market-483.webp,assets/img/banners/royal-goblin-market-483.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0484,Haunted Attic Drop #484,assets/img/thumbs/haunted-attic-drop-484.webp,assets/img/banners/haunted-attic-drop-484.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0485,Ninja Wall Run #485,assets/img/thumbs/ninja-wall-run-485.webp,assets/img/banners/ninja-wall-run-485.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0486,Desert Star Link #486,assets/img/thumbs/desert-star-link-486.webp,assets/img/banners/desert-star-link-486.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0487,Royal Vault Heist #487,assets/img/thumbs/royal-vault-heist-487.webp,assets/img/banners/royal-vault-heist-487.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0488,Desert Moon Hopper #0488,assets/img/thumbs/desert-moon-hopper-0488.webp,assets/img/banners/desert-moon-hopper-0488.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0489,Haunted Chime Order #0489,assets/img/thumbs/haunted-chime-order-0489.webp,assets/img/banners/haunted-chime-order-0489.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0490,Crystal Golem Merge #0490,assets/img/thumbs/crystal-golem-merge-0490.webp,assets/img/banners/crystal-golem-merge-0490.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0491,Desert Ant Hill #0491,assets/img/thumbs/desert-ant-hill-0491.webp,assets/img/banners/desert-ant-hill-0491.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0492,Royal Crown Slide #0492,assets/img/thumbs/royal-crown-slide-0492.webp,assets/img/banners/royal-crown-slide-0492.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0493,Haunted Attic Climb #0493,assets/img/thumbs/haunted-attic-climb-0493.webp,assets/img/banners/haunted-attic-climb-0493.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0494,Desert Windmill Spin #0494,assets/img/thumbs/desert-windmill-spin-0494.webp,assets/img/banners/desert-windmill-spin-0494.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0495,Haunted Grave Dig #0495,assets/img/thumbs/haunted-grave-dig-0495.webp,assets/img/banners/haunted-grave-dig-0495.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0496,Royal Coin Sort #0496,assets/img/thumbs/royal-coin-sort-0496.webp,assets/img/banners/royal-coin-sort-0496.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0497,Ninja Scroll Chase #0497,assets/img/thumbs/ninja-scroll-chase-0497.webp,assets/img/banners/ninja-scroll-chase-0497.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0498,Desert Sand Timer Duel #0498,assets/img/thumbs/desert-sand-timer-duel-0498.webp,assets/img/banners/desert-sand-timer-duel-0498.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0499,Haunted Clock Puzzle #0499,assets/img/thumbs/haunted-clock-puzzle-0499.webp,assets/img/banners/haunted-clock-puzzle-0499.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED
+0500,Royal Crown Finale #0500,assets/img/thumbs/royal-crown-finale-0500.webp,assets/img/banners/royal-crown-finale-0500.webp,400x300,1200x630,valid,VISUALLY_MATCHED,FILE_VALIDATED

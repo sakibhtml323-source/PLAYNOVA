@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Desert Logic Gates</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fef3c7,#fde68a);font-family:Georgia,serif;color:#78350f;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.1rem;color:#b45309;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#q{max-width:560px;text-align:center;margin:14px 0 8px;font-size:1.05rem;line-height:1.6}
+#ckt{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:10px 0}
+.node{width:62px;height:62px;border-radius:50%;border:2px solid #d97706;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;user-select:none;background:#fffbeb;color:#78350f}
+.node.on{background:#d97706;color:#fff;box-shadow:0 0 16px #f59e0b}
+.gate{width:70px;height:70px;border-radius:12px;border:2px solid #d97706;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;background:#fffbeb}
+.gate small{font-size:.6rem;font-weight:400;color:#b45309}
+.lamp{width:54px;height:54px;border-radius:50%;border:2px solid #d97706;background:#fffbeb}
+.lamp.on{background:#fbbf24;box-shadow:0 0 20px #fbbf24}
+#opts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+#opts button{border:2px solid #d97706;background:#fffbeb;color:#78350f;padding:10px 18px;font-size:.95rem;cursor:pointer;border-radius:8px;font-family:inherit}
+#opts button:hover{background:#d97706;color:#fff}
+#fb{min-height:24px;margin-top:10px;font-weight:600}
+#ov{position:fixed;inset:0;background:rgba(254,243,199,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#78350f;padding:20px;z-index:5}
+#ov button{background:#d97706;color:#fff;border:none;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+@media(max-width:480px){#q{font-size:.95rem}.node,.gate{width:52px;height:52px}}
+</style>
+</head>
+<body>
+<h1>🏜 DESERT LOGIC GATES</h1>
+<div id="hud"><span>Q <b id="n">1</b>/12</span><span>Score <b id="sc">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="q"></div>
+<div id="ckt"></div>
+<div id="opts"></div>
+<div id="fb"></div>
+<div id="ov"><h1 style="letter-spacing:3px">OASIS LOGIC</h1><p id="od">Saharan circuit logic! Toggle the dune-switches (T/Y keys or tap), predict the lamp, then choose ON/OFF. 12 questions — the gate shifts like sand!</p><button id="btn">ACTIVATE</button></div>
+<script>
+"use strict";
+const GATES={AND:(a,b)=>a&&b,OR:(a,b)=>a||b,XOR:(a,b)=>(a^b)===1,NAND:(a,b)=>!(a&&b),NOR:(a,b)=>!(a||b)};
+const NAMES=Object.keys(GATES);
+let qn,score,a,b,gate,best=+localStorage.getItem('dlg_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function render(){const c=document.getElementById('ckt');c.innerHTML='';
+const na=document.createElement('div');na.className='node'+(a?' on':'');na.textContent='A:'+(a?1:0);
+na.onclick=()=>{audio.resume();a=a?0:1;beep(a?500:300);render();};
+const nb=document.createElement('div');nb.className='node'+(b?' on':'');nb.textContent='B:'+(b?1:0);
+nb.onclick=()=>{audio.resume();b=b?0:1;beep(b?500:300);render();};
+const ng=document.createElement('div');ng.className='gate';ng.innerHTML=gate+'<small>2-INPUT</small>';
+const nl=document.createElement('div');nl.className='lamp'+(GATES[gate](a,b)?' on':'');
+c.append(na,nb,ng,nl);
+document.getElementById('q').innerHTML='Dunes — <b>A: '+(a?1:'0')+'</b> · <b>B: '+(b?1:'0')+'</b> → <b>'+gate+'</b>.<br>Will the oasis lamp be ON or OFF?';}
+function ask(){a=Math.random()<0.5?1:0;b=Math.random()<0.5?1:0;gate=NAMES[(Math.random()*NAMES.length)|0];render();
+const o=document.getElementById('opts');o.innerHTML='';
+[['LAMP ON',1],['LAMP OFF',0]].forEach(([t,v])=>{const btn=document.createElement('button');btn.textContent=t;
+btn.onclick=()=>answer(v);o.appendChild(btn);});
+document.getElementById('fb').textContent='';document.getElementById('n').textContent=qn+1;}
+function answer(v){const right=GATES[gate](a,b)?1:0;const fb=document.getElementById('fb');
+if(v===right){score++;beep(700,.12);fb.textContent='✓ Correct.';fb.style.color='#16a34a';}
+else{beep(180,.2);fb.textContent='✗ The lamp would be '+(right?'ON':'OFF')+'.';fb.style.color='#dc2626';}
+document.getElementById('sc').textContent=score;
+qn++;if(qn>=12){finish();}else setTimeout(ask,1000);}
+function finish(){if(score>best){best=score;localStorage.setItem('dlg_best',best);document.getElementById('b').textContent=best;}
+const r=score>=11?'🏆 SAGE OF SANDS':score>=9?'🌵 DUNE WIZARD':score>=6?'🔆 CARAVANNER':'💨 SANDSTORM';
+document.getElementById('od').innerHTML='Score: <b>'+score+'/12</b><br><span style="letter-spacing:3px">'+r+'</span>';
+document.getElementById('btn').textContent='RE-ACTIVATE';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;
+const k=e.key.toLowerCase();if(k==='t'){a=a?0:1;render();}if(k==='y'){b=b?0:1;render();}
+if(k==='o'||k==='x'){const btns=document.querySelectorAll('#opts button');const v=k==='o'?0:1;if(btns[v])btns[v].click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();qn=0;score=0;document.getElementById('sc').textContent=0;document.getElementById('ov').style.display='none';ask();};
+</script>
+</body>
+</html>

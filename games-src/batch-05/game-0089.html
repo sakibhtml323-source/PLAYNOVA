@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pixel Art Golden Challenge</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0f0f0f;font-family:'Courier New',monospace;color:#fbbf24;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#board{display:grid;gap:2px;background:#1c1c1c;border:3px solid #b45309;border-radius:8px;padding:8px;touch-action:none}
+.px{width:22px;height:22px;background:#222;border-radius:2px;cursor:pointer}
+.px.f1{background:#fbbf24}
+.px.f2{background:#f59e0b}
+#msg{text-align:center;font-size:.8rem;color:#a16207;margin-top:8px;max-width:440px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(15,15,15,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fbbf24;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#0f0f0f;font-weight:800;padding:12px 34px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;box-shadow:4px 4px #78350f}
+@media(max-width:420px){.px{width:18px;height:18px}}
+</style>
+</head>
+<body>
+<h1>🖼️ PIXEL GOLDEN CHALLENGE</h1>
+<div id="hud"><span>Artwork <b id="l">1</b></span><span>Gold <b id="g">0</b>%</span><span>Turns <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div>
+<div id="msg">Flip pixel regions to gild the pattern — match the golden ratio target!</div>
+<div id="ov"><h2 style="color:#fbbf24">GILD THE PIXELS</h2><p id="od">Each tap flips a 3×3 pixel block between gold and dark. Recreate the hidden golden artwork in as few turns as possible. Artworks grow in size!</p><button id="btn">GILD</button></div>
+<script>
+"use strict";
+let N,grid,goal,playing,level=0,turns,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function build(){N=Math.min(6+level,10);grid=[];goal=[];
+const total=N*N;const gt=Math.floor(total*0.55);
+const idx=[...Array(total).keys()].sort(()=>Math.random()-.5);
+goal=Array(total).fill(0);idx.slice(0,gt).forEach(i=>goal[i]=1);
+grid=goal.slice();
+// scramble with random 3x3 flips (guaranteed solvable)
+const flips=3+level*2;
+for(let i=0;i<flips;i++){flip((Math.random()*(N-2))|0,(Math.random()*(N-2))|0,true);}
+turns=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=level;
+best=+localStorage.getItem('pg_best_'+N)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+render();}
+function flip(r,c,silent){for(let dr=0;dr<3;dr++)for(let dc=0;dc<3;dc++){const i=(r+dr)*N+(c+dc);
+if(r+dr<N&&c+dc<N)grid[i]=1-grid[i];}
+if(!silent){turns++;document.getElementById('m').textContent=turns;beep(440+turns*10,.05);}}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+N+',22px)';b.innerHTML='';
+let g=0;grid.forEach((v,i)=>{if(v)g++;
+const p=document.createElement('div');p.className='px f'+(v?v:0);
+b.appendChild(p);});
+document.getElementById('g').textContent=Math.round(g/(N*N)*100);
+// tap zones = top-left corners of 3x3
+[...b.children].forEach((p,i)=>{const r=(i/N)|0,c=i%N;
+if(r<N-2&&c<N-2){p.style.cursor='pointer';
+p.onclick=()=>{if(!playing)return;audio.resume();flip(r,c);render();
+if(grid.every((v,i2)=>v===goal[i2])){if(turns<best){best=turns;localStorage.setItem('pg_best_'+N,best);}
+beep(800,.15,'triangle');setTimeout(()=>beep(1000,.15,'triangle'),140);
+document.getElementById('od').innerHTML='✨ Gilded in <b>'+turns+'</b> turns!'+(N<10?'<br>Next: '+(N+1)+'×'+(N+1)+' artwork':'<br>The golden gallery is complete!');
+document.getElementById('btn').textContent=N<10?'NEXT ARTWORK':'GILD AGAIN';if(N>=10)level=0;level++;playing=false;document.getElementById('ov').style.display='flex';}};}});}
+document.getElementById('btn').onclick=()=>{audio.resume();if(level===0)level=1;playing=true;build();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key==='Enter'){const p=document.querySelectorAll('.px');if(p.length)p[0].click();}});
+</script>
+</body>
+</html>

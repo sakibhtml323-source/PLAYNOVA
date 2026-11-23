@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Attic Crawl #438</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(7,44px);gap:3px;margin:12px}
+.c{width:44px;height:44px;background:#27272a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
+.c.creak{background:#7f1d1d33}
+.c.safe{background:#14532d33}
+.c.me{background:#7c3aed;outline:2px solid #facc15}
+.c.goal{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🕷️ Haunted Attic Crawl</h1><div class="sub">The candle shows the floor plan briefly — crawl from memory, avoid the creaks!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Creaks <b id="cr">0</b>/3</span><span>⏱️ <b id="t">5</b>s</span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🕯️ New Attic</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=7;let grid=[],me={r:0,c:0},goal={r:6,c:6},creaks=0,level=1,phase='study',t=0;
+function gen(){grid=[];me={r:0,c:0};goal={r:6,c:6};creaks=0;
+for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(Math.random()<0.3);grid.push(row);}
+grid[0][0]=false;grid[6][6]=false;
+let pr=0,pc=0;
+while(pr<6||pc<6){if(pr<6&&(pc>=6||Math.random()<0.5))pr++;else pc++;grid[pr][pc]=false;}
+document.getElementById('l').textContent=level;document.getElementById('cr').textContent=0;
+phase='study';t=Math.max(2,6-level);document.getElementById('t').textContent=t;
+render();
+setTimeout(()=>{phase='crawl';render();msg('Crawl from memory!');},t*1000);}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+const show=phase==='study';
+d.className='c'+(show?(grid[r][c]?' creak':' safe'):'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🐈';}
+else if(r===goal.r&&c===goal.c){d.classList.add('goal');d.textContent='🪟';}
+else if(show)d.textContent=grid[r][c]?'🟥':'⬜';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function tap(r,c){if(phase!=='crawl')return;
+if(Math.abs(r-me.r)+Math.abs(c-me.c)!==1)return;
+me={r,c};
+if(grid[r][c]){creaks++;document.getElementById('cr').textContent=creaks;
+beep(150,.2,'sawtooth');msg('🟥 CREAK! Something stirs…');
+if(creaks>=3){msg('🕷️ The attic creature wakes!');phase='over';render();return;}}
+else beep(400,.04);
+if(r===goal.r&&c===goal.c){phase='over';beep(880,.3,'triangle');
+msg('🪟 Escaped the attic! Level '+(level+1));level++;
+setTimeout(gen,1000);return;}
+render();}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Scroll Balance #458</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+canvas{background:#1f2937;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#facc15}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>📜 Ninja Scroll Balance</h1><div class="sub">Balance the sacred scroll on your head — tilt to counter the wind!</div>
+<div id="hud"><span>Time <b id="t">0.0</b>s</span><span>Wind <b id="w">→</b></span><span>Best <b id="b">0.0</b>s</span></div>
+<canvas id="cv" width="400" height="380"></canvas>
+<div id="ov"><div style="font-size:3rem">📜</div><p>Move mouse/finger left-right to tilt.<br>Keep the scroll balanced!</p><button id="btn">Balance</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,H=380;let tilt=0,tiltV=0,scrollA=0,wind=0,windT=0,playing=false,startT=0,targetX=W/2,best=+localStorage.getItem('nsb_best')||0;
+document.getElementById('b').textContent=best.toFixed(1);
+cvs.addEventListener('pointermove',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+targetX=(e.clientX-r.left)*W/r.width;});
+document.addEventListener('keydown',e=>{if(!playing)return;
+if(e.key==='ArrowLeft')tiltV-=0.3;if(e.key==='ArrowRight')tiltV+=0.3;});
+function step(){windT++;if(windT>80){windT=0;wind=(Math.random()*2-1)*0.05;
+document.getElementById('w').textContent=wind>0?'→':'←';}
+// tilt control toward mouse
+tiltV+=((targetX-W/2)/200)*0.02;
+tiltV+=wind;
+tiltV*=0.96;
+tilt+=tiltV;
+tilt=Math.max(-0.8,Math.min(0.8,tilt));
+document.getElementById('t').textContent=((Date.now()-startT)/1000).toFixed(1);
+if(Math.abs(tilt)>0.7){drop();}}
+function drop(){playing=false;beep(130,.35,'sawtooth');
+const t=((Date.now()-startT)/1000);
+if(t>best){best=t;localStorage.setItem('nsb_best',best);document.getElementById('b').textContent=best.toFixed(1);}
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='📜 The scroll falls!<br>Balanced <b style="color:#facc15">'+t.toFixed(1)+'s</b>';}
+function draw(){ctx.fillStyle='#1f2937';ctx.fillRect(0,0,W,H);
+const fy=H-70;
+// ninja
+ctx.font='32px serif';ctx.textAlign='center';ctx.fillText('🥷',W/2,fy);
+// scroll on head
+ctx.save();ctx.translate(W/2,fy-34);ctx.rotate(tilt);
+ctx.fillStyle='#d6b98a';ctx.fillRect(-46,-7,92,14);
+ctx.fillStyle='#92400e';ctx.fillRect(-46,-9,12,18);ctx.fillRect(34,-9,12,18);
+ctx.restore();
+// wind streaks
+ctx.fillStyle='#93c5fd44';
+for(let i=0;i<5;i++)ctx.fillRect((Date.now()/8+i*80)%W,60+i*50,wind*300,2);
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{tilt=0;tiltV=0;scrollA=0;wind=0;windT=0;
+document.getElementById('ov').style.display='none';playing=true;startT=Date.now();
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();};
+</script></body></html>

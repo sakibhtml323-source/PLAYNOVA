@@ -1,0 +1,9 @@
+{
+ "games": 500,
+ "unique_ids": 500,
+ "unique_slugs": 500,
+ "game_files": 500,
+ "thumbnails": 500,
+ "banners": 500,
+ "categories": 8
+}

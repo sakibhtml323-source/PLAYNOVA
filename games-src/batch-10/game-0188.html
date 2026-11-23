@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Mega Halloween Airport Manager</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#0c0a09);font-family:Georgia,serif;color:#fdba74;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#f97316;padding:6px}
+#hud{display:flex;gap:10px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#292524;border:1px solid #44403c;border-radius:10px;padding:4px 10px}
+#gates{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+.gate{width:92px;height:92px;border-radius:14px;background:#292524;border:2px solid #7c2d12;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#fdba74}
+.gate.busy{background:#431407}
+.gate .p{font-size:1.8rem}
+.gate small{font-size:.65rem;color:#fdba74}
+#q{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;min-height:68px;margin:8px 0}
+.plane{background:#451a03;border:2px solid #f97316;border-radius:12px;padding:8px 12px;text-align:center;cursor:pointer;color:#fdba74}
+.plane .e{font-size:1.5rem}
+.plane small{display:block;font-size:.68rem;color:#fdba74}
+#log{width:min(540px,94vw);background:#292524;border-radius:10px;padding:8px 12px;font-size:.8rem;color:#fdba74;min-height:2.2em;border:1px solid #44403c}
+#ov{position:fixed;inset:0;background:rgba(28,25,23,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fdba74;padding:20px;z-index:5}
+button.big{background:#f97316;color:#0c0a09;border:none;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🎃 HALLOWEEN SKYPORT</h1>
+<div id="hud"><span>🦇 Shift <b id="sh">0</b>/10</span><span>🍬 Treats <b id="cr">50</b></span><span>😱 Fear <b id="sat">80</b>%</span><span>🛬 Landed <b id="ld">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="gates"></div>
+<div id="q"></div>
+<div id="log">Assign the spooky flights to crypts before fear takes over!</div>
+<div id="ov"><h2 style="color:#f97316">SPOOKY SKYPORT</h2><p id="od">Manage the haunted airport! Witches' brooms and ghost ships queue with fear-meters. Assign each to a crypt dock — cursed vessels need longer to land. 10 shifts, keep fear above zero!</p><button class="big" id="btn">RAISE THE DEAD</button></div>
+<script>
+
+"use strict";
+const TYPES=[{e:'🧹',n:'Broom',p:100,t:12,w:1},{e:'👻',n:'Ghost Ship',p:130,t:16,w:1},{e:'🦇',n:'Bat Wing',p:80,t:8,w:2},{e:'🎃',n:'Pumpkin Chopper',p:110,t:14,w:1}];
+let S,sel,playing;
+let best=+localStorage.getItem('mh_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function fresh(){S={sh:1,cr:50,sat:80,gates:[{p:0},{p:0},{p:0}],q:[],landed:0,over:false};}
+function load(){try{const d=JSON.parse(localStorage.getItem('mh_save'));if(d)S=d;else fresh();}catch(e){fresh();}}
+function save(){localStorage.setItem('mh_save',JSON.stringify(S));}
+load();if(!S||S.over)fresh();
+function render(){document.getElementById('sh').textContent=S.sh;document.getElementById('cr').textContent=Math.floor(S.cr);
+document.getElementById('sat').textContent=Math.max(0,Math.floor(S.sat));document.getElementById('ld').textContent=S.landed;
+const g=document.getElementById('gates');g.innerHTML='';
+S.gates.forEach((gt,i)=>{const d=document.createElement('div');d.className='gate'+(gt.p>0?' busy':'');
+d.innerHTML='<div class="p">'+(gt.p>0?'🦇':'⚰️')+'</div><small>CRYPT '+(i+1)+(gt.p>0?' · '+gt.p+'s':'')+'</small>';
+d.onclick=()=>{if(!playing)return;
+if(sel!==null&&S.q[sel]&&gt.p<=0){S.gates[i]={p:S.q[sel].t};S.cr+=S.q[sel].p;S.landed++;S.q.splice(sel,1);sel=null;
+beep(660,.1,'triangle');log('✅ Landed in crypt! +treats earned.');render();save();}
+else if(gt.p<=0)log('Select a flight from the queue first.');};
+g.appendChild(d);});
+const q=document.getElementById('q');q.innerHTML='';
+S.q.forEach((p,i)=>{const d=document.createElement('div');d.className='plane';
+if(sel===i)d.style.outline='3px solid #f97316';
+d.innerHTML='<span class="e">'+p.e+'</span><small>'+p.n+' · '+p.p+'🍬 · ⏳'+p.patience+'s</small>';
+d.onclick=()=>{if(!playing)return;sel=i;render();};
+q.appendChild(d);});}
+function log(t){document.getElementById('log').textContent='» '+t;}
+function tick(){if(!playing)return;
+S.q.forEach(p=>p.patience--);
+S.q.filter(p=>p.patience<=0).forEach(p=>{S.sat-=12;S.q.splice(S.q.indexOf(p),1);
+if(sel!==null&&sel>=S.q.length)sel=null;log('🌫 '+p.n+' vanished into mist! Fear -12.');beep(150,.2,'sawtooth');});
+S.gates.forEach((g,i)=>{if(g.p>0){g.p--;if(g.p===0)S.sat=Math.min(100,S.sat+2);}});
+if(Math.random()<0.6){const t=TYPES[(Math.random()*TYPES.length)|0];S.q.push({...t,patience:16+((Math.random()*10)|0)});}
+if(S.sat<=0)return end(false,'Mass panic! The skyport is abandoned.');
+if(S.landed>=S.sh*4+4){if(S.sh>=10)return end(true,'');S.sh++;S.sat=Math.min(100,S.sat+10);
+log('🌅 Shift '+S.sh+' begins! Fear +10.');beep(520,.12,'triangle');}
+render();save();}
+function end(win,why){playing=false;S.over=true;
+if(S.cr>best){best=Math.floor(S.cr);localStorage.setItem('mh_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=win?'🏆 <b>HAUNTED SKYPORT MASTER!</b><br>10 shifts survived — the spirits salute you.':'💥 '+why;
+document.getElementById('btn').textContent='NEW HARBINGER';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);}}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW HARBINGER')fresh();
+playing=true;render();document.getElementById('ov').style.display='none';};
+setInterval(tick,1000);
+window.addEventListener('keydown',e=>{const k=e.key;if(k>='1'&&k<='3'){const gs=document.querySelectorAll('.gate');if(gs[+k-1])gs[+k-1].click();}});
+
+</script>
+</body>
+</html>

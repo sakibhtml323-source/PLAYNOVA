@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pixel Checkers Fog #243</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh;image-rendering:pixelated}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(8,38px);gap:0;margin:10px;border:3px solid #334155;border-radius:6px;overflow:hidden}
+.sq{width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer}
+.sq.dk{background:#1e293b}.sq.lt{background:#334155}
+.sq.sel{outline:2px solid #facc15}
+.sq.fog{opacity:.35}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🌫️ Pixel Checkers Fog</h1><div class="sub">Enemy pieces are hidden unless within 2 squares of yours!</div>
+<div id="hud"><span>You <b id="s1">12</b></span><span>AI <b id="s2">12</b></span><span id="st">Your move</span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">⚔️ New Game</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=8;let grid=[],sel=null,playing=true;
+function init(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++){
+let v=null;if((r+c)%2===1){if(r<3)v={p:2,k:false};else if(r>4)v={p:1,k:false};}row.push(v);}grid.push(row);}
+sel=null;playing=true;render();function msg(t){document.getElementById('msg').textContent=t;}
+msg('Your move — enemy shrouded in fog!');}
+function visible(r,c){if(!grid[r][c]||grid[r][c].p===1)return true;
+for(let rr=0;rr<N;rr++)for(let cc=0;cc<N;cc++){const q=grid[rr][cc];
+if(q&&q.p===1&&Math.max(Math.abs(rr-r),Math.abs(cc-c))<=2)return true;}return false;}
+function moves(r,c){const p=grid[r][c];if(!p)return[];
+const out=[];const dirs=p.p===1?[-1]:p.k?[-1,1]:[1];
+dirs.forEach(dr=>{[-1,1].forEach(dc=>{const r2=r+dr,c2=c+dc;
+if(r2<0||r2>=N||c2<0||c2>=N)return;
+if(!grid[r2][c2])out.push({r:r2,c:c2,jump:null});
+else if(grid[r2][c2].p!==p.p){const r3=r2+dr,c3=c2+dc;
+if(r3>=0&&r3<N&&c3>=0&&c3<N&&!grid[r3][c3])out.push({r:r3,c:c3,jump:[r2,c2]});}});});
+return out;}
+function tap(r,c){if(!playing||!grid[r][c]||grid[r][c].p!==1)return;
+sel={r,c};render();}
+function tapMove(r,c){if(!sel)return;const mv=moves(sel.r,sel.c).find(m=>m.r===r&&m.c===c);
+if(!mv){beep(160,.06,'sawtooth');return;}
+const p=grid[sel.r][sel.c];grid[sel.r][sel.c]=null;grid[r][c]=p;
+if(mv.jump){grid[mv.jump[0]][mv.jump[1]]=null;beep(760,.1,'triangle');}else beep(420,.06);
+if(r===0)p.k=true;
+sel=null;render();check();
+if(playing){msg('AI moves…');setTimeout(ai,400);}}
+function ai(){if(!playing)return;const all=[];let cap=null;
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const p=grid[r][c];if(!p||p.p!==2)continue;
+moves(r,c).forEach(m=>{all.push({r,c,m});if(m.jump&&!cap)cap={r,c,m};});}
+if(!all.length){check(true);return;}
+const pick=cap||all[(Math.random()*all.length)|0];
+const p=grid[pick.r][pick.c];grid[pick.r][pick.c]=null;grid[pick.m.r][pick.m.c]=p;
+if(pick.m.jump)grid[pick.m.jump[0]][pick.m.jump[1]]=null;
+if(pick.m.r===N-1)p.k=true;
+render();check();if(playing)msg('Your move!');}
+function check(force){const p1=grid.flat().filter(p=>p&&p.p===1).length,p2=grid.flat().filter(p=>p&&p.p===2).length;
+document.getElementById('s1').textContent=p1;document.getElementById('s2').textContent=p2;
+if(p1===0||p2===0||force){playing=false;
+const w=p1>p2?'🏆 You win!':p2>p1?'💀 AI wins…':'🤝 Draw!';
+msg(w+'  '+p1+'–'+p2);beep(p1>=p2?880:200,.25,p1>=p2?'triangle':'sawtooth');return;}}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='sq '+((r+c)%2?'dk':'lt');
+if(!visible(r,c))d.classList.add('fog');
+if(sel&&sel.r===r&&sel.c===c)d.classList.add('sel');
+const p=grid[r][c];
+if(p&&visible(r,c))d.textContent=p.p===1?(p.k?'👑':'🔵'):(p.k?'🖤':'🔴');
+d.onclick=()=>{if(grid[r][c]&&grid[r][c].p===1&&visible(r,c))tap(r,c);else tapMove(r,c);};
+b.appendChild(d);}}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();init();};
+init();
+</script></body></html>

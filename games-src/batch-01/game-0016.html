@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Neumorphism Phantom Rush</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#e0e5ec;font-family:'Segoe UI',Arial,sans-serif;color:#4a5568;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px}
+h1{font-size:1.1rem;letter-spacing:2px;padding:6px;color:#2d3748}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:8px}
+@media(max-width:420px){.tile{width:50px;height:50px}#board{gap:8px;padding:12px}}
+#board{display:grid;gap:10px;background:#e0e5ec;padding:16px;border-radius:24px;box-shadow:9px 9px 16px #b8bec7,-9px -9px 16px #fff;touch-action:none}
+.tile{width:64px;height:64px;border-radius:16px;background:#e0e5ec;box-shadow:6px 6px 12px #b8bec7,-6px -6px 12px #fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#5a67d8;cursor:pointer;transition:transform .12s}
+.tile:active{transform:scale(.94)}
+.tile.hole{box-shadow:inset 6px 6px 12px #b8bec7,inset -6px -6px 12px #fff;color:transparent;cursor:default}
+#ov{position:fixed;inset:0;background:rgba(224,229,236,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5;color:#2d3748}
+button{background:#e0e5ec;border:none;color:#5a67d8;font-weight:700;padding:13px 36px;border-radius:20px;font-size:1rem;cursor:pointer;box-shadow:6px 6px 12px #b8bec7,-6px -6px 12px #fff;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>👻 NEUMORPHISM PHANTOM RUSH</h1>
+<div id="hud"><span>Moves <b id="m">0</b></span><span>Size <b id="sz">3×3</b></span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div>
+<div id="ov"><h2 style="letter-spacing:2px">PHANTOM RUSH</h2><p id="od">Slide the phantom tiles into the hollow. Order 1→8. Each solved board grows bigger!</p><button id="btn">BEGIN</button></div>
+<script>
+"use strict";
+let size=3,board,moves,playing,bestKey,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){moves=0;playing=true;const n=size*size;board=[...Array(n).keys()].slice(1).concat(0);
+// shuffle by random valid moves
+let hole=n-1;for(let i=0;i<n*30;i++){const opts=neighbors(hole);const pick=opts[(Math.random()*opts.length)|0];board[hole]=board[pick];board[pick]=0;hole=pick;}
+if(solved()){board[0]=1;board[1]=0;}
+document.getElementById('m').textContent=0;document.getElementById('sz').textContent=size+'×'+size;
+best=+localStorage.getItem('npr_best_'+size)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+render();}
+function neighbors(i){const r=(i/size)|0,c=i%size,out=[];if(r>0)out.push(i-size);if(r<size-1)out.push(i+size);if(c>0)out.push(i-1);if(c<size-1)out.push(i+1);return out;}
+function solved(){const n=size*size;for(let i=0;i<n-1;i++)if(board[i]!==i+1)return false;return board[n-1]===0;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+size+',64px)';
+b.innerHTML='';board.forEach((v,i)=>{const t=document.createElement('div');t.className='tile'+(v===0?' hole':'');t.textContent=v||'✦';
+t.onclick=()=>tap(i);b.appendChild(t);});}
+function tap(i){if(!playing||board[i]===0)return;const hole=board.indexOf(0);
+if(!neighbors(hole).includes(i)){beep(160,.08);return;}
+board[hole]=board[i];board[i]=0;moves++;document.getElementById('m').textContent=moves;beep(400+((i*7)%5)*80,.06);render();
+if(solved()){playing=false;beep(700,.15,'triangle');setTimeout(()=>beep(900,.2,'triangle'),120);
+if(moves<best){best=moves;localStorage.setItem('npr_best_'+size,best);}
+const next=Math.min(size+1,6);
+document.getElementById('od').innerHTML='👻 Phantom freed in <b>'+moves+'</b> moves!'+(next>size?'<br>Next: '+(next)+'×'+next+' board.':'<br>You beat the biggest board!');
+document.getElementById('btn').textContent=next>size?'NEXT BOARD':'REPLAY';size=next;document.getElementById('ov').style.display='flex';}}
+window.addEventListener('keydown',e=>{if(!playing)return;const hole=board.indexOf(0);const r=(hole/size)|0,c=hole%size;const k=e.key;
+let t=-1;if(k==='ArrowUp'&&r<size-1)t=hole+size;if(k==='ArrowDown'&&r>0)t=hole-size;if(k==='ArrowLeft'&&c<size-1)t=hole+1;if(k==='ArrowRight'&&c>0)t=hole-1;
+if(t>=0)tap(t);});
+document.getElementById('btn').onclick=()=>{audio.resume();if(size>6)size=3;init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

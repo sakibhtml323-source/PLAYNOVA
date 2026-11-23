@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Neumorphism Hotseat Strategy: Sky</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#e0e5ec;font-family:'Segoe UI',Arial,sans-serif;color:#4a5568;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;letter-spacing:2px;padding:6px;color:#2d3748}
+#hud{display:flex;gap:14px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#board{display:grid;gap:6px;background:#e0e5ec;padding:14px;border-radius:24px;box-shadow:9px 9px 16px #b8bec7,-9px -9px 16px #fff;touch-action:none}
+.cell{width:44px;height:44px;border-radius:12px;background:#e0e5ec;box-shadow:5px 5px 10px #b8bec7,-5px -5px 10px #fff;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:#5a67d8;transition:transform .1s}
+.cell:active{transform:scale(.95)}
+.cell.p1{color:#e53e3e}.cell.p2{color:#3182ce}
+.cell.sel{box-shadow:inset 4px 4px 8px #b8bec7,inset -4px -4px 8px #fff;color:#d69e2e}
+#tip{text-align:center;font-size:.82rem;color:#718096;margin-top:8px;min-height:2.2em;padding:0 8px}
+#ov{position:fixed;inset:0;background:rgba(224,229,236,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#2d3748;padding:20px;z-index:5}
+button{background:#e0e5ec;border:none;color:#5a67d8;font-weight:700;padding:13px 36px;border-radius:20px;font-size:1rem;cursor:pointer;box-shadow:6px 6px 12px #b8bec7,-6px -6px 12px #fff;margin-top:14px}
+@media(max-width:400px){.cell{width:36px;height:36px;font-size:.85rem}}
+</style>
+</head>
+<body>
+<h1>☁️ NEUMORPHISM HOTSEAT: SKY</h1>
+<div id="hud"><span style="color:#e53e3e">SKYFIRE <b id="a1">0</b></span><span>Turn <b id="t">1</b></span><span style="color:#3182ce">STORMWIND <b id="a2">0</b></span></div>
+<div id="board"></div>
+<div id="tip"></div>
+<div id="ov"><h2 style="letter-spacing:2px">SKY DOMINION</h2><p id="od">2 players conquer the floating isles! Tap your ☁️ cloud, then an adjacent isle to send half your sky-force. Storm tiles ⚡ strike intruders. Wipe the rival sky-navy to win.</p><button id="btn">TAKE THE SKIES</button></div>
+<script>
+
+"use strict";
+const S=7;let grid,cur,sel,turn,playing;let skw=+localStorage.getItem('sk_w1')||0,skw2=+localStorage.getItem('sk_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=[];for(let i=0;i<S*S;i++)grid.push({o:0,storm:Math.random()<0.15});
+[[0,0],[1,0],[0,1],[S-1,S-1],[S-2,S-1],[S-1,S-2]].forEach(([c,r])=>grid[r*S+c].storm=false);
+grid[0]={o:1,n:14,storm:false};grid[1]={o:1,n:9,storm:false};grid[S]={o:1,n:9,storm:false};
+grid[S*S-1]={o:2,n:14,storm:false};grid[S*S-2]={o:2,n:9,storm:false};grid[S*S-1-S]={o:2,n:9,storm:false};
+cur=1;turn=1;sel=null;playing=true;document.getElementById('t').textContent=1;render();}
+function neigh(i){const r=(i/S)|0,c=i%S,o=[];if(r>0)o.push(i-S);if(r<S-1)o.push(i+S);if(c>0)o.push(i-1);if(c<S-1)o.push(i+1);return o;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+S+',44px)';b.innerHTML='';
+grid.forEach((g,i)=>{const c=document.createElement('div');c.className='cell'+(g.o===1?' p1':g.o===2?' p2':'')+(sel===i?' sel':'');
+c.textContent=g.o?('☁'+g.n):(g.storm?'⚡':'');
+c.onclick=()=>tap(i);b.appendChild(c);});
+document.getElementById('a1').textContent=grid.filter(g=>g.o===1).reduce((a,g)=>a+g.n,0);
+document.getElementById('a2').textContent=grid.filter(g=>g.o===2).reduce((a,g)=>a+g.n,0);
+document.getElementById('tip').textContent=playing?(cur===1?'🔴 SKYFIRE':'🔵 STORMWIND')+' — tap a ☁️ cloud, then an adjacent isle. ⚡ Storms cut attacks by 2 and eat 2 units/round!':'The sky is silent.';}
+function tap(i){if(!playing)return;const g=grid[i];
+if(g.o===cur){sel=i;beep(600,.05);render();return;}
+if(sel!==null&&neigh(sel).includes(i)){
+let send=Math.floor(grid[sel].n/2);
+if(g.storm&&g.o!==cur){send=Math.max(1,send-2);beep(180,.1,'sawtooth');}
+if(send<1){render();return;}
+grid[sel].n-=send;
+if(g.o===cur){g.n+=send;}
+else if(g.n<send){g.o=cur;g.n=send-g.n;beep(500,.1,'triangle');}
+else{g.n-=send;}
+
+sel=null;render();check();if(playing){cur=cur===1?2:1;if(cur===1){turn++;document.getElementById('t').textContent=turn;
+grid.forEach((c,j)=>{if(c.o){grid[j].n+=1;if(c.storm){grid[j].n=Math.max(0,grid[j].n-2);}}});render();}}}
+else{sel=null;render();}}
+function check(){const a=grid.some(g=>g.o===1),b=grid.some(g=>g.o===2);
+if(!a||!b){playing=false;
+localStorage.setItem('sk_w'+(a?1:2),(a?skw:skw2)+1);
+document.getElementById('od').innerHTML='🏆 <b style="color:#d69e2e">'+(a?'SKYFIRE':'STORMWIND')+' OWNS THE HEAVENS!</b><br>in '+turn+' turns';
+document.getElementById('btn').textContent='NEW SKY WAR';document.getElementById('ov').style.display='flex';beep(880,.3,'triangle');}}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;const own=grid.map((g,i)=>g.o===cur?i:-1).filter(i=>i>=0);if(!own.length)return;
+if(e.key==='Enter'||e.key===' '){e.preventDefault();if(sel!==null){const nb=neigh(sel).find(j=>grid[j].o!==cur);if(nb!==undefined)tap(nb);else{sel=null;render();}}else{sel=own[0];render();}}
+if(e.key==='ArrowRight'){sel=own[(own.indexOf(sel)+1+own.length)%own.length]||own[0];render();}});
+
+</script>
+</body>
+</html>

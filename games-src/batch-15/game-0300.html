@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Defense Grid #300</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(6,52px);gap:3px;margin:12px}
+.cell{width:52px;height:52px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer}
+.cell.crys{background:#312e81}
+.cell.path{background:#334155}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💎 Crystal Defense Grid</h1><div class="sub">Enemies march down the marked path — place crystals beside it to zap them!</div>
+<div id="hud"><span>Wave <b id="w">1</b></span><span>❤️ <b id="h">20</b></span><span>💰 <b id="g">50</b></span><span>⚡ <b id="p">0</b></span></div>
+<div id="grid"></div>
+<div id="msg"></div>
+<button id="btn">🛡️ Start Wave</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=6,C=6;let grid=[],crystals=[],path=[],foes=[],hp=20,gold=50,wave=1,kills=0,playing=false,timer=null;
+// fixed path: top row → right col → bottom row exit
+function buildPath(){path=[];for(let c=0;c<C;c++)path.push({r:0,c});
+for(let r=1;r<R;r++)path.push({r,c:C-1});}
+function gen(){grid=Array.from({length:R},()=>Array(C).fill(0));
+crystals=[];buildPath();
+path.forEach(p=>{grid[p.r][p.c]=1;});
+foes=[];hp=20;gold=50;wave=1;
+document.getElementById('w').textContent=1;document.getElementById('h').textContent=20;
+document.getElementById('g').textContent=50;document.getElementById('p').textContent=0;
+render();msg('Tap a cell NEXT to the path to place a crystal (10💰)');}
+function tap(r,c){if(grid[r][c]||crystals.some(x=>x.r===r&&x.c===c)){beep(160,.06,'sawtooth');return;}
+if(gold<10){beep(160,.06,'sawtooth');return;}
+gold-=10;crystals.push({r,c,cd:0});
+document.getElementById('g').textContent=gold;beep(600,.08);render();}
+function spawnWave(){const n=2+wave;
+for(let i=0;i<n;i++)foes.push({pi:0,hp:10+wave*5,off:i*18});}
+function step(){// crystals zap
+crystals.forEach(c=>{c.cd++;
+if(c.cd>=40){let tgt=null,bd=1e9;
+foes.forEach(f=>{const p=path[f.pi];
+if(!p)return;const d=Math.abs(p.r-c.r)+Math.abs(p.c-c.c);
+if(d<=1&&f.off<=0&&d<bd){bd=d;tgt=f;}});
+if(tgt){tgt.hp-=6;c.cd=0;beep(700,.04,'triangle');}}});
+// foes advance
+foes.forEach(f=>{if(f.off>0){f.off-=1;return;}
+const p=path[f.pi];if(!p){return;}
+f.pi+=0.02+wave*0.002;});
+// reached end?
+foes.forEach(f=>{if(f.pi>=path.length){hp-=2;f.hp=0;beep(150,.15,'sawtooth');}});
+foes=foes.filter(f=>f.hp>0);
+document.getElementById('h').textContent=Math.max(0,hp);
+document.getElementById('p').textContent=kills;
+if(foes.length===0&&playing){wave++;document.getElementById('w').textContent=wave;
+gold+=15;document.getElementById('g').textContent=gold;spawnWave();}
+if(hp<=0){playing=false;clearInterval(timer);beep(130,.35,'sawtooth');
+msg('💀 The crystal falls on wave '+wave+'! Kills: '+kills);render();}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<R;r++)for(let c=0;c<C;c++){const d=document.createElement('div');
+d.className='cell'+(grid[r][c]===1?' path':'');
+const cry=crystals.find(x=>x.r===r&&x.c===c);
+if(cry)d.textContent='💎';
+else if(grid[r][c]===1){const f=foes.find(f2=>{const p=path[Math.floor(f2.pi)];return p&&p.r===r&&p.c===c&&f2.off<=0;});
+d.textContent=f?'👾':'·';}
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('btn').textContent='🛡️ Wave '+(wave+1);
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;
+spawnWave();clearInterval(timer);timer=setInterval(()=>{step();if(playing)render();},100);};
+gen();
+</script></body></html>

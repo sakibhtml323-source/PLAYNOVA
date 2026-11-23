@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Simulation: Norse</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0f172a,#1e293b);font-family:Georgia,serif;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#93c5fd;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:4px 10px}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:60px}
+.card{background:#0f172a;border:1px solid #334155;border-radius:14px;padding:12px}
+.card h3{color:#93c5fd;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#1e293b;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row small{color:#94a3b8;display:block}
+.row button{background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.row button:disabled{opacity:.35}
+#log{font-size:.8rem;color:#94a3b8;min-height:2.4em;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e2e8f0;padding:20px;z-index:5}
+button.big{background:#3b82f6;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⚡ SIMULATION: NORSE</h1>
+<div id="hud"><span>🌲 Wood <b id="w">15</b></span><span>🐟 Fish <b id="f">15</b></span><span>⛏️ Runes <b id="r">5</b></span><span>👥 Vikings <b id="v">4</b></span><span>⚡ Favor <b id="fv">10</b></span><span>Year <b id="y">1</b></span></div>
+<main>
+<div class="card"><h3>🏕️ LONGHOUSE PROJECTS</h3><div id="mods"></div></div>
+<div class="card"><h3>📜 SAGA LOG</h3><div id="log">The fjord is quiet. Build your village, keep favor above zero through 12 years.</div></div>
+</main>
+<div id="ov"><h2 style="color:#93c5fd">NORSE VILLAGE SIM</h2><p id="od">Rule a Viking village for 12 years! Chop wood, fish, carve runes. Vikings eat fish; the gods demand favor each year. Winter years are harsh. End with 30+ favor for Valhalla's blessing.</p><button class="big" id="btn">RAISE THE SAILS</button></div>
+<script>
+"use strict";
+let S;let nb97=+localStorage.getItem('ns_best')||0;
+function fresh(){S={w:15,f:15,r:5,v:4,fv:10,y:1,lumber:1,dock:0,carver:0,shrine:0,over:false};}
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(S.over)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function log(t){const el=document.getElementById('log');el.innerHTML='» '+t+'<br>'+el.innerHTML;}
+const MODS=[
+{n:'Lumber Camp',d:'+5 wood/year',c:{w:0,f:0,r:0},k:'lumber',max:5},
+{n:'Fishing Dock',d:'+6 fish/year',c:{w:8,f:0,r:0},k:'dock',max:4},
+{n:'Rune Carver',d:'converts 2 wood → 3 runes',c:{w:6,f:2,r:0},k:'carver',max:4},
+{n:'Odin Shrine',d:'+4 favor/year',c:{w:10,f:2,r:3},k:'shrine',max:3}];
+function can(c){return S.w>=c.w&&S.f>=c.f&&S.r>=c.r;}
+function render(){['w','f','r','v','fv'].forEach(k=>document.getElementById(k).textContent=Math.floor(S[k]));
+document.getElementById('y').textContent=S.y;
+const m=document.getElementById('mods');m.innerHTML='';
+MODS.forEach(md=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+md.n+'</b> <small>×'+S[md.k]+' · '+md.d+'</small></div>';
+const b=document.createElement('button');
+b.textContent=S[md.k]>=md.max?'MAX':'Build ('+(md.c.w?md.c.w+'🌲 ':'')+(md.c.f?md.c.f+'🐟 ':'')+(md.c.r?md.c.r+'⛏':'')+')';
+b.disabled=S[md.k]>=md.max||!can(md.c);
+b.onclick=()=>{if(can(md.c)&&S[md.k]<md.max){S.w-=md.c.w;S.f-=md.c.f;S.r-=md.c.r;S[md.k]++;beep(600,.09);log(md.n+' raised.');render();}};row.appendChild(b);m.appendChild(row);});}
+function nextYear(){S.y++;
+S.w+=S.lumber*5;S.f+=S.dock*6;S.r+=S.carver*3;S.w-=S.carver*2;S.fv+=S.shrine*4;
+S.f-=S.v;if(S.f<0){S.v+=Math.floor(S.f/3);S.f=0;log('⚠️ Hunger! Vikings abandon the village.');
+if(S.v<1)return end(false,'The longhouses stand empty.');}
+const winter=S.y%4===0;
+const tribute=(winter?12:6)+S.y;
+S.fv-=tribute;log((winter?'❄️ WINTER year! ':'')+'The gods demand '+tribute+' favor.');
+if(S.fv<=0)return end(false,'The gods abandon you in year '+S.y+'.');
+if(Math.random()<0.18){S.w+=8;log('🌊 Driftwood bounty! +8 wood.');}
+if(Math.random()<0.12){S.fv+=6;log('🌈 Bifrost shimmer! +6 favor.');}
+if(S.y>12)return end(true,'');
+render();beep(440,.05);}
+function end(win,why){S.over=true;
+if(S.y>nb97){nb97=S.y;localStorage.setItem('ns_best',nb97);log('🏅 Longest rule: '+nb97+' years.');}
+document.getElementById('od').innerHTML=win?'⚡ <b style="color:#fde047">VALHALLA WELCOMES YOU!</b><br>12 years ruled with '+Math.floor(S.fv)+' favor. The skalds will sing of it.':'💀 '+why;
+document.getElementById('btn').textContent='NEW SAGA';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();fresh();log('The settlement is founded.');render();document.getElementById('ov').style.display='none';};
+const nb=document.createElement('button');nb.className='big';nb.textContent='NEXT YEAR ⏭';
+nb.style.cssText='position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:4';
+nb.onclick=()=>{audio.resume();if(S&&!S.over)nextYear();};
+document.body.appendChild(nb);
+window.addEventListener('keydown',e=>{if(e.key==='n'||e.key==='N'){if(S&&!S.over)nextYear();}});
+</script>
+</body>
+</html>

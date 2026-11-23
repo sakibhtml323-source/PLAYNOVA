@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense Sports Rush</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#052e16;font-family:'Segoe UI',Arial,sans-serif;color:#dcfce7;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:6px;flex-wrap:wrap;justify-content:center}
+#field{overflow:hidden;width:min(560px,96vw);height:340px;background:#166534;border:3px solid #22c55e;border-radius:12px;position:relative;touch-action:none}
+.unit{position:absolute;width:20px;height:20px;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-size:.8rem}
+#msg{text-align:center;font-size:.82rem;color:#86efac;margin-top:6px;min-height:1.6em}
+#ov{position:fixed;inset:0;background:rgba(5,46,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#dcfce7;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#052e16;font-family:inherit;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏟 INTENSE SPORTS RUSH</h1>
+<div id="hud"><span>🏃 Athletes <b id="a">5</b></span><span>⏱ Quarter <b id="q">1</b>/4</span><span>🎯 Score <b id="s">0</b></span><span>👟 Rivals <b id="r">5</b></span><span>Best <b id="b">0</b></span></div>
+<div id="field"></div>
+<div id="msg">Draft your rushers! Tap the field to send athletes toward the ball.</div>
+<div id="ov"><h2 style="color:#4ade80">SPORTS RUSH</h2><p id="od">Real-time strategy on the pitch! Tap anywhere to send your nearest athletes rushing. Keep the ball ⚽ in the rival half to score goals. The AI fights back every quarter!</p><button id="btn">KICK OFF</button></div>
+<script>
+"use strict";
+const F=document.getElementById('field');const W=560,H=340;
+let mine,theirs,ball,playing,quarter,score,timer,best=+localStorage.getItem('sr_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function mk(side,x,y){const el=document.createElement('div');el.className='unit';
+el.textContent=side===0?'🟢':'🔴';el.style.background=side===0?'#16a34a':'#dc2626';
+const u={el,side,x,y,tx:x,ty:y,sp:1.5+Math.random()*0.5};F.appendChild(el);return u;}
+function init(){F.innerHTML='';mine=[];theirs=[];ball={x:W/2,y:H/2,vx:0,vy:0,el:null};
+const bel=document.createElement('div');bel.className='unit';bel.textContent='⚽';bel.style.background='#fff';ball.el=bel;F.appendChild(bel);
+for(let i=0;i<5;i++){mine.push(mk(0,60+i*20,60+i*55));theirs.push(mk(1,W-60-i*20,60+i*55));}
+playing=true;quarter=1;score=0;document.getElementById('q').textContent=1;document.getElementById('s').textContent=0;
+clearInterval(timer);timer=setInterval(quarterTick,15000);}
+function quarterTick(){if(!playing)return;
+quarter++;document.getElementById('q').textContent=quarter;
+beep(500,.12,'triangle');
+// AI grows stronger
+theirs.forEach(t=>t.sp+=0.25);
+if(quarter>4)end();}
+function end(){playing=false;clearInterval(timer);
+if(score>best){best=score;localStorage.setItem('sr_best',best);document.getElementById('b').textContent=best;}
+const r=score>=5?'🏆 CHAMPION':score>=3?'🥇 CONTENDER':'🥉 ROOKIE';
+document.getElementById('od').innerHTML=r+'<br>Final score: <b style="color:#fde047">'+score+'</b> goals';
+document.getElementById('btn').textContent='REMATCH';document.getElementById('ov').style.display='flex';}
+F.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=F.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+let nm=null,nd=1e9;mine.forEach(u=>{const d=Math.hypot(u.x-x,u.y-y);if(d<nd){nd=d;nm=u;}});
+if(nm){nm.tx=x;nm.ty=y;beep(600,.04);}});
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;
+if(k==='ArrowLeft')mine.forEach(u=>u.tx=Math.max(20,u.tx-60));
+if(k==='ArrowRight')mine.forEach(u=>u.tx=Math.min(W-20,u.tx+60));
+if(k==='ArrowUp')mine.forEach(u=>u.ty=Math.max(20,u.ty-60));
+if(k==='ArrowDown')mine.forEach(u=>u.ty=Math.min(H-20,u.ty+60));});
+function tick(){if(!playing)return;const sc=F.clientWidth/W,sy=F.clientHeight/H;
+mine.forEach(u=>{const dx=u.tx-u.x,dy=u.ty-u.y,d=Math.hypot(dx,dy);
+if(d>6){u.x+=dx/d*u.sp;u.y+=dy/d*u.sp;}
+u.el.style.left=(u.x*sc)+'px';u.el.style.top=(u.y*sy)+'px';});
+// AI: chase ball
+theirs.forEach(t=>{t.tx=ball.x;t.ty=ball.y;const dx=t.tx-t.x,dy=t.ty-t.y,d=Math.hypot(dx,dy)||1;
+t.x+=dx/d*t.sp;t.y+=dy/d*t.sp;t.el.style.left=t.x+'px';t.el.style.top=t.y+'px';});
+// ball physics
+ball.vx*=0.985;ball.vy*=0.985;ball.x+=ball.vx;ball.y+=ball.vy;
+if(ball.x<10){ball.x=10;ball.vx*=-0.7;}if(ball.x>W-10){ball.x=W-10;ball.vx*=-0.7;}
+if(ball.y<10){ball.y=10;ball.vy*=-0.7;}if(ball.y>H-10){ball.y=H-10;ball.vy*=-0.7;}
+// kick
+[...mine,...theirs].forEach(u=>{const d=Math.hypot(u.x-ball.x,u.y-ball.y);
+if(d<20){const a=Math.atan2(ball.y-u.y,ball.x-u.x);
+ball.vx+=Math.cos(a)*0.7;ball.vy+=Math.sin(a)*0.7;beep(300,.03);}});
+// goals
+if(ball.x>W-16){score++;document.getElementById('s').textContent=score;beep(880,.2,'triangle');
+ball.x=W/2;ball.y=H/2;ball.vx=ball.vy=0;}
+if(ball.x<16){beep(150,.25,'sawtooth');ball.x=W/2;ball.y=H/2;ball.vx=ball.vy=0;}
+ball.el.style.left=(ball.x*sc)+'px';ball.el.style.top=(ball.y*sy)+'px';}
+setInterval(tick,50);
+document.getElementById('btn').onclick=()=>{audio.resume();init();
+document.getElementById('msg').textContent='Tap the field to command your rushers!';
+document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

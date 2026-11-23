@@ -1,0 +1,30 @@
+{
+ "games": 500,
+ "counts": {
+  "page_loads|PASS": 500,
+  "engine_initialises|PASS": 485,
+  "start_button|PASS": 433,
+  "mouse|PASS": 163,
+  "touch|PASS": 140,
+  "keyboard|PASS": 70,
+  "restart|PASS": 500,
+  "pause|NOT": 499,
+  "state_resets_after_restart|UNVERIFIED": 306,
+  "level_progression_win_lose_gameover|PARTIAL": 16,
+  "reward_handling|PARTIAL": 16,
+  "storage_save_restore_delete_corrupt|PASS": 500,
+  "js_errors_in_test|PASS": 500,
+  "duplicate_html_ids_live_dom|PASS": 500,
+  "start_button|NOT": 21,
+  "mouse|UNVERIFIED": 337,
+  "touch|UNVERIFIED": 360,
+  "level_progression_win_lose_gameover|UNVERIFIED": 484,
+  "reward_handling|UNVERIFIED": 484,
+  "engine_initialises|FAIL": 15,
+  "keyboard|UNVERIFIED": 205,
+  "state_resets_after_restart|PASS": 194,
+  "keyboard|NOT": 225,
+  "pause|UNVERIFIED": 1,
+  "start_button|UNVERIFIED": 46
+ }
+}

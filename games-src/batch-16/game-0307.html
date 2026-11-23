@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Train Switch #307</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🚂 Desert Train Switch</h1><div class="sub">Tap the track switches before the train arrives — route it to the matching station!</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Trains <b id="t">0</b></span><span>Missed <b id="x">0</b>/3</span></div>
+<canvas id="cv" width="440" height="320"></canvas>
+<div id="msg"></div>
+<button id="btn">🛤️ Start Dispatch</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=320;
+const COLORS=['#ef4444','#3b82f6','#22c55e'];
+let switches=[{x:W/2,y:80,dir:0},{x:W/2,y:200,dir:0}];
+let trains=[],score=0,trainsN=0,missed=0,playing=false,spawnT=0;
+function spawn(){const c=(Math.random()*3)|0;
+// station 0=top-left,1=bottom-left,2=right
+const station=(Math.random()*3)|0;
+trains.push({x:-30,y:160,c,station,sp:1.8+Math.random(),passed:[false,false]});}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+switches.forEach(sw=>{if(Math.abs(x-sw.x)<30&&Math.abs(y-sw.y)<30){sw.dir=1-sw.dir;
+beep(400+sw.y,.08);}});});
+function step(){spawnT++;if(spawnT>130){spawnT=0;spawn();}
+trains.forEach(t=>{
+// switch zones
+if(!t.passed[0]&&Math.abs(t.x-switches[0].x)<8){t.y=switches[0].dir===0?80:240;t.passed[0]=true;}
+if(!t.passed[1]&&Math.abs(t.x-switches[1].x)<8&&t.y!==160){t.y=switches[1].dir===0?60:260;t.passed[1]=true;}
+t.x+=t.sp;
+// arrived at right edge → check station
+if(t.x>W+20){
+const ok=(t.station===2&&t.y===160)||(t.station===0&&t.y<160)||(t.station===1&&t.y>160);
+if(ok){score+=50;beep(700,.12,'triangle');}
+else{missed++;beep(150,.2,'sawtooth');
+document.getElementById('x').textContent=missed;
+if(missed>=3){playing=false;beep(130,.35,'sawtooth');
+document.getElementById('msg').textContent='🚨 Too many missed trains! Score: '+score;}}
+t.dead=true;}});
+trains=trains.filter(t=>!t.dead);
+document.getElementById('s').textContent=score;
+document.getElementById('t').textContent=++trainsN;}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,H);
+// tracks
+ctx.strokeStyle='#57534e';ctx.lineWidth=6;ctx.lineCap='round';
+// horizontal main
+ctx.beginPath();ctx.moveTo(0,160);ctx.lineTo(W,160);ctx.stroke();
+// switch branches
+switches.forEach(sw=>{ctx.beginPath();ctx.moveTo(sw.x,160);
+ctx.lineTo(sw.x+40,sw.dir===0?sw.y-40:sw.y+40);ctx.stroke();});
+// stations
+ctx.font='22px serif';ctx.textAlign='center';
+ctx.fillText('🔴',W-30,80);ctx.fillText('🔵',W-30,160);ctx.fillText('🟢',W-30,250);
+// trains
+trains.forEach(t=>{ctx.fillStyle=COLORS[t.c];
+ctx.fillRect(t.x-14,t.y-9,28,18);
+ctx.font='14px serif';ctx.fillText(['🔴','🔵','🟢'][t.station],t.x,t.y-14);});
+// switches
+switches.forEach(sw=>{ctx.fillStyle='#fbbf24';
+ctx.beginPath();ctx.arc(sw.x,sw.y===80?80:200,10,0,7);ctx.fill();
+ctx.font='12px serif';ctx.fillText(sw.dir===0?'↖':'↙',sw.x,sw.y===80?64:216);});
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{trains=[];score=0;trainsN=0;missed=0;spawnT=0;
+document.getElementById('s').textContent=0;document.getElementById('t').textContent=0;
+document.getElementById('x').textContent=0;
+document.getElementById('msg').textContent='';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;draw();};
+</script></body></html>

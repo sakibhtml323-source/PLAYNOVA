@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Clever Arctic Tales</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#e0f2fe,#bae6fd);font-family:Georgia,serif;color:#0c4a6e;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#0284c7;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#f0f9ff;border-radius:12px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(240,249,255,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#0c4a6e;padding:20px;z-index:5}
+button{background:#0284c7;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🦊 CLEVER ARCTIC TALES</h1>
+<div id="hud"><span>Tale <b id="t">1</b></span><span>❄️ Warmth <b id="w">100</b>%</span><span>Fish <b id="f">0</b></span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#0284c7">ARCTIC TALES</h2><p id="od">You are the clever arctic fox! Dash through the snow gathering 🐟 fish for your den. Dodge the wolves 🐺 and the freezing wind. Warmth drains — eat fish to survive. Complete 5 tales!</p><button id="btn">TELL THE TALE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+let me,fish,wolves,playing,tale,warmth,score,keys,frame,best=+localStorage.getItem('at_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H/2,r:13};fish=[];wolves=[];playing=true;tale=1;warmth=100;score=0;frame=0;keys={};
+document.getElementById('t').textContent=1;document.getElementById('w').textContent=100;document.getElementById('f').textContent=0;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+window.addEventListener('pointerup',()=>drag=null);
+function step(){frame++;const sp=3.4;
+if(keys['w']||keys['arrowup'])me.y-=sp;if(keys['s']||keys['arrowdown'])me.y+=sp;
+if(keys['a']||keys['arrowleft'])me.x-=sp;if(keys['d']||keys['arrowright'])me.x+=sp;
+if(drag){const dx=drag.x-me.x,dy=drag.y-me.y,d=Math.hypot(dx,dy);if(d>5){me.x+=dx/d*sp;me.y+=dy/d*sp;}}
+me.x=Math.max(14,Math.min(W-14,me.x));me.y=Math.max(14,Math.min(H-14,me.y));
+warmth-=0.06+tale*0.015;document.getElementById('w').textContent=Math.max(0,Math.round(warmth));
+if(warmth<=0)return freeze();
+if(frame%40===0)fish.push({x:20+Math.random()*(W-40),y:20+Math.random()*(H-40)});
+if(frame%Math.max(60,110-tale*12)===0)wolves.push({x:-20,y:Math.random()*H,vx:2+tale*0.2,vy:0});
+fish=fish.filter(fl=>{if(Math.hypot(fl.x-me.x,fl.y-me.y)<22){warmth=Math.min(100,warmth+15);score++;
+document.getElementById('w').textContent=Math.round(warmth);document.getElementById('f').textContent=score;
+beep(700,.07,'triangle');return false;}return true;});
+wolves.forEach(wf=>{wf.x+=wf.vx;wf.y+=Math.sin(wf.x/40)*1.4;
+if(Math.hypot(wf.x-me.x,wf.y-me.y)<26)return freeze();});
+wolves=wolves.filter(wf=>wf.x<W+30);
+if(score>=tale*5){tale++;document.getElementById('t').textContent=tale;beep(880,.15,'triangle');
+if(tale>5)win();}}
+function freeze(){playing=false;beep(110,.5,'sawtooth');
+if(tale>best){best=tale;localStorage.setItem('at_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='❄️ The cold claims the fox on tale '+tale+'…<br>Fish gathered: '+score;
+document.getElementById('btn').textContent='RETELL';document.getElementById('ov').style.display='flex';}
+function win(){playing=false;if(tale>best){best=tale;localStorage.setItem('at_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);
+document.getElementById('od').innerHTML='🦊 <b style="color:#0284c7">ALL 5 TALES TOLD!</b><br>The clever fox outwits the winter.';
+document.getElementById('btn').textContent='NEW SAGA';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#f0f9ff';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#bae6fd';for(let i=0;i<8;i++)ctx.fillRect((i*97+40)%W,(i*61+30)%H,26,10);
+fish.forEach(fl=>{ctx.font='16px serif';ctx.textAlign='center';ctx.fillText('🐟',fl.x,fl.y+5);});
+wolves.forEach(wf=>{ctx.font='22px serif';ctx.fillText('🐺',wf.x,wf.y+8);});
+ctx.fillStyle='#fdba74';ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();
+ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(me.x-8,me.y-8);ctx.lineTo(me.x-4,me.y-22);ctx.lineTo(me.x,me.y-10);ctx.fill();
+ctx.beginPath();ctx.moveTo(me.x+8,me.y-8);ctx.lineTo(me.x+4,me.y-22);ctx.lineTo(me.x,me.y-10);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(me.x+3,me.y-3,3,3);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

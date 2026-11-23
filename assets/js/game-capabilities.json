@@ -1,0 +1,73 @@
+{
+ "schema": 1,
+ "note": "Per-game capabilities. Only FULLY_INTEGRATED/PARTIALLY_INTEGRATED may earn event rewards. Promote only with real gameplay evidence.",
+ "games": {
+  "desert-reflection-232": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "ninja-maze-sprint-233": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "haunted-spot-shift-254": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "ninja-stealth-grid-261": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "crystal-dot-link-276": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "royal-number-maze-283": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "haunted-pattern-shift-284": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "crystal-dot-pop-292": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "crystal-path-finder-297": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "crystal-shift-puzzle-306": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "ninja-stack-sort-308": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "crystal-stack-sort-346": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "haunted-clock-tower-348": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "crystal-puzzle-grid-355": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "ninja-ice-flow-367": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true
+  },
+  "jungle-farm-puzzle": {
+   "status": "PARTIALLY_INTEGRATED",
+   "levels": true,
+   "loss": true,
+   "score": true,
+   "win": false
+  }
+ }
+}

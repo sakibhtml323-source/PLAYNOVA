@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Row Slide Puzzle #69</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#fdf4ff,#f0f9ff);font-family:Georgia,serif;color:#581c87;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px}
+h1{font-size:1.1rem;color:#7e22ce;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#board{display:grid;gap:6px;touch-action:none}
+.tile{width:80px;height:80px;border-radius:12px;cursor:pointer;box-shadow:0 3px 10px rgba(126,34,206,.25);display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#fff;text-shadow:0 1px 4px #0006;transition:transform .12s}
+.tile:active{transform:scale(.94)}
+.tile.hole{background:transparent;box-shadow:inset 0 0 0 2px #e9d5ff;cursor:default}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#581c87;padding:20px;z-index:5}
+button{background:#a855f7;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:420px){.tile{width:62px;height:62px;font-size:1.2rem}}
+</style>
+</head>
+<body>
+<h1>🎨 WATERCOLOR SLIDE</h1>
+<div id="hud"><span>Panel <b id="l">3×3</b></span><span>Moves <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div>
+<div id="ov"><h2 style="color:#7e22ce">WATERCOLOR SLIDE</h2><p id="od">Slide the painted tiles into the blank space to restore the picture — order the hues from cool to warm. Panels grow after each solve!</p><button id="btn">WET THE PAPER</button></div>
+<script>
+"use strict";
+const PALS=['#0ea5e9','#22d3ee','#2dd4bf','#4ade80','#a3e635','#facc15','#fb923c','#f87171','#e879f9','#c084fc','#818cf8','#64748b','#94a3b8','#fda4af','#fdba74'];
+let size,board,moves,level=0,playing,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){size=Math.min(3+level,5);const n=size*size;board=[...Array(n).keys()].slice(1).concat(0);
+let hole=n-1;for(let i=0;i<n*24;i++){const opts=neigh(hole);const pick=opts[(Math.random()*opts.length)|0];
+board[hole]=board[pick];board[pick]=0;hole=pick;}
+if(solved()){board[0]=1;board[1]=0;}
+moves=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=size+'×'+size;
+best=+localStorage.getItem('ws2_best_'+size)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+render();}
+function neigh(i){const r=(i/size)|0,c=i%size,o=[];if(r>0)o.push(i-size);if(r<size-1)o.push(i+size);if(c>0)o.push(i-1);if(c<size-1)o.push(i+1);return o;}
+function solved(){const n=size*size;for(let i=0;i<n-1;i++)if(board[i]!==i+1)return false;return board[n-1]===0;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+size+',80px)';b.innerHTML='';
+board.forEach((v,i)=>{const t=document.createElement('div');
+t.className='tile'+(v===0?' hole':'');
+t.style.background=v===0?'':PALS[(v-1)%PALS.length];
+t.textContent=v===0?'':v;
+t.onclick=()=>{if(!playing||v===0)return;const hole=board.indexOf(0);const hr=(hole/size)|0,hc=hole%size,tr=(i/size)|0,tc=i%size;
+if(tr===hr){if(tc>hc){for(let c=hc;c<tc;c++)board[tr*size+c]=board[tr*size+c+1];}else{for(let c=hc;c>tc;c--)board[tr*size+c]=board[tr*size+c-1];}board[tr*size+tc]=0;}
+else if(tc===hc){if(tr>hr){for(let r=hr;r<tr;r++)board[r*size+tc]=board[(r+1)*size+tc];}else{for(let r=hr;r>tr;r--)board[r*size+tc]=board[(r-1)*size+tc];}board[tr*size+tc]=0;}
+else{beep(160,.06);return;}
+moves++;document.getElementById('m').textContent=moves;
+beep(380+((v*53)%5)*70,.05);render();
+if(solved())win();};
+b.appendChild(t);});}
+function win(){playing=false;beep(720,.12,'triangle');setTimeout(()=>beep(920,.15,'triangle'),120);
+if(moves<best){best=moves;localStorage.setItem('ws2_best_'+size,best);}
+document.getElementById('od').innerHTML='🎨 Panel restored in <b>'+moves+'</b> moves!'+(size<5?'<br>Next: '+(size+1)+'×'+(size+1)+' panel':'<br>The grand mural is complete!');
+document.getElementById('btn').textContent=size<5?'NEXT PANEL':'PAINT AGAIN';if(size>=5)level=0;level++;document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();if(level===0)level=1;playing=true;init();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;const hole=board.indexOf(0);
+const r=(hole/size)|0,c=hole%size;const k=e.key;let t=-1;
+if(k==='ArrowUp'&&r<size-1)t=hole+size;if(k==='ArrowDown'&&r>0)t=hole-size;
+if(k==='ArrowLeft'&&c<size-1)t=hole+1;if(k==='ArrowRight'&&c>0)t=hole-1;
+if(t>=0){const bt=document.querySelectorAll('.tile')[t];if(bt)bt.click();}});
+</script>
+</body>
+</html>

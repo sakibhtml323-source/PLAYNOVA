@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Splitter Defense #165</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#020204;font-family:Georgia,serif;color:#a78bfa;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#8b5cf6;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px;flex-wrap:wrap;justify-content:center}
+canvas{background:#0a0a14;border-radius:10px;border:1px solid #4c1d95;touch-action:none}
+#build{display:flex;gap:8px;margin:8px;flex-wrap:wrap;justify-content:center}
+#build button{background:#0f0f23;border:1px solid #4c1d95;color:#c4b5fd;border-radius:10px;padding:8px 14px;font-size:.8rem;cursor:pointer}
+#build button.sel{border-color:#a78bfa;background:#2e1065}
+#msg{text-align:center;font-size:.82rem;color:#7c3aed;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(2,2,4,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#c4b5fd;padding:20px;z-index:5}
+button.big{background:#7c3aed;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🌌 COSMIC DARK DEFENSE</h1>
+<div id="hud"><span>✨ Stardust <b id="cd">60</b></span><span>Wave <b id="w">1</b></span><span>🛡️ Core <b id="h">22</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="build">
+<button data-t="void" class="sel">🕳️ Void 20</button><button data-t="star">⭐ Star 35</button><button data-t="nova">🌟 Nova 50</button>
+<button id="go">▶ WAVE</button>
+</div>
+<div id="msg">Place cosmic defenses on the void-path! Stop the shadow creepers.</div>
+<div id="ov"><h2 style="color:#8b5cf6">DARK COSMOS</h2><p id="od">Defend the last light in the dark cosmos! Shadow creepers march the star-path to your core. Build void wells (slow), star lances (shoot) and nova bursts (splash) between waves. Survive as long as you can!</p><button class="big" id="btn">IGNITE THE CORE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=460,H=340;cvs.width=W;cvs.height=H;
+let path,slots,towers,foes,cd,heart,playing,wave,waveOn,selT,best=+localStorage.getItem('cdb_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const DEFS={void:{c:20,r:80,dmg:3,rate:20,e:'🕳️',col:'#7c3aed',slow:true},star:{c:35,r:85,dmg:8,rate:13,e:'⭐',col:'#a78bfa'},nova:{c:50,r:110,dmg:20,rate:45,e:'🌟',col:'#fbbf24',splash:true}};
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-200)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function buildMap(){path=[[0,1],[1,1],[2,1],[3,1],[3,2],[3,3],[2,3],[1,3],[1,4],[1,5],[2,5],[3,5],[4,5],[5,5],[5,4],[5,3],[6,3],[7,3],[8,3],[8,4],[8,5],[9,5],[10,5],[10,6],[10,7],[11,7]];
+const onP=k=>path.some(p=>p[0]+','+p[1]===k);
+slots=[[2,2],[3,4],[4,2],[5,2],[6,4],[7,4],[9,4],[10,4],[4,4],[7,6],[8,6],[9,6]].filter(s=>!onP(s[0]+','+s[1]));
+towers=[];foes=[];cd=60;heart=22;wave=0;}
+function startWave(){wave++;document.getElementById('w').textContent=wave;waveOn=true;
+const n=4+wave*2;for(let i=0;i<n;i++)foes.push({pi:0,off:-i*26,hp:20+wave*7,sp:1+wave*0.07,slowT:0,shadow:wave>3&&Math.random()<0.2,splitter:i%4===3});
+beep(500,.12,'triangle');}
+function step(){foes.forEach(e=>{const sp=e.slowT>0?e.sp*0.45:e.sp;e.slowT=Math.max(0,e.slowT-1);
+e.off+=sp;if(e.off<0)return; /* FIX (PLAYNOVA repair): enemies spawn with a negative offset (staggered entry); seg became -1 and path[-1] threw every tick */ const seg=Math.floor(e.off/26);
+if(seg>=path.length-1){foes.splice(foes.indexOf(e),1);heart--;document.getElementById('h').textContent=heart;beep(130,.2,'sawtooth');
+if(heart<=0)over();return;}
+e.sx=path[seg][0]+(path[seg+1][0]-path[seg][0])*((e.off%26)/26);
+e.sy=path[seg][1]+(path[seg+1][1]-path[seg][1])*((e.off%26)/26);});
+towers.forEach(t=>{t.cd--;if(t.cd>0)return;const d=DEFS[t.type];
+let nf=null,nd2=1e9;foes.forEach(f=>{const dd=Math.hypot(f.sx-t.x,f.sy-t.y);if(dd<d.r/28&&dd<nd2){nd2=dd;nf=f;}});
+if(nf){t.cd=d.rate;nf.hp-=d.dmg;if(d.slow)nf.slowT=30;beep(d.splash?190:560,.04,d.splash?'sawtooth':'square');
+if(d.splash)foes.forEach(f2=>{if(f2!==nf&&Math.hypot(f2.sx-nf.sx,f2.sy-nf.sy)<1.4)f2.hp-=8;});
+if(nf.hp<=0){foes.splice(foes.indexOf(nf),1);cd+=6;
+if(nf.splitter){for(let s2=0;s2<2;s2++)foes.push({pi:nf.pi,off:nf.off-14-s2*16,hp:Math.max(6,(20+wave*7)/3),sp:nf.sp*1.15,slowT:0,shadow:false,splitter:false});beep(300,.1,'sawtooth');}}}});
+if(waveOn&&!foes.length){waveOn=false;cd+=22+wave*4;
+if(wave>best){best=wave;localStorage.setItem('cdb_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('msg').textContent='✅ Wave '+wave+' cleared! +stardust.';beep(700,.14,'triangle');}
+document.getElementById('cd').textContent=cd;}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=cvs.getBoundingClientRect();
+const mx=(e.clientX-r.left)/r.width*W,my=(e.clientY-r.top)/r.height*H;
+let hit=null,hd=1e9;slots.forEach(s=>{const d=Math.hypot(s[0]*38-mx,s[1]*34+10-my);if(d<22&&d<hd&&!towers.some(t=>t.x===s[0]&&t.y===s[1])){hd=d;hit=s;}});
+if(hit){const d=DEFS[selT]||{c:Infinity};/* FIX (PLAYNOVA repair): no tower selected yet -> DEFS[...] was undefined and clicking a build spot threw */if(cd>=d.c){cd-=d.c;towers.push({x:hit[0],y:hit[1],type:selT,cd:0});beep(620,.08);}else beep(160,.08,'sawtooth');}});
+document.querySelectorAll('#build [data-t]').forEach(b=>b.onclick=()=>{selT=b.dataset.t;document.querySelectorAll('#build [data-t]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');});
+document.getElementById('go').onclick=()=>{audio.resume();if(playing&&!waveOn)startWave();};
+window.addEventListener('keydown',e=>{const k=e.key;if(k>='1'&&k<='3')document.querySelectorAll('#build [data-t]')[+k-1].click();if(k==='Enter'&&playing&&!waveOn)startWave();});
+function draw(){ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+path.forEach(p=>{ctx.fillStyle='#1e1b4b';ctx.fillRect(p[0]*38+3,p[1]*34+3,32,28);});
+towers.forEach(t=>{ctx.font='17px serif';ctx.textAlign='center';ctx.fillText(DEFS[t.type].e,t.x*38+19,t.y*34+22);});
+foes.forEach(e=>{ctx.fillStyle=e.shadow?'#000':'#312e81';
+ctx.beginPath();ctx.arc(e.sx*38+19,e.sy*34+17,8,0,7);ctx.fill();});
+ctx.fillStyle='#8b5cf6';ctx.font='20px serif';const last=path[path.length-1];ctx.fillText('🛡️',last[0]*38+19,last[1]*34+22);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+function over(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🌑 The dark consumes the core on wave <b>'+wave+'</b>.';
+document.getElementById('btn').textContent='RELIGHT';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();buildMap();playing=true;waveOn=false;
+document.getElementById('h').textContent=22;document.getElementById('w').textContent=0;
+document.getElementById('msg').textContent='Build on the void path, then press WAVE.';
+document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

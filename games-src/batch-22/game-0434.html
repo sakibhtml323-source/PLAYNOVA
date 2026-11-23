@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Door Guard #434</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#riddle{background:#27272a;border-radius:12px;padding:14px 20px;margin:12px;font-size:1.05rem;font-weight:600;max-width:330px;text-align:center;min-height:60px}
+#opts{display:flex;gap:10px;margin:10px;flex-wrap:wrap;justify-content:center}
+.opt{padding:12px 22px;border-radius:10px;border:2px solid #3f3f46;background:#27272a;color:#fafafa;font-weight:700;cursor:pointer;font-size:.95rem}
+.opt:hover{border-color:#facc15}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🚪 Haunted Door Guard</h1><div class="sub">Each haunted door asks a riddle — answer right to pass. Wrong answers wake the ghost!</div>
+<div id="hud"><span>Door <b id="d">1</b>/8</span><span>👻 <b id="h">3</b></span><span>Score <b id="s">0</b></span></div>
+<div id="riddle"></div>
+<div id="opts"></div>
+<div id="msg"></div>
+<button id="btn">🕯️ New Haunt</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const RIDDLES=[
+{q:'I have keys but open no locks. What am I?',o:['A piano','A map','A jailer','A code'],a:0},
+{q:'The more you take, the more you leave behind. What am I?',o:['Footsteps','Photos','Memories','Time'],a:0},
+{q:'What has a head and a tail, but no body?',o:['A coin','A snake','A comet','A river'],a:0},
+{q:'What gets wetter the more it dries?',o:['A towel','The sun','A desert','Paint'],a:0},
+{q:'What has hands but cannot clap?',o:['A clock','A doll','A glove','A statue'],a:0},
+{q:'What can you catch but not throw?',o:['A cold','A ball','A wave','A thief'],a:0},
+{q:'What goes up but never comes down?',o:['Your age','A balloon','Smoke','A rocket'],a:0},
+{q:'What has one eye but cannot see?',o:['A needle','A storm','A potato','A camera'],a:0}];
+let door=1,hp=3,score=0,order=[];
+function newGame(){door=1;hp=3;score=0;
+document.getElementById('h').textContent=3;document.getElementById('s').textContent=0;
+order=RIDDLES.map((r,i)=>i).sort(()=>Math.random()-.5);
+load();}
+function load(){if(door>8){msg('🏆 You escaped the haunted hall! Score: '+score);return;}
+const r=RIDDLES[order[(door-1)%8]];
+document.getElementById('d').textContent=door;
+document.getElementById('riddle').textContent='🚪 "'+r.q+'"';
+const box=document.getElementById('opts');box.innerHTML='';
+r.o.forEach((opt,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=opt;
+b.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();answer(i===r.a);};
+box.appendChild(b);});
+msg('');}
+function answer(ok){if(ok){score+=100;document.getElementById('s').textContent=score;
+beep(880,.25,'triangle');msg('🚪 The door creaks open…');door++;
+setTimeout(load,800);}
+else{hp--;document.getElementById('h').textContent=hp;
+beep(150,.2,'sawtooth');msg('👻 The ghost howls!');
+if(hp<=0){msg('👻 The ghost claims you! Score: '+score);
+setTimeout(newGame,1500);}}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newGame();};
+newGame();
+</script></body></html>

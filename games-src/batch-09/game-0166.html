@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Royal Hidden Object</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fef3c7,#fde68a);font-family:Georgia,serif;color:#713f12;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#b45309;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#fffbeb;border-radius:12px;touch-action:none;border:2px solid #d97706}
+#msg{text-align:center;font-size:.85rem;color:#92400e;min-height:1.6em;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(254,243,199,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#713f12;padding:20px;z-index:5}
+button{background:#b45309;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>👑 ROYAL HIDDEN OBJECT</h1>
+<div id="hud"><span>Chamber <b id="s">1</b></span><span>Found <b id="f">0</b>/<b id="t">0</b></span><span>⏱ <b id="tm">0</b>s</span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Find the royal treasures before the king returns!</div>
+<div id="ov"><h2 style="color:#b45309">THE KING'S CHAMBERS</h2><p id="od">Treasures hide in the royal rooms! Tap the listed objects before time runs out — wrong taps cost 5 seconds. Chambers grow more crowded!</p><button id="btn">ENTER THE CASTLE</button></div>
+<script>
+
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=420;cvs.width=W;cvs.height=H;
+const ITEMS=[['👑','crown'],['💍','ring'],['🗝️','key'],['🏰','castle'],['🛡️','shield'],['🗡️','sword'],['👗','gown'],['🍷','goblet'],['🕯️','candle'],['📜','decree'],['🐎','steed'],['🌹','rose']];
+let scene=[],found=[],list=[],timeLeft,playing,lv,frame,timer,best=+localStorage.getItem('rho_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function setup(){lv=(lv||0)+1;scene=[];
+const n=Math.min(4+lv,8);
+const pick=ITEMS.slice().sort(()=>Math.random()-.5);
+list=pick.slice(0,n).map(it=>it[1]);
+for(let i=0;i<n;i++)scene.push({e:pick[i][0],x:30+Math.random()*(W-60),y:40+Math.random()*(H-100),r:18,found:false,ph:Math.random()*7});
+found=[];timeLeft=45;document.getElementById('s').textContent=lv;document.getElementById('t').textContent=n;document.getElementById('f').textContent=0;document.getElementById('tm').textContent=timeLeft;
+document.getElementById('msg').textContent='Find: '+list.join(' · ');
+clearInterval(timer);
+timer=setInterval(()=>{timeLeft--;document.getElementById('tm').textContent=timeLeft;
+if(timeLeft<=0){clearInterval(timer);lose();}},1000);}
+function draw(){ctx.fillStyle='#fffbeb';ctx.fillRect(0,0,W,H);
+// royal chamber
+ctx.fillStyle='#fef3c7';ctx.fillRect(0,0,W,60);
+ctx.fillStyle='#fde68a';ctx.fillRect(0,H-50,W,50);
+ctx.fillStyle='#d97706';ctx.fillRect(W/2-60,0,120,40);
+scene.forEach(o=>{if(o.found)return;
+const wob=Math.sin(frame/30+o.ph)*2;
+ctx.font='24px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.globalAlpha=.9;ctx.fillText(o.e,o.x,o.y+wob);ctx.globalAlpha=1;});
+scene.forEach(o=>{if(o.found){ctx.strokeStyle='#16a34a';ctx.lineWidth=2;ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,7);ctx.stroke();}});}
+let kx9=W/2,ky9=H/2;
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;const st=16;
+if(k==='ArrowLeft')kx9-=st;else if(k==='ArrowRight')kx9+=st;else if(k==='ArrowUp')ky9-=st;else if(k==='ArrowDown')ky9+=st;
+else if(k==='Enter'||k===' '){e.preventDefault();
+let hit=null;scene.forEach(o=>{if(!o.found&&Math.hypot(o.x-kx9,o.y-ky9)<o.r+4)hit=o;});
+if(hit){hit.found=true;found.push(hit.e);beep(700+found.length*30,.08,'triangle');document.getElementById('f').textContent=found.length;if(found.length>=scene.length)win();}
+else{timeLeft-=5;beep(150,.12,'sawtooth');if(timeLeft<=0){clearInterval(timer);lose();}document.getElementById('tm').textContent=timeLeft;}return;}else return;
+kx9=Math.max(10,Math.min(W-10,kx9));ky9=Math.max(10,Math.min(H-10,ky9));});
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+let hit=null;scene.forEach(o=>{if(!o.found&&Math.hypot(o.x-x,o.y-y)<o.r+4)hit=o;});
+if(hit){hit.found=true;found.push(hit.e);beep(700+found.length*30,.08,'triangle');
+document.getElementById('f').textContent=found.length;
+if(found.length>=scene.length)win();}
+else{timeLeft-=5;beep(150,.12,'sawtooth');
+if(timeLeft<=0){clearInterval(timer);lose();}
+document.getElementById('tm').textContent=timeLeft;}});
+function win(){playing=false;clearInterval(timer);
+if(lv+1>best){best=lv+1;localStorage.setItem('rho_best',best);document.getElementById('b').textContent=best;}
+beep(880,.15,'triangle');setTimeout(()=>beep(1100,.15,'triangle'),140);
+document.getElementById('od').innerHTML='👑 Chamber cleared with '+timeLeft+'s left!<br>Next chamber: '+(Math.min(4+lv+1,8))+' treasures.';
+document.getElementById('btn').textContent='NEXT CHAMBER';document.getElementById('ov').style.display='flex';}
+function lose(){playing=false;beep(120,.5,'sawtooth');
+document.getElementById('od').innerHTML='⏰ The king returns! You found '+found.length+'/'+scene.length+'.';
+document.getElementById('btn').textContent='HIDE AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();if(document.getElementById('btn').textContent==='HIDE AGAIN')lv=0;
+playing=true;setup();document.getElementById('ov').style.display='none';};
+function loop(){frame++;draw();requestAnimationFrame(loop);}
+loop();
+
+</script>
+</body>
+</html>

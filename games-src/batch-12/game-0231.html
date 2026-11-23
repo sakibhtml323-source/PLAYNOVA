@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Egyptian Wrap Pipes #231</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(6,50px);gap:3px;margin:12px}
+.tile{width:50px;height:50px;background:#292524;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tile svg{width:44px;height:44px}
+.tile.lit{background:#44403c}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🏺 Egyptian Wrap Pipes</h1><div class="sub">Connect the urn to the temple — pipes wrap around the edges!</div>
+<div id="hud"><span>Chamber <b id="l">1</b></span><span>Rotations <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div>
+<button id="btn">🔀 New Chamber</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=6,SIZE=N*N;
+const STRAIGHT=[0,2],ELBOW=[[2,3],[3,0],[0,1],[1,2]];
+function dirType(a,b){const r=(a/N)|0,c=a%N,r2=(b/N)|0,c2=b%N;
+if(r===r2)return c<c2?[1,3]:[3,1];return r<r2?[2,0]:[0,2];}
+function twoDir(a,b,c2){const r=(a/N)|0,cc=a%N;
+if((b/N)|0===r)return b<cc?[0,1]:[1,0];if((c2/N)|0===r)return c2<cc?[0,3]:[3,0];
+return b<cc?[2,1]:[1,2];}
+let cells=[],level=1,moves=0,playing=true,best=Infinity;
+function opens(c){return c.t==='straight'?(c.r%2?STRAIGHT:STRAIGHT).slice():ELBOW[c.r];}
+function build(){
+const src=(Math.random()*SIZE)|0;const path=[src];const used=new Set([src]);
+while(path.length<Math.min(SIZE,10+level*2)){const last=path[path.length-1];const r=(last/N)|0,c=last%N;const opts=[];
+if(r>0&&!used.has(last-N))opts.push(last-N);if(r<N-1&&!used.has(last+N))opts.push(last+N);
+if(c>0&&!used.has(last-1))opts.push(last-1);if(c<N-1&&!used.has(last+1))opts.push(last+1);
+if(!opts.length)break;const nx=opts[(Math.random()*opts.length)|0];used.add(nx);path.push(nx);}
+for(let i=0;i<SIZE;i++){const pi=path.indexOf(i);let t='none';
+if(pi>=0){if(pi===0)t=dirType(i,path[1]);else if(pi===path.length-1)t=dirType(i,path[pi-1]);
+else t=twoDir(i,path[pi-1],path[pi+1]);}
+cells.push({t,r:(Math.random()*4)|0,src:i===src,lit:false});}
+// scramble
+path.forEach((idx,pi)=>{const c=cells[idx];
+if(c.t==='straight')c.r=(c.r+1+((Math.random()*3)|0))%4;else c.r=(c.r+1+((Math.random()*3)|0))%4;});
+moves=0;playing=true;light();render();}
+function light(){cells.forEach(c=>c.lit=false);
+const q=[cells.findIndex(c=>c.src)];if(q[0]<0)return;cells[q[0]].lit=true;
+while(q.length){const cur=q.pop();const c=cells[cur];
+opens(c).forEach(d=>{let n=-1;const r=(cur/N)|0,cc=cur%N;
+const T=SIZE;
+if(d===0)n=((cur-N)+T)%T;if(d===1)n=r*N+((cc+1)%N);if(d===2)n=(cur+N)%T;if(d===3)n=r*N+((cc+N-1)%N);
+if(opens(cells[n]).includes((d+2)%4)&&!cells[n].lit){cells[n].lit=true;q.push(n);}});}}
+function check(){if(cells.every(c=>c.lit||c.t==='none')){playing=false;beep(660,.2,'triangle');
+if(moves<best){best=moves;localStorage.setItem('wp_best',best);}
+level++;document.getElementById('b').textContent=best;
+setTimeout(()=>{cells=[];build();document.getElementById('l').textContent=level;},900);}}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+cells.forEach((c,i)=>{const d=document.createElement('div');d.className='tile'+(c.lit?' lit':'');
+let svg='';
+const col=c.lit?'#22c55e':'#78716c';
+if(c.t==='straight')svg='<svg viewBox="0 0 40 40"><line x1="20" y1="0" x2="20" y2="40" stroke="'+col+'" stroke-width="8" stroke-linecap="round"/></svg>';
+else if(c.t!=='none')svg='<svg viewBox="0 0 40 40"><path d="M 20 0 Q 20 20 40 20" fill="none" stroke="'+col+'" stroke-width="8" stroke-linecap="round"/></svg>';
+if(c.src)svg='<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="9" fill="#fbbf24"/></svg>';
+d.innerHTML=svg;
+d.onclick=()=>{if(!playing)return;cells[i].r=(cells[i].r+1)%4;moves++;document.getElementById('m').textContent=moves;beep(400+(i%5)*60,.05);light();render();check();};
+b.appendChild(d);});
+document.getElementById('l').textContent=level;
+document.getElementById('b').textContent=best<Infinity?best:'—';}
+document.getElementById('btn').onclick=()=>{cells=[];build();};
+build();
+</script></body></html>

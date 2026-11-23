@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Word Ladder #239</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:12px 0 2px}.sub{color:#a5b4fc;font-size:.78rem;max-width:320px;text-align:center}
+#chain{display:flex;flex-direction:column;gap:6px;margin:12px;align-items:center}
+.step{background:#312e81;border:2px solid #4f46e5;border-radius:10px;padding:8px 20px;font-size:1.1rem;letter-spacing:3px;font-weight:700}
+.step.cur{border-color:#fbbf24;background:#4338ca}
+input{padding:10px 16px;border-radius:10px;border:2px solid #4f46e5;background:#312e81;color:#eef2ff;font-size:1.1rem;letter-spacing:3px;text-align:center;width:160px;font-weight:700;text-transform:uppercase}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600;margin:4px}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👑 Royal Word Ladder</h1>
+<div class="sub">Change ONE letter at a time to turn the start word into the goal word. Every step must be a real word!</div>
+<div id="hud"><span>Ladder <b id="l">1</b></span><span>Steps <b id="s">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="chain"></div>
+<input id="in" placeholder="TYPE WORD" maxlength="4">
+<div id="msg"></div>
+<button id="btn">🪜 New Ladder</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.08,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const WORDS=['COLD','CORD','WORD','WORE','GORE','GONE','GENE','LINE','LINK','LION','LOIN','COIN','CORN','BORN','BURN','TURN','TUSK','TASK','TANK','RANK','RANT','RAIN','PAIN','PAIL','MAIL','MAIN','MOON','MOOD','FOOD','FOOT','BOOT','BOOK','BEAK','BEAM','TEAM','TERM','PERM','PERK','PARK','PART','PORT','SORT','SORE','SOUR','HOUR','YOUR'];
+const PAIRS=[['COLD','WARM'],['LION','LAMB'],['KING','PAWN'],['GOLD','LEAD'],['FIRE','RAIN'],['MOON','STAR']];
+let cur=[],goal='',steps=0,ladder=1,playing=true,best=+localStorage.getItem('wl_best')||Infinity;
+function newLadder(){
+let path=null,start='',end='';
+for(let tries=0;tries<PAIRS.length&&!path;tries++){
+const pr=PAIRS[(ladder-1+tries)%PAIRS.length];
+start=pr[0];end=pr[1];
+path=bfs(start,end);
+if(!path)ladder++;}
+if(!path){msg('No path found — try another ladder!');return;}
+cur=path.slice(0,1);goal=end;steps=0;playing=true;
+document.getElementById('l').textContent=ladder;
+document.getElementById('s').textContent=0;render();msg('Turn '+start+' into '+end+'!');}
+function neigh(w){const out=[];WORDS.forEach(x=>{if(x.length!==w.length||x===w)return;
+let d=0;for(let i=0;i<w.length;i++)if(x[i]!==w[i])d++;
+if(d===1)out.push(x);});return out;}
+function bfs(a,b){const q=[[a]],seen=new Set([a]);
+while(q.length){const p=q.shift(),last=p[p.length-1];
+if(last===b)return p;
+neigh(last).forEach(n=>{if(!seen.has(n)){seen.add(n);q.push([...p,n]);}});}return null;}
+function submit(){if(!playing)return;const w=document.getElementById('in').value.toUpperCase().trim();
+document.getElementById('in').value='';
+if(w.length!==4){beep(160,.08,'sawtooth');msg('4 letters!');return;}
+const last=cur[cur.length-1];
+let diff=0;for(let i=0;i<4;i++)if(w[i]!==last[i])diff++;
+if(diff!==1){beep(160,.08,'sawtooth');msg('Change exactly ONE letter!');return;}
+if(!WORDS.includes(w)){beep(200,.1,'sawtooth');msg('"'+w+'" is not in the royal dictionary…');return;}
+cur.push(w);steps++;document.getElementById('s').textContent=steps;
+beep(520+steps*40,.09,'triangle');
+if(w===goal){playing=false;beep(880,.25,'triangle');
+if(steps<best){best=steps;localStorage.setItem('wl_best',best);document.getElementById('b').textContent=best;}
+msg('🎉 '+goal+' reached in '+steps+' steps! Next ladder…');ladder++;setTimeout(newLadder,1200);return;}
+render();}
+function render(){const c=document.getElementById('chain');c.innerHTML='';
+cur.forEach((w,i)=>{const d=document.createElement('div');
+d.className='step'+(i===cur.length-1?' cur':'');d.textContent=w;c.appendChild(d);});
+const g=document.createElement('div');g.className='step';g.style.opacity=.5;g.textContent='🎯 '+goal;c.appendChild(g);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('in').addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newLadder();};
+newLadder();
+</script></body></html>

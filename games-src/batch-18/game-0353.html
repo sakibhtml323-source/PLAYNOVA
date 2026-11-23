@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Anagram Battle #353</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem;max-width:330px;text-align:center}
+#letters{display:flex;gap:6px;margin:12px;font-size:1.3rem;font-weight:800;flex-wrap:wrap;justify-content:center;max-width:94vw}
+#letters span{background:#4338ca;border-radius:10px;padding:8px 12px}
+#found{display:flex;gap:6px;flex-wrap:wrap;margin:8px;justify-content:center;max-width:360px}
+.wd{background:#14532d;border-radius:8px;padding:4px 10px;font-size:.85rem;font-weight:700}
+.wd.p2{background:#7f1d1d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+input{padding:10px 16px;border-radius:10px;border:2px solid #4f46e5;background:#312e81;color:#eef2ff;font-size:1.05rem;font-weight:700;text-transform:uppercase;text-align:center;width:190px}
+#msg{min-height:1.4em;font-weight:600;margin:4px}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⚔️ Royal Anagram Battle</h1>
+<div class="sub">2 players share 9 letters — race to find valid words! Player alternates each round; most words wins.</div>
+<div id="hud"><span>🫅 <b id="s1">0</b></span><span>👸 <b id="s2">0</b></span><span>Turn <b id="t">King</b></span><span>⏱️ <b id="tm">60</b>s</span></div>
+<div id="letters"></div>
+<div id="found"></div>
+<input id="in" placeholder="MAKE A WORD" maxlength="9">
+<div id="msg"></div>
+<button id="btn">🏰 New Battle</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const POOL='AAEEIIOOUURRNNTTLSSGDMCPB';
+const WORDS=['CAT','DOG','SUN','MOON','STAR','KING','QUEEN','CASTLE','SWORD','ROSE','LAKE','STONE','BIRD','FISH','TREE','ROAD','SHIP','GOLD','RING','CROWN','THRONE','MAGIC','DRAGON','KNIGHT'];
+let letters=[],found=[],s1=0,s2=0,turn=1,time=60,timer=null,playing=false;
+function newBattle(){letters=[];const bag=POOL;
+for(let i=0;i<9;i++)letters.push(bag[(Math.random()*bag.length)|0]);
+found=[];s1=0;s2=0;turn=1;time=60;playing=true;
+document.getElementById('s1').textContent=0;document.getElementById('s2').textContent=0;
+document.getElementById('t').textContent='King';document.getElementById('tm').textContent=60;
+document.getElementById('found').innerHTML='';document.getElementById('in').value='';
+const L=document.getElementById('letters');L.innerHTML='';
+letters.forEach(ch=>{const s=document.createElement('span');s.textContent=ch;L.appendChild(s);});
+msg('Find words from these 9 letters!');
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('tm').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);
+const w=s1>s2?'🫅 King wins '+s1+'–'+s2+'!':s2>s1?'👸 Queen wins '+s2+'–'+s1+'!':'🤝 Draw '+s1+'–'+s2+'!';
+beep(880,.3,'triangle');msg('⏰ '+w);}},1000);}
+function submit(){if(!playing)return;const w=document.getElementById('in').value.toUpperCase().trim();
+document.getElementById('in').value='';
+if(w.length<3){beep(160,.08,'sawtooth');msg('At least 3 letters!');return;}
+if(found.includes(w)){beep(160,.08,'sawtooth');msg('Already found!');return;}
+// check letters available
+const need=w.split('');const have=letters.slice();
+for(const ch of need){const i=have.indexOf(ch);if(i<0){beep(180,.1,'sawtooth');msg('Letters not available!');return;}have.splice(i,1);}
+// generous dictionary: common pattern or in list
+const ok=WORDS.includes(w)||w.length>=4;
+if(!ok){beep(200,.1,'sawtooth');msg('Not a royal word…');return;}
+found.push(w);
+if(turn===1)s1++;else s2++;
+document.getElementById('s1').textContent=s1;document.getElementById('s2').textContent=s2;
+const d=document.createElement('span');d.className='wd'+(turn===2?' p2':'');
+d.textContent=w+' ('+(turn===1?'K':'Q')+')';
+document.getElementById('found').appendChild(d);
+beep(500+found.length*30,.1,'triangle');msg('✅ +1!');
+turn=turn===1?2:1;document.getElementById('t').textContent=turn===1?'King':'Queen';}
+document.getElementById('in').addEventListener('keydown',e=>{if(e.key==='Enter'){AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();submit();}});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newBattle();};
+newBattle();
+</script></body></html>

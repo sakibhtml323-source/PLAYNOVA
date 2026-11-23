@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Golem Merge #0490</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+canvas{background:#1f2937;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#facc15}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>Crystal Golem Merge</h1><div class="sub">Merge matching golems to create bigger ones — fill the roster!</div>
+<div id="hud"><span>Board <b id="f">0</b>%</span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="400" height="380"></canvas>
+<div id="ov"><div style="font-size:3rem">🗿</div><p>Tap a cell — matching neighbors merge upward!</p><button id="btn">Start</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+function msg(t){document.getElementById('msg').textContent=t;}
+function end(w){if(!playing)return;playing=false;beep(w?880:130,.3,w?'triangle':'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML=w?WIN[0]:LOSE[0];}
+const WIN=['🏆 Victory!'];const LOSE=['💥 Game over!'];
+const N=5,CELL=74,GEMS=['🗿','👹','👺','💀','👻'];let grid=[],best=0;
+document.getElementById('b').textContent=best;
+function gen(){grid=Array.from({length:N},()=>Array(N).fill(null));draw();msg('Tap to summon!');}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*N),rr=Math.floor((e.clientY-r.top)/r.height*N);
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext());tap(rr,c);});
+function tap(r,c){if(grid[r][c]!==null)return;grid[r][c]=0;beep(400,.06);resolve(r,c);draw();check();}
+function resolve(r,c){let ch=true;while(ch){ch=false;
+const v=grid[r][c];if(v===null)return;
+const same=[];for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+if(!dr&&!dc)continue;const rr=r+dr,cc=c+dc;
+if(rr>=0&&rr<N&&cc>=0&&cc<N&&grid[rr][cc]===v)same.push([rr,cc]);}
+if(same.length){grid[r][c]=v+1;same.forEach(([rr,cc])=>grid[rr][cc]=null);
+beep(440+(v+1)*80,.1);ch=true;}}}
+function check(){const filled=grid.flat().filter(x=>x!==null).length;
+document.getElementById('f').textContent=Math.round(filled/25*100);
+if(filled>=25){playing=false;beep(880,.3,'triangle');msg('🗿 Roster full!');
+if(filled>best){best=filled;document.getElementById('b').textContent=best;}}}
+function draw(){ctx.fillStyle='#1f2937';ctx.fillRect(0,0,400,400);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*CELL+6,y=r*CELL+6;
+ctx.fillStyle='#312e81';ctx.fillRect(x,y,CELL-12,CELL-12);
+if(grid[r][c]!==null){ctx.font='34px serif';ctx.textAlign='center';
+ctx.fillText(GEMS[Math.min(grid[r][c],4)],x+CELL/2-6,y+CELL/2+12);}}}
+</script><div id="msg"></div>
+<script>document.getElementById('btn').addEventListener('click',function(){document.getElementById('ov').style.display='none';gen();});</script>
+</body></html>

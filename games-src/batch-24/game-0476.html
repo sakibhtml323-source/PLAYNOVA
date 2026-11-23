@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Mirror Hall #476</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#hall{display:flex;gap:10px;margin:14px;flex-wrap:wrap;justify-content:center}
+.door{width:96px;height:120px;background:#27272a;border:3px solid #3f3f46;border-radius:10px 10px 0 0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform .15s}
+.door .e{font-size:2.2rem}
+.door:hover{transform:translateY(-6px)}
+.door.real{background:#14532d;border-color:#22c55e}
+.door.fake{background:#7f1d1d;border-color:#ef4444}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🪞 Haunted Mirror Hall</h1><div class="sub">All doors look the same — but only ONE is real. The mirror flickers a clue!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Lives <b id="h">3</b></span><span>Best <b id="b">0</b></span></div>
+<div id="hall"></div>
+<div id="msg"></div>
+<button id="btn">🕯️ New Hall</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let real=0,round=1,lives=3,best=+localStorage.getItem('hmh_best')||0;
+document.getElementById('b').textContent=best;
+const DOORS=['🚪','🚪','🪞','🚪','🚪','🪞'];
+function gen(){const n=Math.min(4+round,6);
+real=(Math.random()*n)|0;
+const hall=document.getElementById('hall');hall.innerHTML='';
+document.getElementById('r').textContent=round;
+for(let i=0;i<n;i++){const d=document.createElement('div');d.className='door';
+d.innerHTML='<div class="e">'+(DOORS[i%DOORS.length])+'</div><small>'+(i+1)+'</small>';
+d.onclick=()=>pick(i);hall.appendChild(d);}
+// flicker clue: real door shimmers briefly
+const el=document.querySelectorAll('.door')[real];
+el.style.background='#14532d';
+setTimeout(()=>{el.style.background='';},300+Math.max(100,600-round*40));
+msg('👀 Watch for the shimmer!');}
+function pick(i){const doors=document.querySelectorAll('.door');
+if(i===real){round++;beep(880,.25,'triangle');
+if(round>best){best=round;localStorage.setItem('hmh_best',best);document.getElementById('b').textContent=best;}
+doors[real].classList.add('real');msg('🚪 The real door! Round '+round);
+setTimeout(gen,900);}
+else{doors[i].classList.add('fake');lives--;document.getElementById('h').textContent=lives;
+beep(150,.2,'sawtooth');
+if(lives<=0){msg('🪞 Trapped in mirrors forever! Round '+round);
+setTimeout(gen,1500);}
+else{doors[real].classList.add('real');
+msg('❌ A mirror! The real door glows green…');
+setTimeout(gen,1200);}}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;lives=3;
+document.getElementById('r').textContent=1;document.getElementById('h').textContent=3;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

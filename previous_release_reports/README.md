@@ -1,0 +1,2 @@
+# Reports from the PREVIOUS release (before PLAYNOVA v3)
+These files were moved here unchanged. They describe the earlier build (before the new UI, XP/wallet system, game isolation and bridge) and some of their statements (for example about passing tests or offline/mobile support) were NOT re-verified for v3 and may no longer be accurate. The current, verified status is in FINAL_RELEASE_REPORT.md, KNOWN_LIMITATIONS.md, SECURITY_AUDIT.md and GAME_INTEGRATION_AUDIT.csv in the site root.

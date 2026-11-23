@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Memory Match #248</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(4,64px);gap:6px;margin:12px}
+.card{width:64px;height:64px;background:#57534e;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;user-select:none;transition:transform .15s}
+.card.open{background:#d6d3d1;transform:rotateY(180deg)}
+.card.done{background:#65a30d;opacity:.85;cursor:default}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🏜️ Desert Memory Match</h1><div class="sub">Match pairs — consecutive matches build combos. 3 misses shuffles the board!</div>
+<div id="hud"><span>Combo <b id="c">×1</b></span><span>Pairs <b id="p">0</b>/8</span><span>Misses <b id="x">0</b>/3</span><span>Time <b id="t">60</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🃏 New Deal</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const ICONS=['🐪','🏺','🔺','🦂','🌵','👑','🗿','🐍'];
+let cards=[],open=[],pairs=0,misses=0,combo=1,lock=false,time=60,timer=null;
+function deal(){const deck=ICONS.concat(ICONS).sort(()=>Math.random()-.5);
+cards=deck.map((e,i)=>({e,i,open:false,done:false}));open=[];pairs=0;misses=0;combo=1;lock=false;
+document.getElementById('c').textContent='×1';document.getElementById('p').textContent=0;
+document.getElementById('x').textContent=0;document.getElementById('t').textContent=60;msg('');
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);lock=true;msg('⏰ Time! Matched '+pairs+'/8.');}},1000);render();}
+function tap(i){if(lock||cards[i].open||cards[i].done)return;
+cards[i].open=true;open.push(i);beep(400+i*30,.06);render();
+if(open.length===2){lock=true;
+const[a,b]=open;
+if(cards[a].e===cards[b].e){cards[a].done=cards[b].done=true;pairs++;
+document.getElementById('p').textContent=pairs;
+beep(500+combo*80,.1,'triangle');msg('✅ Combo ×'+combo+'!');
+combo=Math.min(combo+1,8);document.getElementById('c').textContent='×'+combo;
+open=[];lock=false;
+if(pairs>=8){clearInterval(timer);msg('🎉 All pairs with time to spare!');}}
+else{misses++;document.getElementById('x').textContent=misses;
+beep(180,.12,'sawtooth');msg('💥 Miss!');
+setTimeout(()=>{cards[a].open=cards[b].open=false;open=[];lock=false;
+if(misses>=3){misses=0;document.getElementById('x').textContent=0;combo=1;
+document.getElementById('c').textContent='×1';shuffle();msg('🌀 Board shuffled!');}
+render();},650);}}}
+function shuffle(){const closed=cards.filter(c=>!c.done);
+const icons=closed.map(c=>c.e).sort(()=>Math.random()-.5);
+closed.forEach((c,i)=>{c.e=icons[i];c.open=false;});}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+cards.forEach((c,i)=>{const d=document.createElement('div');
+d.className='card'+(c.open?' open':'')+(c.done?' done':'');
+d.textContent=(c.open||c.done)?c.e:'❓';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();deal();};
+deal();
+</script></body></html>

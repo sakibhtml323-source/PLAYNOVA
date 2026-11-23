@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Clever Tycoon</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0b0f19;font-family:'Segoe UI',Arial,sans-serif;color:#cbd5e1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#818cf8;padding:6px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.9rem}
+#stats span{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:4px 12px}
+#brain{font-size:3.6rem;cursor:pointer;user-select:none;margin:10px 0;display:inline-block;transition:transform .08s}
+#brain:active{transform:scale(.9)}
+main{width:min(600px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#0f172a;border:1px solid #1f2937;border-radius:14px;padding:12px}
+.card h3{color:#a5b4fc;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#0b0f19;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row small{color:#64748b;display:block}
+.row button{background:#4f46e5;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.row button:disabled{opacity:.35}
+.f{position:fixed;color:#818cf8;font-weight:800;pointer-events:none;transition:all .8s;z-index:9;text-shadow:0 2px 6px #000}
+</style>
+</head>
+<body>
+<h1>🧠 CLEVER TYCOON</h1>
+<div id="stats"><span>💡 Ideas <b id="c">0</b></span><span>📈 /s <b id="r">0</b></span><span>🎯 Insight <b id="i">0</b></span><span>🏆 Best <b id="b">0</b></span></div>
+<div style="text-align:center"><span id="brain">🧠</span><div style="font-size:.75rem;color:#475569">click the brain — or press SPACE</div></div>
+<main>
+<div class="card"><h3>🏢 VENTURES (auto ideas)</h3><div id="shop"></div></div>
+<div class="card"><h3>⚡ INSIGHT DECISIONS (one-time boosts)</h3><div id="ups"></div>
+<div style="display:flex;gap:8px;margin-top:8px"><button id="save" style="background:#1f2937;color:#cbd5e1;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">💾 Save</button><button id="reset" style="background:#1f2937;color:#cbd5e1;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">🗑️ Reset</button></div></div>
+</main>
+<script>
+"use strict";
+const VENT=[{n:'Coffee Stand',e:'☕',c:15,r:0.4},{n:'App Studio',e:'💻',c:90,r:1.8},{n:'Data Farm',e:'🗄️',c:400,r:7},{n:'AI Lab',e:'🤖',c:1800,r:26},{n:'Neural City',e:'🌆',c:8000,r:95}];
+const UPS=[{n:'Efficiency Hack',d:'ventures ×2 income',c:300,f:S=>S.mult*=2},{n:'Viral Loop',d:'click power ×5',c:1200,f:S=>S.pc*=5},{n:'Genius Network',d:'ventures ×3 income',c:6000,f:S=>S.mult*=3}];
+let S={c:0,own:[0,0,0,0,0],pc:1,mult:1,up:[0,0,0],prestige:0,prestigeMult:1};
+function load(){try{const d=JSON.parse(localStorage.getItem('ct_save'));if(d)Object.assign(S,d);}catch(e){}}
+function save(){localStorage.setItem('ct_save',JSON.stringify(S));let b=+localStorage.getItem('ct_best')||0;if(S.c>b){localStorage.setItem('ct_best',Math.floor(S.c));}}
+load();document.getElementById('b').textContent=+localStorage.getItem('ct_best')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function rate(){return VENT.reduce((a,v,i)=>a+v.r*S.own[i],0)*S.mult*S.prestigeMult;}
+function fl(x,y,t){const s=document.createElement('div');s.className='f';s.textContent=t;s.style.cssText='left:'+x+'px;top:'+y+'px';document.body.appendChild(s);requestAnimationFrame(()=>{s.style.top=(y-70)+'px';s.style.opacity=0;});setTimeout(()=>s.remove(),850);}
+document.getElementById('brain').addEventListener('pointerdown',e=>{audio.resume();S.c+=S.pc;beep(260+Math.random()*160);fl(e.clientX,e.clientY,'+'+S.pc);render();});
+window.addEventListener('keydown',e=>{const k=e.key;if(k===' '){e.preventDefault();document.getElementById('brain').dispatchEvent(new PointerEvent('pointerdown',{clientX:innerWidth/2,clientY:innerHeight/2}));}if(k>='1'&&k<='5'){const b=document.querySelectorAll('#shop button')[+k-1];if(b&&!b.disabled)b.click();}});
+function render(){document.getElementById('c').textContent=Math.floor(S.c);document.getElementById('r').textContent=rate().toFixed(1);document.getElementById('i').textContent=S.up.reduce((a,b)=>a+b,0);
+const sh=document.getElementById('shop');sh.innerHTML='';
+VENT.forEach((v,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+v.e+' '+v.n+'</b> <small>×'+S.own[i]+' · '+(v.r*S.mult).toFixed(1)+'/s</small></div>';
+const b=document.createElement('button');b.textContent=v.c+' 💡';b.disabled=S.c<v.c;
+b.onclick=()=>{if(S.c>=v.c){S.c-=v.c;S.own[i]++;beep(480+i*70,.09);render();save();}};row.appendChild(b);sh.appendChild(row);});
+const up=document.getElementById('ups');up.innerHTML='';
+UPS.forEach((u,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+u.n+'</b> <small>'+u.d+(S.up[i]?' · ✓ owned':'')+'</small></div>';
+const b=document.createElement('button');b.textContent=S.up[i]?'OWNED':u.c+' 💡';b.disabled=S.up[i]||S.c<u.c;
+b.onclick=()=>{if(!S.up[i]&&S.c>=u.c){S.c-=u.c;S.up[i]=1;u.f(S);beep(700,.12);render();save();}};row.appendChild(b);up.appendChild(row);});
+const pr=document.createElement('div');pr.className='row';pr.style.border='2px dashed #a855f7';
+const pw=document.createElement('div');pw.innerHTML='<b>💫 Prestige</b> <small>reset for +25% permanent (now ×'+S.prestigeMult.toFixed(2)+')</small>';
+const pb=document.createElement('button');pb.textContent='Prestige ✨';
+pb.onclick=()=>{const gain=1+0.25*(S.prestige+1);
+if(!confirm('Reset everything for ×'+gain.toFixed(2)+' permanent boost?'))return;
+S={c:0,own:[0,0,0,0,0],pc:1,mult:1,up:[0,0,0],prestige:S.prestige+1,prestigeMult:gain};
+save();render();};
+pr.appendChild(pw);pr.appendChild(pb);sh.appendChild(pr);}
+setInterval(()=>{S.c+=rate()/10;render();},100);
+document.getElementById('save').onclick=()=>{save();beep(880);};
+document.getElementById('reset').onclick=()=>{if(confirm('Reset the empire?')){S={c:0,own:[0,0,0,0,0],pc:1,mult:1,up:[0,0,0],prestige:S.prestige,prestigeMult:S.prestigeMult};localStorage.removeItem('ct_save');render();}
+};
+window.addEventListener('beforeunload',save);
+render();
+</script>
+</body>
+</html>

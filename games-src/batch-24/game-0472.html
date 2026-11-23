@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Golem Path #472</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#wrap{display:flex;gap:16px;margin:12px;flex-wrap:wrap;justify-content:center}
+#grid{display:grid;grid-template-columns:repeat(6,52px);gap:3px}
+.c{width:52px;height:52px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer}
+.c.cmd{background:#312e81}
+.c.rock{background:#0f172a;cursor:default}
+#palette{display:flex;flex-direction:column;gap:6px}
+.cmdB{width:56px;height:44px;background:#4338ca;border:2px solid #6366f1;border-radius:8px;cursor:pointer;font-size:18px}
+.cmdB.sel{border-color:#fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🗿 Crystal Golem Path</h1><div class="sub">Place arrow commands — then RUN the golem. It follows your program to the gem!</div>
+<div id="hud"><span>Commands <b id="c">10</b></span><span>Level <b id="l">1</b></span></div>
+<div id="wrap"><div id="grid"></div>
+<div id="palette">
+<button class="cmdB" data-c="↑">↑</button><button class="cmdB" data-c="↓">↓</button>
+<button class="cmdB" data-c="←">←</button><button class="cmdB" data-c="→">→</button>
+<button id="run" style="background:#22c55e">▶ RUN</button>
+</div></div>
+<div id="msg"></div>
+<button id="btn">✨ New Cave</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=6;let grid=[],golem={r:0,c:0},gem={r:5,c:5},cmdsLeft=10,sel='→',level=1,running=false;
+function gen(){grid=Array.from({length:N},()=>Array(N).fill(null));
+golem={r:0,c:0};gem={r:5,c:5};cmdsLeft=10+level;running=false;
+// rocks
+const nr=3+level;
+for(let i=0;i<nr;i++){const r=(Math.random()*N)|0,c=(Math.random()*N)|0;
+if((r===0&&c===0)||(r===5&&c===5))continue;grid[r][c]='rock';}
+document.getElementById('c').textContent=cmdsLeft;
+document.getElementById('l').textContent=level;
+render();msg('Place arrows, then RUN!');}
+document.querySelectorAll('.cmdB').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.cmdB').forEach(x=>x.classList.remove('sel'));
+b.classList.add('sel');sel=b.dataset.c;beep(400,.05);});
+function tap(r,c){if(running)return;
+if(grid[r][c]==='rock')return;
+if(golem.r===r&&golem.c===c)return;
+if(gem.r===r&&gem.c===c)return;
+if(grid[r][c]){grid[r][c]=null;cmdsLeft++;document.getElementById('c').textContent=cmdsLeft;}
+else{if(cmdsLeft<=0){beep(160,.08,'sawtooth');return;}
+grid[r][c]=sel;cmdsLeft--;document.getElementById('c').textContent=cmdsLeft;}
+beep(400,.05);render();}
+document.getElementById('run').onclick=()=>{if(running)return;running=true;runGolem();};
+async function runGolem(){msg('🗿 Running…');
+const maxSteps=60;let r=golem.r,c=golem.c;
+for(let s=0;s<maxSteps;s++){const cmd=grid[r]&&grid[r][c];
+if(cmd==='↑')r--;else if(cmd==='↓')r++;else if(cmd==='←')c--;else if(cmd==='→')c++;
+r=Math.max(0,Math.min(N-1,r));c=Math.max(0,Math.min(N-1,c));
+golem={r,c};beep(300+s*10,.05);render();
+await wait(220);
+if(r===gem.r&&c===gem.c){beep(880,.3,'triangle');msg('💎 Gem reached! Level '+(level+1));level++;running=false;
+setTimeout(gen,1000);return;}
+if(grid[r][c]==='rock'){beep(150,.2,'sawtooth');msg('💥 The golem crashes!');running=false;
+golem={r:0,c:0};render();return;}}
+beep(200,.15,'sawtooth');msg('😶 The golem stalls — add more commands!');running=false;}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]==='rock'?' rock':grid[r][c]?' cmd':'');
+if(golem.r===r&&golem.c===c)d.textContent='🗿';
+else if(gem.r===r&&gem.c===c)d.textContent='💎';
+else if(grid[r][c]==='rock')d.textContent='🪨';
+else d.textContent=grid[r][c]||'';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

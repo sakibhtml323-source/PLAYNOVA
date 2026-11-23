@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gunner: Watercolor Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#fdf4ff;font-family:Georgia,serif;color:#581c87;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#7e22ce;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{border-radius:12px;touch-action:none;box-shadow:0 8px 30px rgba(126,34,206,.2)}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#581c87;padding:20px;z-index:5}
+button{background:#a855f7;border:none;color:#fff;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🎨 GUNNER: WATERCOLOR EDITION</h1>
+<div id="hud"><span>Splats <b id="s">0</b></span><span>Lives <b id="l">3</b></span><span>Palette <b id="p">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#7e22ce">WATERCOLOR GUNNER</h2><p id="od">Blot out the grey blots! Move with ← → or A/D (or drag). Tap/Space to fire paint. Every 10 splats unlocks a new palette level with faster, angrier blots.</p><button id="btn">WET YOUR BRUSH</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=520;cvs.width=W;cvs.height=H;
+let gun,shots,blots,score,lives,palette,playing,keys,spawnT,frame,best=+localStorage.getItem('wg2_best')||0;
+document.getElementById('b').textContent=best;
+const PALS=['#a855f7','#ec4899','#f97316','#eab308','#22c55e','#0ea5e9'];
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){gun={x:W/2,cd:0};shots=[];blots=[];score=0;lives=3;palette=1;keys={};spawnT=0;frame=0;playing=true;document.getElementById('s').textContent=0;document.getElementById('l').textContent=3;document.getElementById('p').textContent=1;}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '){e.preventDefault();fire();}});
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.3)keys['arrowleft']=true;else if(x>W*0.7)keys['arrowright']=true;else fire();});
+cvs.addEventListener('pointerup',()=>{keys['arrowleft']=false;keys['arrowright']=false;dragX=null;});
+function fire(){if(!playing||gun.cd>0)return;gun.cd=12;shots.push({x:gun.x,y:H-46,vy:-7,c:PALS[(palette-1)%PALS.length]});beep(600+palette*50,.05);}
+function step(){frame++;gun.cd--;
+if(keys['arrowleft']||keys['a'])gun.x-=5;if(keys['arrowright']||keys['d'])gun.x+=5;
+gun.x=Math.max(20,Math.min(W-20,gun.x));
+spawnT--;if(spawnT<=0){spawnT=Math.max(16,42-palette*3);
+blots.push({x:24+Math.random()*(W-48),y:-16,vy:1.1+palette*0.28+Math.random()*0.7,r:10+Math.random()*10,wob:Math.random()*7});}
+shots.forEach(s=>{s.y+=s.vy;blots.forEach(b=>{if(Math.hypot(b.x-s.x,b.y-s.y)<b.r+4){b.hp=(b.hp||1+((palette/2)|0))-1;shots.splice(shots.indexOf(s),1);beep(500,.06,'triangle');
+if(b.hp<=0){blots.splice(blots.indexOf(b),1);score++;document.getElementById('s').textContent=score;beep(700+palette*40,.08);
+if(score%10===0){palette++;document.getElementById('p').textContent=palette;beep(880,.15,'triangle');}}}});});
+shots=shots.filter(s=>s.y>-12);
+blots.forEach(b=>{b.y+=b.vy;b.x+=Math.sin(b.y/30+b.wob)*0.8;
+if(b.y>H-40&&Math.abs(b.x-gun.x)<26){lives--;document.getElementById('l').textContent=lives;blots.splice(blots.indexOf(b),1);beep(140,.2,'sawtooth');if(lives<=0)over();}});
+blots=blots.filter(b=>b.y<H+30);}
+function over(){playing=false;if(score>best){best=score;localStorage.setItem('wg2_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The canvas is grey…<br>Splats: <b style="color:#a855f7">'+score+'</b> · Palette level '+palette;
+document.getElementById('btn').textContent='REPAINT';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#fdf4ff';ctx.fillRect(0,0,W,H);
+// watercolor blobs bg
+for(let i=0;i<5;i++){const g2=ctx.createRadialGradient((i*97)%W,(i*131)%H,4,(i*97)%W,(i*131)%H,70);
+g2.addColorStop(0,PALS[i%6]+'22');g2.addColorStop(1,'transparent');ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);}
+shots.forEach(s=>{ctx.fillStyle=s.c;ctx.beginPath();ctx.arc(s.x,s.y,5,0,7);ctx.fill();});
+blots.forEach(b=>{ctx.fillStyle='#78716c';ctx.globalAlpha=.85;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);ctx.fill();ctx.globalAlpha=.5;ctx.beginPath();ctx.arc(b.x+4,b.y-3,b.r*0.6,0,7);ctx.fill();ctx.globalAlpha=1;});
+// brush gun
+ctx.fillStyle='#7c3aed';ctx.fillRect(gun.x-6,H-40,12,26);ctx.fillStyle='#c084fc';ctx.fillRect(gun.x-6,H-40,12,6);
+ctx.fillStyle=PALS[(palette-1)%PALS.length];ctx.beginPath();ctx.arc(gun.x,H-44,6,0,7);ctx.fill();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

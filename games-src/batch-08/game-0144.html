@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ultimate Match-3: Fantasy Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(ellipse at top,#312e81,#0f172a);font-family:Georgia,serif;color:#e0e7ff;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.15rem;color:#a5b4fc;padding:8px;letter-spacing:1px}
+#hud{display:flex;gap:14px;justify-content:center;font-size:.95rem;padding:4px;flex-wrap:wrap}
+#hud b{color:#fde047}
+#wrap{position:relative;touch-action:none}
+canvas{display:block;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.5);background:#1e1b4b}
+#overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(15,23,42,.9);border-radius:12px;text-align:center;padding:20px}
+#overlay h2{font-size:1.6rem;margin-bottom:10px;color:#fde047}
+#overlay p{margin:6px 0;line-height:1.5}
+button{background:#818cf8;color:#1e1b4b;border:none;padding:12px 28px;border-radius:24px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:14px}
+#msg{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);padding:6px 14px;border-radius:14px;font-size:.85rem;opacity:0;transition:opacity .3s;pointer-events:none}
+@media(max-width:400px){h1{font-size:1rem}}
+</style>
+</head>
+<body>
+<h1>✨ ULTIMATE MATCH-3</h1>
+<div id="hud"><span>Score <b id="score">0</b></span><span>Moves <b id="moves">30</b></span><span>Best <b id="best">0</b></span><span>Realm <b id="lvl">1</b></span></div>
+<div id="wrap"><canvas id="c"></canvas><div id="msg"></div>
+<div id="overlay"><h2 id="ot">Fantasy Match-3</h2><p id="od">Swap adjacent relics to match 3+. Reach the target before moves run out!</p><p>🖱️ Click/tap two adjacent tiles or drag to swap.<br>⌨️ Arrows + Enter to select.</p><button id="btn">ENTER THE REALM</button></div></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+const COLS=8, ROWS=8, RELICS=[['🗡️','#93c5fd'],['🛡️','#fca5a5'],['🏹','#86efac'],['⚗️','#c4b5fd'],['👑','#fde047'],['💎','#67e8f9']];
+let cell,size,grid=[],sel=null,score=0,moves=30,level=1,busy=false,playing=false;
+let best=+localStorage.getItem('um_best')||0; document.getElementById('best').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,type='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(.12,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const w=Math.min(window.innerWidth-16,window.innerHeight-130,480);size=Math.floor(w/COLS);cvs.width=cvs.height=size*COLS;cell=size;}
+window.addEventListener('resize',()=>{resize();draw();});
+resize();
+function newGrid(){grid=[];for(let r=0;r<ROWS;r++){grid[r]=[];for(let c2=0;c2<COLS;c2++){let v;do{v=(Math.random()*RELICS.length)|0;}while((c2>=2&&grid[r][c2-1]===v&&grid[r][c2-2]===v)||(r>=2&&grid[r-1][c2]===v&&grid[r-2][c2]===v));grid[r][c2]=v;}}}
+function findMatches(){const m=new Set();for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){const v=grid[r][c2];if(c2<COLS-2&&grid[r][c2+1]===v&&grid[r][c2+2]===v){m.add(r+','+c2);m.add(r+','+(c2+1));m.add(r+','+(c2+2));}if(r<ROWS-2&&grid[r+1][c2]===v&&grid[r+2][c2]===v){m.add(r+','+c2);m.add((r+1)+','+c2);m.add((r+2)+','+c2);}}return m;}
+function swap(a,b){const t=grid[a.r][a.c];grid[a.r][a.c]=grid[b.r][b.c];grid[b.r][b.c]=t;}
+function msg(t){const el=document.getElementById('msg');el.textContent=t;el.style.opacity=1;setTimeout(()=>el.style.opacity=0,1400);}
+async function trySwap(a,b){if(busy)return;busy=true;swap(a,b);draw();await wait(150);let m=findMatches();
+if(!m.size){swap(a,b);draw();beep(160,.12,'square');msg('No match!');busy=false;return;}
+moves--;document.getElementById('moves').textContent=moves;
+while(m.size){score+=m.size*10*(1+Math.floor(m.size/5));document.getElementById('score').textContent=score;beep(500+m.size*20,.1,'triangle');
+m.forEach(k=>{const[r,c3]=k.split(',').map(Number);grid[r][c3]=-1;});
+draw();await wait(220);
+for(let c3=0;c3<COLS;c3++){let wR=ROWS-1;for(let r=ROWS-1;r>=0;r--){if(grid[r][c3]!==-1){grid[wR][c3]=grid[r][c3];if(wR!==r)grid[r][c3]=-1;wR--;}}for(let r=wR;r>=0;r--)grid[r][c3]=(Math.random()*RELICS.length)|0;}
+draw();await wait(180);m=findMatches();}
+busy=false;checkEnd();}
+function checkEnd(){const target=level*800;if(score>=target){level++;moves=30;document.getElementById('lvl').textContent=level;msg('✨ Realm '+level+'!');beep(880,.3);}
+if(moves<=0&&score<target){playing=false;if(score>best){best=score;localStorage.setItem('um_best',best);document.getElementById('best').textContent=best;}
+showOver('The Realm Fades','You scored '+score+'. Target was '+(level*800)+'.');}}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function showOver(t,d){document.getElementById('ot').textContent=t;document.getElementById('od').textContent=d;document.getElementById('btn').textContent='PLAY AGAIN';document.getElementById('overlay').style.display='flex';}
+function draw(){ctx.clearRect(0,0,cvs.width,cvs.height);for(let r=0;r<ROWS;r++)for(let c2=0;c2<COLS;c2++){const x=c2*cell,y=r*cell;
+ctx.fillStyle=(r+c2)%2?'#312e81':'#3730a3';ctx.fillRect(x,y,cell,cell);
+const v=grid[r][c2];if(v>=0){ctx.font=(cell*.62)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(RELICS[v][0],x+cell/2,y+cell/2+2);}}
+if(sel){ctx.strokeStyle='#fde047';ctx.lineWidth=4;ctx.strokeRect(sel.c*cell+3,sel.r*cell+3,cell-6,cell-6);}}
+function pos(e){const r=cvs.getBoundingClientRect();const p=e.touches?e.touches[0]:e;return{r:Math.floor((p.clientY-r.top)/r.height*ROWS),c:Math.floor((p.clientX-r.left)/r.width*COLS)};}
+let downPos=null;
+cvs.addEventListener('pointerdown',e=>{if(!playing||busy)return;const p=pos(e);
+if(sel&&Math.abs(sel.r-p.r)+Math.abs(sel.c-p.c)===1){const s=sel;sel=null;trySwap(s,p);}else sel=p;downPos=p;draw();});
+cvs.addEventListener('pointerup',e=>{if(!playing||busy||!downPos)return;const p=pos(e);
+if(Math.abs(p.r-downPos.r)+Math.abs(p.c-downPos.c)===1){sel=null;trySwap(downPos,p);}downPos=null;});
+document.getElementById('btn').onclick=()=>{audio.resume();newGrid();score=0;moves=30;level=1;playing=true;busy=false;sel=null;
+document.getElementById('score').textContent=0;document.getElementById('moves').textContent=30;document.getElementById('lvl').textContent=1;
+document.getElementById('overlay').style.display='none';draw();};
+let kSel={r:0,c:0};
+window.addEventListener('keydown',e=>{if(!playing||busy)return;const k=e.key;
+if(k==='ArrowUp')kSel.r=Math.max(0,kSel.r-1);else if(k==='ArrowDown')kSel.r=Math.min(ROWS-1,kSel.r+1);
+else if(k==='ArrowLeft')kSel.c=Math.max(0,kSel.c-1);else if(k==='ArrowRight')kSel.c=Math.min(COLS-1,kSel.c+1);
+else if(k==='Enter'||k===' '){if(sel&&Math.abs(sel.r-kSel.r)+Math.abs(sel.c-kSel.c)===1){const s=sel;sel=null;trySwap(s,kSel);}else sel={...kSel};e.preventDefault();}
+else return;sel={...kSel};draw();});
+newGrid();draw();
+</script>
+</body>
+</html>

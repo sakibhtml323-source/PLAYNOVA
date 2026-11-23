@@ -1,0 +1,19 @@
+{
+ "test": "ads-consent-gate",
+ "server": "self-started python http.server on ephemeral port",
+ "provider": "TEST-ONLY local tests/test-provider.js via adsterra adapter; no real ad network",
+ "cases": {
+  "accepted_exactly_one": true,
+  "repeat_no_duplicate": true,
+  "declined_zero": true,
+  "no_consent_absent_key": true,
+  "expired_zero": true,
+  "invalid_zero": true,
+  "no_uncaught_errors": true,
+  "unknown_provider_zero_inject": true,
+  "unknown_provider_no_uncaught": true,
+  "missing_credentials_zero": true
+ },
+ "all_pass": true,
+ "date": "2026-11-05 11:14"
+}

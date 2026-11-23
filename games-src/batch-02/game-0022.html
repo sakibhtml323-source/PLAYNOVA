@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ocean Spot the Difference Empire</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#082f49,#0c4a6e);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px}
+h1{font-size:1.15rem;color:#7dd3fc;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+#wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+canvas{background:#075985;border-radius:10px;touch-action:none;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+#hint{text-align:center;font-size:.85rem;color:#bae6fd;margin-top:6px;min-height:1.4em}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button{background:#38bdf8;border:none;color:#082f49;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+@media(max-width:760px){h1{font-size:.95rem}}
+</style>
+</head>
+<body>
+<h1>🌊 OCEAN SPOT THE DIFFERENCE EMPIRE</h1>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Found <b id="f">0</b>/<b id="t">0</b></span><span>Time <b id="tm">0</b>s</span><span>Best level <b id="b">1</b></span></div>
+<div id="wrap"><canvas id="left"></canvas><canvas id="right"></canvas></div>
+<div id="hint">Tap the differences on EITHER picture.</div>
+<div id="ov"><h2 style="color:#7dd3fc">OCEAN EMPIRE</h2><p id="od">Two underwater scenes… but they differ! Find all differences before time runs out. Each level adds more secrets and less time.</p><button id="btn">DIVE IN</button></div>
+<script>
+"use strict";
+const L=document.getElementById('left'),R=document.getElementById('right');
+const W=340,H=300;L.width=R.width=W;L.height=R.height=H;
+const lctx=L.getContext('2d'),rctx=R.getContext('2d');
+let level,found,diffs,timer,timeLeft,playing,best=+localStorage.getItem('sd_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const SPOTS=[ // [x,y,type]
+[60,240,'fish'],[150,260,'star'],[260,230,'coral'],[90,120,'bubble'],[220,90,'fish'],[300,160,'shell'],[40,60,'weed'],[180,200,'crab'],[290,50,'bubble'],[130,40,'star'],[250,190,'weed'],[70,170,'shell']];
+function drawScene(ctx,alt){ctx.fillStyle='#075985';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#0ea5e9';for(let i=0;i<7;i++){ctx.beginPath();ctx.arc((i*67)%W,((i*91)%H),14+(i%3)*6,0,7);ctx.globalAlpha=.15;ctx.fill();ctx.globalAlpha=1;}
+ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(W-60,44,24,0,7);ctx.globalAlpha=.5;ctx.fill();ctx.globalAlpha=1;
+ctx.fillStyle='#78350f';ctx.fillRect(0,H-34,W,34);
+SPOTS.forEach((s,i)=>{if(alt&&diffs.includes(i))return; // hide on right
+const[x,y,t]=s;ctx.font='20px serif';ctx.textAlign='center';
+if(t==='fish')ctx.fillText('🐠',x,y);if(t==='star')ctx.fillText('⭐',x,y);
+if(t==='coral')ctx.fillText('🪸',x,y);if(t==='bubble'){ctx.strokeStyle='#bae6fd';ctx.beginPath();ctx.arc(x,y,8,0,7);ctx.stroke();}
+if(t==='shell')ctx.fillText('🐚',x,y);if(t==='weed'){ctx.fillText('🌿',x,y);ctx.fillText('🌿',x+8,y-10);}
+if(t==='crab')ctx.fillText('🦀',x,y);});}
+function setup(){const n=Math.min(3+level,SPOTS.length-1);const idx=[...SPOTS.keys()].sort(()=>Math.random()-.5).slice(0,n);
+diffs=idx;found=[];timeLeft=Math.max(15,40-level*3);document.getElementById('t').textContent=n;document.getElementById('f').textContent=0;document.getElementById('tm').textContent=timeLeft;document.getElementById('l').textContent=level;
+drawScene(lctx,false);drawScene(rctx,true);
+clearInterval(timer);timer=setInterval(()=>{timeLeft--;document.getElementById('tm').textContent=timeLeft;if(timeLeft<=0)lose();},1000);}
+function check(e,ctx,cvs){if(!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+for(const i of diffs){if(found.includes(i))continue;const s=SPOTS[i];if(Math.hypot(s[0]-x,s[1]-y)<26){found.push(i);
+document.getElementById('f').textContent=found.length;beep(700+found.length*40,.1,'triangle');
+ctx.strokeStyle='#fbbf24';ctx.lineWidth=3;ctx.beginPath();ctx.arc(s[0],s[1],22,0,7);ctx.stroke();
+if(found.length>=diffs.length)win();return;}}
+beep(160,.1,'sawtooth');}
+[L,R].forEach(c=>c.addEventListener('pointerdown',e=>{audio.resume();check(e,c===L?lctx:rctx,c);}));
+window.addEventListener('keydown',e=>{if(e.key==='h'||e.key==='H'){ // hint reveals one
+if(playing){const rem=diffs.filter(i=>!found.includes(i));if(rem.length){const s=SPOTS[rem[0]];
+lctx.strokeStyle='#f87171';lctx.setLineDash([4,4]);lctx.beginPath();lctx.arc(s[0],s[1],26,0,7);lctx.stroke();lctx.setLineDash([]);}}}});
+function win(){playing=false;clearInterval(timer);beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+if(level+1>best){best=level+1;localStorage.setItem('sd_best',best);document.getElementById('b').textContent=best;}
+level++;document.getElementById('od').innerHTML='🌊 Level clear with <b style="color:#fde047">'+timeLeft+'s</b> left!<br>Next level: '+Math.min(3+level,SPOTS.length-1)+' differences.';
+document.getElementById('btn').textContent='NEXT LEVEL';document.getElementById('ov').style.display='flex';}
+function lose(){playing=false;clearInterval(timer);beep(140,.4,'sawtooth');
+document.getElementById('od').innerHTML='⏰ Time\'s up! You found '+found.length+'/'+diffs.length+'.<br>Level reached: <b>'+level+'</b>';
+document.getElementById('btn').textContent='TRY AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();if(document.getElementById('btn').textContent==='TRY AGAIN')level=1;playing=true;setup();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

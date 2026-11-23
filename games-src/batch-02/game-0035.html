@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Desert Legendary Galaxy</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fef9c3,#fde68a 55%,#d97706);font-family:Georgia,serif;color:#713f12;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#b45309;padding:6px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.85rem;margin-bottom:6px}
+#stats span{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:4px 10px}
+#orb{font-size:4rem;cursor:pointer;user-select:none;display:inline-block;margin:10px 0;transition:transform .1s}
+#orb:active{transform:scale(.85) rotate(10deg)}
+#coll{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;width:min(520px,94vw);margin-top:8px}
+.leg{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:6px;text-align:center;font-size:1.4rem;filter:grayscale(1);opacity:.4}
+.leg.got{filter:none;opacity:1;box-shadow:0 0 12px #fbbf2488}
+.leg small{display:block;font-size:.55rem;color:#92400e}
+#ov{position:fixed;inset:0;background:rgba(254,249,195,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#713f12;padding:20px;z-index:5}
+button{background:#d97706;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+#roll{min-height:2.4em;text-align:center;font-size:1.05rem;color:#92400e;margin-top:4px}
+</style>
+</head>
+<body>
+<h1>🏜️ DESERT LEGENDARY GALAXY</h1>
+<div id="stats"><span>✨ Stardust <b id="d">0</b></span><span>🔮 Collected <b id="n">0</b>/8</span><span>🍀 Luck <b id="lk">1.0</b></span><span>🏆 Dust best <b id="b">0</b></span></div>
+<div style="text-align:center"><span id="orb">🔮</span><div style="font-size:.75rem;color:#a16207">tap the mystic orb — or press SPACE</div></div>
+<div id="roll"></div>
+<div id="coll"></div>
+<div id="ov"><h2 style="color:#b45309">LEGEND OF THE DUNES</h2><p id="od">Eight legendary artifacts sleep beneath the sands. Tap the orb to gather stardust and reveal them. Each artifact boosts your luck! Collect all 8 to complete the galaxy legend.</p><button id="btn">EXCAVATE</button></div>
+<script>
+"use strict";
+const LEG=[['🏺','Vase of Ra'],['🗿','Sphinx Core'],['💎','Zaffre Star'],['🐫','Golden Camel'],['🏆','Pharaoh\'s Cup'],['🗡️','Blade of Seth'],['📿','Beads of Isis'],['👑','Crown of Orion']];
+let S;
+function fresh(){S={d:0,col:[0,0,0,0,0,0,0,0],luck:1};}
+function load(){try{const x=JSON.parse(localStorage.getItem('dg_save'));if(x)S=x;else fresh();}catch(e){fresh();}}
+function save(){localStorage.setItem('dg_save',JSON.stringify(S));let b=+localStorage.getItem('dg_best')||0;if(S.d>b)localStorage.setItem('dg_best',Math.floor(S.d));}
+load();
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function luck(){return 1+S.col.filter(Boolean).length*0.35;}
+document.getElementById('orb').addEventListener('pointerdown',()=>{audio.resume();
+const gain=Math.ceil(Math.random()*3*luck());S.d+=gain;
+const roll=Math.random()*100;
+let msg='+'+gain+' ✨ stardust';
+if(roll<7){const un=S.col.indexOf(0);
+if(un>=0){S.col[un]=1;msg='🌟 LEGENDARY! You found <b>'+LEG[un][1]+'</b>!';beep(880,.25,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),180);}}
+else if(roll<30){msg='💫 The sands shimmer… '+gain+' ✨';}
+else beep(420+Math.random()*200,.06);
+document.getElementById('roll').innerHTML=msg;
+save();render();
+if(S.col.every(Boolean)){win();}});
+window.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();document.getElementById('orb').dispatchEvent(new PointerEvent('pointerdown'));}});
+function render(){document.getElementById('d').textContent=Math.floor(S.d);
+document.getElementById('n').textContent=S.col.filter(Boolean).length;
+document.getElementById('lk').textContent=luck().toFixed(1);
+document.getElementById('b').textContent=+localStorage.getItem('dg_best')||0;
+const c=document.getElementById('coll');c.innerHTML='';
+LEG.forEach((L,i)=>{const d=document.createElement('div');d.className='leg'+(S.col[i]?' got':'');
+d.innerHTML=S.col[i]?L[0]:'❓';d.innerHTML+='<small>'+(S.col[i]?L[1]:'???')+'</small>';c.appendChild(d);});}
+function win(){const ov=document.getElementById('ov');
+document.getElementById('od').innerHTML='🏆 <b style="font-size:1.3rem;color:#b45309">THE GALAXY LEGEND IS COMPLETE!</b><br>All 8 artifacts recovered with '+Math.floor(S.d)+' stardust gathered. The desert sings your name!';
+document.getElementById('btn').textContent='NEW LEGEND';ov.style.display='flex';
+beep(880,.25,'triangle');setTimeout(()=>beep(1175,.25,'triangle'),200);setTimeout(()=>beep(1568,.35,'triangle'),420);}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW LEGEND')fresh();
+render();document.getElementById('ov').style.display='none';};
+window.addEventListener('beforeunload',save);
+render();
+</script>
+</body>
+</html>

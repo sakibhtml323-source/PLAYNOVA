@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Cipher #269</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem;max-width:320px;text-align:center}
+#cipher{font-size:1.3rem;font-weight:800;letter-spacing:3px;background:#1e293b;padding:14px 22px;border-radius:12px;margin:12px;text-align:center}
+#clue{font-size:.85rem;color:#94a3b8;margin:4px}
+#input{font-size:1.2rem;padding:10px 16px;border-radius:10px;border:2px solid #334155;background:#1e293b;color:#e2e8f0;text-align:center;width:240px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔐 Crystal Cipher</h1>
+<div class="sub">Each letter is shifted by a secret amount. Crack the code word!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Guesses <b id="g">5</b></span><span>Score <b id="s">0</b></span></div>
+<div id="cipher">?</div>
+<div id="clue"></div>
+<input id="input" placeholder="DECODED WORD" maxlength="12">
+<div id="msg"></div>
+<button id="btn">🔮 New Cipher</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const WORDS=['CRYSTAL','MAGIC','DESERT','NINJA','ROYAL','HAUNTED','TEMPLE','PHARAOH','PYRAMID','SERPENT','MIRAGE','AMULET','SCARAB','FALCON','LOTUS','COBRA','ORACLE','SPIRIT','PHANTOM','WIZARD'];
+let shift=0,cipher='',level=1,guesses=5,score=0;
+function newCipher(){const w=WORDS[(Math.random()*WORDS.length)|0];
+shift=1+((Math.random()*25)|0);
+cipher=w.split('').map(ch=>String.fromCharCode(65+(ch.charCodeAt(0)-65+shift)%26)).join('');
+document.getElementById('cipher').textContent=cipher;
+document.getElementById('clue').textContent='Hint: shifted by '+shift+' letter'+(shift>1?'s':'')+' (A→'+String.fromCharCode(65+shift%26)+')';
+guesses=5;document.getElementById('g').textContent=5;
+document.getElementById('l').textContent=level;
+document.getElementById('input').value='';
+msg('Decode the cipher!');}
+function submit(){const v=document.getElementById('input').value.toUpperCase().trim();
+if(!v)return;
+const target=cipher.split('').map(ch=>String.fromCharCode(65+(ch.charCodeAt(0)-65-shift+26)%26)).join('');
+if(v===target){score+=guesses*20;document.getElementById('s').textContent=score;
+beep(880,.25,'triangle');msg('🔓 Cracked it! +'+guesses*20+' ('+target+')');
+level++;setTimeout(newCipher,1000);}
+else{guesses--;document.getElementById('g').textContent=guesses;
+beep(150,.15,'sawtooth');
+if(guesses<=0){msg('🔒 Cipher sealed! Word was: '+target);
+level=Math.max(1,level-1);setTimeout(newCipher,1400);}
+else msg('❌ Wrong — '+guesses+' guesses left.');}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('input').addEventListener('keydown',e=>{if(e.key==='Enter'){AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();submit();}});
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newCipher();};
+newCipher();
+</script></body></html>

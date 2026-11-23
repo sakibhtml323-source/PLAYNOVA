@@ -1,0 +1,449 @@
+{
+ "method": "pixel-based: each text element is measured against the real rendered background (page screenshot with text made transparent), WCAG AA 4.5:1 (3:1 for large text); estimates, translucent/gradient backgrounds are sampled by median",
+ "pages": {
+  "home": {
+   "text_elements_measured": 106,
+   "below_AA": 44,
+   "samples": [
+    [
+     "SPAN",
+     "\u2714 500 unique games \u00b7 free fo",
+     3.86,
+     13.28
+    ],
+    [
+     "H2",
+     "\ud83d\udd25Action GamesAll \u203a",
+     1.18,
+     18.4
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd25",
+     1.03,
+     17.6
+    ],
+    [
+     "A",
+     "All \u203a",
+     1.14,
+     14.4
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd2b Action",
+     1.47,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\u26a1 Action",
+     1.37,
+     10.88
+    ],
+    [
+     "H2",
+     "\ud83e\udde9Puzzle GamesAll \u203a",
+     1.24,
+     18.4
+    ],
+    [
+     "SPAN",
+     "\ud83e\udde9",
+     1.04,
+     17.6
+    ]
+   ]
+  },
+  "games": {
+   "text_elements_measured": 134,
+   "below_AA": 38,
+   "samples": [
+    [
+     "SPAN",
+     "\ud83c\udf3f Puzzle",
+     1.76,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\u2694 Casual",
+     2.63,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd2b Action",
+     1.67,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfa8 Casual",
+     1.4,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Multiplayer Local",
+     2.48,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf83 Casual",
+     1.94,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf0c Strategy",
+     2.32,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udc51 Casual",
+     2.01,
+     10.88
+    ]
+   ]
+  },
+  "categories": {
+   "text_elements_measured": 50,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.35,
+     14.72
+    ]
+   ]
+  },
+  "game page": {
+   "text_elements_measured": 10,
+   "below_AA": 8,
+   "samples": [
+    [
+     "H1",
+     "\ud83c\udf2b Ninja Fog Walk #441",
+     1.0,
+     13.6
+    ],
+    [
+     "DIV",
+     "by PLAYNOVA",
+     1.91,
+     11.52
+    ],
+    [
+     "B",
+     "PLAYNOVA",
+     1.89,
+     11.52
+    ],
+    [
+     "BUTTON",
+     "\u2386 Fullscreen (F)",
+     2.08,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "\u275a\u275a Pause (P)",
+     2.61,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "\ud83d\udd0a Sound",
+     2.65,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "\u2b50 Favorite",
+     1.38,
+     11.84
+    ],
+    [
+     "BUTTON",
+     "Progress",
+     1.0,
+     11.84
+    ]
+   ]
+  },
+  "profile": {
+   "text_elements_measured": 57,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.5,
+     14.72
+    ]
+   ]
+  },
+  "cookies": {
+   "text_elements_measured": 53,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.58,
+     14.72
+    ]
+   ]
+  },
+  "privacy": {
+   "text_elements_measured": 59,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.58,
+     14.72
+    ]
+   ]
+  },
+  "about": {
+   "text_elements_measured": 52,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.55,
+     14.72
+    ]
+   ]
+  },
+  "terms": {
+   "text_elements_measured": 56,
+   "below_AA": 3,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.58,
+     14.72
+    ],
+    [
+     "BUTTON",
+     "\ud83d\udd0a",
+     1.22,
+     18.4
+    ],
+    [
+     "A",
+     "Cookie Policy",
+     3.56,
+     14.08
+    ]
+   ]
+  },
+  "disclaimer": {
+   "text_elements_measured": 42,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.54,
+     14.72
+    ]
+   ]
+  },
+  "contact": {
+   "text_elements_measured": 40,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.5,
+     14.72
+    ]
+   ]
+  },
+  "popular": {
+   "text_elements_measured": 133,
+   "below_AA": 37,
+   "samples": [
+    [
+     "SPAN",
+     "\ud83c\udf3f Puzzle",
+     1.76,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\u2694 Casual",
+     1.79,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd2b Action",
+     1.67,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfa8 Casual",
+     1.4,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Multiplayer Local",
+     2.48,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf83 Casual",
+     1.94,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udf0c Strategy",
+     2.32,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udc51 Casual",
+     2.01,
+     10.88
+    ]
+   ]
+  },
+  "category page": {
+   "text_elements_measured": 134,
+   "below_AA": 36,
+   "samples": [
+    [
+     "SPAN",
+     "\ud83c\udf3f Puzzle",
+     1.29,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udc7b Puzzle",
+     1.17,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83e\uddca Puzzle",
+     2.05,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\u2b21 Puzzle",
+     1.76,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd22 Puzzle",
+     1.52,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfdc Puzzle",
+     2.99,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfdb Puzzle",
+     2.03,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udff4 Puzzle",
+     1.96,
+     10.88
+    ]
+   ]
+  },
+  "favorites": {
+   "text_elements_measured": 37,
+   "below_AA": 1,
+   "samples": [
+    [
+     "B",
+     "NOVA",
+     3.35,
+     14.72
+    ]
+   ]
+  },
+  "new": {
+   "text_elements_measured": 133,
+   "below_AA": 41,
+   "samples": [
+    [
+     "SPAN",
+     "\ud83c\udfaf Action",
+     2.47,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Multiplayer Local",
+     2.19,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Brain",
+     2.15,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Action",
+     2.11,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Arcade",
+     2.22,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Arcade",
+     1.69,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Strategy",
+     1.84,
+     10.88
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfaf Puzzle",
+     2.08,
+     10.88
+    ]
+   ]
+  }
+ }
+}

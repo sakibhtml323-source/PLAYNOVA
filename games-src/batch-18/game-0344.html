@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Number Path #344</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(6,54px);gap:4px;margin:12px}
+.c{width:54px;height:54px;background:#27272a;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:800;cursor:pointer}
+.c.me{background:#7c3aed;outline:2px solid #facc15}
+.c.done{background:#14532d;opacity:.7}
+.c.ghost{background:#7f1d1d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔢 Haunted Number Path</h1><div class="sub">Step on 1, 2, 3… in order — ghosts patrol the numbers!</div>
+<div id="hud"><span>Need <b id="n">1</b></span><span>❤️ <b id="h">5</b></span><span>Ghosts hit <b id="g">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🎲 New Board</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=6,C=6;let grid=[],me={r:0,c:0},next=1,hp=5,ghostHits=0,ghosts=[],playing=true;
+function gen(){grid=Array.from({length:R},()=>Array(C).fill(null));
+// place numbers
+const cells=[];for(let r=0;r<R;r++)for(let c=0;c<C;c++)cells.push([r,c]);
+cells.sort(()=>Math.random()-.5);
+const maxN=10;for(let i=0;i<maxN;i++)grid[cells[i][0]][cells[i][1]]=i+1;
+// ghosts on some number cells
+ghosts=[];for(let i=0;i<3;i++){const idx=2+((Math.random()*(maxN-2))|0);
+ghosts.push({r:cells[idx][0],c:cells[idx][1],n:idx+1});}
+me={r:cells[0][0],c:cells[0][1]};next=1;hp=5;ghostHits=0;playing=true;
+document.getElementById('n').textContent=1;document.getElementById('h').textContent=5;
+document.getElementById('g').textContent=0;
+render();msg('Grab 1, 2, 3… watch for ghosts!');}
+function tap(r,c){if(!playing||Math.abs(r-me.r)+Math.abs(c-me.c)!==1)return;
+me={r,c};const v=grid[r][c];
+if(v===next){grid[r][c]=-1;next++;
+document.getElementById('n').textContent=next;
+beep(500+v*40,.12,'triangle');
+// ghost check
+if(ghosts.some(g=>g.r===r&&g.c===c)){ghostHits++;hp--;
+document.getElementById('g').textContent=ghostHits;document.getElementById('h').textContent=hp;
+beep(150,.2,'sawtooth');msg('👻 Ghost got you! −1 HP');
+if(hp<=0){playing=false;beep(130,.3,'sawtooth');msg('💀 The ghosts win…');render();return;}}
+if(next>10){playing=false;beep(880,.3,'triangle');msg('🎉 All numbers collected!');}}
+else if(v>0){beep(200,.1,'sawtooth');msg('Need '+next+' first!');}
+else beep(380,.04);
+render();}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<R;r++)for(let c=0;c<C;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]===-1?' done':'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🥷';}
+else if(grid[r][c]===-1)d.textContent='✅';
+else if(grid[r][c]!==null){const gh=ghosts.find(x=>x.r===r&&x.c===c);
+d.textContent=gh?'👻':grid[r][c];if(gh)d.classList.add('ghost');}
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

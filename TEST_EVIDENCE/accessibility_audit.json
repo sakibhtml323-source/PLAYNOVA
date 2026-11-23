@@ -1,0 +1,279 @@
+{
+ "method": "custom in-browser audit (no axe-core available offline): contrast of every visible text node vs nearest opaque background (WCAG AA 4.5:1, large text 3:1), unnamed controls, missing alt, landmarks",
+ "pages": {
+  "home": {
+   "texts": 384,
+   "low_contrast": 110,
+   "low_samples": [
+    [
+     "A",
+     "\ud83c\udfae Browse All Games",
+     "1.08"
+    ],
+    [
+     "SPAN",
+     "\ud83e\udd77 Brain",
+     "2.38"
+    ],
+    [
+     "SPAN",
+     "\ud83e\udea3 Strategy",
+     "2.01"
+    ],
+    [
+     "SPAN",
+     "\ud83d\uddbc Strategy",
+     "2.01"
+    ],
+    [
+     "SPAN",
+     "\ud83c\udfdc Brain",
+     "2.38"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "games": {
+   "texts": 193,
+   "low_contrast": 51,
+   "low_samples": [
+    [
+     "SPAN",
+     "\ud83c\udf3f Puzzle",
+     "4.23"
+    ],
+    [
+     "SPAN",
+     "\u2694 Casual",
+     "2.23"
+    ],
+    [
+     "SPAN",
+     "\ud83d\udd2b Action",
+     "3.01"
+    ],
+    [
+     "SPAN",
+     "\u26a1 Casual",
+     "2.23"
+    ],
+    [
+     "SPAN",
+     "\u2694 Multiplayer Local",
+     "3.67"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "categories": {
+   "texts": 52,
+   "low_contrast": 3,
+   "low_samples": [
+    [
+     "B",
+     "NOVA",
+     "3.66"
+    ],
+    [
+     "A",
+     "Cookie Policy",
+     "3.56"
+    ],
+    [
+     "BUTTON",
+     "Accept",
+     "1.11"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "game page": {
+   "texts": 17,
+   "low_contrast": 5,
+   "low_samples": [
+    [
+     "H1",
+     "\ud83c\udf2b Ninja Fog Walk #441",
+     "1.00"
+    ],
+    [
+     "B",
+     "PLAYNOVA",
+     "1.91"
+    ],
+    [
+     "BUTTON",
+     "\u2386 Fullscreen (F)",
+     "1.00"
+    ],
+    [
+     "A",
+     "Cookie Policy",
+     "3.56"
+    ],
+    [
+     "BUTTON",
+     "Accept",
+     "1.11"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "profile": {
+   "texts": 66,
+   "low_contrast": 3,
+   "low_samples": [
+    [
+     "B",
+     "NOVA",
+     "3.66"
+    ],
+    [
+     "A",
+     "Cookie Policy",
+     "3.56"
+    ],
+    [
+     "BUTTON",
+     "Accept",
+     "1.11"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "cookies": {
+   "texts": 53,
+   "low_contrast": 19,
+   "low_samples": [
+    [
+     "H1",
+     "Cookie Policy",
+     "1.30"
+    ],
+    [
+     "P",
+     "This policy explains how",
+     "1.30"
+    ],
+    [
+     "LI",
+     "localStorage (not a cook",
+     "1.30"
+    ],
+    [
+     "B",
+     "localStorage",
+     "1.30"
+    ],
+    [
+     "LI",
+     "localStorage (continued)",
+     "1.30"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  "privacy": {
+   "texts": 59,
+   "low_contrast": 21,
+   "low_samples": [
+    [
+     "H1",
+     "Privacy Policy",
+     "1.30"
+    ],
+    [
+     "P",
+     "PLAYNOVA (\"the Site\") is",
+     "1.30"
+    ],
+    [
+     "LI",
+     "Game progress and high s",
+     "1.30"
+    ],
+    [
+     "B",
+     "Game progress and high s",
+     "1.30"
+    ],
+    [
+     "LI",
+     "Favorites, recently-play",
+     "1.30"
+    ]
+   ],
+   "unnamed_controls": [],
+   "unnamed_count": 0,
+   "imgs_without_alt": 0,
+   "lang": "en",
+   "h1": 1,
+   "landmarks": [
+    1,
+    1,
+    1,
+    1
+   ]
+  }
+ }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Quantum Viking Merge</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0f172a,#1e293b);font-family:Georgia,serif;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px}
+h1{font-size:1.15rem;color:#93c5fd;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:16px;font-size:.9rem;margin-bottom:10px}
+#grid{display:grid;grid-template-columns:repeat(4,74px);gap:8px;touch-action:none}
+.tile{width:74px;height:74px;border-radius:14px;background:#1e293b;border:2px solid #334155;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s}
+.tile:active{transform:scale(.94)}
+.tile .e{font-size:1.5rem}
+.tile .v{font-size:.65rem;color:#93c5fd}
+#msg{text-align:center;font-size:.85rem;color:#64748b;margin-top:10px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e2e8f0;padding:20px;z-index:5}
+button{background:#3b82f6;border:none;color:#fff;font-family:inherit;font-weight:700;padding:13px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:360px){#grid{grid-template-columns:repeat(4,60px)}.tile{width:60px;height:60px}}
+</style>
+</head>
+<body>
+<h1>⚔️ QUANTUM VIKING MERGE</h1>
+<div id="hud"><span>Iron <b id="s">0</b></span><span>Best relic <b id="b">0</b></span><span>Merges <b id="m">0</b></span></div>
+<div id="grid"></div>
+<div id="msg">Merge the quantum relics! Tap to place, merge equals — watch for the ⚡ quantum bonus!</div>
+<div id="ov"><h2 style="color:#93c5fd">QUANTUM FORGE</h2><p id="od">A 4×4 merge board of quantum viking gear! Place pieces, merge equals. Every 5th merge triggers a QUANTUM SURGE ⚡ that merges a random pair for free!</p><button id="btn">FORGE</button></div>
+<script>
+
+"use strict";
+const LV=[['🪨',2],['🪙',4],['🗡️',8],['🛡️',16],['🪓',32],['⚒️',64],['⚡',128],['🐺',256],['👑',512],['🌌',1024]];
+let grid,playing,score,merges,topT,quant,best=+localStorage.getItem('qvm_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=Array(16).fill(null);quant={};playing=true;score=0;merges=0;topT=0;
+spawn();spawn();document.getElementById('s').textContent=0;document.getElementById('m').textContent=0;render();}
+function spawn(){const empty=grid.map((v,i)=>v===null?i:-1).filter(i=>i>=0);
+if(!empty.length)return false;
+grid[empty[(Math.random()*empty.length)|0]]=0;return true;}
+function neigh(i){const r=(i/4)|0,c=i%4,o=[];if(r>0)o.push(i-4);if(r<3)o.push(i+4);if(c>0)o.push(i-1);if(c<3)o.push(i+1);return o;}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+grid.forEach((v,i)=>{const t=document.createElement('div');t.className='tile';
+if(v!==null){if(quant[i]){t.innerHTML='<span class="e">❓</span><span class="v">?</span>';t.style.border='2px dashed #a855f7';}else{t.innerHTML='<span class="e">'+LV[v][0]+'</span><span class="v">'+LV[v][1]+'</span>';}}
+else{t.innerHTML='<span class="e" style="opacity:.25">＋</span>';}
+t.onclick=()=>tap(i);g.appendChild(t);});}
+function tap(i){if(!playing||grid[i]!==null)return;audio.resume();
+grid[i]=0;beep(420,.05);render();
+let changed=true;
+while(changed){changed=false;
+for(let j=0;j<16;j++){if(grid[j]===null)continue;
+const same=neigh(j).filter(k=>grid[k]===grid[j]);
+if(same.length){const k=same[0];grid[k]=grid[j]+1;grid[j]=null;
+merges++;score+=LV[grid[k]][1];topT=Math.max(topT,grid[k]);changed=true;break;}}}
+document.getElementById('s').textContent=score;document.getElementById('m').textContent=merges;render();
+// quantum surge
+if(merges>0&&merges%5===0){
+const pool=grid.map((v,i)=>v!==null?i:-1).filter(i=>i>=0);
+if(pool.length>=2){const a=pool[(Math.random()*pool.length)|0];
+const nb=neigh(a).filter(k=>grid[k]!==null&&grid[k]===grid[a]);
+if(nb.length){grid[nb[0]]=grid[a]+1;grid[a]=null;beep(1000,.15,'triangle');
+document.getElementById('msg').textContent='⚡ QUANTUM SURGE! Free merge!';setTimeout(()=>document.getElementById('msg').textContent='Merge the quantum relics!',2000);}}}
+if(topT>=9){win();return;}
+if(!grid.includes(null)){over();}}
+function win(){playing=false;if(score>best){best=score;localStorage.setItem('qvm_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),180);
+document.getElementById('od').innerHTML='🌌 <b style="color:#93c5fd">THE QUANTUM CROWN!</b><br>Iron score: '+score;
+document.getElementById('btn').textContent='FORGE ANEW';document.getElementById('ov').style.display='flex';}
+function over(){playing=false;if(score>best){best=score;localStorage.setItem('qvm_best',best);document.getElementById('b').textContent=best;}
+beep(120,.4,'sawtooth');
+document.getElementById('od').innerHTML='⚒️ <b>The forge is full!</b><br>Final iron: '+score+' in '+merges+' merges.';
+document.getElementById('btn').textContent='STOKE AGAIN';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;const t=document.querySelectorAll('.tile')[i];if(t)t.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# test_results — PLAYNOVA (evidence run)
+- **T01** [PASS] Homepage loads with PLAYNOVA branding — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T01.png
+- **T02** [PASS] Catalogue sections render (featured + category rows) — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T02.png
+- **T03** [PASS] 500 games registered — desktop 1280x800 — no-shot
+- **T04** [PASS] Search filters results — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T04.png
+- **T05** [PASS] Category filter narrows correctly — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T05.png
+- **T06** [PASS] Sorting A-Z works — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T06.png
+- **T07** [PASS] Pagination renders multiple pages — desktop 1280x800 — no-shot
+- **T08** [PASS] Game card opens correct game page — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T08.png
+- **T09** [PASS] Game reaches ready state — desktop 1280x800 — no-shot
+- **T10** [PASS] Refresh on game route works — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T10.png
+- **T11** [PASS] Back navigation works — desktop 1280x800 — no-shot
+- **T12** [PASS] Dynamic player route works — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T12.png
+- **T13** [PASS] Missing game shows proper error — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T13.png
+- **T14** [PASS] Invalid/malformed slug handled (no crash) — desktop 1280x800 — no-shot
+- **T15** [PASS] Fullscreen engages — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T15.png
+- **T16** [PASS] Mobile 390px no horizontal overflow — mobile 390x844 — BROWSER_TEST_EVIDENCE/T16_mobile.png
+- **T17** [PASS] Touch UI present (fsHint/pad) — mobile 390x844 — no-shot
+- **T18** [PASS] Touch D-Pad available — mobile 390x844 — no-shot
+- **T19** [PASS] Mobile: no uncaught exceptions — mobile 390x844 — no-shot
+- **T20** [PASS] Desktop: no uncaught exceptions — desktop 1280x800 — no-shot
+- **T21** [PASS] No consent → no ad scripts + banner — desktop 1280x800 — no-shot
+- **T22** [PASS] Accepted (default disabled config) → still no provider script — desktop 1280x800 — no-shot
+- **T23** [PASS] Declined → scripts blocked, banner gone — desktop 1280x800 — no-shot
+- **T24** [PASS] Invalid consent treated as none — desktop 1280x800 — no-shot
+- **T25** [PASS] Refresh after acceptance persists — desktop 1280x800 — no-shot
+- **T26** [PASS] Refresh after decline persists — desktop 1280x800 — no-shot
+- **T27** [PASS] Ads disabled in config by default — desktop 1280x800 — no-shot
+- **T28** [PASS] Provider credentials null — desktop 1280x800 — no-shot
+- **T29** [PASS] Settings change enforced — desktop 1280x800 — no-shot
+- **T30** [PASS] Service worker registers (localhost) — desktop 1280x800 — BROWSER_TEST_EVIDENCE/T30.png
+- **T31** [PASS] Manifest loads (./ start_url, icons) — desktop 1280x800 — no-shot

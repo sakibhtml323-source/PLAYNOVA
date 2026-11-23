@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Zombie Puzzle: Liquid Glass</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#18181b,#09090b);font-family:Georgia,serif;color:#a1a1aa;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#0a0a0a;border-radius:12px;border:1px solid #27272a;touch-action:none;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+#msg{text-align:center;font-size:.85rem;color:#71717a;min-height:1.5em;margin-top:6px;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(9,9,11,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#09090b;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🧟 ZOMBIE PUZZLE: LIQUID GLASS</h1>
+<div id="hud"><span>Lab <b id="l">1</b></span><span>Antidote <b id="a">0</b>%</span><span>⚗️ Moves <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Pour the glowing antidote 💚 through the liquid glass pipes into every zombie!</div>
+<div id="ov"><h2 style="color:#4ade80">LIQUID GLASS</h2><p id="od">Tilt the lab! Each move pours antidote in one direction — it flows through glass channels and cures every zombie it touches. Fill ALL zombies to clear the lab. Labs get bigger, zombies get thirstier.</p><button id="btn">OPEN THE LAB</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+const W=440,H=440;cvs.width=W;cvs.height=H;
+let N,grid,zombs,playing,level,moves,best=Infinity;
+const TS=60;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){N=Math.min(5+level,7);grid=[];zombs=[];
+for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=Math.random()<0.22?1:0;}
+// open borders
+for(let i=0;i<N;i++){grid[0][i]=0;grid[N-1][i]=0;grid[i][0]=0;grid[i][N-1]=0;}
+// place zombies on open cells away from edges
+const free=[];for(let r=1;r<N-1;r++)for(let c=1;c<N-1;c++)if(!grid[r][c])free.push([r,c]);
+free.sort(()=>Math.random()-.5);
+const nZ=Math.min(1+level,free.length);
+for(let i=0;i<nZ;i++)zombs.push({r:free[i][0],c:free[i][1],full:0});
+moves=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=level;
+best=+localStorage.getItem('zg_best_'+N)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+document.getElementById('a').textContent=0;draw();}
+function pour(dr,dc){if(!playing)return;
+// antidote enters from one side; flows in straight lines through open cells
+let cured=0;
+zombs.forEach(z=>{if(z.full)return;
+// check if a straight line from pour edge reaches zombie
+let r=z.r,c=z.c,blocked=false;
+// step backwards toward source
+let cr=r,cc=c;
+while(true){cr-=dr;cc-=dc;
+if(cr<0||cc<0||cr>=N||cc>=N)break; // reached edge
+if(grid[cr][cc]){blocked=true;break;}}
+if(!blocked){z.full=1;cured++;beep(700,.1,'triangle');}});
+moves++;document.getElementById('m').textContent=moves;
+const full=zombs.filter(z=>z.full).length;
+document.getElementById('a').textContent=Math.round(full/zombs.length*100);
+draw();
+if(full===zombs.length)win();}
+function win(){playing=false;beep(800,.15,'triangle');setTimeout(()=>beep(1000,.15,'triangle'),140);
+if(moves<best){best=moves;localStorage.setItem('zg_best_'+N,best);}
+document.getElementById('od').innerHTML='🧟 All zombies cured in <b>'+moves+'</b> pours!'+(N<7?'<br>Next: '+(N+1)+'×'+(N+1)+' lab':'<br>The apocalypse is cancelled!');
+document.getElementById('btn').textContent=N<7?'NEXT LAB':'CURE AGAIN';if(N>=7)level=0;level++;document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*TS,y=r*TS;
+ctx.fillStyle=(r+c)%2?'#18181b':'#1c1c1f';ctx.fillRect(x+2,y+2,TS-4,TS-4);
+// liquid glass sheen
+const g2=ctx.createLinearGradient(x,y,x+TS,y+TS);
+g2.addColorStop(0,'rgba(255,255,255,.06)');g2.addColorStop(1,'rgba(255,255,255,0)');
+ctx.fillStyle=g2;ctx.fillRect(x+2,y+2,TS-4,TS-4);
+if(grid[r][c]){ctx.fillStyle='#27272a';ctx.fillRect(x+8,y+8,TS-16,TS-16);ctx.strokeStyle='#3f3f46';ctx.strokeRect(x+8,y+8,TS-16,TS-16);}}
+zombs.forEach(z=>{const x=z.c*TS+TS/2,y=z.r*TS+TS/2;
+ctx.globalAlpha=z.full?1:0.75;
+ctx.font=(TS*0.55)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText(z.full?'🧑‍🌾':'🧟',x,y+2);
+ctx.globalAlpha=1;
+if(z.full){ctx.strokeStyle='#4ade80';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,TS*0.42,0,7);ctx.stroke();}});
+// arrows
+ctx.fillStyle='#4ade80';ctx.font='16px serif';
+ctx.fillText('⬆',W/2,14);ctx.fillText('⬇',W/2,H-8);ctx.fillText('⬅',12,H/2);ctx.fillText('➡',W-16,H/2);}
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowUp'||k==='w')pour(-1,0);else if(k==='ArrowDown'||k==='s')pour(1,0);
+else if(k==='ArrowLeft'||k==='a')pour(0,-1);else if(k==='ArrowRight'||k==='d')pour(0,1);});
+let t0=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();t0={x:e.clientX,y:e.clientY};});
+cvs.addEventListener('pointerup',e=>{if(!t0)return;const dx=e.clientX-t0.x,dy=e.clientY-t0.y;
+if(Math.abs(dx)<16&&Math.abs(dy)<16){const r=cvs.getBoundingClientRect();
+const tx=Math.floor((e.clientX-r.left)/r.width*N),ty=Math.floor((e.clientY-r.top)/r.height*N);
+const cc=Math.floor(N/2);
+pour(Math.sign(ty-cc),Math.sign(tx-cc));}
+else if(Math.abs(dx)>Math.abs(dy))pour(0,Math.sign(dx));else pour(Math.sign(dy),0);t0=null;});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

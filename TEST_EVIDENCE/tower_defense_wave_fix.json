@@ -1,0 +1,41 @@
+{
+ "base-defense-isometric-edition": {
+  "errors_during_9s_wave": [],
+  "enemy_state": {
+   "n": 2,
+   "offs": [
+    545,
+    518
+   ]
+  }
+ },
+ "hero-defense-90": {
+  "errors_during_15s_wave_after_hero_fix": [],
+  "state": {
+   "foes": 0,
+   "heart": 14,
+   "wave": 1
+  }
+ },
+ "tower-forge-115-click-tower-to-upgrade": {
+  "errors_during_9s_wave": [],
+  "enemy_state": {
+   "n": -1,
+   "offs": []
+  }
+ },
+ "splitter-defense-165": {
+  "errors_during_9s_wave": [],
+  "enemy_state": {
+   "n": -1,
+   "offs": []
+  }
+ },
+ "robot-rush": {
+  "errors_during_9s_wave": [],
+  "enemy_state": {
+   "n": 0,
+   "offs": []
+  }
+ }
+}

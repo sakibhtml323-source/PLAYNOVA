@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Storm Jungle Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#052e16,#14532d);font-family:Georgia,serif;color:#bbf7d0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#166534;border-radius:12px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#86efac;min-height:1.6em;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(5,46,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#bbf7d0;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#052e16;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🌩 STORM JUNGLE PUZZLE</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>⛈ Storm <b id="st">0</b>%</span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Clear the jungle canopy! Tap connected fruit clusters — the storm grows with every tap!</div>
+<div id="ov"><h2 style="color:#4ade80">CANOPY CLEAR</h2><p id="od">A fruit-cluster arcade puzzler! Tap a group of 3+ matching fruits to clear them. The storm ⛈ builds with every tap — at 100% the lightning clears the board (and your score stops). Bigger clusters, bigger points!</p><button id="btn">ENTER THE STORM</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+const COLS=7, ROWS=7,TS=60;
+const FRUITS=[['🥭','#fbbf24'],['🍍','#fde047'],['🥝','#4ade80'],['🍓','#f87171'],['🍇','#a78bfa']];
+let grid,playing,score,storm,frame,best=+localStorage.getItem('sj_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){grid=[];for(let r=0;r<ROWS;r++){grid[r]=[];for(let c=0;c<COLS;c++)grid[r][c]=(Math.random()*FRUITS.length)|0;}
+playing=true;score=0;storm=0;frame=0;
+document.getElementById('s').textContent=0;document.getElementById('st').textContent=0;draw();}
+function cluster(r,c){const v=grid[r][c];if(v<0)return[];
+const seen=new Set([r+','+c]);const q=[[r,c]];
+while(q.length){const[a,b]=q.pop();
+[[a-1,b],[a+1,b],[a,b-1],[a,b+1]].forEach(([x,y])=>{
+if(x<0||y<0||x>=ROWS||y>=COLS)return;const k=x+','+y;
+if(!seen.has(k)&&grid[x][y]===v){seen.add(k);q.push([x,y]);}});}
+return[...seen];}
+function tap(px,py){if(!playing)return;
+const c=Math.floor(px/TS),r=Math.floor(py/TS);
+if(r<0||c<0||r>=ROWS||c>=COLS)return;
+const cl=cluster(r,c);
+if(cl.length<3){beep(180,.08);return;}
+score+=cl.length*cl.length*10;document.getElementById('s').textContent=score;
+storm+=2+cl.length*0.5;document.getElementById('st').textContent=Math.floor(storm);
+cl.forEach(k=>{const[a,b]=k.split(',').map(Number);grid[a][b]=-1;});
+beep(400+cl.length*30,.12,'triangle');
+// collapse
+for(let c2=0;c2<COLS;c2++){let wR=ROWS-1;for(let r=ROWS-1;r>=0;r--){if(grid[r][c2]!==-1){grid[wR][c2]=grid[r][c2];if(wR!==r)grid[r][c2]=-1;wR--;}}
+for(let r=wR;r>=0;r--)grid[r][c2]=(Math.random()*FRUITS.length)|0;}
+draw();
+if(storm>=100){lightning();}}
+function lightning(){playing=false;beep(90,.5,'sawtooth');
+// chain clear everything
+for(let pass=0;pass<3;pass++){for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){grid[r][c]=-1;}}
+draw();
+if(score>best){best=score;localStorage.setItem('sj_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='⛈ THE STORM BREAKS THE CANOPY!<br>Final score: <b style="color:#fde047">'+score+'</b>';
+document.getElementById('btn').textContent='AFTER THE STORM';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#14532d';ctx.fillRect(0,0,W,H);
+// storm overlay
+if(storm>50){ctx.fillStyle='rgba(30,27,75,'+((storm-50)/100)+')';ctx.fillRect(0,0,W,H);}
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){const x=c*TS,y=r*TS;
+ctx.fillStyle=(r+c)%2?'#166534':'#15803d';ctx.fillRect(x+2,y+2,TS-4,TS-4);
+const v=grid[r][c];if(v>=0){ctx.font=(TS*.6)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText(FRUITS[v][0],x+TS/2,y+TS/2+2);}}
+// storm flashes
+if(playing&&storm>30&&Math.random()<storm/400){ctx.fillStyle='rgba(224,231,255,.25)';ctx.fillRect(0,0,W,H);}}
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+tap(((e.clientX-r.left)/r.width)*W,((e.clientY-r.top)/r.height)*H);});
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;tap((i%7)*TS+TS/2,((i/7)|0)*TS+TS/2);}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Ghost Maze #310</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(7,46px);gap:2px;margin:12px}
+.c{width:46px;height:46px;background:#27272a;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.c.wall{background:#3f3f46}
+.c.out{background:#14532d}
+#pad{display:grid;grid-template-columns:repeat(3,50px);gap:4px;margin:8px}
+.pd{width:50px;height:42px;border-radius:10px;border:none;background:#3f3f46;color:#fff;font-size:1.1rem;cursor:pointer}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Ghost Maze</h1><div class="sub">All ghosts move TOGETHER — guide every one to an exit!</div>
+<div id="hud"><span>Ghosts out <b id="o">0</b>/<b id="ot">0</b></span><span>Moves <b id="m">0</b></span><span>Level <b id="l">1</b></span></div>
+<div id="grid"></div>
+<div id="pad"><div></div><button class="pd" data-d="u">⬆</button><div></div>
+<button class="pd" data-d="l">⬅</button><button class="pd" data-d="d">⬇</button><button class="pd" data-d="r">➡</button></div>
+<div id="msg"></div>
+<button id="btn">🌫️ New Haunt</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=7;let grid=[],ghosts=[],exits=[],moves=0,level=1,out=0,playing=true;
+function gen(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(r%2===0&&c%2===0&&Math.random()<0.4?1:0);grid.push(row);}
+for(let i=0;i<N;i++){grid[0][i]=0;grid[N-1][i]=0;grid[i][0]=0;grid[i][N-1]=0;}
+// exits on edges
+exits=[{r:0,c:3},{r:N-1,c:3},{r:3,c:0},{r:3,c:N-1}];
+exits.forEach(e=>{grid[e.r][e.c]=2;});
+// ghosts
+ghosts=[];const ng=Math.min(1+level,4);
+for(let i=0;i<ng;i++){let r,c;do{r=1+((Math.random()*(N-2))|0);c=1+((Math.random()*(N-2))|0);}while(grid[r][c]||ghosts.some(g=>g.r===r&&g.c===c));
+ghosts.push({r,c,out:false});}
+moves=0;out=0;playing=true;
+document.getElementById('o').textContent=0;
+document.getElementById('ot').textContent=ng;
+document.getElementById('m').textContent=0;
+document.getElementById('l').textContent=level;
+render();msg('Move all ghosts to the green exits!');}
+function moveAll(dr,dc){if(!playing)return;
+let moved=false;
+ghosts.forEach(g=>{if(g.out)return;
+const r=g.r+dr,c=g.c+dc;
+// wall check
+if(r<0||r>=N||c<0||c>=N||grid[r][c]===1){return;} // blocked stays
+g.r=r;g.c=c;moved=true;
+if(grid[r][c]===2){g.out=true;out++;beep(700+out*60,.12,'triangle');
+document.getElementById('o').textContent=out;}});
+if(moved){moves++;document.getElementById('m').textContent=moves;beep(400,.04);render();
+if(out>=ghosts.length){playing=false;beep(880,.3,'triangle');
+msg('👻 All ghosts freed! Level '+(level+1));level++;
+setTimeout(gen,1000);}}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]===1?' wall':grid[r][c]===2?' out':'');
+const gh=ghosts.find(x=>!x.out&&x.r===r&&x.c===c);
+if(gh)d.textContent='👻';
+g.appendChild(d);}}
+document.querySelectorAll('.pd').forEach(b=>b.addEventListener('pointerdown',()=>{
+const d=b.dataset.d;
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();
+if(d==='u')moveAll(-1,0);if(d==='d')moveAll(1,0);
+if(d==='l')moveAll(0,-1);if(d==='r')moveAll(0,1);}));
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='arrowup')moveAll(-1,0);if(k==='arrowdown')moveAll(1,0);
+if(k==='arrowleft')moveAll(0,-1);if(k==='arrowright')moveAll(0,1);});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

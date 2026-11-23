@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Candle Light #328</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,64px);gap:8px;margin:12px}
+.candle{width:64px;height:100px;background:#312e81;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;cursor:pointer;position:relative}
+.flame{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:26px;opacity:0;transition:opacity .3s}
+.candle.lit .flame{opacity:1}
+.candle.lit{background:#4338ca}
+.stick{width:8px;height:60px;background:#fbbf24;border-radius:3px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🕯️ Royal Candle Light</h1><div class="sub">Lighting a candle lights its neighbors too — light all 25 with fewest matches!</div>
+<div id="hud"><span>Matches <b id="m">5</b></span><span>Lit <b id="l">0</b>/25</span><span>Level <b id="lv">1</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🏰 New Hall</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5;let lit=[],matches=5,level=1,playing=true;
+function gen(){lit=Array(N*N).fill(false);
+matches=Math.max(3,6-level);playing=true;
+document.getElementById('m').textContent=matches;
+document.getElementById('lv').textContent=level;
+document.getElementById('l').textContent=0;
+render();msg('Light them all!');}
+function tap(i){if(!playing||lit[i])return;
+if(matches<=0){beep(160,.1,'sawtooth');msg('💨 No matches left!');return;}
+matches--;document.getElementById('m').textContent=matches;
+// toggle self + neighbors
+const r=(i/N)|0,c=i%N;
+[[r,c],[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([rr,cc])=>{
+if(rr>=0&&rr<N&&cc>=0&&cc<N)lit[rr*N+cc]=!lit[rr*N+cc];});
+beep(500,.1);render();check();}
+function check(){const n=lit.filter(x=>x).length;
+document.getElementById('l').textContent=n;
+if(n===N*N){playing=false;beep(880,.3,'triangle');
+msg('✨ Hall aglow! Level '+(level+1));level++;
+setTimeout(gen,1200);return;}
+if(matches<=0&&n<N*N){playing=false;beep(130,.3,'sawtooth');msg('🌑 Darkness wins…');}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+lit.forEach((on,i)=>{const d=document.createElement('div');d.className='candle'+(on?' lit':'');
+d.innerHTML='<div class="flame">🔥</div><div class="stick"></div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

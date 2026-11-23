@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Crystal Horror Flappy</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#09090b;font-family:Georgia,serif;color:#e4e4e7;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#a21caf;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#18181b;border-radius:10px;border:1px solid #3f3f46;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(9,9,11,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button{background:#a21caf;border:none;color:#fff;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>💀 CRYSTAL HORROR FLAPPY</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#a21caf">CRYSTAL HORROR</h2><p id="od">Guide the cursed crystal bat through the haunted caverns. Space/↑/tap to flap. Don't touch the crystal spires… they remember.</p><button id="btn">ENTER THE CRYPT</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let bat,pipes,score,playing,frame,best=+localStorage.getItem('cf_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-130)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){bat={x:90,y:H/2,vy:0,r:11};pipes=[];score=0;frame=0;playing=true;document.getElementById('s').textContent=0;}
+function flap(){if(!playing)return;bat.vy=-7.2;beep(600,.05);}
+window.addEventListener('keydown',e=>{if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();flap();}});
+cvs.addEventListener('pointerdown',()=>{audio.resume();flap();});
+function step(){frame++;bat.vy+=0.5;bat.y+=bat.vy;
+if(frame%95===0){const gap=130+Math.random()*40;const gy=70+Math.random()*(H-220);pipes.push({x:W+20,w:52,gy,gap,passed:false});}
+pipes.forEach(p=>{p.x-=2.6;
+if(!p.passed&&p.x+p.w<bat.x){p.passed=true;score++;document.getElementById('s').textContent=score;beep(880,.08,'triangle');}
+const inX=bat.x+bat.r>p.x&&bat.x-bat.r<p.x+p.w;
+const inTop=bat.y-bat.r<p.gy,inBot=bat.y+bat.r>p.gy+p.gap;
+if(inX&&(inTop||inBot))die();});
+pipes=pipes.filter(p=>p.x>-70);
+if(bat.y>H-8||bat.y<8)die();}
+function die(){if(!playing)return;playing=false;if(score>best){best=score;localStorage.setItem('cf_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The crystal claims another…<br>Score: <b style="color:#e879f9">'+score+'</b>';
+document.getElementById('btn').textContent='RISE AGAIN';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#18181b';ctx.fillRect(0,0,W,H);
+// fog glow
+const g=ctx.createRadialGradient(bat.x,bat.y,10,bat.x,bat.y,150);g.addColorStop(0,'rgba(162,28,175,.25)');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+pipes.forEach(p=>{ctx.fillStyle='#3b0764';ctx.fillRect(p.x,0,p.w,p.gy);ctx.fillRect(p.x,p.gy+p.gap,p.w,H-p.gy-p.gap);
+ctx.fillStyle='#7e22ce';ctx.fillRect(p.x,0,6,p.gy);ctx.fillRect(p.x,p.gy+p.gap,6,H-p.gy-p.gap);
+ctx.fillStyle='#a21caf';ctx.beginPath();ctx.moveTo(p.x,p.gy);ctx.lineTo(p.x+p.w/2,p.gy-14);ctx.lineTo(p.x+p.w,p.gy);ctx.fill();
+ctx.beginPath();ctx.moveTo(p.x,p.gy+p.gap);ctx.lineTo(p.x+p.w/2,p.gy+p.gap+14);ctx.lineTo(p.x+p.w,p.gy+p.gap);ctx.fill();});
+// bat crystal
+ctx.fillStyle='#e879f9';ctx.beginPath();ctx.moveTo(bat.x,bat.y-12);ctx.lineTo(bat.x+10,bat.y);ctx.lineTo(bat.x,bat.y+12);ctx.lineTo(bat.x-10,bat.y);ctx.closePath();ctx.fill();
+const f=Math.sin(frame/3)*6;ctx.fillStyle='#a21caf';
+ctx.beginPath();ctx.moveTo(bat.x-4,bat.y);ctx.lineTo(bat.x-20,bat.y-6+f);ctx.lineTo(bat.x-8,bat.y+4);ctx.fill();
+ctx.beginPath();ctx.moveTo(bat.x+4,bat.y);ctx.lineTo(bat.x+20,bat.y-6+f);ctx.lineTo(bat.x+8,bat.y+4);ctx.fill();
+ctx.fillStyle='#fff';ctx.fillRect(bat.x-4,bat.y-4,3,3);ctx.fillRect(bat.x+1,bat.y-4,3,3);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

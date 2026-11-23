@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Chill Greek Myth Sudoku</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fefce8,#fef9c3);font-family:Georgia,serif;color:#713f12;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#a16207;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#board{display:grid;gap:4px;background:#a1620722;border:3px solid #a16207;border-radius:12px;padding:10px;touch-action:none}
+.cell{width:58px;height:58px;border-radius:8px;background:#fff;border:1px solid #fde68a;display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer}
+.cell.given{background:#fef3c7;color:#92400e;font-weight:700}
+.cell.sel{outline:3px solid #f59e0b}
+.cell.bad{background:#fee2e2;color:#dc2626}
+#picks{display:flex;gap:8px;margin-top:12px}
+#picks button{width:52px;height:52px;border-radius:10px;border:2px solid #fde68a;background:#fff;font-size:1.4rem;cursor:pointer}
+#picks button.sel{border-color:#f59e0b;background:#fef3c7}
+#msg{text-align:center;font-size:.85rem;color:#a16207;margin-top:8px;min-height:1.4em}
+#ov{position:fixed;inset:0;background:rgba(254,252,232,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#713f12;padding:20px;z-index:5}
+button.big{background:#a16207;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:340px){.cell{width:48px;height:48px}}
+</style>
+</head>
+<body>
+<h1>🏛️ CHILL GREEK MYTH SUDOKU</h1>
+<div id="hud"><span>Puzzle <b id="p">1</b></span><span>Mistakes <b id="m">0</b></span><span>Solved <b id="so">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="board"></div>
+<div id="picks"></div>
+<div id="msg">Place each god once per row, column and 2×2 block.</div>
+<div id="ov"><h2 style="color:#a16207">MYTHIC SUDOKU</h2><p id="od">A calm 4×4 sudoku of Greek gods. Fill the grid so every row, column and 2×2 block holds each god exactly once. Tap a cell, then a god.</p><button class="big" id="btn">CONSULT THE ORACLE</button></div>
+<script>
+"use strict";
+const GODS=['⚡','🌊','🌾','🏹'];
+let puzzle,given,cur,sel,mistakes,solvedN,playing,best=+localStorage.getItem('gs_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function valid(g,r,c,v){for(let i=0;i<4;i++)if(g[r][i]===v||g[i][c]===v)return false;
+const br=r-r%2,bc=c-c%2;
+for(let i=0;i<2;i++)for(let j=0;j<2;j++)if(g[br+i][bc+j]===v)return false;
+return true;}
+function gen(){const g=[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+// backtracking
+function fill(pos){if(pos===16)return true;
+const r=(pos/4)|0,c=pos%4;const nums=[0,1,2,3].sort(()=>Math.random()-.5);
+for(const n of nums){if(valid(g,r,c,n)){g[r][c]=n;if(fill(pos+1))return true;g[r][c]=0;}}
+return false;}
+fill(0);
+// remove cells
+const p=g.map(r=>r.slice());
+let holes=6+Math.min(solvedN,4);const cells=[...Array(16).keys()].sort(()=>Math.random()-.5).slice(0,holes);
+cells.forEach(i=>p[(i/4)|0][i%4]=0);
+return{p,g};}
+function build(){const{p,g}=gen();puzzle=p;given=g;cur=null;sel=null;mistakes=0;
+document.getElementById('p').textContent=solvedN+1;document.getElementById('m').textContent=0;
+render();picks();}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat(4,58px)';b.innerHTML='';
+for(let r=0;r<4;r++)for(let c=0;c<4;c++){const d=document.createElement('div');
+d.className='cell'+(given[r][c]?' given':'')+(sel===r*4+c?' sel':'');
+d.textContent=puzzle[r][c]?GODS[puzzle[r][c]-1]:'';
+d.onclick=()=>{audio.resume();sel=r*4+c;render();};
+b.appendChild(d);}}
+function picks(){const p2=document.getElementById('picks');p2.innerHTML='';
+GODS.forEach((g,i)=>{const b=document.createElement('button');b.textContent=g;
+b.onclick=()=>{audio.resume();place(i+1);};p2.appendChild(b);});}
+function place(v){if(sel===null)return;const r=(sel/4)|0,c=sel%4;
+if(given[r][c])return;
+if(valid(puzzle.map(x=>x.slice()),r,c,v)){puzzle[r][c]=v;beep(600,.07,'triangle');
+if(puzzle.every((row,i2)=>row.every((v2,j)=>v2&&valid(puzzle.map(x=>x.slice()),i2,j,v2)))){win();}}
+else{mistakes++;document.getElementById('m').textContent=mistakes;beep(150,.18,'sawtooth');
+if(mistakes>=5){playing=false;beep(110,.4,'sawtooth');
+document.getElementById('od').innerHTML='☠️ The Fates reject you — 5 mistakes on puzzle '+(solvedN+1)+'.';
+document.getElementById('btn').textContent='TRY AGAIN';document.getElementById('ov').style.display='flex';}}
+render();}
+function win(){solvedN++;if(solvedN>best){best=solvedN;localStorage.setItem('gs_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('so').textContent=solvedN;
+beep(880,.15,'triangle');setTimeout(()=>beep(1100,.15,'triangle'),140);
+document.getElementById('od').innerHTML='🎉 Puzzle '+(solvedN)+' solved! The gods smile.<br>Next puzzle hides more cells.';
+document.getElementById('btn').textContent='NEXT PUZZLE';document.getElementById('ov').style.display='flex';playing=false;}
+window.addEventListener('keydown',e=>{if(!playing&&document.getElementById('ov').style.display==='flex')return;
+if(sel!==null){const k=e.key;if(k>='1'&&k<='4')place(+k);
+const r=(sel/4)|0,c=sel%4;
+if(k==='ArrowUp'&&r>0)sel-=4;if(k==='ArrowDown'&&r<3)sel+=4;
+if(k==='ArrowLeft'&&c>0)sel--;if(k==='ArrowRight'&&c<3)sel++;render();}});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;
+if(document.getElementById('btn').textContent==='TRY AGAIN')solvedN=Math.max(0,solvedN);
+build();document.getElementById('ov').style.display='none';};
+build();
+</script>
+</body>
+</html>

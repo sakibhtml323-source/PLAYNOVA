@@ -1,0 +1,501 @@
+id,title,category,deep_status,result
+0001,Jungle Farm - Puzzle,Puzzle,STATIC_OK,PASS_RENDERED
+0002,Viking Farming Sim Adventure,Casual,DOM_STATIC,PASS_UI
+0003,Iron Gunner,Action,ANIMATED,PASS
+0004,Thunder Retro Chronicles,Casual,STATIC_OK,PASS_RENDERED
+0005,Cosmic Medieval War,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0006,IQ Test: Samurai Edition,Brain,DOM_REACTIVE,PASS
+0007,Quantum Samurai Coloring Book,Casual,STATIC_OK,PASS_RENDERED
+0008,Infinity Party Game,Multiplayer Local,DOM_STATIC,PASS_UI
+0009,Royal Desert Party Game,Multiplayer Local,DOM_STATIC,PASS_UI
+0010,Eternal Halloween Tycoon,Casual,DOM_STATIC,PASS_UI
+0011,Watercolor Galaxy,Strategy,STATIC_OK,PASS_RENDERED
+0012,Royal Cooking,Casual,DOM_REACTIVE,PASS
+0013,Thunder Sports Zombie Survival,Action,ANIMATED,PASS
+0014,Iron Minimalist Logic Gates,Brain,DOM_REACTIVE,PASS
+0015,Crazy Jungle Forest,Action,ANIMATED,PASS
+0016,Neumorphism Phantom Rush,Puzzle,DOM_STATIC,PASS_UI
+0017,Swift Watercolor Typing Speed,Brain,DOM_REACTIVE,PASS
+0018,Crystal Horror Flappy,Arcade,ANIMATED,PASS
+0019,Fighting: Robot Edition,Action,ANIMATED,PASS
+0020,Halloween Epic Arena,Arcade,ANIMATED,PASS
+0021,Crazy Pastel Reaction Time,Brain,DOM_STATIC,PASS_UI
+0022,Ocean Spot the Difference Empire,Casual,STATIC_OK,PASS_RENDERED
+0023,Space Resource Management Fury,Strategy,DOM_REACTIVE,PASS
+0024,Lightning Ladder: Storm Reflexes #24,Multiplayer Local,DOM_STATIC,PASS_UI
+0025,Tile Rotation: Arctic Edition,Puzzle,DOM_REACTIVE,PASS
+0026,Greek Myth Endless Runner Fury,Arcade,ANIMATED,PASS
+0027,Mega Hotseat Strategy,Multiplayer Local,DOM_REACTIVE,PASS
+0028,Mystic Physics Sandbox,Simulation,STATIC_OK,PASS_RENDERED
+0029,Turbo Christmas Ball Bounce,Arcade,STATIC_OK,PASS_RENDERED
+0030,Minimalist Intense Puzzle,Action,ANIMATED,PASS
+0031,Clever Tycoon,Casual,DOM_STATIC,PASS_UI
+0032,Epic Egyptian School Simulator,Simulation,DOM_REACTIVE,PASS
+0033,Airport Manager: Glassmorphism Edition,Simulation,DOM_STATIC,PASS_UI
+0034,Samurai Zombie Survival Blast,Action,ANIMATED,PASS
+0035,Desert Legendary Galaxy,Casual,DOM_STATIC,PASS_UI
+0036,Super Christmas Blast,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0037,Combo Clicker #37 (Active Only),Casual,DOM_STATIC,PASS_UI
+0038,Silver Horror Hexagon Puzzle,Puzzle,STATIC_OK,PASS_RENDERED
+0039,Dragon Dark Mode Riddle Solver,Brain,DOM_REACTIVE,PASS
+0040,Gunner: Watercolor Edition,Action,ANIMATED,PASS
+0041,Wild Glassmorphism Nonogram,Puzzle,DOM_REACTIVE,PASS
+0042,Ultimate Desert Dungeon,Puzzle,STATIC_OK,PASS_RENDERED
+0043,Base Defense: Isometric Edition,Strategy,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0044,Idle Clicker: Minimalist Edition,Casual,DOM_STATIC,PASS_UI
+0045,Versus Puzzle: Horror Edition,Multiplayer Local,DOM_STATIC,PASS_UI
+0046,Arctic Hidden Object Storm,Casual,ANIMATED,PASS
+0047,Desert Rhythm Tap Empire,Arcade,ANIMATED,PASS
+0048,Isometric Mystic City,Brain,STATIC_OK,PASS_RENDERED
+0049,Infinity Physics Sandbox: Pirate Seas,Simulation,ANIMATED,PASS
+0050,Wild Desert Storm,Multiplayer Local,ANIMATED,PASS
+0051,Watercolor Tales,Arcade,ANIMATED,PASS
+0052,Ninja Hotseat Strategy Battle,Multiplayer Local,DOM_REACTIVE,PASS
+0053,Legendary Modern Flat War,Simulation,DOM_REACTIVE,PASS
+0054,Resource Management: Robot Edition,Strategy,DOM_REACTIVE,PASS
+0055,Dash Brawler #55,Action,ANIMATED,PASS
+0056,Chill Greek Myth Sudoku,Puzzle,DOM_REACTIVE,PASS
+0057,Robot Fighting Gate,Action,ANIMATED,PASS
+0058,Super Desert Shared Screen Racing,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0059,Intense Pixel Art Rise,Action,ANIMATED,PASS
+0060,Horror Neon Forest,Casual,ANIMATED,PASS
+0061,Shadow Christmas 2-Player Battle,Multiplayer Local,ANIMATED,PASS
+0062,Dark Mode Anagram Puzzle,Brain,DOM_STATIC,PASS_UI
+0063,Party Game: Neon Edition,Multiplayer Local,DOM_STATIC,PASS_UI
+0064,Parkour: Cute Animals Edition,Action,ANIMATED,PASS
+0065,Neumorphism Hotseat Strategy: Sky,Multiplayer Local,DOM_REACTIVE,PASS
+0066,Focus Trainer: Comic Book Edition,Brain,DOM_REACTIVE,PASS
+0067,Legendary Minimalist Blast,Arcade,ANIMATED,PASS
+0068,Swift Color Sorting: Pirate Edition,Puzzle,DOM_STATIC,PASS_UI
+0069,Row Slide Puzzle #69,Puzzle,DOM_STATIC,PASS_UI
+0070,Royal Gradient Traffic Control,Simulation,STATIC_OK,PASS_RENDERED
+0071,Intense Horror Rise,Brain,DOM_REACTIVE,PASS
+0072,Phoenix Cute Animals Island,Puzzle,DOM_REACTIVE,PASS
+0073,Cosmic Jungle Hero,Puzzle,STATIC_OK,PASS_RENDERED
+0074,Halloween Hyper Portal,Arcade,ANIMATED,PASS
+0075,Arctic Crazy Universe,Strategy,DOM_STATIC,PASS_UI
+0076,Time Killer: Pirates,Multiplayer Local,ANIMATED,PASS
+0077,Intense Infinite Runner,Arcade,ANIMATED,PASS
+0078,Endless Strategy: Greek Myth,Action,DOM_REACTIVE,PASS
+0079,Hyper Tile Puzzle: Watercolor,Arcade,DOM_STATIC,PASS_UI
+0080,Zombie Puzzle: Liquid Glass,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0081,Crystal Isometric Blast,Simulation,STATIC_OK,PASS_RENDERED
+0082,Watercolor Quantum Dash,Brain,DOM_REACTIVE,PASS
+0083,Leak Pressure Pipes #83,Puzzle,DOM_REACTIVE,PASS
+0084,High Stakes Quiz #84,Brain,DOM_REACTIVE,PASS
+0085,Horror Cosmic Merge,Strategy,DOM_REACTIVE,PASS
+0086,Desert Math Challenge: Ocean Edition,Brain,DOM_REACTIVE,PASS
+0087,Pirate Fruit Ninja Farm,Arcade,ANIMATED,PASS
+0088,Checkers AI: Pastel Edition,Strategy,DOM_STATIC,PASS_UI
+0089,Pixel Art Golden Challenge,Strategy,DOM_STATIC,PASS_UI
+0090,Hero Defense #90,Strategy,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0091,Golden Comic Book Mountain,Action,ANIMATED,PASS
+0092,Top-Down Shooter: Magic Edition,Action,ANIMATED,PASS
+0093,Ocean Brave Puzzle,Puzzle,ANIMATED,PASS
+0094,Magic Rise,Puzzle,DOM_REACTIVE,PASS
+0095,Wild Rise,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0096,Wild Greek Myth Shooter,Simulation,ANIMATED,PASS
+0097,Simulation: Norse,Strategy,DOM_REACTIVE,PASS
+0098,Board Game: Greek Myth,Casual,DOM_STATIC,PASS_UI
+0099,Endless Hotseat Strategy #########,Multiplayer Local,DOM_REACTIVE,PASS
+0100,Wild Color Match: Infinite,Casual,DOM_STATIC,PASS_UI
+0101,Western Physics Sandbox Empire,Simulation,STATIC_OK,PASS_RENDERED
+0102,Wrap Pipes #102,Puzzle,DOM_REACTIVE,PASS
+0103,Phantom Isometric Hidden Object,Casual,STATIC_OK,PASS_RENDERED
+0104,Brave Traffic Control: Samurai Edition,Simulation,ANIMATED,PASS
+0105,Airport Manager: Greek Myth Edition,Simulation,DOM_STATIC,PASS_UI
+0106,Vibrant Mega Ocean,Puzzle,DOM_STATIC,PASS_UI
+0107,Party Game: Egyptian Edition,Multiplayer Local,DOM_STATIC,PASS_UI
+0108,Anagram: Sports Edition,Brain,DOM_STATIC,PASS_UI
+0109,Epic Arctic Versus Puzzle,Multiplayer Local,DOM_REACTIVE,PASS
+0110,Ninja Silver Chronicles,Brain,DOM_REACTIVE,PASS
+0111,Phantom Side-Scroller,Action,ANIMATED,PASS
+0112,Retro 16-bit Quantum Dash,Brain,DOM_REACTIVE,PASS
+0113,Retro Lives Arena #113,Casual,ANIMATED,PASS
+0114,Gradient Heavy Super Race,Action,STATIC_OK,PASS_RENDERED
+0115,Tower Forge #115 (click tower to upgrade),Strategy,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0116,Intense 2-Player Strategy,Strategy,DOM_REACTIVE,PASS
+0117,Snowboarder: Neon Chronicles,Casual,ANIMATED,PASS
+0118,Overheat Clicker #118,Arcade,DOM_STATIC,PASS_UI
+0119,Silver Celtic Merge,Strategy,DOM_REACTIVE,PASS
+0120,Super Halloween Farming Simulator,Brain,DOM_STATIC,PASS_UI
+0121,Clever Arctic Tales,Arcade,ANIMATED,PASS
+0122,Eternal Number Merge,Puzzle,DOM_REACTIVE,PASS
+0123,Robot World,Puzzle,DOM_STATIC,PASS_UI
+0124,Robot Intense Dash,Arcade,ANIMATED,PASS
+0125,Coloring Book: Cyberpunk Edition,Casual,STATIC_OK,PASS_RENDERED
+0126,Intense Sports Rush,Strategy,DOM_REACTIVE,PASS
+0127,Eternal Egyptian Dungeon,Simulation,STATIC_OK,PASS_RENDERED
+0128,Pirate Idle Clicker Fury,Casual,DOM_STATIC,PASS_UI
+0129,Hospital Tycoon: Fantasy Edition,Simulation,DOM_STATIC,PASS_UI
+0130,Intense School Simulator,Simulation,DOM_REACTIVE,PASS
+0131,Villager Escort #131,Action,ANIMATED,PASS
+0132,Food Dragon Island,Brain,DOM_REACTIVE,PASS
+0133,Western Shared Screen Racing Hero,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0134,Golden Neon Forest,Strategy,DOM_STATIC,PASS_UI
+0135,Super Cooking: Samurai Edition,Casual,DOM_REACTIVE,PASS
+0136,Watercolor Color Match: Infinite,Action,DOM_STATIC,PASS_UI
+0137,Intense Cooking: Infinity Edition,Strategy,DOM_REACTIVE,PASS
+0138,Air Hockey: Pirate Theme,Multiplayer Local,ANIMATED,PASS
+0139,Gravity Puzzle: Pirate Edition,Simulation,STATIC_OK,PASS_RENDERED
+0140,Decoy Spotter #140,Casual,STATIC_OK,PASS_RENDERED
+0141,Minimalist Vehicle Combat Rush,Action,ANIMATED,PASS
+0142,Flying Kings Checkers #142,Strategy,DOM_STATIC,PASS_UI
+0143,Turbo Airport Manager: Steampunk Edition,Simulation,DOM_STATIC,PASS_UI
+0144,Ultimate Match-3: Fantasy Edition,Puzzle,STATIC_OK,PASS_RENDERED
+0145,Modern Flat Mystic Master,Multiplayer Local,DOM_STATIC,PASS_UI
+0146,Phantom Glassmorphism Hotseat Strategy,Multiplayer Local,DOM_STATIC,PASS_UI
+0147,Losing Checkers #147 (lose all pieces to win!),Strategy,DOM_STATIC,PASS_UI
+0148,Swift Neon Gunner,Action,ANIMATED,PASS
+0149,King Rush Checkers #149,Strategy,DOM_STATIC,PASS_UI
+0150,Eternal Robot Room Escape,Casual,STATIC_OK,PASS_RENDERED
+0151,Intense Samurai Vehicle Combat,Action,ANIMATED,PASS
+0152,Isometric Brave Kingdom,Simulation,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0153,Cosmic Monochrome Farming Sim,Casual,DOM_STATIC,PASS_UI
+0154,Storm Jungle Puzzle,Arcade,STATIC_OK,PASS_RENDERED
+0155,Viking Merge: Watercolor Edition,Strategy,DOM_STATIC,PASS_UI
+0156,Ultimate Endless Runner: Pirate Edition,Action,ANIMATED,PASS
+0157,Cel-shaded Space War: 2P Edition,Strategy,STATIC_OK,PASS_RENDERED
+0158,Modern Flat Puzzle: Norse Edition,Multiplayer Local,DOM_STATIC,PASS_UI
+0159,Epic Time Management: Infinity,Action,DOM_STATIC,PASS_UI
+0160,Lives & Lens Spotter #160,Casual,STATIC_OK,PASS_RENDERED
+0161,Mega Magic Logic Gates,Brain,DOM_REACTIVE,PASS
+0162,Cosmic Magic Riddle Solver,Brain,DOM_REACTIVE,PASS
+0163,Gravity Shift Merge #163,Simulation,DOM_REACTIVE,PASS
+0164,Neon Party Game: Race Edition,Multiplayer Local,DOM_STATIC,PASS_UI
+0165,Splitter Defense #165,Strategy,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0166,Royal Hidden Object,Casual,STATIC_OK,PASS_RENDERED
+0167,Glassmorphism Realm,Brain,DOM_REACTIVE,PASS
+0168,Overtime Trivia #168,Brain,DOM_REACTIVE,PASS
+0169,Cute Animals Rise,Action,ANIMATED,PASS
+0170,Memory Sequence: Isometric Edition,Brain,DOM_STATIC,PASS_UI
+0171,Arctic Flappy: Universe Edition,Arcade,ANIMATED,PASS
+0172,Dress Up: Glassmorphism Edition,Casual,DOM_REACTIVE,PASS
+0173,Roundabout Yield #173,Simulation,ANIMATED,PASS
+0174,Retro 8-bit School Simulator Rush,Simulation,DOM_REACTIVE,PASS
+0175,Versus Puzzle: Food Edition,Multiplayer Local,DOM_STATIC,PASS_UI
+0176,Golden Watercolor Portal,Arcade,ANIMATED,PASS
+0177,Watercolor Physics Sandbox,Brain,STATIC_OK,PASS_RENDERED
+0178,Dark Mode Sport Hero,Casual,DOM_REACTIVE,PASS
+0179,Epic Cozy Merge: 2P Edition,Arcade,DOM_REACTIVE,PASS
+0180,Halloween Intense Puzzle,Action,STATIC_OK,PASS_RENDERED
+0181,Turbo Christmas Legend,Simulation,DOM_REACTIVE,PASS
+0182,Glassmorphism Golden Adventure,Arcade,ANIMATED,PASS
+0183,Ball Bounce: Glassmorphism Edition,Arcade,STATIC_OK,PASS_RENDERED
+0184,Focus Trainer: Pixel Art Edition,Brain,DOM_REACTIVE,PASS
+0185,Coloring Book: Glassmorphism Edition,Casual,STATIC_OK,PASS_RENDERED
+0186,Dual Source Pipes #186,Puzzle,DOM_REACTIVE,PASS
+0187,Legendary Traffic Control: Food Edition,Simulation,ANIMATED,PASS
+0188,Mega Halloween Airport Manager,Simulation,DOM_STATIC,PASS_UI
+0189,Medieval Arena,Casual,ANIMATED,PASS
+0190,Phoenix Arctic Legend,Arcade,ANIMATED,PASS
+0191,Epic Vehicle Combat: Horror Edition,Action,ANIMATED,PASS
+0192,Storm Jungle Word Search,Puzzle,DOM_STATIC,PASS_UI
+0193,Norse Shared Screen Racing,Simulation,ANIMATED,PASS
+0194,Chain Combo Merge #194,Arcade,DOM_REACTIVE,PASS
+0195,Legendary Maze,Action,STATIC_OK,PASS_RENDERED
+0196,Desert Math Puzzle,Puzzle,DOM_REACTIVE,PASS
+0197,Rune Tree Idle #197,Multiplayer Local,DOM_STATIC,PASS_UI
+0198,Side-Scroller: Arctic Edition,Casual,ANIMATED,PASS
+0199,Desert Logic Gates,Casual,DOM_REACTIVE,PASS
+0200,Super Hotseat Strategy: Christmas Edition,Multiplayer Local,DOM_REACTIVE,PASS
+0201,Comic Book Chronicles,Arcade,ANIMATED,PASS
+0202,Zen Vibrant Master,Action,ANIMATED,PASS
+0203,Epic Pixel Art Tower,Puzzle,DOM_REACTIVE,PASS
+0204,Low-poly Fall,Simulation,ANIMATED,PASS
+0205,Turbo Magic Parkour,Action,ANIMATED,PASS
+0206,Coloring Book: Food Edition,Casual,STATIC_OK,PASS_RENDERED
+0207,Quantum Viking Merge,Puzzle,DOM_REACTIVE,PASS
+0208,Silent Music Galaxy,Simulation,ANIMATED,PASS
+0209,Cyberpunk Sky,Casual,ANIMATED,PASS
+0210,Robot Rush,Strategy,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0211,Royal Cooking Party Game,Simulation,DOM_STATIC,PASS_UI
+0212,Train Crossing #212,Strategy,ANIMATED,PASS
+0213,Epic Magic Coloring Book,Casual,STATIC_OK,PASS_RENDERED
+0214,Intense Brain Puzzle Saga (Daily Seed),Puzzle,DOM_REACTIVE,PASS
+0215,Fog of War Checkers #215,Casual,DOM_STATIC,PASS_UI
+0216,Quantum Run,Brain,ANIMATED,PASS
+0217,Token Hunt Slide #217,Action,DOM_STATIC,PASS_UI
+0218,Halloween King,Multiplayer Local,DOM_REACTIVE,PASS
+0219,Intense Maze,Brain,ANIMATED,PASS
+0220,Watercolor Merge: Holiday Edition,Action,DOM_REACTIVE,PASS
+0221,Ninja Dress Up #221,Casual,DOM_REACTIVE,PASS
+0222,Food Dungeon #222,Arcade,DOM_STATIC,PASS_UI
+0223,Egyptian Gate Traffic #223,Simulation,STATIC_OK,PASS_RENDERED
+0224,Haunted Simon Duel #224,Brain,DOM_REACTIVE,PASS
+0225,Ninja Coin Tower #225,Simulation,ANIMATED,PASS
+0226,Desert Forge Idle #226,Arcade,DOM_STATIC,PASS_UI
+0227,Haunted Row Slide #227,Puzzle,DOM_REACTIVE,PASS
+0228,Royal Cooking Dash #228,Action,DOM_REACTIVE,PASS
+0229,Crystal Hex Duel #229,Puzzle,DOM_STATIC,PASS_UI
+0230,Haunted Obby Run #230,Action,STATIC_OK,PASS_RENDERED
+0231,Egyptian Wrap Pipes #231,Puzzle,DOM_STATIC,PASS_UI
+0232,Desert Reflection #232,Simulation,STATIC_OK,PASS_RENDERED
+0233,Ninja Maze Sprint #233,Brain,DOM_STATIC,PASS_UI
+0234,Royal Checkers Blitz #234,Strategy,DOM_STATIC,PASS_UI
+0235,Haunted Hotseat Conquest #235,Simulation,DOM_REACTIVE,PASS
+0236,Crystal Match Blast #236,Brain,DOM_STATIC,PASS_UI
+0237,Idle Pharaoh #237,Casual,DOM_STATIC,PASS_UI
+0238,Ninja Reaction #238,Multiplayer Local,ANIMATED,PASS
+0239,Royal Word Ladder #239,Action,DOM_STATIC,PASS_UI
+0240,Desert Gravity Flip #240,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0241,Desert Mega Hero #241,Simulation,ANIMATED,PASS
+0242,Music Versus #242,Multiplayer Local,DOM_REACTIVE,PASS
+0243,Pixel Checkers Fog #243,Strategy,DOM_STATIC,PASS_UI
+0244,Haunted Calculator #244,Action,DOM_REACTIVE,PASS
+0245,Crystal Ball Sort #245,Brain,DOM_STATIC,PASS_UI
+0246,Ninja Math Sprint #246,Brain,STATIC_OK,PASS_RENDERED
+0247,Royal Court Word Duel #247,Simulation,DOM_REACTIVE,PASS
+0248,Desert Memory Match #248,Brain,DOM_REACTIVE,PASS
+0249,Music Sequence Builder #249,Brain,DOM_STATIC,PASS_UI
+0250,Haunted Merge Blast #250,Brain,DOM_STATIC,PASS_UI
+0251,Crystal Balance #251,Brain,STATIC_OK,PASS_RENDERED
+0252,Ninja Quiz Blitz #252,Multiplayer Local,DOM_REACTIVE,PASS
+0253,Royal Idle Kingdom #253,Casual,DOM_STATIC,PASS_UI
+0254,Haunted Spot Shift #254,Multiplayer Local,ANIMATED,PASS
+0255,Egyptian Portal 2048 #255,Casual,DOM_STATIC,PASS_UI
+0256,Ninja Reflex Duel #256,Strategy,DOM_STATIC,PASS_UI
+0257,Royal Pipe Connect #257,Puzzle,DOM_REACTIVE,PASS
+0258,Crystal Word Search #258,Simulation,DOM_REACTIVE,PASS
+0259,Desert Snake Trail #259,Strategy,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0260,Haunted Tower Stack #260,Strategy,ANIMATED,PASS
+0261,Ninja Stealth Grid #261,Puzzle,DOM_REACTIVE,PASS
+0262,Desert Dual Defense #262,Strategy,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0263,Crystal Rhythm Grid #263,Simulation,DOM_REACTIVE,PASS
+0264,Egyptian Math Pyramid #264,Arcade,DOM_REACTIVE,PASS
+0265,Haunted Whack-A-Ghost #265,Puzzle,DOM_REACTIVE,PASS
+0266,Royal Chess Puzzles #266,Simulation,DOM_STATIC,PASS_UI
+0267,Ninja Ice Slide #267,Puzzle,DOM_REACTIVE,PASS
+0268,Desert Draw Path #268,Arcade,STATIC_OK,PASS_RENDERED
+0269,Crystal Cipher #269,Multiplayer Local,DOM_STATIC,PASS_UI
+0270,Ninja Arena King #270,Action,ANIMATED,PASS
+0271,Haunted Anagram Arena #271,Strategy,DOM_STATIC,PASS_UI
+0272,Desert Snake Pit #272,Action,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0273,Ninja Logic Gates #273,Action,DOM_REACTIVE,PASS
+0274,Royal Match Towers #274,Puzzle,DOM_STATIC,PASS_UI
+0275,Haunted Wave Composer #275,Casual,STATIC_OK,PASS_RENDERED
+0276,Crystal Dot Link #276,Casual,DOM_STATIC,PASS_UI
+0277,Desert Rhythm Runner #277,Arcade,ANIMATED,PASS
+0278,Royal Deck Duel #278,Arcade,DOM_REACTIVE,PASS
+0279,Haunted Falling Blocks #279,Arcade,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0280,Ninja Mirror Maze #280,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0281,Desert Bounce Quest #281,Arcade,STATIC_OK,PASS_RENDERED
+0282,Crystal Memory Matrix #282,Strategy,DOM_REACTIVE,PASS
+0283,Royal Number Maze #283,Puzzle,DOM_STATIC,PASS_UI
+0284,Haunted Pattern Shift #284,Simulation,DOM_REACTIVE,PASS
+0285,Ninja Color Flood #285,Brain,DOM_REACTIVE,PASS
+0286,Desert Vault #286,Simulation,DOM_REACTIVE,PASS
+0287,Crystal Laser Alignment #287,Strategy,STATIC_OK,PASS_RENDERED
+0288,Ninja Pixel Painter #288,Puzzle,DOM_REACTIVE,PASS
+0289,Royal Tile Swap #289,Multiplayer Local,DOM_REACTIVE,PASS
+0290,Haunted Sound Board #290,Strategy,DOM_REACTIVE,PASS
+0291,Desert Caravan Trade #291,Action,DOM_STATIC,PASS_UI
+0292,Crystal Dot Pop #292,Strategy,DOM_STATIC,PASS_UI
+0293,Ninja Target Skipper #293,Casual,ANIMATED,PASS
+0294,Royal Word Search Blitz #294,Brain,DOM_STATIC,PASS_UI
+0295,Desert Balance Beam #295,Brain,STATIC_OK,PASS_RENDERED
+0296,Ninja Shadow Match #296,Puzzle,DOM_STATIC,PASS_UI
+0297,Crystal Path Finder #297,Brain,DOM_STATIC,PASS_UI
+0298,Royal Rhythm Taps #298,Arcade,DOM_REACTIVE,PASS
+0299,Haunted Maze Chase #299,Casual,DOM_REACTIVE,PASS
+0300,Crystal Defense Grid #300,Strategy,DOM_STATIC,PASS_UI
+0301,Ninja Spell Chain #301,Action,DOM_STATIC,PASS_UI
+0302,Desert Oasis Defense #302,Multiplayer Local,DOM_STATIC,PASS_UI
+0303,Crystal Reflex Grid #303,Strategy,DOM_REACTIVE,PASS
+0304,Royal Joust #304,Strategy,DOM_REACTIVE,PASS
+0305,Haunted Bubble Pop #305,Action,STATIC_OK,PASS_RENDERED
+0306,Crystal Shift Puzzle #306,Action,DOM_STATIC,PASS_UI
+0307,Desert Train Switch #307,Arcade,STATIC_OK,PASS_RENDERED
+0308,Ninja Stack Sort #308,Arcade,DOM_STATIC,PASS_UI
+0309,Royal Word Grid #309,Strategy,DOM_STATIC,PASS_UI
+0310,Haunted Ghost Maze #310,Action,DOM_STATIC,PASS_UI
+0311,Crystal Dice Duel #311,Multiplayer Local,DOM_REACTIVE,PASS
+0312,Ninja Orchard Harvest #312,Action,ANIMATED,PASS
+0313,Haunted Spot Pop #313,Strategy,STATIC_OK,PASS_RENDERED
+0314,Royal Card Count #314,Multiplayer Local,DOM_REACTIVE,PASS
+0315,Desert Mirror Path #315,Puzzle,STATIC_OK,PASS_RENDERED
+0316,Ninja Star Catch #0316,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0317,Royal Jewel Merge #317,Puzzle,DOM_STATIC,PASS_UI
+0318,Haunted Tile Runner #0318,Simulation,STATIC_OK,PASS_RENDERED
+0319,Crystal Number Drop #319,Casual,DOM_STATIC,PASS_UI
+0320,Desert Rhythm Tap #320,Casual,ANIMATED,PASS
+0321,Ninja Dart Board #321,Arcade,ANIMATED,PASS
+0322,Desert Sand Draw #322,Brain,STATIC_OK,PASS_RENDERED
+0323,Crystal Color Chain #323,Puzzle,DOM_REACTIVE,PASS
+0324,Royal Egg Catch #324,Multiplayer Local,ANIMATED,PASS
+0325,Haunted Grid Crawler #325,Multiplayer Local,DOM_REACTIVE,PASS
+0326,Desert Oasis Match #326,Puzzle,DOM_REACTIVE,PASS
+0327,Ninja Wind Sprint #327,Casual,ANIMATED,PASS
+0328,Royal Candle Light #328,Puzzle,DOM_STATIC,PASS_UI
+0329,Desert Scroll Roll #329,Brain,STATIC_OK,PASS_RENDERED
+0330,Crystal Code Breaker #330,Casual,DOM_REACTIVE,PASS
+0331,Ninja Balance Tower #331,Brain,ANIMATED,PASS
+0332,Royal Music Tiles #332,Action,ANIMATED,PASS
+0333,Desert Dot Trail #333,Brain,STATIC_OK,PASS_RENDERED
+0334,Ninja Windmill #334,Casual,STATIC_OK,PASS_RENDERED
+0335,Royal Gate Keeper #335,Simulation,STATIC_OK,PASS_RENDERED
+0336,Crystal Ice Break #336,Action,DOM_STATIC,PASS_UI
+0337,Desert Scarab Rush #337,Arcade,ANIMATED,PASS
+0338,Haunted Mirror Match #338,Strategy,DOM_REACTIVE,PASS
+0339,Ninja Lantern Light #339,Action,DOM_REACTIVE,PASS
+0340,Royal Charm Match #340,Arcade,DOM_STATIC,PASS_UI
+0341,Ninja Wind Blade #341,Casual,ANIMATED,PASS
+0342,Desert Coin Pusher #342,Strategy,STATIC_OK,PASS_RENDERED
+0343,Crystal Path Defense #343,Casual,STATIC_OK,PASS_RENDERED
+0344,Haunted Number Path #344,Action,DOM_REACTIVE,PASS
+0345,Royal Jester Juggle #345,Puzzle,ANIMATED,PASS
+0346,Crystal Stack Sort #346,Action,DOM_STATIC,PASS_UI
+0347,Desert Rhythm Hop #347,Puzzle,ANIMATED,PASS
+0348,Haunted Clock Tower #348,Action,STATIC_OK,PASS_RENDERED
+0349,Royal Crown Tower #349,Simulation,ANIMATED,PASS
+0350,Ninja Shadow Step #350,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0351,Crystal Flow #351,Brain,DOM_REACTIVE,PASS
+0352,Desert Camel Race #352,Multiplayer Local,ANIMATED,PASS
+0353,Royal Anagram Battle #353,Arcade,DOM_STATIC,PASS_UI
+0354,Beat Bell #354,Strategy,DOM_REACTIVE,PASS
+0355,Crystal Puzzle Grid #355,Arcade,DOM_REACTIVE,PASS
+0356,Ninja Star Throw #356,Puzzle,STATIC_OK,PASS_RENDERED
+0357,Desert Coin Flip #357,Simulation,DOM_REACTIVE,PASS
+0358,Haunted Crystal Ball #358,Strategy,DOM_STATIC,PASS_UI
+0359,Royal Feast Rush #359,Action,DOM_STATIC,PASS_UI
+0360,Ninja Scroll Cargo #360,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0361,Desert Ant Farm #361,Action,STATIC_OK,PASS_RENDERED
+0362,Crystal Grid Shift #362,Brain,DOM_STATIC,PASS_UI
+0363,Royal Bee Garden #363,Action,ANIMATED,PASS
+0364,Ninja Word Scroll #364,Casual,DOM_REACTIVE,PASS
+0365,Desert Mine Cart #365,Strategy,ANIMATED,PASS
+0366,Haunted Painting #366,Simulation,STATIC_OK,PASS_RENDERED
+0367,Ninja Ice Flow #367,Multiplayer Local,DOM_STATIC,PASS_UI
+0368,Royal Soup Stir #368,Brain,STATIC_OK,PASS_RENDERED
+0369,Desert Sand Timer #369,Simulation,ANIMATED,PASS
+0370,Ninja Lantern Maze #370,Casual,DOM_REACTIVE,PASS
+0371,Royal Chess Knight #371,Casual,DOM_REACTIVE,PASS
+0372,Desert Firefly Catch #372,Strategy,ANIMATED,PASS
+0373,Haunted Mirror Path #373,Puzzle,STATIC_OK,PASS_RENDERED
+0374,Ninja Water Drop #374,Brain,DOM_STATIC,PASS_UI
+0375,Royal Dice Stack #375,Simulation,DOM_STATIC,PASS_UI
+0376,Desert Scorpion Sting #376,Action,STATIC_OK,PASS_RENDERED
+0377,Crystal Harmony #377,Casual,DOM_REACTIVE,PASS
+0378,Royal Portrait Mix #378,Puzzle,DOM_STATIC,PASS_UI
+0379,Ninja Smoke Bomb #379,Puzzle,ANIMATED,PASS
+0380,Royal Crown Jewels #380,Action,STATIC_OK,PASS_RENDERED
+0381,Ninja Leaf Glide #381,Puzzle,ANIMATED,PASS
+0382,Desert Gear Puzzle #382,Action,STATIC_OK,PASS_RENDERED
+0383,Royal Recipe Mix #383,Action,DOM_STATIC,PASS_UI
+0384,Haunted Echo #384,Action,DOM_STATIC,PASS_UI
+0385,Ninja Star Link #385,Arcade,STATIC_OK,PASS_RENDERED
+0386,Desert Camel Choir #386,Action,DOM_STATIC,PASS_UI
+0387,Royal Card Castle #387,Strategy,ANIMATED,PASS
+0388,Desert Oasis Hop #388,Strategy,ANIMATED,PASS
+0389,Ninja Lantern Catch #389,Puzzle,ANIMATED,PASS
+0390,Royal Throne Sort #390,Action,DOM_STATIC,PASS_UI
+0391,Royal Key Turn #391,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0392,Desert Sand Storm #392,Multiplayer Local,ANIMATED,PASS
+0393,Ninja Torch Trail #393,Strategy,STATIC_OK,PASS_RENDERED
+0394,Royal Feast Balance #394,Multiplayer Local,ANIMATED,PASS
+0395,Haunted Library #395,Brain,DOM_STATIC,PASS_UI
+0396,Desert Scarab Maze #396,Simulation,DOM_STATIC,PASS_UI
+0397,Ninja Mask Match #397,Brain,DOM_REACTIVE,PASS
+0398,Royal Rainbow #398,Strategy,DOM_REACTIVE,PASS
+0399,Desert Moon Phase #399,Simulation,DOM_STATIC,PASS_UI
+0400,Ninja Storm Dodge #400,Puzzle,ANIMATED,PASS
+0401,Ninja Sand Sprint #401,Simulation,ANIMATED,PASS
+0402,Desert Night Watch #402,Action,ANIMATED,PASS
+0403,Royal Sword Pull #403,Strategy,DOM_STATIC,PASS_UI
+0404,Haunted Hourglass Race #404,Arcade,DOM_STATIC,PASS_UI
+0405,Crystal Pond Ripple #405,Puzzle,STATIC_OK,PASS_RENDERED
+0406,Desert Star Navigate #406,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0407,Royal Cannon Aim #407,Strategy,STATIC_OK,PASS_RENDERED
+0408,Ninja Web Swing #408,Brain,ANIMATED,PASS
+0409,Desert Solar Align #409,Action,STATIC_OK,PASS_RENDERED
+0410,Haunted Bell Ring #410,Puzzle,DOM_STATIC,PASS_UI
+0411,Desert Dune Board #411,Brain,ANIMATED,PASS
+0412,Royal Joust Duel #412,Brain,ANIMATED,PASS
+0413,Ninja Shadow Clone #413,Brain,ANIMATED,PASS
+0414,Desert Wind Chime #414,Simulation,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0415,Royal Torch Run #415,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0416,Haunted Clock Hands #416,Strategy,DOM_REACTIVE,PASS
+0417,Desert Frog Leap #417,Multiplayer Local,STATIC_OK,PASS_RENDERED
+0418,Crystal Grid Slide #418,Multiplayer Local,DOM_STATIC,PASS_UI
+0419,Haunted Attic Sort #419,Casual,DOM_STATIC,PASS_UI
+0420,Crystal Comet Catch #420,Arcade,ANIMATED,PASS
+0421,Ninja Silent Step #421,Multiplayer Local,DOM_STATIC,PASS_UI
+0422,Desert Sun Dial #422,Casual,STATIC_OK,PASS_RENDERED
+0423,Royal Goblet Guess #423,Brain,DOM_STATIC,PASS_UI
+0424,Haunted Portrait Row #424,Multiplayer Local,DOM_STATIC,PASS_UI
+0425,Crystal Flood Gate #425,Arcade,ANIMATED,PASS
+0426,Royal Fan Fare #426,Action,ANIMATED,PASS
+0427,Desert Star Map #427,Puzzle,STATIC_OK,PASS_RENDERED
+0428,Ninja Lantern Toss #428,Brain,ANIMATED,PASS
+0429,Desert Oasis Guard #429,Brain,ANIMATED,PASS
+0430,Royal Jewel Weigh #430,Simulation,DOM_STATIC,PASS_UI
+0431,Haunted Painting Find #431,Casual,ANIMATED,PASS
+0432,Desert Camel Bell #432,Multiplayer Local,DOM_STATIC,PASS_UI
+0433,Crystal Pool Shot #433,Puzzle,STATIC_OK,PASS_RENDERED
+0434,Haunted Door Guard #434,Arcade,DOM_REACTIVE,PASS
+0435,Desert Masked Dancer #435,Action,DOM_STATIC,PASS_UI
+0436,Crystal Tide Pool #436,Arcade,ANIMATED,PASS
+0437,Royal Archer Range #437,Strategy,ANIMATED,PASS
+0438,Haunted Attic Crawl #438,Arcade,DOM_REACTIVE,PASS
+0439,Desert Sun Catch #439,Arcade,ANIMATED,PASS
+0440,Royal Throne Path #440,Casual,DOM_REACTIVE,PASS
+0441,Ninja Fog Walk #441,Casual,DOM_REACTIVE,PASS
+0442,Desert Star Fall #442,Multiplayer Local,ANIMATED,PASS
+0443,Royal Trumpet Call #443,Strategy,DOM_STATIC,PASS_UI
+0444,Haunted Organ #444,Casual,DOM_STATIC,PASS_UI
+0445,Desert Scarab Push #445,Brain,STATIC_OK,PASS_RENDERED
+0446,Crystal Gem Grid #446,Action,DOM_STATIC,PASS_UI
+0447,Desert Wind Ladder #447,Arcade,STATIC_OK,PASS_RENDERED
+0448,Royal Banner Weave #448,Simulation,STATIC_OK,PASS_RENDERED
+0449,Haunted Tower Stack #449,Action,ANIMATED,PASS
+0450,Desert Echo Shout #450,Casual,ANIMATED,PASS
+0451,Royal Bell Tower #451,Multiplayer Local,DOM_REACTIVE,PASS
+0452,Crystal Pool Dive #452,Puzzle,ANIMATED,PASS
+0453,Haunted Attic Stack #453,Puzzle,ANIMATED,PASS
+0454,Desert Snake Charmer #454,Action,DOM_STATIC,PASS_UI
+0455,Royal Procession #455,Simulation,DOM_STATIC,PASS_UI
+0456,Ninja Star Pin #456,Puzzle,ANIMATED,PASS
+0457,Desert Cactus Guard #457,Casual,ANIMATED,PASS
+0458,Ninja Scroll Balance #458,Strategy,STATIC_OK,PASS_RENDERED
+0459,Desert Moon Jump #459,Strategy,ANIMATED,PASS
+0460,Royal Crown Catch #460,Puzzle,STATIC_OK,PASS_RENDERED
+0461,Ninja Leaf Sweep #461,Multiplayer Local,ANIMATED,PASS
+0462,Desert Camel Market #462,Brain,DOM_STATIC,PASS_UI
+0463,Crystal Prism Split #463,Strategy,STATIC_OK,PASS_RENDERED
+0464,Desert Night Patrol #464,Action,ANIMATED,PASS
+0465,Haunted Graveyard #465,Simulation,ANIMATED,PASS
+0466,Desert Oasis Rope #466,Strategy,STATIC_OK,PASS_RENDERED
+0467,Ninja Star Trace #467,Casual,STATIC_OK,PASS_RENDERED
+0468,Desert Hawk Dive #468,Multiplayer Local,ANIMATED,PASS
+0469,Royal Tapestry #469,Casual,DOM_STATIC,PASS_UI
+0470,Haunted Ballroom #470,Strategy,ANIMATED,PASS
+0471,Desert Sun Dial Run #471,Puzzle,ANIMATED,PASS
+0472,Crystal Golem Path #472,Action,DOM_STATIC,PASS_UI
+0473,Haunted Garden Tend #473,Simulation,DOM_REACTIVE,PASS
+0474,Royal Vault Spin #474,Arcade,STATIC_OK,PASS_RENDERED
+0475,Desert Fire Dance #475,Simulation,ANIMATED,PASS
+0476,Haunted Mirror Hall #476,Puzzle,DOM_STATIC,PASS_UI
+0477,Desert Rain Catch #477,Puzzle,STATIC_OK,PASS_RENDERED
+0478,Ninja Wind Blade Dance #478,Puzzle,STATIC_OK,PASS_RENDERED
+0479,Desert Oasis Ring #479,Casual,ANIMATED,PASS
+0480,Royal Feast Balance #480,Arcade,STATIC_OK,PASS_RENDERED
+0481,Ninja Smoke Maze #481,Simulation,DOM_REACTIVE,PASS
+0482,Desert Sun Race #482,Arcade,ANIMATED,PASS
+0483,Royal Goblin Market #483,Casual,DOM_STATIC,PASS_UI
+0484,Haunted Attic Drop #484,Brain,ANIMATED,PASS
+0485,Ninja Wall Run #485,Strategy,ANIMATED,PASS
+0486,Desert Star Link #486,Casual,STATIC_OK,PASS_RENDERED
+0487,Royal Vault Heist #487,Strategy,DOM_STATIC,PASS_UI
+0488,Desert Moon Hopper #0488,Casual,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0489,Haunted Chime Order #0489,Puzzle,BLANK_CANVAS,PASS_RENDERED
+0490,Crystal Golem Merge #0490,Casual,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0491,Desert Ant Hill #0491,Strategy,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0492,Royal Crown Slide #0492,Puzzle,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0493,Haunted Attic Climb #0493,Strategy,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0494,Desert Windmill Spin #0494,Arcade,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0495,Haunted Grave Dig #0495,Arcade,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0496,Royal Coin Sort #0496,Action,FIXED_STATIC,PASS_FIXED_THIS_CYCLE
+0497,Ninja Scroll Chase #0497,Brain,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0498,Desert Sand Timer Duel #0498,Action,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0499,Haunted Clock Puzzle #0499,Multiplayer Local,FIXED_ANIMATED,PASS_FIXED_THIS_CYCLE
+0500,Royal Crown Finale #0500,Action,FIXED_STATIC,PASS_FIXED_THIS_CYCLE

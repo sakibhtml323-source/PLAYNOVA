@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Hourglass Race #404</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#race{display:flex;gap:30px;margin:14px;align-items:flex-end}
+.hg{width:110px;text-align:center}
+.hg .glass{width:110px;height:200px;border:3px solid #3f3f46;border-radius:50% 50% 50% 50%/8% 8% 8% 8%;position:relative;overflow:hidden;margin:0 auto}
+.hg .sandT{position:absolute;top:0;left:0;right:0;background:#fbbf24;transition:height .1s}
+.hg .sandB{position:absolute;bottom:0;left:0;right:0;background:#fbbf24;transition:height .1s}
+.hg .who{font-size:1.6rem;margin-bottom:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⏳ Haunted Hourglass Race</h1><div class="sub">Flip YOUR hourglass to keep sand flowing — race the ghost to 50 flips!</div>
+<div id="hud"><span>Your flips <b id="y">0</b></span><span>Ghost flips <b id="g">0</b></span><span>Target <b id="t">50</b></span></div>
+<div id="race">
+<div class="hg"><div class="who">🥷 You</div><div class="glass"><div class="sandT" id="yt"></div><div class="sandB" id="yb"></div></div></div>
+<div class="hg"><div class="who">👻 Ghost</div><div class="glass"><div class="sandT" id="gt"></div><div class="sandB" id="gb"></div></div></div>
+</div>
+<div id="msg"></div>
+<button id="btn">🕯️ Start Race</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let yt=100,yb=0,yFlip=false,gt=100,gb=0,gFlip=false,yFlips=0,gFlips=0,playing=false,timer=null;
+const TARGET=50;
+function update(){document.getElementById('yt').style.height=yt+'%';
+document.getElementById('yb').style.height=yb+'%';
+document.getElementById('gt').style.height=gt+'%';
+document.getElementById('gb').style.height=gb+'%';}
+document.addEventListener('pointerdown',()=>{if(!playing)return;
+yFlip=!yFlip;yFlips++;document.getElementById('y').textContent=yFlips;
+beep(500,.08);});
+function step(){const yr=0.9,gr=0.7+yFlips*0.002;
+if(!yFlip){yt-=yr;yb+=yr;}else{yb-=yr;yt+=yr;}
+if(!gFlip){gt-=gr;gb+=gr;}else{gb-=gr;gt+=gr;}
+// ghost flips itself
+if(gt<=0||gb<=0){gFlip=!gFlip;gt=Math.max(gt,1);gb=Math.max(gb,1);gFlips++;
+document.getElementById('g').textContent=gFlips;}
+if(yt<=0||yb<=0){playing=false;clearInterval(timer);beep(150,.3,'sawtooth');
+msg('⏰ Your sand ran out! Ghost wins '+gFlips+'–'+yFlips);
+document.getElementById('t').textContent=TARGET;return;}
+if(yFlips>=TARGET){playing=false;clearInterval(timer);beep(880,.35,'triangle');
+msg('🏆 You win the race! '+yFlips+' flips!');
+document.getElementById('t').textContent='WON';}
+update();}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{yt=100;yb=0;gt=100;gb=0;
+yFlip=false;gFlip=false;yFlips=0;gFlips=0;
+document.getElementById('y').textContent=0;document.getElementById('g').textContent=0;
+document.getElementById('t').textContent=TARGET;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();playing=true;update();
+clearInterval(timer);timer=setInterval(()=>{if(playing)step();},100);};
+update();
+</script></body></html>

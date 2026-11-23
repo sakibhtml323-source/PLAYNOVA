@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Swift Color Sorting: Pirate Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#082f49,#0c4a6e);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#stacks{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.stack{width:52px;min-height:190px;background:#0c4a6e;border:2px solid #38bdf8;border-radius:10px;display:flex;flex-direction:column-reverse;align-items:center;justify-content:flex-start;padding:4px;cursor:pointer;touch-action:none}
+.stack.sel{border-color:#fbbf24;box-shadow:0 0 14px #fbbf2488}
+.ball{width:40px;height:40px;border-radius:50%;margin:2px;border:2px solid #00000033}
+#msg{text-align:center;font-size:.85rem;color:#bae6fd;margin-top:10px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#082f49;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:480px){.stack{width:44px;min-height:160px}.ball{width:34px;height:34px}}
+</style>
+</head>
+<body>
+<h1>🏴‍☠️ SWIFT COLOR SORTING</h1>
+<div id="hud"><span>Hold <b id="l">1</b></span><span>Moves <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="stacks"></div>
+<div id="msg">Sort the cursed gems — tap a stack, then another to move the top gem.</div>
+<div id="ov"><h2 style="color:#fbbf24">CURSED CARGO</h2><p id="od">The pirate ship's gem cargo is jumbled! Tap a stack to lift its top gem, then tap another stack to drop it. Each hold must end with gems of ONE color. Fewer moves, more glory.</p><button id="btn">SET SAIL</button></div>
+<script>
+"use strict";
+const COLS=['#ef4444','#22c55e','#3b82f6','#eab308','#a855f7'];
+let stacks,nc,sel,hold,moves,level,playing,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function build(){nc=Math.min(3+level,5);
+// deal: shuffle balls across nc stacks
+let balls=[];for(let c=0;c<nc;c++)for(let i=0;i<4;i++)balls.push(c);
+for(let i=balls.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[balls[i],balls[j]]=[balls[j],balls[i]];}if(solvedArr(balls)){const a=Math.random()*4|0,s1=Math.random()*nc|0,s2=(s1+1+Math.random()*(nc-1)|0)%nc;[balls[s1*4+a],balls[s2*4+a]]=[balls[s2*4+a],balls[s1*4+a]];}
+stacks=[];for(let s=0;s<nc;s++)stacks.push(balls.slice(s*4,s*4+4));
+stacks.push([],[]);
+sel=null;hold=null;moves=0;document.getElementById('m').textContent=0;
+document.getElementById('l').textContent=level;
+best=+localStorage.getItem('cs_best_'+nc)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+render();}
+function solvedArr(b){const st=[];for(let s=0;s<nc;s++)st.push(b.slice(s*4,s*4+4));
+return st.every(x=>x.length===0||x.every(v=>v===x[0]));}
+function solved(){return stacks.slice(0,nc).every(x=>x.length===0||x.every(v=>v===x[0]));}
+function render(){const w=document.getElementById('stacks');w.innerHTML='';
+stacks.forEach((st,i)=>{const d=document.createElement('div');d.className='stack'+(sel===i?' sel':'');
+if(hold!==null&&sel===i){const hb=document.createElement('div');hb.className='ball';hb.style.background=COLS[hold];hb.style.marginBottom='8px';hb.style.boxShadow='0 6px 10px #0008';d.appendChild(hb);}
+st.forEach(v=>{const b=document.createElement('div');b.className='ball';b.style.background=COLS[v];d.appendChild(b);});
+d.onclick=()=>tap(i);w.appendChild(d);});}
+function tap(i){if(!playing)return;audio.resume();
+if(sel===null){if(!stacks[i].length)return;sel=i;hold=stacks[i].pop();beep(500,.05);render();return;}
+if(sel===i){stacks[i].push(hold);hold=null;sel=null;render();return;}
+// drop: only on empty or same color top
+const top=stacks[i][stacks[i].length-1];
+if(stacks[i].length&&top!==hold){beep(160,.1,'sawtooth');render();return;}
+stacks[i].push(hold);hold=null;sel=null;moves++;document.getElementById('m').textContent=moves;
+beep(600+moves*8,.06,'triangle');render();
+if(solved())win();}
+function win(){playing=false;beep(800,.15,'triangle');setTimeout(()=>beep(1000,.15,'triangle'),140);
+if(moves<best){best=moves;localStorage.setItem('cs_best_'+nc,best);}
+document.getElementById('od').innerHTML='🏴‍☠️ Hold sorted in <b>'+moves+'</b> moves!'+(nc<5?'<br>Next: '+COLS.slice(0,nc+1).length+' colors':'<br>The grandest cargo conquered!');
+document.getElementById('btn').textContent=nc<5?'NEXT HOLD':'SAIL AGAIN';if(nc>=5)level=0;level++;document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;if(k>='1'&&k<='7'){const i=+k-1;if(i<stacks.length)tap(i);}});
+document.getElementById('btn').onclick=()=>{audio.resume();if(level===0)level=1;playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Fog of War Checkers #215</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fdf4ff,#f5f3ff);font-family:Georgia,serif;color:#581c87;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#7c3aed;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#board{display:grid;gap:0;border:4px solid #d8b4fe;border-radius:10px;overflow:hidden;touch-action:none;box-shadow:0 8px 24px rgba(124,58,237,.2)}
+.sq.fog{opacity:.55;filter:blur(1px)}
+.sq{width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.5rem}
+@media(max-width:400px){.sq.fog{opacity:.55;filter:blur(1px)}
+.sq{width:36px;height:36px;font-size:1.2rem}}
+.sq.l{background:#fdf4ff}.sq.d{background:#d8b4fe}
+.sq.mv{box-shadow:inset 0 0 0 4px #fde047}
+.sq.sel{box-shadow:inset 0 0 0 4px #7c3aed}
+#msg{text-align:center;font-size:.85rem;color:#7c3aed;margin-top:8px;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#581c87;padding:20px;z-index:5}
+button{background:#8b5cf6;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🎨 WATERCOLOR CHECKERS</h1>
+<div id="hud"><span>You 🟣 <b id="y">0</b></span><span id="who">Your move</span><span>AI 🌸 <b id="a">0</b></span><span>Win streak <b id="b">0</b></span></div>
+<div id="board"></div>
+<div id="msg">Tap a 🟣 piece, then a highlighted square. Jump to splash-capture!</div>
+<div id="ov"><h2 style="color:#7c3aed">WATERCOLOR DUEL</h2><p id="od">Checkers painted in watercolors! You are 🟣 (bottom). Crown a 🌈 at the far end. The AI plays in soft pinks!</p><button id="btn">DIP THE BRUSH</button></div>
+<script>
+"use strict";
+const N=8;let grid,turn,sel,streak=+localStorage.getItem('ck5_best')||0,curStreak=0,playing;
+document.getElementById('b').textContent=streak;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=[];for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++){
+if((r+c)%2===1&&(r<3||r>4))grid[r][c]={p:r<3?2:1,k:false};else grid[r][c]=null;}}
+turn=1;sel=null;playing=true;render();}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat(8,44px)';b.innerHTML='';
+const mvs=sel?validMoves(sel.r,sel.c):[];
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='sq '+((r+c)%2?'d':'l');
+const piece=grid[r][c];
+if(piece){
+const near=piece.p===1||(()=>{for(let rr=0;rr<N;rr++)for(let cc=0;cc<N;cc++){const q=grid[rr][cc];if(q&&q.p===1&&Math.max(Math.abs(rr-r),Math.abs(cc-c))<=2)return true;}return false;})();
+d.textContent=near?(piece.p===1?(piece.k?'🌈':'🟣'):(piece.k?'🌟':'🌸')):'❓';
+if(!near)d.classList.add('fog');}
+if(sel&&sel.r===r&&sel.c===c)d.classList.add('sel');
+if(mvs.some(m=>m.r===r&&m.c===c))d.classList.add('mv');
+d.onclick=()=>tap(r,c);b.appendChild(d);}
+document.getElementById('y').textContent=grid.flat().filter(p=>p&&p.p===1).length;
+document.getElementById('a').textContent=grid.flat().filter(p=>p&&p.p===2).length;
+document.getElementById('who').textContent=playing?(turn===1?'Your move':'AI thinking…'):'Game over';}
+function dirs(p,k){const f=p===1?-1:1;const out=[[f,-1],[f,1]];if(k)out.push([-f,-1],[-f,1]);return out;}
+function validMoves(r,c){const piece=grid[r][c];if(!piece)return[];
+const out=[];dirs(piece.p,piece.k).forEach(([dr,dc])=>{
+const r2=r+dr,c2=c+dc;
+if(r2<0||c2<0||r2>=N||c2>=N)return;
+if(!grid[r2][c2])out.push({r:r2,c:c2,jump:false});
+else if(grid[r2][c2].p!==piece.p){const r3=r2+dr,c3=c2+dc;
+if(r3>=0&&c3>=0&&r3<N&&c3<N&&!grid[r3][c3])out.push({r:r3,c:c3,jump:true,jr:r2,jc:c2});}});
+return out;}
+function tap(r,c){if(!playing||turn!==1)return;audio.resume();
+if(sel){const mv=validMoves(sel.r,sel.c).find(m=>m.r===r&&m.c===c);
+if(mv){move(sel.r,sel.c,mv);return;}}
+if(grid[r][c]&&grid[r][c].p===1){sel={r,c};beep(500,.04);render();}}
+function move(r,c,mv){const piece=grid[r][c];
+grid[mv.r][mv.c]=piece;grid[r][c]=null;
+if(mv.jump){grid[mv.jr][mv.jc]=null;beep(200,.1,'sawtooth');}
+if((piece.p===1&&mv.r===0)||(piece.p===2&&mv.r===N-1))piece.k=true;
+sel=null;render();check();
+if(playing){turn=3-turn;if(turn===2)setTimeout(ai,450);}}
+function ai(){if(!playing)return;
+const all=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++){const p=grid[r][c];
+if(p&&p.p===2){validMoves(r,c).forEach(mv=>all.push({r,c,mv,w:mv.jump?2:1+(p.k?0.5:0)+Math.random()*0.3}));}}
+if(!all.length){check();return;}
+all.sort((x,y)=>y.w-x.w);
+const pick=all[0];move(pick.r,pick.c,pick.mv);}
+function check(){const p1=grid.flat().some(p=>p&&p.p===1),p2=grid.flat().some(p=>p&&p.p===2);
+const p1mv=anyMoves(1),p2mv=anyMoves(2);
+if(!p1||!p1mv||!p2||!p2mv){playing=false;
+let txt;
+if(!p2||!p2mv){curStreak++;if(curStreak>streak){streak=curStreak;localStorage.setItem('ck5_best',streak);document.getElementById('b').textContent=streak;}
+txt='🏆 <b style="color:#7c3aed">YOU PAINT VICTORY!</b><br>Win streak: '+curStreak;beep(880,.25,'triangle');}
+else{curStreak=0;txt='🌸 <b>The AI washes you out…</b>';beep(130,.4,'sawtooth');}
+document.getElementById('od').innerHTML=txt;
+document.getElementById('btn').textContent='REMATCH';document.getElementById('ov').style.display='flex';}}
+function anyMoves(p){for(let r=0;r<N;r++)for(let c=0;c<N;c++){const pc=grid[r][c];
+if(pc&&pc.p===p&&validMoves(r,c).length)return true;}return false;}
+window.addEventListener('keydown',e=>{if(!playing||turn!==1)return;
+if(e.key>='1'&&e.key<='8'){if(sel){const mv=validMoves(sel.r,sel.c)[+e.key-1];if(mv)move(sel.r,sel.c,mv);}else{
+outer:for(let r=0;r<N;r++)for(let c=0;c<N;c++){if(grid[r][c]&&grid[r][c].p===1&&validMoves(r,c).length){sel={r,c};render();break outer;}}}}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+init();
+</script>
+</body>
+</html>

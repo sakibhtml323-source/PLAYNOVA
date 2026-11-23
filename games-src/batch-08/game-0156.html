@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ultimate Endless Runner: Pirate Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#082f49;font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:linear-gradient(#7dd3fc,#0ea5e9);border-radius:10px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#082f49;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏴‍☠️ ULTIMATE PIRATE RUNNER</h1>
+<div id="hud"><span>Distance <b id="d">0</b>m</span><span>💰 Loot <b id="l">0</b></span><span>Speed <b id="v">1.0</b>x</span><span>Best <b id="b">0</b>m</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#fbbf24">DECK RUNNER</h2><p id="od">Run the endless deck of the Flying Dutchman! Jump gaps and barrels with Space/↑/tap, slide under sails with ↓. Grab 💰 doubloons. The ship speeds up forever!</p><button id="btn">MAN THE DECK</button></div>
+<script>
+
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=560,H=260;cvs.width=W;cvs.height=H;const GY=H-42;
+let pirate,obs,coins2,playing,speed,dist,loot,frame,duck,best=+localStorage.getItem('upr_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){pirate={x:70,y:GY,vy:0,w:24,h:32,onG:true,jumps:0};obs=[];coins2=[];dist=0;loot=0;speed=4.6;frame=0;duck=0;playing=true;
+document.getElementById('d').textContent=0;document.getElementById('l').textContent=0;document.getElementById('v').textContent='1.0';}
+function jump(){if(pirate.onG){pirate.vy=-11.4;pirate.onG=false;pirate.jumps=1;beep(520,.05);}else if(pirate.jumps<2){pirate.vy=-10;pirate.jumps++;beep(660,.05);}}
+function slide(){duck=22;beep(260,.05);}
+window.addEventListener('keydown',e=>{const k=e.key;if(k===' '||k==='ArrowUp'){e.preventDefault();jump();}if(k==='ArrowDown')slide();});
+let touchY=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();touchY=e.clientY;jump();});
+cvs.addEventListener('pointerup',e=>{if(touchY!==null&&e.clientY-touchY>40)slide();touchY=null;});
+function step(){frame++;dist+=speed/18;speed=4.6+dist/220;document.getElementById('d').textContent=Math.floor(dist);document.getElementById('v').textContent=(speed/4.6).toFixed(1);
+pirate.vy+=0.58;pirate.y+=pirate.vy;pirate.onG=false;if(duck>0)duck--;
+if(pirate.y>=GY){pirate.y=GY;pirate.vy=0;pirate.onG=true;pirate.jumps=0;}
+if(frame%Math.max(26,52-dist/40|0)===0){const r=Math.random();
+if(r<0.32)obs.push({x:W+20,y:GY-24,w:34,h:24,t:'barrel'});
+else if(r<0.55)obs.push({x:W+20,y:GY-52,w:40,h:14,t:'sail'});
+else if(r<0.75)coins2.push({x:W+20,y:GY-64});
+else obs.push({x:W+20,y:GY-14,w:28,h:14,t:'crab'});}
+obs.forEach(o=>o.x-=speed);coins2.forEach(c=>c.x-=speed);
+obs=obs.filter(o=>o.x>-60);coins2=coins2.filter(c=>c.x>-30);
+const hh=duck>0?16:pirate.h;
+coins2.forEach(c=>{if(Math.abs(c.x-pirate.x)<24&&Math.abs(c.y-(pirate.y-hh/2))<30){loot++;
+document.getElementById('l').textContent=loot;coins2.splice(coins2.indexOf(c),1);beep(800,.06);}});
+obs.forEach(o=>{if(pirate.x+pirate.w/2>o.x&&pirate.x-pirate.w/2<o.x+o.w&&pirate.y-hh<o.y+o.h&&pirate.y>o.y)die();});}
+function die(){playing=false;const d=Math.floor(dist);
+if(d>best){best=d;localStorage.setItem('upr_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='Davy Jones takes you at <b style="color:#fde047">'+d+'m</b> with '+loot+' doubloons!';
+document.getElementById('btn').textContent='WALK THE PLANK AGAIN';document.getElementById('ov').style.display='flex';beep(120,.4,'sawtooth');}
+function draw(){const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#7dd3fc');g2.addColorStop(1,'#0ea5e9');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+// ship deck
+ctx.fillStyle='#92400e';ctx.fillRect(0,GY,W,H-GY);
+ctx.fillStyle='#78350f';for(let i=0;i<W;i+=38)ctx.fillRect((i-frame*2)%W,GY,3,H-GY);
+// mast
+ctx.fillStyle='#78350f';ctx.fillRect(W/2-5,20,10,GY-20);
+obs.forEach(o=>{if(o.t==='barrel'){ctx.fillStyle='#b45309';ctx.beginPath();ctx.arc(o.x+o.w/2,o.y+o.h/2,o.h/2,0,7);ctx.fill();
+ctx.strokeStyle='#78350f';ctx.beginPath();ctx.arc(o.x+o.w/2,o.y+o.h/2,o.h/2-4,0,7);ctx.stroke();}
+else if(o.t==='sail'){ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(o.x,o.y+14);ctx.lineTo(o.x+o.w/2,o.y);ctx.lineTo(o.x+o.w,o.y+14);ctx.fill();}
+else{ctx.fillStyle='#f87171';ctx.fillRect(o.x,o.y,o.w,o.h);}});
+coins2.forEach(c=>{ctx.fillStyle='#fde047';ctx.beginPath();ctx.arc(c.x,c.y,7,0,7);ctx.fill();
+ctx.fillStyle='#b45309';ctx.font='bold 8px Georgia';ctx.textAlign='center';ctx.fillText('$',c.x,c.y+3);});
+const hh=duck>0?16:pirate.h;
+ctx.fillStyle='#1e293b';ctx.fillRect(pirate.x-pirate.w/2,pirate.y-hh,pirate.w,hh);
+ctx.fillStyle='#fbbf24';ctx.fillRect(pirate.x-pirate.w/2,pirate.y-hh,pirate.w,8);
+ctx.fillStyle='#111';ctx.fillRect(pirate.x+4,pirate.y-hh+12,4,4);
+ctx.fillStyle='#fbbf24';ctx.fillRect(pirate.x-pirate.w/2-6,pirate.y-hh-4,10,6);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense Infinite Runner</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050505;font-family:'Courier New',monospace;color:#4ade80;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#22c55e;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0a0a0a;border-radius:8px;touch-action:none;image-rendering:pixelated}
+#ov{position:fixed;inset:0;background:rgba(5,5,5,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#4ade80;padding:20px;z-index:5}
+button{background:#22c55e;border:none;color:#050505;font-weight:800;padding:12px 32px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;box-shadow:4px 4px #14532d}
+</style>
+</head>
+<body>
+<h1>▶ INTENSE INFINITE RUNNER</h1>
+<div id="hud"><span>DIST <b id="d">0</b>m</span><span>MATH <b id="m">1</b></span><span>❤️ <b id="h">3</b></span><span>BEST <b id="b">0</b>m</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#22c55e">RUNNER.EXE</h2><p id="od">An infinite runner where EVERY obstacle is a math gate! Choose the lane with the correct answer (tap left/middle/right or keys 1/2/3). Wrong answers hurt. Distance is truth.</p><button id="btn">EXECUTE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=460;cvs.width=W;cvs.height=H;
+const LANES=[W*0.2,W*0.5,W*0.8];
+let me,gates,playing,dist,hp,streak,best=+localStorage.getItem('ir_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mkQ(){const a=1+((Math.random()*10)|0),b=1+((Math.random()*10)|0);const ans=a+b;
+const opts=new Set([ans]);while(opts.size<3)opts.add(ans+((Math.random()*8)|0)-4+ (Math.random()<0.5?10:-10));
+while(opts.size<3)opts.add(ans+opts.size*3);
+const arr=[...opts].sort(()=>Math.random()-.5);
+return{q:a+' + '+b+' = ?',ans,opts:arr};}
+function init(){me={lane:1};gates=[];dist=0;hp=3;streak=0;playing=true;
+document.getElementById('d').textContent=0;document.getElementById('h').textContent=3;document.getElementById('m').textContent=1;}
+function step(){dist+=0.12;document.getElementById('d').textContent=Math.floor(dist);
+if(!gates.length||gates[gates.length-1].y<120){const q=mkQ();gates.push({y:-30,q,opts:q.opts});}
+gates.forEach(g=>g.y+=2+dist/600);
+gates.forEach(g=>{if(g.y>H-96&&g.y<H-40&&!g.done){g.done=true;
+if(g.opts[me.lane]===g.ans){streak++;beep(660+streak*20,.07,'triangle');}
+else{hp--;document.getElementById('h').textContent=hp;streak=0;beep(140,.2,'sawtooth');
+if(hp<=0)die();}}});
+gates=gates.filter(g=>g.y<H+40);}
+function choose(l){if(!playing)return;me.lane=l;beep(440+l*80,.04);}
+window.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3')choose(+e.key-1);});
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W;choose(x<W/3?0:x<2*W/3?1:2);});
+function die(){playing=false;const d=Math.floor(dist);
+if(d>best){best=d;localStorage.setItem('ir_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='FATAL ERROR at <b style="color:#fde047">'+d+'m</b><br>Streak reached: '+streak;
+document.getElementById('btn').textContent='REBOOT';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,W,H);
+for(let i=0;i<8;i++){const y=(i*70+dist*4)%(H+70);
+ctx.strokeStyle='#14532d';ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+LANES.forEach((lx,i)=>{ctx.strokeStyle=i===me.lane?'#22c55e':'#14532d';ctx.lineWidth=i===me.lane?3:1;
+ctx.beginPath();ctx.moveTo(lx,0);ctx.lineTo(lx,H);ctx.stroke();ctx.lineWidth=1;});
+gates.forEach(g=>{g.opts.forEach((o,i)=>{
+ctx.fillStyle=i===me.lane?'#052e16':'#111';ctx.fillRect(LANES[i]-52,g.y,104,42);
+ctx.strokeStyle='#22c55e';ctx.strokeRect(LANES[i]-52,g.y,104,42);
+ctx.fillStyle='#4ade80';ctx.font='bold 15px Courier New';ctx.textAlign='center';ctx.fillText(o,LANES[i],g.y+26);});
+ctx.fillStyle='#fff';ctx.font='bold 13px Courier New';ctx.fillText(g.q,W/2,g.y-10);});
+// player
+ctx.fillStyle='#22c55e';ctx.fillRect(LANES[me.lane]-11,H-70,22,22);
+ctx.fillStyle='#050505';ctx.fillRect(LANES[me.lane]-5,H-63,4,4);ctx.fillRect(LANES[me.lane]+2,H-63,4,4);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

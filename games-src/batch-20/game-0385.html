@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Star Link #385</title><style>
+body{margin:0;font-family:system-ui;background:#0c1445;color:#e0e7ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#93c5fd;font-size:.78rem}
+canvas{background:#111936;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#0c1445;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>⭐ Ninja Star Link</h1><div class="sub">Connect matching stars without crossing lines — every pair must link!</div>
+<div id="hud"><span>Pairs <b id="p">0</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">✨ New Sky</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400;const PAIRS=[['🔴','#ef4444'],['🔵','#3b82f6'],['🟢','#22c55e'],['🟡','#eab308'],['🟣','#a855f7']];
+let stars=[],links=[],drawing=null,level=1;
+function gen(){stars=[];links=[];
+const n=Math.min(2+level,5);
+const pts=[];
+for(let i=0;i<n*2;i++){pts.push({x:50+Math.random()*300,y:50+Math.random()*300});}
+// simple spacing
+pts.sort((a,b)=>a.x-b.x);
+for(let p=0;p<n;p++){stars.push({x:pts[p*2].x,y:pts[p*2].y,pair:p,e:PAIRS[p][0],c:PAIRS[p][1]});
+stars.push({x:pts[p*2+1].x,y:pts[p*2+1].y,pair:p,e:PAIRS[p][0],c:PAIRS[p][1]});}
+document.getElementById('l').textContent=level;
+document.getElementById('p').textContent=0;
+draw();msg('Link the matching stars!');}
+function segCross(a,b,c,d){const s=(p,q,r)=>((r.x-q.x)*(p.y-q.y)-(r.y-q.y)*(p.x-q.x));
+const d1=s(c,a,b),d2=s(d,a,b),d3=s(a,c,d),d4=s(b,c,d);
+return((d1>0&&d2<0)||(d1<0&&d2>0))&&((d3>0&&d4<0)||(d3<0&&d4>0));}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+const hit=stars.find(s=>Math.hypot(s.x-x,s.y-y)<24);
+if(!hit)return;
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();
+drawing={from:hit,x,y};
+links=links.filter(l=>!(l.a===hit||l.b===hit));
+beep(400,.06);draw();});
+cvs.addEventListener('pointermove',e=>{if(!drawing)return;const r=cvs.getBoundingClientRect();
+drawing.x=(e.clientX-r.left)*W/r.width;drawing.y=(e.clientY-r.top)*W/r.height;draw();});
+cvs.addEventListener('pointerup',e=>{if(!drawing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+const hit=stars.find(s=>Math.hypot(s.x-x,s.y-y)<24&&s!==drawing.from);
+if(hit&&hit.pair===drawing.from.pair){
+// check crossing
+const bad=links.some(l=>segCross(drawing.from,hit,l.a,l.b));
+if(bad){beep(150,.2,'sawtooth');msg('❌ Lines cannot cross!');}
+else{links.push({a:drawing.from,b:hit});
+beep(600+links.length*50,.1,'triangle');
+document.getElementById('p').textContent=links.length;
+if(links.length>=Math.min(2+level,5)){msg('🌌 Constellation complete! Level '+(level+1));level++;
+setTimeout(gen,1000);}}}
+drawing=null;draw();});
+function draw(){ctx.fillStyle='#111936';ctx.fillRect(0,0,W,W);
+for(let i=0;i<30;i++){ctx.fillStyle='#ffffff22';ctx.fillRect((i*83)%W,(i*47)%W,2,2);}
+// links
+links.forEach(l=>{ctx.strokeStyle=l.a.c;ctx.lineWidth=3;ctx.lineCap='round';
+ctx.beginPath();ctx.moveTo(l.a.x,l.a.y);ctx.lineTo(l.b.x,l.b.y);ctx.stroke();});
+if(drawing){ctx.strokeStyle=drawing.from.c+'88';ctx.setLineDash([5,5]);
+ctx.beginPath();ctx.moveTo(drawing.from.x,drawing.from.y);ctx.lineTo(drawing.x,drawing.y);ctx.stroke();ctx.setLineDash([]);}
+// stars
+stars.forEach(s=>{ctx.font='22px serif';ctx.textAlign='center';ctx.fillText(s.e,s.x,s.y+8);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

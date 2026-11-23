@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Camel Choir #386</title><style>
+body{margin:0;font-family:system-ui;background:#78350f;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+#choir{display:flex;gap:8px;margin:14px;flex-wrap:wrap;justify-content:center}
+.camel{width:76px;height:90px;background:#92400e;border:3px solid #b45309;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;transition:transform .1s}
+.camel.sing{transform:scale(1.1);background:#b45309;border-color:#fbbf24}
+#order{display:flex;gap:6px;margin:8px;font-size:1.3rem;min-height:30px}
+#order span{opacity:.35}#order span.cur{opacity:1}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#78350f;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🐪 Desert Camel Choir</h1><div class="sub">Each camel sings a note — tap them low-to-high to play the scale!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Best <b id="b">0</b></span></div>
+<div id="order"></div>
+<div id="choir"></div>
+<div id="msg"></div>
+<button id="btn">🎵 Rehearse</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function note(i){const F=[262,294,330,349,392,440,494];
+try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();
+os.type='triangle';os.frequency.value=F[i];
+g.gain.setValueAtTime(.15,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+.5);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+.5);}catch(e){}}
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let camels=[],order=[],idx=0,round=1,best=+localStorage.getItem('dcc_best')||0;
+document.getElementById('b').textContent=best;
+function newRound(){const n=Math.min(3+round,7);
+camels=[];const notes=[];
+for(let i=0;i<n;i++)notes.push(i);
+// shuffle camel->note mapping
+const sh=notes.slice().sort(()=>Math.random()-.5);
+const ch=document.getElementById('choir');ch.innerHTML='';
+sh.forEach((noteI,i)=>{const d=document.createElement('div');d.className='camel';
+d.textContent='🐪';
+d.onclick=()=>sing(i,noteI);
+ch.appendChild(d);camels.push({el:d,note:noteI});});
+order=notes.slice().sort((a,b)=>a-b);
+idx=0;document.getElementById('r').textContent=round;
+const od=document.getElementById('order');od.innerHTML='';
+order.forEach((nt,i)=>{const s=document.createElement('span');s.textContent='♪';od.appendChild(s);});
+msg('Sing from lowest to highest!');}
+function sing(ci,noteI){note(noteI);
+camels[ci].el.classList.add('sing');
+setTimeout(()=>camels[ci].el.classList.remove('sing'),200);
+if(noteI===order[idx]){idx++;
+document.querySelectorAll('#order span')[idx-1].classList.add('cur');
+if(idx>=order.length){beep(880,.3,'triangle');msg('🎶 Beautiful! Round '+(round+1));round++;
+if(round>best){best=round;localStorage.setItem('dcc_best',best);document.getElementById('b').textContent=best;}
+setTimeout(newRound,900);}}
+else{beep(150,.2,'sawtooth');msg('🐫 Off-key! Restarting…');
+idx=0;document.querySelectorAll('#order span').forEach(s=>s.classList.remove('cur'));}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+</script></body></html>

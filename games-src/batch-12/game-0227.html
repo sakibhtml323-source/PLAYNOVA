@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Row Slide #227</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:12px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(4,64px);gap:4px;margin:12px}
+.cell{width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800;background:#27272a;border-radius:10px;cursor:pointer;user-select:none}
+.cell.hole{background:#18181b;border:2px dashed #3f3f46}
+.cell.ok{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#facc15}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>👻 Haunted Row Slide</h1><div class="sub">Tap any tile — the WHOLE row shifts toward the gap. Restore 1→15!</div>
+<div id="hud"><span>Moves <b id="m">0</b></span><span>Level <b id="l">1</b></span><span>Best <b id="b">—</b></span></div>
+<div id="grid"></div>
+<button id="btn">🔀 New Haunt</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.06,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let board=[],moves=0,level=1,playing=true,best=+localStorage.getItem('hs2_best')||Infinity;
+const N=4;
+function init(){board=[...Array(15).keys()].map(x=>x+1).concat(0);
+let hole=15;for(let i=0;i<200;i++){const opts=[];const r=(hole/N)|0,c=hole%N;
+if(r>0)opts.push(hole-N);if(r<3)opts.push(hole+N);if(c>0)opts.push(hole-1);if(c<3)opts.push(hole+1);
+const p=opts[(Math.random()*opts.length)|0];board[hole]=board[p];board[p]=0;hole=p;}
+if(solved()){board=[2,1,3,4,5,6,7,8,9,10,11,12,13,14,15,0];}
+moves=0;playing=true;render();}
+function solved(){for(let i=0;i<15;i++)if(board[i]!==i+1)return false;return true;}
+function tap(i){
+const hole=board.indexOf(0);const hr=(hole/N)|0,hc=hole%N,tr=(i/N)|0,tc=i%N;
+if(tr!==hr&&tc!==hc){beep(160,.06,'sawtooth');return;}
+if(tr===hr){const step=tc>hc?1:-1;for(let c=hc;c!==tc;c+=step)board[hr*N+c]=board[hr*N+c+step];board[tr*N+tc]=0;}
+else{const step=tr>hr?1:-1;for(let r=hr;r!==tr;r+=step)board[r*N+tc]=board[(r+step)*N+tc];board[tr*N+tc]=0;}
+moves++;document.getElementById('m').textContent=moves;
+beep(380+((board[hole]*53)%5)*70,.05);
+if(solved()){playing=false;beep(660,.2,'triangle');
+if(moves<best){best=moves;localStorage.setItem('hs2_best',best);}
+level++;document.getElementById('l').textContent=level;
+document.getElementById('b').textContent=best;
+setTimeout(init,1200);return;}
+render();}
+function render(){
+const g=document.getElementById('grid');g.innerHTML='';
+for(let i=0;i<16;i++){const d=document.createElement('div');
+d.className='cell'+(board[i]===0?' hole':'')+(board[i]===i+1?' ok':'');
+d.textContent=board[i]||'';d.onclick=()=>tap(i);g.appendChild(d);}
+document.getElementById('b').textContent=best<Infinity?best:'—';}
+document.getElementById('btn').onclick=init;
+init();
+</script></body></html>

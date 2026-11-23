@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gravity Puzzle: Pirate Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#082f49,#0c4a6e);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#075985;border-radius:12px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#bae6fd;min-height:1.6em;margin-top:6px;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#082f49;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🧭 GRAVITY PUZZLE: PIRATE</h1>
+<div id="hud"><span>Map <b id="l">1</b></span><span>💰 Loot <b id="lo">0</b>/<b id="t">0</b></span><span>Moves <b id="m">0</b></span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Tilt gravity! All treasure 💰 slides in that direction until blocked. Collect every coin.</div>
+<div id="ov"><h2 style="color:#fbbf24">TREASURE TILT</h2><p id="od">A physics puzzle on the high seas! Swipe (or arrow keys) to tilt gravity — all loose treasure slides until something stops it. Collect every 💰 before moves run out. Maps grow!</p><button id="btn">WEIGH ANCHOR</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=420;cvs.width=W;cvs.height=H;
+let N,grid,loot,start,playing,level,moves,best=+localStorage.getItem('gp_best')||1;
+document.getElementById('b').textContent=best;
+const TS=52;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){N=Math.min(5+((level-1)/2|0),8);grid=[];loot=[];
+for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=Math.random()<0.24?1:0;}
+// clear a corner for start
+start={r:N-1,c:0};grid[N-1][0]=0;grid[N-2][0]=0;grid[N-1][1]=0;
+const free=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(!grid[r][c]&&!(r===N-1&&c===0))free.push([r,c]);
+free.sort(()=>Math.random()-.5);
+const nL=Math.min(3+level,free.length-1);
+for(let i=0;i<nL;i++)loot.push({r:free[i][0],c:free[i][1],got:false});
+moves=4+level*2;
+document.getElementById('m').textContent=moves;document.getElementById('l').textContent=level;
+document.getElementById('lo').textContent=0;document.getElementById('t').textContent=nL;draw();}
+function tilt(dr,dc){if(!playing)return;
+// move all uncollected loot in direction until blocked
+loot.forEach(l=>{if(l.got)return;
+let r=l.r,c=l.c;
+while(true){const nr=r+dr,nc=c+dc;
+if(nr<0||nc<0||nr>=N||nc>=N||grid[nr][nc])break;
+// blocked by other loot?
+if(loot.some(o=>!o.got&&o!==l&&o.r===nr&&o.c===nc))break;
+r=nr;c=nc;}
+l.r=r;l.c=c;});
+moves--;document.getElementById('m').textContent=moves;
+beep(400,.05);draw();
+// collect: loot on start?
+loot.forEach(l=>{if(!l.got&&l.r===start.r&&l.c===start.c){l.got=true;
+document.getElementById('lo').textContent=loot.filter(x=>x.got).length;beep(800,.1,'triangle');}});
+draw();
+if(loot.every(l=>l.got)){win();return;}
+if(moves<=0){lose();}}
+function win(){playing=false;if(level+1>best){best=level+1;localStorage.setItem('gp_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🏴‍☠️ All treasure secured with '+moves+' moves left!'+(N<8?'<br>Next: '+(N+1)+'×'+(N+1)+' map':'<br>The seven seas are yours!');
+document.getElementById('btn').textContent=N<8?'NEXT MAP':'SAIL AGAIN';if(N>=8)level=0;level++;document.getElementById('ov').style.display='flex';}
+function lose(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🦈 The tide takes the rest…<br>You salvaged '+loot.filter(l=>l.got).length+'/'+loot.length+' on map '+level;
+document.getElementById('btn').textContent='DIVE AGAIN';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#075985';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*TS,y=r*TS;
+ctx.fillStyle=(r+c)%2?'#0c4a6e':'#0ea5e933';ctx.fillRect(x+2,y+2,TS-4,TS-4);
+if(grid[r][c]){ctx.fillStyle='#164e63';ctx.fillRect(x+6,y+6,TS-12,TS-12);ctx.fillStyle='#082f49';ctx.fillRect(x+10,y+10,TS-20,TS-20);}}
+// start (ship)
+ctx.font=(TS*0.55)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText('⛵',start.c*TS+TS/2,start.r*TS+TS/2+2);
+loot.forEach(l=>{if(!l.got)ctx.fillText('💰',l.c*TS+TS/2,l.r*TS+TS/2+2);});}
+let t0=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();t0={x:e.clientX,y:e.clientY};});
+cvs.addEventListener('pointerup',e=>{if(!t0)return;const dx=e.clientX-t0.x,dy=e.clientY-t0.y;
+if(Math.abs(dx)<16&&Math.abs(dy)<16)return;
+if(Math.abs(dx)>Math.abs(dy))tilt(0,Math.sign(dx));else tilt(Math.sign(dy),0);t0=null;});
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowUp'||k==='w')tilt(-1,0);else if(k==='ArrowDown'||k==='s')tilt(1,0);
+else if(k==='ArrowLeft'||k==='a')tilt(0,-1);else if(k==='ArrowRight'||k==='d')tilt(0,1);});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

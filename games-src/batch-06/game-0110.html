@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ninja Silver Chronicles</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#18181b,#27272a);font-family:Georgia,serif;color:#d4d4d8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.1rem;color:#e4e4e7;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+@media(max-width:420px){.shuriken{width:40px;height:40px;font-size:1.1rem}}
+#seq{display:flex;gap:10px;justify-content:center;margin:16px 0;min-height:60px}
+.shuriken{width:52px;height:52px;border-radius:50%;background:#3f3f46;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;transition:background .15s}
+.shuriken.lit{background:#e4e4e7;color:#18181b}
+#msg{text-align:center;font-size:.9rem;color:#a1a1aa;margin:10px 0;min-height:1.6em}
+#input{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
+#input .shuriken{width:44px;height:44px;font-size:1.2rem}
+#fb{text-align:center;min-height:1.6em;font-weight:700}
+#ov{position:fixed;inset:0;background:rgba(24,24,27,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#e4e4e7;border:none;color:#18181b;font-family:inherit;font-weight:800;padding:12px 34px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🥷 NINJA SILVER CHRONICLES</h1>
+<div id="hud"><span>Scroll <b id="l">1</b></span><span>Sequence <b id="n">3</b></span><span>Focus <b id="f">3</b></span><span>Best <b id="b">1</b></span></div>
+<div id="seq"></div>
+<div id="msg">Watch the master's strikes…</div>
+<div id="input"></div>
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#e4e4e7">THE SILVER CHRONICLES</h2><p id="od">Memorize the shuriken sequence the master demonstrates, then repeat it perfectly. Each scroll adds one more strike. Three mistakes and your training ends.</p><button id="btn">BOW TO THE MASTER</button></div>
+<script>
+"use strict";
+const EMO=['🌀','🔥','⚡','🌙','⭐','❄️'];
+let seq,inp,playing,level,focus,best=+localStorage.getItem('nc_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function buildSeq(){seq=[];for(let i=0;i<level+2;i++)seq.push((Math.random()*EMO.length)|0);}
+function renderSeq(litIdx){const s=document.getElementById('seq');s.innerHTML='';
+seq.forEach((v,i)=>{const d=document.createElement('div');d.className='shuriken'+(litIdx===i?' lit':'');
+d.textContent=EMO[v];s.appendChild(d);});
+document.getElementById('n').textContent=seq.length;document.getElementById('l').textContent=level;document.getElementById('f').textContent=focus;}
+function renderInput(){const s=document.getElementById('input');s.innerHTML='';
+seq.forEach((v,i)=>{const d=document.createElement('div');d.className='shuriken';
+d.textContent=inp[i]!==undefined?EMO[inp[i]]:'?';
+if(inp[i]!==undefined)d.classList.add('lit');s.appendChild(d);});}
+function show(){buildSeq();inp=[];renderInput();playing=false;
+document.getElementById('msg').textContent='Watch…';
+let i=0;const iv=setInterval(()=>{
+if(i>0)renderSeq(-1);
+if(i>=seq.length){clearInterval(iv);renderSeq(-1);playing=true;
+document.getElementById('msg').textContent='Your turn — tap the shuriken in order!';
+renderInput();buildInput();return;}
+{const k=i;setTimeout(()=>{renderSeq(k);beep(400+seq[k]*80,.12,'triangle');},80);} i++/* FIX (PLAYNOVA repair): i was already incremented when the timer fired */;},620);}
+function buildInput(){const s=document.getElementById('input');s.innerHTML='';
+EMO.forEach((e,i)=>{const d=document.createElement('div');d.className='shuriken';
+d.textContent=e;
+d.onclick=()=>pick(i);s.appendChild(d);});}
+function pick(v){if(!playing)return;audio.resume();
+const idx=inp.length;
+if(seq[idx]!==v){focus--;document.getElementById('f').textContent=focus;beep(150,.2,'sawtooth');
+document.getElementById('fb').textContent='✗ Wrong strike! The master glares. ('+focus+' focus left)';
+document.getElementById('fb').style.color='#f87171';
+if(focus<=0)return fail();return;}
+inp.push(v);beep(600+v*70,.09,'triangle');renderInput();
+if(inp.length>=seq.length){document.getElementById('fb').textContent='✓ Perfect form!';
+document.getElementById('fb').style.color='#4ade80';
+if(level+1>best){best=level+1;localStorage.setItem('nc_best',best);document.getElementById('b').textContent=best;}
+level++;setTimeout(show,900);}}
+function fail(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🥷 <b>Training ends at scroll '+level+'.</b><br>The master vanishes in silver mist.';
+document.getElementById('btn').textContent='REQUEST RETRAINING';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='6')pick(+e.key-1);});
+document.getElementById('btn').onclick=()=>{audio.resume();level=1;focus=3;document.getElementById('fb').textContent='';
+document.getElementById('ov').style.display='none';show();};
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+id,test,method,result,evidence/notes
+TR-01,500 game files runtime (load/start/input),"Playwright, 500 games",PASS,test_results.json — 500/500
+TR-02,15-game spot re-test after all fixes,Playwright,PASS,"15/15, 0 errors"
+TR-03,Portal pages console/overflow (12 pages),Playwright,PASS,"0 errors, 0 overflow"
+TR-04,Mobile sweep 8 viewports × 11 pages,Playwright 320–1024px,PASS,all clean
+TR-05,Buttons/features (26 checks),Playwright,PASS,BUTTON_TEST_REPORT.csv
+TR-06,Search resets pagination,Playwright,PASS,page=3 → search → no page param
+TR-07,Search+filter+sort combined,Playwright,PASS,48/48 Puzzle & title-match & A–Z & no page param
+TR-08,LocalStorage-blocked resilience,Playwright (storage stubbed),PASS,"home grid 24, consent works, 0 portal errors"
+TR-09,Game-internal storage blocked,Playwright,FAIL (documented),iframe games throw internally; portal unaffected; games frozen per rules
+TR-10,Fullscreen + Escape exit,Playwright,PASS,
+TR-11,Restart / Pause / Resume,Playwright,PASS,honest pause text verified
+TR-12,Favorites + Recently Played save/display,Playwright,PASS,
+TR-13,Cookie consent,Playwright,PASS,accept stores + dismisses; storage-blocked safe
+TR-14,500 game routes HTTP 200,HTTP sweep,PASS,
+TR-15,Registry↔game page mapping,Playwright sample 12,PASS,0 bad
+TR-16,Broken links crawl (all HTML),Static crawl,PASS,0 broken
+TR-17,All JS syntax,node --check,PASS,0 errors
+TR-18,Sitemap URLs exist,Static,PASS,521/521
+TR-19,No Google Ads/AdSense; ad adapters inert,Source scan,PASS,
+TR-20,External dependency scan,Static,PASS,only placeholder domain + schema.org + sitemaps.org
+TR-21,iOS Safari fullscreen (real device),MANUAL,NOT TESTED,headless cannot verify webkitEnterFullscreen
+TR-22,Physical-device sweep (460 remaining games),MANUAL,NOT TESTED,sample showed no class-level issues

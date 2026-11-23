@@ -1,0 +1,501 @@
+id,title,labels,playerMode,mobileSupport,offlineSupport,inputMethods,releaseStatus,result
+0001,Jungle Farm - Puzzle,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0002,Viking Farming Sim Adventure,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0003,Iron Gunner,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0004,Thunder Retro Chronicles,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0005,Cosmic Medieval War,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0006,IQ Test: Samurai Edition,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0007,Quantum Samurai Coloring Book,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0008,Infinity Party Game,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0009,Royal Desert Party Game,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0010,Eternal Halloween Tycoon,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0011,Watercolor Galaxy,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0012,Royal Cooking,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0013,Thunder Sports Zombie Survival,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0014,Iron Minimalist Logic Gates,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0015,Crazy Jungle Forest,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0016,Neumorphism Phantom Rush,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0017,Swift Watercolor Typing Speed,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0018,Crystal Horror Flappy,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0019,Fighting: Robot Edition,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0020,Halloween Epic Arena,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0021,Crazy Pastel Reaction Time,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0022,Ocean Spot the Difference Empire,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0023,Space Resource Management Fury,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0024,Lightning Ladder: Storm Reflexes #24,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0025,Tile Rotation: Arctic Edition,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0026,Greek Myth Endless Runner Fury,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0027,Mega Hotseat Strategy,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0028,Mystic Physics Sandbox,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0029,Turbo Christmas Ball Bounce,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0030,Minimalist Intense Puzzle,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0031,Clever Tycoon,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0032,Epic Egyptian School Simulator,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0033,Airport Manager: Glassmorphism Edition,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0034,Samurai Zombie Survival Blast,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0035,Desert Legendary Galaxy,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0036,Super Christmas Blast,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0037,Combo Clicker #37 (Active Only),CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0038,Silver Horror Hexagon Puzzle,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0039,Dragon Dark Mode Riddle Solver,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0040,Gunner: Watercolor Edition,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0041,Wild Glassmorphism Nonogram,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0042,Ultimate Desert Dungeon,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0043,Base Defense: Isometric Edition,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0044,Idle Clicker: Minimalist Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0045,Versus Puzzle: Horror Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0046,Arctic Hidden Object Storm,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0047,Desert Rhythm Tap Empire,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0048,Isometric Mystic City,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0049,Infinity Physics Sandbox: Pirate Seas,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0050,Wild Desert Storm,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0051,Watercolor Tales,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0052,Ninja Hotseat Strategy Battle,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0053,Legendary Modern Flat War,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0054,Resource Management: Robot Edition,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0055,Dash Brawler #55,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0056,Chill Greek Myth Sudoku,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0057,Robot Fighting Gate,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0058,Super Desert Shared Screen Racing,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0059,Intense Pixel Art Rise,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0060,Horror Neon Forest,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0061,Shadow Christmas 2-Player Battle,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0062,Dark Mode Anagram Puzzle,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0063,Party Game: Neon Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0064,Parkour: Cute Animals Edition,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0065,Neumorphism Hotseat Strategy: Sky,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0066,Focus Trainer: Comic Book Edition,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0067,Legendary Minimalist Blast,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0068,Swift Color Sorting: Pirate Edition,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0069,Row Slide Puzzle #69,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0070,Royal Gradient Traffic Control,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0071,Intense Horror Rise,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0072,Phoenix Cute Animals Island,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0073,Cosmic Jungle Hero,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0074,Halloween Hyper Portal,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0075,Arctic Crazy Universe,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0076,Time Killer: Pirates,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0077,Intense Infinite Runner,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0078,Endless Strategy: Greek Myth,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0079,Hyper Tile Puzzle: Watercolor,ARCADE|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0080,Zombie Puzzle: Liquid Glass,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0081,Crystal Isometric Blast,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0082,Watercolor Quantum Dash,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0083,Leak Pressure Pipes #83,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0084,High Stakes Quiz #84,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0085,Horror Cosmic Merge,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0086,Desert Math Challenge: Ocean Edition,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0087,Pirate Fruit Ninja Farm,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0088,Checkers AI: Pastel Edition,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0089,Pixel Art Golden Challenge,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0090,Hero Defense #90,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0091,Golden Comic Book Mountain,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0092,Top-Down Shooter: Magic Edition,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0093,Ocean Brave Puzzle,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0094,Magic Rise,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0095,Wild Rise,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0096,Wild Greek Myth Shooter,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0097,Simulation: Norse,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0098,Board Game: Greek Myth,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0099,Endless Hotseat Strategy #########,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0100,Wild Color Match: Infinite,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0101,Western Physics Sandbox Empire,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0102,Wrap Pipes #102,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0103,Phantom Isometric Hidden Object,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0104,Brave Traffic Control: Samurai Edition,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0105,Airport Manager: Greek Myth Edition,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0106,Vibrant Mega Ocean,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0107,Party Game: Egyptian Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0108,Anagram: Sports Edition,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0109,Epic Arctic Versus Puzzle,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0110,Ninja Silver Chronicles,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0111,Phantom Side-Scroller,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0112,Retro 16-bit Quantum Dash,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0113,Retro Lives Arena #113,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0114,Gradient Heavy Super Race,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0115,Tower Forge #115 (click tower to upgrade),KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0116,Intense 2-Player Strategy,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0117,Snowboarder: Neon Chronicles,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0118,Overheat Clicker #118,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0119,Silver Celtic Merge,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0120,Super Halloween Farming Simulator,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0121,Clever Arctic Tales,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0122,Eternal Number Merge,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0123,Robot World,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0124,Robot Intense Dash,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0125,Coloring Book: Cyberpunk Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0126,Intense Sports Rush,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0127,Eternal Egyptian Dungeon,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0128,Pirate Idle Clicker Fury,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0129,Hospital Tycoon: Fantasy Edition,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0130,Intense School Simulator,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0131,Villager Escort #131,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0132,Food Dragon Island,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0133,Western Shared Screen Racing Hero,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0134,Golden Neon Forest,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0135,Super Cooking: Samurai Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0136,Watercolor Color Match: Infinite,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0137,Intense Cooking: Infinity Edition,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0138,Air Hockey: Pirate Theme,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0139,Gravity Puzzle: Pirate Edition,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0140,Decoy Spotter #140,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0141,Minimalist Vehicle Combat Rush,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0142,Flying Kings Checkers #142,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0143,Turbo Airport Manager: Steampunk Edition,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0144,Ultimate Match-3: Fantasy Edition,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0145,Modern Flat Mystic Master,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0146,Phantom Glassmorphism Hotseat Strategy,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0147,Losing Checkers #147 (lose all pieces to win!),KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0148,Swift Neon Gunner,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0149,King Rush Checkers #149,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0150,Eternal Robot Room Escape,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0151,Intense Samurai Vehicle Combat,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0152,Isometric Brave Kingdom,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0153,Cosmic Monochrome Farming Sim,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0154,Storm Jungle Puzzle,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0155,Viking Merge: Watercolor Edition,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0156,Ultimate Endless Runner: Pirate Edition,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0157,Cel-shaded Space War: 2P Edition,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0158,Modern Flat Puzzle: Norse Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0159,Epic Time Management: Infinity,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0160,Lives & Lens Spotter #160,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0161,Mega Magic Logic Gates,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0162,Cosmic Magic Riddle Solver,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0163,Gravity Shift Merge #163,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0164,Neon Party Game: Race Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0165,Splitter Defense #165,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0166,Royal Hidden Object,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0167,Glassmorphism Realm,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0168,Overtime Trivia #168,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0169,Cute Animals Rise,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0170,Memory Sequence: Isometric Edition,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0171,Arctic Flappy: Universe Edition,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0172,Dress Up: Glassmorphism Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0173,Roundabout Yield #173,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0174,Retro 8-bit School Simulator Rush,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0175,Versus Puzzle: Food Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0176,Golden Watercolor Portal,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0177,Watercolor Physics Sandbox,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0178,Dark Mode Sport Hero,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0179,Epic Cozy Merge: 2P Edition,ARCADE|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0180,Halloween Intense Puzzle,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0181,Turbo Christmas Legend,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0182,Glassmorphism Golden Adventure,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0183,Ball Bounce: Glassmorphism Edition,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0184,Focus Trainer: Pixel Art Edition,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0185,Coloring Book: Glassmorphism Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0186,Dual Source Pipes #186,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0187,Legendary Traffic Control: Food Edition,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0188,Mega Halloween Airport Manager,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0189,Medieval Arena,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0190,Phoenix Arctic Legend,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0191,Epic Vehicle Combat: Horror Edition,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0192,Storm Jungle Word Search,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0193,Norse Shared Screen Racing,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0194,Chain Combo Merge #194,ARCADE|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0195,Legendary Maze,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0196,Desert Math Puzzle,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0197,Rune Tree Idle #197,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0198,Side-Scroller: Arctic Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0199,Desert Logic Gates,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0200,Super Hotseat Strategy: Christmas Edition,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0201,Comic Book Chronicles,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0202,Zen Vibrant Master,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0203,Epic Pixel Art Tower,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0204,Low-poly Fall,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0205,Turbo Magic Parkour,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0206,Coloring Book: Food Edition,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0207,Quantum Viking Merge,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0208,Silent Music Galaxy,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0209,Cyberpunk Sky,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0210,Robot Rush,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0211,Royal Cooking Party Game,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0212,Train Crossing #212,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0213,Epic Magic Coloring Book,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0214,Intense Brain Puzzle Saga (Daily Seed),KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0215,Fog of War Checkers #215,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0216,Quantum Run,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0217,Token Hunt Slide #217,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0218,Halloween King,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0219,Intense Maze,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0220,Watercolor Merge: Holiday Edition,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0221,Ninja Dress Up #221,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0222,Food Dungeon #222,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0223,Egyptian Gate Traffic #223,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0224,Haunted Simon Duel #224,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0225,Ninja Coin Tower #225,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0226,Desert Forge Idle #226,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0227,Haunted Row Slide #227,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0228,Royal Cooking Dash #228,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0229,Crystal Hex Duel #229,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0230,Haunted Obby Run #230,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0231,Egyptian Wrap Pipes #231,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0232,Desert Reflection #232,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0233,Ninja Maze Sprint #233,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0234,Royal Checkers Blitz #234,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0235,Haunted Hotseat Conquest #235,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0236,Crystal Match Blast #236,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0237,Idle Pharaoh #237,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0238,Ninja Reaction #238,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0239,Royal Word Ladder #239,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0240,Desert Gravity Flip #240,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0241,Desert Mega Hero #241,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0242,Music Versus #242,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0243,Pixel Checkers Fog #243,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0244,Haunted Calculator #244,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0245,Crystal Ball Sort #245,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0246,Ninja Math Sprint #246,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0247,Royal Court Word Duel #247,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0248,Desert Memory Match #248,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0249,Music Sequence Builder #249,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0250,Haunted Merge Blast #250,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0251,Crystal Balance #251,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0252,Ninja Quiz Blitz #252,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0253,Royal Idle Kingdom #253,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0254,Haunted Spot Shift #254,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0255,Egyptian Portal 2048 #255,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0256,Ninja Reflex Duel #256,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0257,Royal Pipe Connect #257,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0258,Crystal Word Search #258,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0259,Desert Snake Trail #259,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0260,Haunted Tower Stack #260,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0261,Ninja Stealth Grid #261,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0262,Desert Dual Defense #262,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0263,Crystal Rhythm Grid #263,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0264,Egyptian Math Pyramid #264,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0265,Haunted Whack-A-Ghost #265,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0266,Royal Chess Puzzles #266,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0267,Ninja Ice Slide #267,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0268,Desert Draw Path #268,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0269,Crystal Cipher #269,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0270,Ninja Arena King #270,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0271,Haunted Anagram Arena #271,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0272,Desert Snake Pit #272,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0273,Ninja Logic Gates #273,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0274,Royal Match Towers #274,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0275,Haunted Wave Composer #275,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0276,Crystal Dot Link #276,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0277,Desert Rhythm Runner #277,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0278,Royal Deck Duel #278,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0279,Haunted Falling Blocks #279,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0280,Ninja Mirror Maze #280,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0281,Desert Bounce Quest #281,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0282,Crystal Memory Matrix #282,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0283,Royal Number Maze #283,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0284,Haunted Pattern Shift #284,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0285,Ninja Color Flood #285,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0286,Desert Vault #286,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0287,Crystal Laser Alignment #287,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0288,Ninja Pixel Painter #288,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0289,Royal Tile Swap #289,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0290,Haunted Sound Board #290,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0291,Desert Caravan Trade #291,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0292,Crystal Dot Pop #292,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0293,Ninja Target Skipper #293,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0294,Royal Word Search Blitz #294,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0295,Desert Balance Beam #295,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0296,Ninja Shadow Match #296,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0297,Crystal Path Finder #297,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0298,Royal Rhythm Taps #298,ARCADE|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0299,Haunted Maze Chase #299,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0300,Crystal Defense Grid #300,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0301,Ninja Spell Chain #301,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0302,Desert Oasis Defense #302,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0303,Crystal Reflex Grid #303,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0304,Royal Joust #304,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0305,Haunted Bubble Pop #305,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0306,Crystal Shift Puzzle #306,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0307,Desert Train Switch #307,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0308,Ninja Stack Sort #308,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0309,Royal Word Grid #309,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0310,Haunted Ghost Maze #310,ACTION|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0311,Crystal Dice Duel #311,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0312,Ninja Orchard Harvest #312,ACTION|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0313,Haunted Spot Pop #313,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0314,Royal Card Count #314,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0315,Desert Mirror Path #315,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0316,Ninja Star Catch #0316,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0317,Royal Jewel Merge #317,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0318,Haunted Tile Runner #0318,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0319,Crystal Number Drop #319,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0320,Desert Rhythm Tap #320,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0321,Ninja Dart Board #321,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0322,Desert Sand Draw #322,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0323,Crystal Color Chain #323,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0324,Royal Egg Catch #324,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0325,Haunted Grid Crawler #325,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0326,Desert Oasis Match #326,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0327,Ninja Wind Sprint #327,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0328,Royal Candle Light #328,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0329,Desert Scroll Roll #329,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0330,Crystal Code Breaker #330,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0331,Ninja Balance Tower #331,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0332,Royal Music Tiles #332,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0333,Desert Dot Trail #333,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0334,Ninja Windmill #334,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0335,Royal Gate Keeper #335,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0336,Crystal Ice Break #336,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0337,Desert Scarab Rush #337,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0338,Haunted Mirror Match #338,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0339,Ninja Lantern Light #339,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0340,Royal Charm Match #340,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0341,Ninja Wind Blade #341,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0342,Desert Coin Pusher #342,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0343,Crystal Path Defense #343,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0344,Haunted Number Path #344,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0345,Royal Jester Juggle #345,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0346,Crystal Stack Sort #346,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0347,Desert Rhythm Hop #347,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0348,Haunted Clock Tower #348,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0349,Royal Crown Tower #349,KEYBOARD|SIMULATION|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0350,Ninja Shadow Step #350,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0351,Crystal Flow #351,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0352,Desert Camel Race #352,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0353,Royal Anagram Battle #353,ARCADE|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0354,Beat Bell #354,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0355,Crystal Puzzle Grid #355,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0356,Ninja Star Throw #356,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0357,Desert Coin Flip #357,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0358,Haunted Crystal Ball #358,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0359,Royal Feast Rush #359,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0360,Ninja Scroll Cargo #360,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0361,Desert Ant Farm #361,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0362,Crystal Grid Shift #362,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0363,Royal Bee Garden #363,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0364,Ninja Word Scroll #364,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0365,Desert Mine Cart #365,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0366,Haunted Painting #366,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0367,Ninja Ice Flow #367,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0368,Royal Soup Stir #368,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0369,Desert Sand Timer #369,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0370,Ninja Lantern Maze #370,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0371,Royal Chess Knight #371,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0372,Desert Firefly Catch #372,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0373,Haunted Mirror Path #373,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0374,Ninja Water Drop #374,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0375,Royal Dice Stack #375,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0376,Desert Scorpion Sting #376,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0377,Crystal Harmony #377,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0378,Royal Portrait Mix #378,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0379,Ninja Smoke Bomb #379,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0380,Royal Crown Jewels #380,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0381,Ninja Leaf Glide #381,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0382,Desert Gear Puzzle #382,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0383,Royal Recipe Mix #383,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0384,Haunted Echo #384,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0385,Ninja Star Link #385,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0386,Desert Camel Choir #386,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0387,Royal Card Castle #387,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0388,Desert Oasis Hop #388,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0389,Ninja Lantern Catch #389,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0390,Royal Throne Sort #390,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0391,Royal Key Turn #391,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0392,Desert Sand Storm #392,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0393,Ninja Torch Trail #393,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0394,Royal Feast Balance #394,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,partial,verified,keyboard|mouse,verified,VALID
+0395,Haunted Library #395,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0396,Desert Scarab Maze #396,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0397,Ninja Mask Match #397,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0398,Royal Rainbow #398,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0399,Desert Moon Phase #399,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0400,Ninja Storm Dodge #400,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0401,Ninja Sand Sprint #401,KEYBOARD|SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0402,Desert Night Watch #402,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0403,Royal Sword Pull #403,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0404,Haunted Hourglass Race #404,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0405,Crystal Pond Ripple #405,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0406,Desert Star Navigate #406,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0407,Royal Cannon Aim #407,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0408,Ninja Web Swing #408,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0409,Desert Solar Align #409,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0410,Haunted Bell Ring #410,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0411,Desert Dune Board #411,BRAIN|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0412,Royal Joust Duel #412,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0413,Ninja Shadow Clone #413,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0414,Desert Wind Chime #414,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0415,Royal Torch Run #415,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0416,Haunted Clock Hands #416,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0417,Desert Frog Leap #417,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0418,Crystal Grid Slide #418,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0419,Haunted Attic Sort #419,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0420,Crystal Comet Catch #420,ARCADE|KEYBOARD|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0421,Ninja Silent Step #421,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0422,Desert Sun Dial #422,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0423,Royal Goblet Guess #423,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0424,Haunted Portrait Row #424,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0425,Crystal Flood Gate #425,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0426,Royal Fan Fare #426,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0427,Desert Star Map #427,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0428,Ninja Lantern Toss #428,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0429,Desert Oasis Guard #429,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0430,Royal Jewel Weigh #430,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0431,Haunted Painting Find #431,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0432,Desert Camel Bell #432,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0433,Crystal Pool Shot #433,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0434,Haunted Door Guard #434,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0435,Desert Masked Dancer #435,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0436,Crystal Tide Pool #436,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0437,Royal Archer Range #437,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0438,Haunted Attic Crawl #438,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0439,Desert Sun Catch #439,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0440,Royal Throne Path #440,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0441,Ninja Fog Walk #441,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0442,Desert Star Fall #442,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0443,Royal Trumpet Call #443,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0444,Haunted Organ #444,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0445,Desert Scarab Push #445,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0446,Crystal Gem Grid #446,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0447,Desert Wind Ladder #447,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0448,Royal Banner Weave #448,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0449,Haunted Tower Stack #449,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0450,Desert Echo Shout #450,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0451,Royal Bell Tower #451,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0452,Crystal Pool Dive #452,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0453,Haunted Attic Stack #453,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0454,Desert Snake Charmer #454,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0455,Royal Procession #455,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0456,Ninja Star Pin #456,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0457,Desert Cactus Guard #457,CASUAL|KEYBOARD|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0458,Ninja Scroll Balance #458,KEYBOARD|SINGLE PLAYER|STRATEGY,single-player,partial,verified,keyboard|mouse,verified,VALID
+0459,Desert Moon Jump #459,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0460,Royal Crown Catch #460,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,partial,verified,keyboard|mouse,verified,VALID
+0461,Ninja Leaf Sweep #461,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL,local-multiplayer,verified,verified,mouse,verified,VALID
+0462,Desert Camel Market #462,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0463,Crystal Prism Split #463,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0464,Desert Night Patrol #464,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0465,Haunted Graveyard #465,SIMULATION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0466,Desert Oasis Rope #466,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0467,Ninja Star Trace #467,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0468,Desert Hawk Dive #468,2 PLAYER|KEYBOARD|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|keyboard|mouse,verified,VALID
+0469,Royal Tapestry #469,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0470,Haunted Ballroom #470,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0471,Desert Sun Dial Run #471,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0472,Crystal Golem Path #472,ACTION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0473,Haunted Garden Tend #473,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0474,Royal Vault Spin #474,ARCADE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0475,Desert Fire Dance #475,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0476,Haunted Mirror Hall #476,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0477,Desert Rain Catch #477,KEYBOARD|MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0478,Ninja Wind Blade Dance #478,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0479,Desert Oasis Ring #479,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0480,Royal Feast Balance #480,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0481,Ninja Smoke Maze #481,SIMULATION|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0482,Desert Sun Race #482,ARCADE|KEYBOARD|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0483,Royal Goblin Market #483,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0484,Haunted Attic Drop #484,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0485,Ninja Wall Run #485,KEYBOARD|SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|keyboard|mouse,verified,VALID
+0486,Desert Star Link #486,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0487,Royal Vault Heist #487,SINGLE PLAYER|STRATEGY,single-player,verified,verified,mouse,verified,VALID
+0488,Desert Moon Hopper #0488,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0489,Haunted Chime Order #0489,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0490,Crystal Golem Merge #0490,CASUAL|MOBILE FRIENDLY|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0491,Desert Ant Hill #0491,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0492,Royal Crown Slide #0492,MOBILE FRIENDLY|PUZZLE|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0493,Haunted Attic Climb #0493,SINGLE PLAYER|STRATEGY|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0494,Desert Windmill Spin #0494,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0495,Haunted Grave Dig #0495,ARCADE|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0496,Royal Coin Sort #0496,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0497,Ninja Scroll Chase #0497,BRAIN|MOBILE FRIENDLY|SINGLE PLAYER,single-player,verified,verified,mouse,verified,VALID
+0498,Desert Sand Timer Duel #0498,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID
+0499,Haunted Clock Puzzle #0499,2 PLAYER|MULTIPLAYER|MULTIPLAYER LOCAL|TOUCH,local-multiplayer,verified,verified,touch|mouse,verified,VALID
+0500,Royal Crown Finale #0500,ACTION|SINGLE PLAYER|TOUCH,single-player,verified,verified,touch|mouse,verified,VALID

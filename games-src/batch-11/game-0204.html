@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Low-poly Fall</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fef3c7,#fde68a);font-family:Georgia,serif;color:#78350f;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#b45309;padding:8px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:linear-gradient(#bae6fd,#e0f2fe);border-radius:12px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(254,243,199,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#78350f;padding:20px;z-index:5}
+button{background:#b45309;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🍂 LOW-POLY FALL</h1>
+<div id="hud"><span>Leaves <b id="l">0</b></span><span>Time <b id="t">0.0</b>s</span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2>AUTUMN DRIFT</h2><p id="od">Guide the falling low-poly leaf through the autumn sky! Steer with ← → / A D or drag. Catch air currents 💨 for lift. Land softly on the golden pile — don't hit the branches!</p><button id="btn">LET GO</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let leaf,currents,branches,playing,keys,time,frame,landed,best=+localStorage.getItem('lpf_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){leaf={x:W/2,y:20,vy:1.2,vx:0,rot:0};currents=[];branches=[];playing=true;keys={};time=0;frame=0;landed=false;
+document.getElementById('l').textContent=0;document.getElementById('t').textContent='0.0';}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+window.addEventListener('pointerup',()=>dragX=null);
+function step(){frame++;time+=1/60;document.getElementById('t').textContent=time.toFixed(1);
+if(keys['arrowleft']||keys['a'])leaf.vx-=0.3;if(keys['arrowright']||keys['d'])leaf.vx+=0.3;
+if(dragX!==null)leaf.vx+=(dragX-leaf.x)*0.02;
+leaf.vx*=0.94;leaf.x+=leaf.vx;leaf.vy=Math.min(leaf.vy+0.02,2.4);leaf.y+=leaf.vy;
+leaf.rot+=leaf.vx*0.02;
+leaf.x=Math.max(16,Math.min(W-16,leaf.x));
+if(frame%70===0)currents.push({x:20+Math.random()*(W-40),y:-20,w:40+Math.random()*30,ph:Math.random()*7});
+if(frame%55===0)branches.push({x:Math.random()<0.5?-30:W+10,y:-16,w:60+Math.random()*40,side:0});
+currents.forEach(c2=>c2.y+=1.4);branches.forEach(b=>b.y+=1.9);
+currents=currents.filter(c2=>c2.y<H+30);branches=branches.filter(b=>b.y<H+20);
+currents.forEach(c2=>{if(Math.abs(leaf.x-c2.x)<c2.w&&Math.abs(leaf.y-c2.y)<20){leaf.vy=Math.max(0.6,leaf.vy-0.15);leaf.vx+=Math.sin(frame/20+c2.ph)*0.2;}});
+branches.forEach(b=>{const bx=b.x<0?b.w/2:W-b.w/2;
+if(Math.abs(leaf.x-bx)<b.w/2&&Math.abs(leaf.y-b.y)<12){die();}});
+if(leaf.y>=H-40){landed=true;win();}}
+function win(){playing=false;const score=Math.max(1,Math.floor(time*10));
+if(score>best){best=score;localStorage.setItem('lpf_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('l').textContent=score;
+beep(880,.25,'triangle');
+document.getElementById('od').innerHTML='🍂 A soft landing after <b style="color:#b45309">'+time.toFixed(1)+'s</b>!<br>Score: '+score;
+document.getElementById('btn').textContent='FALL AGAIN';document.getElementById('ov').style.display='flex';}
+function die(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🌿 A branch catches the leaf at '+time.toFixed(1)+'s…';
+document.getElementById('btn').textContent='RELEASE AGAIN';document.getElementById('ov').style.display='flex';}
+function draw(){const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#bae6fd');g2.addColorStop(1,'#fde68a');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+currents.forEach(c2=>{ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(c2.x-c2.w/2,c2.y+Math.sin(frame/12+c2.ph)*3);
+for(let i=0;i<=10;i++)ctx.lineTo(c2.x-c2.w/2+i*c2.w/10,c2.y+Math.sin(frame/12+c2.ph+i)*3);
+ctx.stroke();ctx.lineWidth=1;});
+branches.forEach(b=>{ctx.fillStyle='#92400e';
+const bx=b.x<0?b.w/2:W-b.w/2;
+ctx.fillRect(bx-b.w/2,b.y,b.w,8);
+ctx.fillStyle='#78350f';for(let i=0;i<3;i++)ctx.fillRect(bx-b.w/2+8+i*18,b.y-6,10,6);});
+// ground pile
+ctx.fillStyle='#f59e0b';ctx.fillRect(0,H-40,W,40);
+ctx.fillStyle='#fde047';for(let i=0;i<8;i++)ctx.fillRect(i*54,H-44,30,8);
+// low-poly leaf
+ctx.save();ctx.translate(leaf.x,leaf.y);ctx.rotate(leaf.rot);
+ctx.fillStyle='#f59e0b';
+ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(10,0);ctx.lineTo(0,14);ctx.lineTo(-10,0);ctx.closePath();ctx.fill();
+ctx.strokeStyle='#b45309';ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(0,14);ctx.stroke();
+ctx.restore();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

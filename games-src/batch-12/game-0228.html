@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Cooking Dash #228</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#orders{display:flex;gap:10px;margin:8px;flex-wrap:wrap;justify-content:center}
+.order{background:#312e81;border:2px solid #4f46e5;border-radius:12px;padding:8px 12px;text-align:center;font-size:.8rem}
+.order .e{font-size:1.7rem}
+.order .bar{height:5px;background:#1e1b4b;border-radius:3px;margin-top:5px;overflow:hidden}
+.order .bar i{display:block;height:100%;background:#34d399;transition:width .2s}
+#pans{display:flex;gap:10px;margin:10px}
+.pan{font-size:2rem;width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:#312e81;border:2px solid #4f46e5;border-radius:50%;cursor:pointer;user-select:none}
+.pan.cooking{animation:shake .3s infinite}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.78);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:12px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>👑 Royal Cooking Dash</h1><div class="sub">Tap a pan to cook its dish, tap the matching order to serve. Beat the clock!</div>
+<div id="hud"><span>⏱️ <b id="t">60</b>s</span><span>Served <b id="s">0</b></span><span>Missed <b id="x">0</b></span></div>
+<div id="orders"></div>
+<div id="pans">
+<div class="pan" data-d="🍗">🍗</div><div class="pan" data-d="🍰">🍰</div>
+<div class="pan" data-d="🍲">🍲</div><div class="pan" data-d="🍤">🍤</div>
+</div>
+<div id="ov"><div style="font-size:3rem">👑</div><p>The royal banquet awaits!<br>Serve as many dishes as you can in 60 seconds.</p><button id="btn">Start Cooking</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.08,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const DISHES=['🍗','🍰','🍲','🍤'];
+const COOKTIME=[900,1100,1300,1500];
+let orders=[],time=60,served=0,missed=0,timer=null,cooking={};
+document.querySelectorAll('.pan').forEach(p=>{
+ p.addEventListener('pointerdown',()=>{const d=p.dataset.d;
+ if(cooking[d])return;cooking[d]=true;p.classList.add('cooking');beep(300,.1);
+ setTimeout(()=>{p.classList.remove('cooking');cooking[d]=false;
+ const o=orders.find(x=>x.d===d&&x.state==='ready');
+ if(o){o.state='serve';o.el.style.borderColor='#fbbf24';beep(700,.1,'triangle');}else{beep(200,.15,'sawtooth');}},COOKTIME[DISHES.indexOf(d)]);});});
+function spawnOrder(){const d=DISHES[(Math.random()*4)|0];
+ const el=document.createElement('div');el.className='order';
+ el.innerHTML='<div class="e">'+d+'</div><div>tap when cooked</div><div class="bar"><i style="width:100%"></i></div>';
+ el.addEventListener('pointerdown',()=>{const o=orders.find(x=>x.el===el);
+ if(!o||o.state==='done')return;
+ if(o.state==='serve'){served++;document.getElementById('s').textContent=served;beep(880,.15,'triangle');o.done();}
+ else{beep(180,.12,'sawtooth');}});
+ document.getElementById('orders').appendChild(el);
+ orders.push({d,el,life:8000,state:'ready',done(){this.state='done';el.remove();orders=orders.filter(x=>x!==this);}});}
+function tick(){time--;document.getElementById('t').textContent=time;
+if(time<=0){clearInterval(timer);clearInterval(spawner);
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🏰 Banquet over!<br>Served: <b style="color:#fbbf24">'+served+'</b> · Missed: '+missed;return;}
+orders.forEach(o=>{o.life-=250;const b=o.el.querySelector('.bar i');if(b)b.style.width=Math.max(0,o.life/80)+'%';
+if(o.life<=0&&o.state!=='done'){missed++;document.getElementById('x').textContent=missed;beep(150,.2,'sawtooth');o.done();}});}
+let spawner=null;
+document.getElementById('btn').onclick=()=>{orders=[];document.getElementById('orders').innerHTML='';
+time=60;served=0;missed=0;document.getElementById('s').textContent=0;document.getElementById('x').textContent=0;document.getElementById('t').textContent=60;
+document.getElementById('ov').style.display='none';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();
+spawnOrder();spawnOrder();
+spawner=setInterval(spawnOrder,2600);timer=setInterval(tick,250);};
+</script></body></html>

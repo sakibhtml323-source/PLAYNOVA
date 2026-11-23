@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Combo Clicker #37 (Active Only)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(ellipse at top,#2e1065,#0f172a);font-family:Georgia,serif;color:#e9d5ff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.2rem;color:#c084fc;padding:6px;letter-spacing:1px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.9rem}
+#stats span{background:#1e1b4b;border:1px solid #4c1d95;border-radius:12px;padding:4px 12px}
+#wand{font-size:4rem;cursor:pointer;user-select:none;display:inline-block;margin:10px 0;transition:transform .1s}
+#wand:active{transform:scale(.9) rotate(-8deg)}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#1e1b4b;border:1px solid #4c1d95;border-radius:14px;padding:12px}
+.card h3{color:#d8b4fe;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#0f172a;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row small{color:#a78bfa;display:block}
+.row button{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.row button:disabled{opacity:.35}
+.f{position:fixed;color:#e9d5ff;font-weight:800;pointer-events:none;transition:all .8s;z-index:9;text-shadow:0 0 8px #a855f7}
+</style>
+</head>
+<body>
+<h1>🔮 LEGENDARY TYCOON</h1>
+<div id="stats"><span>✨ Mana <b id="c">0</b></span><span>📈 /s <b id="r">0</b></span><span>⚡ Per tap <b id="pc">1</b></span><span>🏆 Best <b id="b">0</b></span></div>
+<div style="text-align:center"><span id="wand">🪄</span><div style="font-size:.75rem;color:#7c3aed">tap the wand — or press SPACE</div></div>
+<main>
+<div class="card"><h3>🧙 GUILD STRUCTURES (auto mana)</h3><div id="shop"></div></div>
+<div class="card"><h3>📜 GRIMOIRE UPGRADES</h3><div id="ups"></div>
+<div style="display:flex;gap:8px;margin-top:8px"><button id="save" style="background:#4c1d95;color:#e9d5ff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">💾 Save</button><button id="reset" style="background:#4c1d95;color:#e9d5ff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">🗑️ Reset</button></div></div>
+</main>
+<script>
+"use strict";
+const ST=[{n:'Fairy Circle',e:'🧚',c:20,r:0.5},{n:'Wizard Tower',e:'🧙',c:110,r:2.2},{n:'Dragon Lair',e:'🐉',c:500,r:8},{n:'Celestial Spire',e:'🌟',c:2200,r:30},{n:'Goddess Shrine',e:'🕉️',c:9000,r:110}];
+const UPG=[{n:'Power Word',d:'+2 per tap',c:80,f:S=>S.pc+=2},{n:'Arcane Focus',d:'+10 per tap',c:900,f:S=>S.pc+=10},{n:'Mythic Resonance',d:'+40 per tap',c:6000,f:S=>S.pc+=40}];
+let S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0]};
+function load(){try{const d=JSON.parse(localStorage.getItem('lt_save'));if(d)Object.assign(S,d);}catch(e){}}
+function save(){localStorage.setItem('lt_save',JSON.stringify(S));let b=+localStorage.getItem('lt_best')||0;if(S.c>b)localStorage.setItem('lt_best',Math.floor(S.c));}
+load();document.getElementById('b').textContent=+localStorage.getItem('lt_best')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function rate(){return ST.reduce((a,s2,i)=>a+s2.r*S.own[i],0);}
+function fl(x,y,t){const s=document.createElement('div');s.className='f';s.textContent=t;s.style.cssText='left:'+x+'px;top:'+y+'px';document.body.appendChild(s);requestAnimationFrame(()=>{s.style.top=(y-70)+'px';s.style.opacity=0;});setTimeout(()=>s.remove(),850);}
+document.getElementById('wand').addEventListener('pointerdown',e=>{audio.resume();combo=Math.min(combo+1,10);clearTimeout(comboTO);comboTO=setTimeout(()=>{combo=0;},1500);
+const gained=S.pc*combo;S.c+=gained;beep(500+combo*60,.05,'triangle');fl(e.clientX,e.clientY,'+'+gained+(combo>1?' 🔥x'+combo:''));render();});
+window.addEventListener('keydown',e=>{const k=e.key;if(k===' '){e.preventDefault();document.getElementById('wand').dispatchEvent(new PointerEvent('pointerdown',{clientX:innerWidth/2,clientY:innerHeight/2}));}if(k>='1'&&k<='5'){const b=document.querySelectorAll('#shop button')[+k-1];if(b&&!b.disabled)b.click();}});
+function render(){document.getElementById('c').textContent=Math.floor(S.c);document.getElementById('r').textContent=rate().toFixed(1);document.getElementById('pc').textContent=S.pc;
+const sh=document.getElementById('shop');sh.innerHTML='';
+ST.forEach((s2,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+s2.e+' '+s2.n+'</b> <small>×'+S.own[i]+' · '+s2.r+'/s</small></div>';
+const b=document.createElement('button');b.textContent=s2.c+' ✨';b.disabled=S.c<s2.c;
+b.onclick=()=>{if(S.c>=s2.c){S.c-=s2.c;S.own[i]++;beep(500+i*70,.09);render();save();}};row.appendChild(b);sh.appendChild(row);});
+const up=document.getElementById('ups');up.innerHTML='';
+UPG.forEach((u,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+u.n+'</b> <small>'+u.d+(S.up[i]?' · ✓':'')+'</small></div>';
+const b=document.createElement('button');b.textContent=S.up[i]?'OWNED':u.c+' ✨';b.disabled=S.up[i]||S.c<u.c;
+b.onclick=()=>{if(!S.up[i]&&S.c>=u.c){S.c-=u.c;S.up[i]=1;u.f(S);beep(760,.12,'triangle');render();save();}};row.appendChild(b);up.appendChild(row);});}
+let combo=0,comboTO=null;setInterval(()=>{document.getElementById('c').textContent=Math.floor(S.c);document.getElementById('r').textContent=rate().toFixed(1);},250);
+document.getElementById('save').onclick=()=>{save();beep(1046,.1,'triangle');};
+document.getElementById('reset').onclick=()=>{if(confirm('Dissolve the guild?')){S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0]};localStorage.removeItem('lt_save');render();}};
+window.addEventListener('beforeunload',save);
+render();
+</script>
+</body>
+</html>

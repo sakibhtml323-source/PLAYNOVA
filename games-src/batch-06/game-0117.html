@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Snowboarder: Neon Chronicles</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#05050a;font-family:'Segoe UI',Arial,sans-serif;color:#22d3ee;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#f0abfc;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0a0a14;border-radius:10px;border:2px solid #164e63;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(5,5,10,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#a5f3fc;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#05050a;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏂 SNOWBOARDER: NEON</h1>
+<div id="hud"><span>Distance <b id="d">0</b>m</span><span>🌟 Tricks <b id="tr">0</b></span><span>Speed <b id="v">1.0</b>x</span><span>Best <b id="b">0</b>m</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#f0abfc">NEON SLOPES</h2><p id="od">Carve the infinite neon mountain! Steer with ← → / A D or drag. Hit ramps for air — tap/Space mid-air for a TRICK 🌟. Dodge rocks and trees. Style is distance!</p><button id="btn">DROP IN</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=480;cvs.width=W;cvs.height=H;
+let me,obs,ramps,playing,keys,dist,speed,tricks,air,best=+localStorage.getItem('sn_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-120,vx:0,vy:0,onG:true};obs=[];ramps=[];dist=0;speed=2.6;tricks=0;air=0;keys={};playing=true;
+document.getElementById('d').textContent=0;document.getElementById('tr').textContent=0;document.getElementById('v').textContent='1.0';}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if((e.key===' '||e.key==='ArrowUp')&&!me.onG){e.preventDefault();trick();}});
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W;
+if(x<W*0.35)keys['l']=true;else if(x>W*0.65)keys['r']=true;else if(!me.onG)trick();else keys['accel']=true;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointerup',()=>{keys['l']=false;keys['r']=false;keys['accel']=false;});
+function trick(){tricks++;document.getElementById('tr').textContent=tricks;beep(800+tricks*40,.09,'triangle');
+me.spin=20;}
+function step(){dist+=speed/4;speed=2.6+dist/300;document.getElementById('d').textContent=Math.floor(dist);document.getElementById('v').textContent=(speed/2.6).toFixed(1);
+const st=4.4;
+if(keys['arrowleft']||keys['a']||keys['l'])me.vx-=0.8;
+if(keys['arrowright']||keys['d']||keys['r'])me.vx+=0.8;
+me.vx*=0.92;me.x+=me.vx;me.x=Math.max(24,Math.min(W-24,me.x));
+me.y=H-120+Math.sin(dist/8)*20;
+if(me.spin>0)me.spin--;
+// spawn
+if(Math.random()<0.03+dist/8000){const r=Math.random();
+if(r<0.4)obs.push({x:20+Math.random()*(W-40),y:-30,t:'rock'});
+else if(r<0.7)obs.push({x:20+Math.random()*(W-40),y:-30,t:'tree'});
+else ramps.push({x:40+Math.random()*(W-80),y:-30});}
+const sp=speed*2;
+obs.forEach(o=>o.y+=sp);ramps.forEach(rp=>rp.y+=sp);
+obs=obs.filter(o=>o.y<H+40);ramps=ramps.filter(rp=>rp.y<H+30);
+// ramp jump
+ramps.forEach(rp=>{if(Math.abs(rp.x-me.x)<34&&Math.abs(rp.y-me.y)<24&&me.onG){me.onG=false;me.vy=-7;beep(600,.1,'triangle');}});
+if(!me.onG){me.vy+=0.4;me.y+=me.vy;
+if(me.y>=H-120+Math.sin(dist/8)*20){me.y=H-120+Math.sin(dist/8)*20;me.onG=true;me.vy=0;}}
+obs.forEach(o=>{const w2=o.t==='tree'?20:26;
+if(Math.abs(o.x-me.x)<w2&&Math.abs(o.y-me.y)<20&&!(!me.onG&&me.y<me.baseY-30))die();});}
+function die(){playing=false;const d=Math.floor(dist);
+if(d>best){best=d;localStorage.setItem('sn_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='You wiped out at <b style="color:#f0abfc">'+d+'m</b> with '+tricks+' tricks!';
+document.getElementById('btn').textContent='RIDE AGAIN';document.getElementById('ov').style.display='flex';beep(130,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+// neon slope
+const g2=ctx.createLinearGradient(0,0,W,0);g2.addColorStop(0,'#164e6300');g2.addColorStop(0.5,'#164e63');g2.addColorStop(1,'#164e6300');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+// speed lines
+for(let i=0;i<10;i++){const y=(i*53+dist*8)%(H+60)-30;
+ctx.strokeStyle='#22d3ee22';ctx.beginPath();ctx.moveTo(W/2-140,y);ctx.lineTo(W/2-140,y+18);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2+140,y);ctx.lineTo(W/2+140,y+18);ctx.stroke();}
+ramps.forEach(rp=>{ctx.fillStyle='#f0abfc';ctx.beginPath();ctx.moveTo(rp.x-26,rp.y+10);ctx.lineTo(rp.x+26,rp.y+10);ctx.lineTo(rp.x+8,rp.y-12);ctx.lineTo(rp.x-8,rp.y-12);ctx.fill();});
+obs.forEach(o=>{ctx.font='24px serif';ctx.textAlign='center';ctx.fillText(o.t==='tree'?'🌲':'🪨',o.x,o.y+8);});
+// boarder
+ctx.save();ctx.translate(me.x,me.y);
+if(me.spin>0)ctx.rotate((20-me.spin)/20*6.28);
+ctx.fillStyle='#22d3ee';ctx.fillRect(-16,-4,32,8);
+ctx.fillStyle='#f0abfc';ctx.fillRect(-4,-22,8,20);
+ctx.fillStyle='#111';ctx.fillRect(2,-18,4,4);
+ctx.restore();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

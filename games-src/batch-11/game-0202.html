@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Zen Vibrant Master</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#f472b6,#a78bfa,#4ade80,#fbbf24);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden;transition:background 3s}
+h1{font-size:1.05rem;color:#fff;padding:8px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px;color:#fff}
+canvas{background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:12px;border:1px solid rgba(255,255,255,.4);touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(167,139,250,.95);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px;z-index:5}
+button{background:rgba(255,255,255,.92);color:#7c3aed;border:none;font-weight:700;padding:12px 34px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🧘 ZEN VIBRANT MASTER</h1>
+<div id="hud"><span>Flow <b id="f">0</b></span><span>Distractions avoided <b id="d">0</b></span><span>Zen <b id="z">100</b>%</span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2>THE VIBRANT FLOW</h2><p id="od">Be the zen master of motion! Steer the orb of light with ← → / A D or drag. Absorb matching-color motes for flow, avoid the grey distractions. Zen drains slowly — stay in flow!</p><button id="btn">BREATHE IN</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=520;cvs.width=W;cvs.height=H;
+const HUES=['#f472b6','#a78bfa','#4ade80','#fbbf24'];
+let me,motes,foes,playing,keys,flow,avoided,zen,frame,hueT,best=+localStorage.getItem('zvm_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-70,r:13,hue:0};motes=[];foes=[];playing=true;keys={};flow=0;avoided=0;zen=100;frame=0;hueT=0;
+document.getElementById('f').textContent=0;document.getElementById('d').textContent=0;document.getElementById('z').textContent=100;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+window.addEventListener('pointerup',()=>dragX=null);
+function step(){frame++;
+hueT++;if(hueT>300){hueT=0;me.hue=(me.hue+1)%4;}
+if(keys['arrowleft']||keys['a'])me.x-=4.8;if(keys['arrowright']||keys['d'])me.x+=4.8;
+if(dragX!==null)me.x=dragX;
+me.x=Math.max(16,Math.min(W-16,me.x));
+zen-=0.08;document.getElementById('z').textContent=Math.max(0,Math.round(zen));
+if(zen<=0)return scatter();
+if(frame%16===0){const r=Math.random();
+if(r<0.5)motes.push({x:20+Math.random()*(W-40),y:-12,hue:(Math.random()*4)|0});
+else foes.push({x:20+Math.random()*(W-40),y:-12,wob:Math.random()*7,r:10});}
+motes.forEach(m=>m.y+=2.7);foes.forEach(f=>{f.y+=2.9;f.x+=Math.sin(f.y/26+f.wob);});
+motes=motes.filter(m=>m.y<H+16);foes=foes.filter(f=>f.y<H+16);
+motes.forEach(m=>{if(Math.hypot(m.x-me.x,m.y-me.y)<me.r+10){motes.splice(motes.indexOf(m),1);
+if(m.hue===me.hue){flow+=5;zen=Math.min(100,zen+3);beep(600+flow*10,.08,'triangle');}
+else{flow+=1;zen=Math.min(100,zen+1);beep(400,.05);}}});
+foes.forEach(f=>{if(Math.hypot(f.x-me.x,f.y-me.y)<f.r+me.r-2){zen-=12;
+document.getElementById('z').textContent=Math.max(0,Math.round(zen));
+foes.splice(foes.indexOf(f),1);beep(140,.2,'sawtooth');
+if(zen<=0)scatter();}});
+document.getElementById('f').textContent=flow;document.getElementById('d').textContent=avoided;}
+function scatter(){playing=false;if(flow>best){best=flow;localStorage.setItem('zvm_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='🍃 Your flow scatters…<br>Flow: <b style="color:#fde047">'+flow+'</b>';
+document.getElementById('btn').textContent='BREATHE AGAIN';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.clearRect(0,0,W,H);
+for(let i=0;i<4;i++){const g2=ctx.createRadialGradient((i*173)%W,(i*131)%H,4,(i*173)%W,(i*131)%H,110);
+g2.addColorStop(0,HUES[i]+'33');g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);}
+motes.forEach(m=>{const g2=ctx.createRadialGradient(m.x,m.y,1,m.x,m.y,12);
+g2.addColorStop(0,HUES[m.hue]);g2.addColorStop(1,HUES[m.hue]+'00');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(m.x,m.y,12,0,7);ctx.fill();});
+foes.forEach(f=>{ctx.fillStyle='#78716c';ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,7);ctx.fill();
+ctx.strokeStyle='#44403c';ctx.beginPath();ctx.moveTo(f.x-5,f.y-3);ctx.lineTo(f.x+5,f.y+3);ctx.moveTo(f.x+5,f.y-3);ctx.lineTo(f.x-5,f.y+3);ctx.stroke();});
+const g3=ctx.createRadialGradient(me.x,me.y,2,me.x,me.y,me.r*2.4);
+g3.addColorStop(0,HUES[me.hue]);g3.addColorStop(1,HUES[me.hue]+'00');
+ctx.fillStyle=g3;ctx.beginPath();ctx.arc(me.x,me.y,me.r*2.4,0,7);ctx.fill();
+ctx.fillStyle=HUES[me.hue];ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();
+ctx.fillStyle='#fff';ctx.fillRect(me.x-3,me.y-4,3,3);ctx.fillRect(me.x+2,me.y-4,3,3);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

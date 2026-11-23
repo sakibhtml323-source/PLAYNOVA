@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Chess Puzzles #266</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#board{display:grid;grid-template-columns:repeat(8,40px);gap:0;margin:10px;border:3px solid #4f46e5;border-radius:6px;overflow:hidden}
+.sq{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer}
+.sq.dk{background:#312e81}.sq.lt{background:#6d64d9}
+.sq.sel{outline:2px solid #fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600;text-align:center;max-width:340px}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>♟️ Royal Chess Puzzles</h1><div class="sub">White to play and checkmate in ONE move. Find it!</div>
+<div id="hud"><span>Puzzle <b id="p">1</b>/6</span><span>Solved <b id="s">0</b></span><span>Hints <b id="h">3</b></span></div>
+<div id="board"></div><div id="msg"></div>
+<button id="btn">🔄 Next Puzzle</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.AudioContext||window.webkitAudioContext)();}catch(e){}
+try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const P={
+K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟',
+k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'};
+// each puzzle: board layout (sparse), solution move [from,to]
+const PUZZLES=[
+{f:'e1',t:'e8',setup:{'e8':'K','e1':'k','a1':'r','h5':'q'},note:'Back-rank mate!'},
+{f:'h5',t:'e8',setup:{'e8':'K','e1':'k','a1':'r','h5':'q'},note:'Queen delivers mate!'},
+{f:'g1',t:'f3',setup:{'g8':'K','e1':'k','g1':'n','f3':null,'h5':'q'},note:'Smothered mate!'},
+{f:'c1',t:'g5',setup:{'g8':'K','e1':'k','c1':'b','h7':'q'},note:'Bishop seals the diagonal!'},
+{f:'d1',t:'d8',setup:{'d8':'K','e1':'k','d1':'q','a8':'r'},note:'Queen mate on d8!'},
+{f:'a3',t:'e7',setup:{'e8':'K','e1':'k','a3':'r','e4':'q'},note:'Rook lift finishes it!'}];
+let board=[],sel=null,puzzle=0,solved=0,hints=3;
+function load(i){const PZ=PUZZLES[i];
+board=Array.from({length:8},()=>Array(8).fill(null));
+Object.entries(PZ.setup).forEach(([sq,p])=>{
+if(!p)return;const c=sq.charCodeAt(0)-97,r=8-parseInt(sq[1]);
+board[r][c]=p;});
+sel=null;document.getElementById('p').textContent=i+1;
+msg('White to move — checkmate in 1!');render();}
+function rc(sq){return{r:8-parseInt(sq[1]),c:sq.charCodeAt(0)-97};}
+function tap(r,c){
+if(sel){tryMove(sel,{r,c});return;}
+const p=board[r][c];
+if(p&&p===p.toUpperCase()){sel={r,c};render();}}
+function tryMove(from,to){const PZ=PUZZLES[puzzle];
+const fSq=String.fromCharCode(97+from.c)+(8-from.r);
+const tSq=String.fromCharCode(97+to.c)+(8-to.r);
+if(fSq===PZ.f&&tSq===PZ.t){board[to.r][to.c]=board[from.r][from.c];board[from.r][from.c]=null;
+solved++;document.getElementById('s').textContent=solved;
+beep(880,.25,'triangle');msg('✅ '+PZ.note);
+sel=null;render();
+puzzle=(puzzle+1)%PUZZLES.length;
+setTimeout(()=>load(puzzle),1400);}
+else{beep(150,.15,'sawtooth');msg('❌ Not the mate — try again!');sel=null;render();}}
+function render(){const b=document.getElementById('board');b.innerHTML='';
+for(let r=0;r<8;r++)for(let c=0;c<8;c++){const d=document.createElement('div');
+d.className='sq '+((r+c)%2?'dk':'lt');
+if(sel&&sel.r===r&&sel.c===c)d.classList.add('sel');
+const p=board[r][c];if(p)d.textContent=P[p];
+d.onclick=()=>tap(r,c);b.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();load(puzzle);};
+load(0);
+</script></body></html>

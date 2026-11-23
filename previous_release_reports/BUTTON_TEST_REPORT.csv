@@ -1,0 +1,27 @@
+page,button_or_feature,expected_behavior,result
+Home,section grids (Featured/Trending/New/All),render cards from registry,PASS
+Home,Search box,filters game cards instantly,PASS
+Home,🎲 Random Game,navigates to a random game page,PASS
+Home,Category chips (8),link to category pages (200),PASS
+Home,Footer links (12+),all legal/listing pages (200),PASS
+Header nav,Home/All/Categories/Popular/New/About,all pages load (200),PASS
+Games page,Category filter,narrows to category correctly,PASS
+Games page,Sort A-Z / popularity / newest,re-sorts list,PASS
+Games page,Pagination (11 pages),page 2..n navigate via ?page=,PASS
+Games page,Random button,navigates to random game,PASS
+Game page,Fullscreen button,Fullscreen API engages,PASS
+Game page,Escape key,exits fullscreen,PASS
+Game page,Restart (R),"reloads iframe, game alive",PASS
+Game page,Pause (P/Space),overlay shows,PASS
+Game page,Resume,overlay hides,PASS
+Game page,Favorite star,"saves to localStorage, persists",PASS
+Game page,Keyboard F/R/P shortcuts,work,PASS
+Game page,Breadcrumbs + Related links,resolve (200),PASS
+Favorites page,grid,shows starred games only,PASS
+Recently Played page,grid,"shows last 30 played, newest first",PASS
+Audio,"Panel open, Music/SFX toggle, sliders",prefs persist in localStorage,PASS
+Audio,Autoplay policy,no sound before first user gesture (code-reviewed + behavior verified headless),PASS
+Contact,Name/message validation,blocks short input with message (email required by HTML5),PASS
+Consent,Cookie banner Accept/Decline,"stores choice, banner dismisses",PASS
+404,Custom 404 page,renders with working back link,PASS
+Ads,Ad slots (6),hidden when disabled; no Google Ads anywhere,PASS

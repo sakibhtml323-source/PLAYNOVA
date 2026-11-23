@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Wind Chime #414</title><style>
+body{margin:0;font-family:system-ui;background:#0c4a6e;color:#e0f2fe;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#7dd3fc;font-size:.78rem}
+canvas{background:#075985;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#38bdf8;color:#0c4a6e;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎐 Desert Wind Chime</h1><div class="sub">The wind plays the chimes — they SWAY as they chime! Repeat the moving melody.</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="400" height="380"></canvas>
+<div id="msg"></div>
+<button id="btn">🍃 Listen</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function chime(i){const F=[392,494,587,698,880];
+try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();
+os.type='sine';os.frequency.value=F[i];
+g.gain.setValueAtTime(.15,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+.6);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+.6);}catch(e){}}
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5;let seq=[],idx=0,round=1,best=+localStorage.getItem('dwc_best')||0,accepting=false,sway=0,lit=-1;
+document.getElementById('b').textContent=best;
+const CH_X=[60,130,200,270,340];
+function flash(i){lit=i;chime(i);
+setTimeout(()=>{if(lit===i)lit=-1;},400);}
+async function show(){accepting=false;msg('🍃 The wind chimes…');
+for(const i of seq){await wait(480);flash(i);draw();}
+idx=0;accepting=true;msg('🫵 Repeat the melody!');drawLoop();}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function drawLoop(){if(!accepting)return;draw();requestAnimationFrame(drawLoop);}
+function draw(){ctx.fillStyle='#075985';ctx.fillRect(0,0,400,380);
+ctx.strokeStyle='#38bdf8';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(30,50);ctx.lineTo(370,50);ctx.stroke();ctx.lineWidth=1;
+for(let i=0;i<N;i++){const sw=Math.sin(sway*0.03+i)*10*(i===lit?3:1);
+const x=CH_X[i]+sw;
+ctx.strokeStyle='#7dd3fc';
+ctx.beginPath();ctx.moveTo(CH_X[i],50);ctx.lineTo(x,120);ctx.stroke();
+ctx.font='34px serif';ctx.textAlign='center';
+ctx.globalAlpha=i===lit?1:0.75;
+ctx.fillText('🔔',x,150);ctx.globalAlpha=1;
+if(i===lit){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+ctx.beginPath();ctx.arc(x,130,26,0,7);ctx.stroke();ctx.lineWidth=1;}}}
+cvs.addEventListener('pointerdown',e=>{if(!accepting)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*400/r.width;
+let bi=-1,bd=1e9;
+for(let i=0;i<N;i++){const d=Math.abs(CH_X[i]-x);if(d<bd){bd=d;bi=i;}}
+if(bd>40)return;
+chime(bi);
+if(bi!==seq[idx]){accepting=false;beep(130,.3,'sawtooth');
+msg('💥 Wrong chime! Round '+round);
+if(round>best){best=round;localStorage.setItem('dwc_best',best);document.getElementById('b').textContent=best;}
+draw();return;}
+idx++;
+if(idx>=seq.length){accepting=false;msg('✅ Melody! Round '+(round+1));round++;
+document.getElementById('r').textContent=round;
+seq.push((Math.random()*N)|0);
+setTimeout(show,900);}});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{seq=[(Math.random()*N)|0];idx=0;round=1;
+document.getElementById('r').textContent=1;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();show();};
+</script></body></html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense Maze</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0a0a0a;font-family:'Courier New',monospace;color:#f87171;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.05rem;color:#ef4444;padding:6px;letter-spacing:2px;text-shadow:2px 2px #7f1d1d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#111;border-radius:8px;border:3px solid #7f1d1d;touch-action:none;image-rendering:pixelated}
+#msg{text-align:center;font-size:.85rem;color:#fca5a5;min-height:1.6em;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(10,10,10,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fca5a5;padding:20px;z-index:5}
+button{background:#ef4444;border:none;color:#fff;font-family:inherit;font-weight:800;padding:12px 32px;font-size:1rem;cursor:pointer;margin-top:14px;box-shadow:4px 4px #450a0a}
+</style>
+</head>
+<body>
+<h1>🔥 INTENSE MAZE</h1>
+<div id="hud"><span>Depth <b id="d">1</b></span><span>⏱ <b id="t">0</b>s</span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Drag through the maze — every second counts, the clock is INTENSE!</div>
+<div id="ov"><h2 style="color:#ef4444">THE RED LABYRINTH</h2><p id="od">An intense timed maze! Drag (or arrow keys) through the labyrinth. Each depth gives less time. Reach the exit before the clock screams!</p><button id="btn">DESCEND</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+const TS=40,N=11;
+let grid,px,py,depth,playing,steps,timeLeft,timer,best=+localStorage.getItem('im_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){grid=[];for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=1;}
+const stack=[[1,1]];grid[1][1]=0;
+while(stack.length){const[c,r]=stack[stack.length-1];
+const opts=[[c+2,r],[c-2,r],[c,r+2],[c,r-2]].filter(([nc,nr])=>nc>0&&nr>0&&nc<N-1&&nr<N-1&&grid[nr][nc]===1);
+if(!opts.length){stack.pop();continue;}
+const[nc,nr]=opts[(Math.random()*opts.length)|0];
+grid[(r+nr)/2][(c+nc)/2]=0;grid[nr][nc]=0;
+stack.push([nc,nr]);}
+px=1;py=1;steps=0;
+timeLeft=Math.max(8,30-depth*2.5);
+document.getElementById('d').textContent=depth;document.getElementById('t').textContent=Math.ceil(timeLeft);
+clearInterval(timer);
+timer=setInterval(()=>{timeLeft-=0.5;document.getElementById('t').textContent=Math.ceil(Math.max(0,timeLeft));
+if(timeLeft<=0){playing=false;clearInterval(timer);beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='⏰ TIME! Consumed by the red maze at depth '+depth+'…';
+document.getElementById('btn').textContent='TRY AGAIN';document.getElementById('ov').style.display='flex';}},500);
+draw();}
+function move(dx,dy){if(!playing)return;
+const nx=px+dx,ny=py+dy;
+if(grid[ny]&&grid[ny][nx]===0){px=nx;py=ny;steps++;beep(400,.03);draw();
+if(px===N-2&&py===N-2){depth++;if(depth>best){best=depth;localStorage.setItem('im_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);build();}}}
+function draw(){ctx.fillStyle='#111';ctx.fillRect(0,0,W,H);
+const pulse=0.5+Math.sin(Date.now()/200)*0.2;
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*TS,y=r*TS;
+if(grid[r][c]){ctx.fillStyle='#450a0a';ctx.fillRect(x,y,TS,TS);
+ctx.fillStyle='#7f1d1d';ctx.fillRect(x+5,y+5,TS-10,TS-10);}
+else{ctx.fillStyle='#1c1917';ctx.fillRect(x+1,y+1,TS-2,TS-2);}}
+// exit
+ctx.fillStyle='#ef4444';ctx.globalAlpha=pulse;ctx.fillRect((N-2)*TS+6,(N-2)*TS+6,TS-12,TS-12);ctx.globalAlpha=1;
+// player
+ctx.fillStyle='#fca5a5';ctx.beginPath();ctx.arc(px*TS+TS/2,py*TS+TS/2,11,0,7);ctx.fill();
+ctx.fillStyle='#ef4444';ctx.beginPath();ctx.arc(px*TS+TS/2,py*TS+TS/2,5,0,7);ctx.fill();}
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();
+drag={x:(e.clientX-r.left)/r.width*N,y:(e.clientY-r.top)/r.height*N};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();
+const nx=(e.clientX-r.left)/r.width*N,ny=(e.clientY-r.top)/r.height*N;
+const dx=nx-drag.x,dy=ny-drag.y;
+if(Math.abs(dx)>0.6){move(Math.sign(dx),0);drag={x:nx,y:drag.y};}
+if(Math.abs(dy)>0.6){move(0,Math.sign(dy));drag={x:drag.x,y:ny};}});
+window.addEventListener('pointerup',()=>drag=null);
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowUp'||k==='w')move(0,-1);else if(k==='ArrowDown'||k==='s')move(0,1);
+else if(k==='ArrowLeft'||k==='a')move(-1,0);else if(k==='ArrowRight'||k==='d')move(1,0);});
+document.getElementById('btn').onclick=()=>{audio.resume();if(document.getElementById('btn').textContent==='TRY AGAIN')depth=1;
+playing=true;build();document.getElementById('ov').style.display='none';};
+function loop(){if(playing)draw();requestAnimationFrame(loop);}
+loop();
+</script>
+</body>
+</html>

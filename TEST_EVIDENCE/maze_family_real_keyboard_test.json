@@ -1,0 +1,24 @@
+{
+ "ninja-maze-sprint-233": {
+  "method": "real keyboard arrow presses along BFS path computed from the game's own grid/me/goal state",
+  "attempts": 1,
+  "level1_completed": true,
+  "result": {
+   "done": [
+    1
+   ],
+   "xp": 20
+  },
+  "errors": []
+ },
+ "ninja-stealth-grid-261": {
+  "method": "real keyboard arrow presses along BFS path computed from the game's own grid/me/goal state",
+  "attempts": 5,
+  "level1_completed": false,
+  "result": {
+   "done": [],
+   "xp": 0
+  },
+  "errors": []
+ }
+}

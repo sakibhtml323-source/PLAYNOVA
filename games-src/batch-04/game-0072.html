@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Phoenix Cute Animals Island</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#ecfeff,#cffafe);font-family:Georgia,serif;color:#155e75;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#0891b2;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#grid{display:grid;gap:4px;background:#a5f3fc44;border:3px solid #67e8f9;border-radius:14px;padding:10px;touch-action:none}
+.tile{width:46px;height:46px;border-radius:8px;background:#e0f2fe;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;transition:transform .12s}
+.tile:active{transform:scale(.92)}
+.tile.fire{background:#fed7aa;border-color:#fb923c}
+.tile.water{background:#bae6fd}
+#msg{text-align:center;font-size:.85rem;color:#0e7490;margin-top:8px;min-height:2.2em;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(236,254,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#155e75;padding:20px;z-index:5}
+button{background:#0891b2;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:420px){.tile{width:38px;height:38px;font-size:1.2rem}}
+</style>
+</head>
+<body>
+<h1>🔥 PHOENIX ANIMAL ISLAND</h1>
+<div id="hud"><span>Island <b id="l">1</b></span><span>Flames out <b id="f">0</b></span><span>Turns <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="grid"></div>
+<div id="msg">Tap a fire tile 🔥 to splash water to it and its neighbors — save every animal!</div>
+<div id="ov"><h2 style="color:#0891b2">PHOENIX RESCUE</h2><p id="od">Wildfire spreads across the animal islands! Tap any burning tile to douse it and its four neighbors. Save all 🐾 animals — but watch your water. Islands grow bigger!</p><button id="btn">TAKE FLIGHT</button></div>
+<script>
+"use strict";
+let size,grid,level=0,moves,playing,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function build(){size=Math.min(4+level,7);grid=[];
+const total=size*size;const fires=Math.min(3+level*2,total-4);
+const idx=[...Array(total).keys()].sort(()=>Math.random()-.5).slice(0,fires);
+for(let i=0;i<total;i++)grid.push(idx.includes(i)?1:0);
+moves=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=level;
+best=+localStorage.getItem('px_best_'+size)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+render();}
+function neigh(i){const r=(i/size)|0,c=i%size,o=[];if(r>0)o.push(i-size);if(r<size-1)o.push(i+size);if(c>0)o.push(i-1);if(c<size-1)o.push(i+1);return o;}
+function render(){const g=document.getElementById('grid');g.style.gridTemplateColumns='repeat('+size+',46px)';g.innerHTML='';
+let n=0;grid.forEach((v,i)=>{if(v)n++;
+const t=document.createElement('div');t.className='tile '+(v?'fire':'water');
+t.textContent=v?'🔥':'🐾';
+t.onclick=()=>{if(!playing)return;audio.resume();
+grid[i]=1-grid[i];neigh(i).forEach(j=>grid[j]=1-grid[j]);
+moves++;document.getElementById('m').textContent=moves;
+beep(v?300:600,.06);render();
+document.getElementById('f').textContent=n;
+if(!grid.some(Boolean)){if(moves<best){best=moves;localStorage.setItem('px_best_'+size,best);}
+beep(800,.15,'triangle');setTimeout(()=>beep(1000,.15,'triangle'),140);
+document.getElementById('od').innerHTML='🐾 Island saved in <b>'+moves+'</b> turns!'+(size<7?'<br>Next: '+(size+1)+'×'+(size+1)+' island':'<br>Every island in the archipelago is safe!');
+document.getElementById('btn').textContent=size<7?'NEXT ISLAND':'FLY AGAIN';if(size>=7)level=0;level++;playing=false;document.getElementById('ov').style.display='flex';}};
+g.appendChild(t);});
+document.getElementById('f').textContent=n;}
+document.getElementById('btn').onclick=()=>{audio.resume();if(level===0)level=1;playing=true;build();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;let i=-1;
+if(k==='Enter'||k===' '){e.preventDefault();const t=document.querySelectorAll('.tile')[0];if(t)t.click();return;}
+if(k>='1'&&k<='9'){i=+k-1;if(i<size*size){const t=document.querySelectorAll('.tile')[i];if(t)t.click();}}});
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sakibhtml323-source.github.io/PLAYNOVA/sitemap.xml

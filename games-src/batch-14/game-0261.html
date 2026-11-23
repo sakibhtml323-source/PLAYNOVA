@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Stealth Grid #261</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(8,38px);gap:1px;margin:10px}
+.c{width:38px;height:38px;background:#1e293b;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.c.wall{background:#475569}.c.me{background:#7c3aed}.c.goal{background:#14532d}.c.guard{background:#7f1d1d}.c.vis{background:#f59e0b33}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🥷 Ninja Stealth Grid</h1><div class="sub">Reach the scroll — guards see 3 tiles ahead. Move only when their backs are turned!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Spotted <b id="s">0</b>/3</span><span>Moves <b id="m">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🌙 New Infiltration</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=8;let grid=[],me={r:1,c:1},goal={r:6,c:6},guards=[],spotted=0,moves=0,level=1,playing=true;
+function gen(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++)row.push(r%2===0&&c%2===0&&Math.random()<0.4?1:0);grid.push(row);}
+for(let i=0;i<N;i++){grid[0][i]=1;grid[N-1][i]=1;grid[i][0]=1;grid[i][N-1]=1;}
+grid[1][1]=0;grid[6][6]=0;me={r:1,c:1};
+guards=[];const gn=Math.min(2+level,5);
+for(let i=0;i<gn;i++){let r,c;do{r=2+((Math.random()*4)|0);c=2+((Math.random()*4)|0);}while(grid[r][c]||guards.some(g=>g.r===r&&g.c===c));
+guards.push({r,c,dr:[0,1,0,-1][i%4],dc:[1,0,-1,0][i%4],t:0});}}
+function vision(){const vis=new Set();
+guards.forEach(g=>{for(let k=1;k<=3;k++){const r=g.r+g.dr*k,c=g.c+g.dc*k;
+if(r<0||r>=N||c<0||c>=N||grid[r][c])break;
+vis.add(r*N+c);}});return vis;}
+function move(dr,dc){if(!playing)return;
+const r=me.r+dr,c=me.c+dc;
+if(r<0||r>=N||c<0||c>=N||grid[r][c]){beep(160,.06,'sawtooth');return;}
+moves++;document.getElementById('m').textContent=moves;me={r,c};
+const vis=vision();
+if(vis.has(r*N+c)){spotted++;document.getElementById('s').textContent=spotted;
+beep(150,.2,'sawtooth');msg('👁️ Spotted! Back to start!');
+me={r:1,c:1};
+if(spotted>=3){playing=false;msg('🚨 Alarm raised — infiltration failed!');return;}}
+else if(r===goal.r&&c===goal.c){playing=false;beep(880,.25,'triangle');
+msg('🎉 Scroll stolen! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;document.getElementById('l').textContent=level;
+setTimeout(()=>{spotted=0;moves=0;document.getElementById('s').textContent=0;document.getElementById('m').textContent=0;gen();playing=true;render();},900);return;}
+else beep(400+moves*10,.04);
+render();}
+function stepGuards(){guards.forEach(g=>{g.t++;
+if(g.t%4===0){const opts=[[0,1],[1,0],[0,-1],[-1,0]].filter(([dr,dc])=>{
+const r=g.r+dr,c=g.c+dc;return r>0&&r<N-1&&c>0&&c<N-1&&!grid[r][c];});
+if(opts.length){const[dr,dc]=opts[(Math.random()*opts.length)|0];
+if(Math.random()<0.6){g.dr=dr;g.dc=dc;}else{g.r+=dr;g.c+=dc;}}}});}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(k==='arrowup'||k==='w')move(-1,0);if(k==='arrowdown'||k==='s')move(1,0);
+if(k==='arrowleft'||k==='a')move(0,-1);if(k==='arrowright'||k==='d')move(0,1);
+if(playing)stepGuards();});
+function render(){const vis=vision();const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');
+d.className='c'+(grid[r][c]?' wall':'')+(vis.has(r*N+c)?' vis':'');
+if(r===me.r&&c===me.c){d.classList.add('me');d.textContent='🥷';}
+else if(r===goal.r&&c===goal.c){d.classList.add('goal');d.textContent='📜';}
+const gd=guards.find(x=>x.r===r&&x.c===c);
+if(gd){d.classList.add('guard');d.textContent='👹';}
+d.onclick=()=>{const dr=r-me.r,dc=c-me.c;if(Math.abs(dr)+Math.abs(dc)===1){move(dr,dc);if(playing)stepGuards();}};
+g.appendChild(d);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();level=1;spotted=0;moves=0;
+document.getElementById('l').textContent=1;document.getElementById('s').textContent=0;document.getElementById('m').textContent=0;
+gen();playing=true;render();};
+gen();render();
+</script></body></html>

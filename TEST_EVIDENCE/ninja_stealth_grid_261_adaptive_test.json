@@ -1,0 +1,8 @@
+{
+ "method": "real arrow-key presses chosen adaptively each step: move toward the goal along the shortest path into a cell not currently in a guard's view; wait by pressing into a wall when every forward cell is watched (the game moves guards after every key press)",
+ "steps": 13,
+ "level1_completed": true,
+ "xp": 20,
+ "spotted_at_end": 0,
+ "errors": []
+}

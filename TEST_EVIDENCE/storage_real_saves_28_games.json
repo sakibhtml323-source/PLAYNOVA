@@ -1,0 +1,387 @@
+{
+ "method": "30 real clicks per game then reload; the 24 JSON-save games plus robot-world, egyptian-wrap-pipes-231, royal-pipe-connect-257, haunted-chime-order-0489. Games that only save on win/best events did not produce a save in this probe (their storage layer is covered by storage_all_500.json).",
+ "results": {
+  "epic-egyptian-school-simulator": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "mystic-physics-sandbox": {
+   "keys_before": [
+    "ps_save"
+   ],
+   "keys_after_reload": [
+    "ps_save"
+   ],
+   "max_before": 4161,
+   "max_after": 4161,
+   "parent_store_keys": [
+    "ps_save"
+   ],
+   "save_json_valid": {
+    "ps_save": true
+   }
+  },
+  "airport-manager-glassmorphism-edition": {
+   "keys_before": [
+    "am_save"
+   ],
+   "keys_after_reload": [
+    "am_save"
+   ],
+   "max_before": 374,
+   "max_after": 374,
+   "parent_store_keys": [
+    "am_save"
+   ],
+   "save_json_valid": {
+    "am_save": true
+   }
+  },
+  "viking-farming-sim-adventure": {
+   "keys_before": [
+    "viking_save"
+   ],
+   "keys_after_reload": [
+    "viking_save"
+   ],
+   "max_before": 32,
+   "max_after": 32,
+   "parent_store_keys": [
+    "viking_save"
+   ],
+   "save_json_valid": {
+    "viking_save": true
+   }
+  },
+  "eternal-halloween-tycoon": {
+   "keys_before": [
+    "hwn_save"
+   ],
+   "keys_after_reload": [
+    "hwn_save"
+   ],
+   "max_before": 45,
+   "max_after": 45,
+   "parent_store_keys": [
+    "hwn_save"
+   ],
+   "save_json_valid": {
+    "hwn_save": true
+   }
+  },
+  "clever-tycoon": {
+   "keys_before": [
+    "ct_save"
+   ],
+   "keys_after_reload": [
+    "ct_save"
+   ],
+   "max_before": 84,
+   "max_after": 84,
+   "parent_store_keys": [
+    "ct_save"
+   ],
+   "save_json_valid": {
+    "ct_save": true
+   }
+  },
+  "desert-legendary-galaxy": {
+   "keys_before": [
+    "dg_save"
+   ],
+   "keys_after_reload": [
+    "dg_save"
+   ],
+   "max_before": 40,
+   "max_after": 40,
+   "parent_store_keys": [
+    "dg_save"
+   ],
+   "save_json_valid": {
+    "dg_save": true
+   }
+  },
+  "super-desert-shared-screen-racing": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "western-physics-sandbox-empire": {
+   "keys_before": [
+    "wp_save"
+   ],
+   "keys_after_reload": [
+    "wp_save"
+   ],
+   "max_before": 3160,
+   "max_after": 3160,
+   "parent_store_keys": [
+    "wp_save"
+   ],
+   "save_json_valid": {
+    "wp_save": true
+   }
+  },
+  "infinity-physics-sandbox-pirate-seas": {
+   "keys_before": [
+    "pp_save"
+   ],
+   "keys_after_reload": [
+    "pp_save"
+   ],
+   "max_before": 3375,
+   "max_after": 3303,
+   "parent_store_keys": [
+    "pp_save"
+   ],
+   "save_json_valid": {
+    "pp_save": true
+   }
+  },
+  "combo-clicker-37-active-only": {
+   "keys_before": [
+    "lt_save"
+   ],
+   "keys_after_reload": [
+    "lt_save"
+   ],
+   "max_before": 45,
+   "max_after": 45,
+   "parent_store_keys": [
+    "lt_save"
+   ],
+   "save_json_valid": {
+    "lt_save": true
+   }
+  },
+  "idle-clicker-minimalist-edition": {
+   "keys_before": [
+    "mi_save"
+   ],
+   "keys_after_reload": [
+    "mi_save"
+   ],
+   "max_before": 39,
+   "max_after": 39,
+   "parent_store_keys": [
+    "mi_save"
+   ],
+   "save_json_valid": {
+    "mi_save": true
+   }
+  },
+  "airport-manager-greek-myth-edition": {
+   "keys_before": [
+    "am2_save"
+   ],
+   "keys_after_reload": [
+    "am2_save"
+   ],
+   "max_before": 319,
+   "max_after": 319,
+   "parent_store_keys": [
+    "am2_save"
+   ],
+   "save_json_valid": {
+    "am2_save": true
+   }
+  },
+  "hospital-tycoon-fantasy-edition": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "western-shared-screen-racing-hero": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "intense-school-simulator": {
+   "keys_before": [
+    "iss_save"
+   ],
+   "keys_after_reload": [
+    "iss_save"
+   ],
+   "max_before": 109,
+   "max_after": 109,
+   "parent_store_keys": [
+    "iss_save"
+   ],
+   "save_json_valid": {
+    "iss_save": true
+   }
+  },
+  "overheat-clicker-118": {
+   "keys_before": [
+    "ep_save"
+   ],
+   "keys_after_reload": [
+    "ep_save"
+   ],
+   "max_before": 53,
+   "max_after": 53,
+   "parent_store_keys": [
+    "ep_save"
+   ],
+   "save_json_valid": {
+    "ep_save": true
+   }
+  },
+  "pirate-idle-clicker-fury": {
+   "keys_before": [
+    "pic_save"
+   ],
+   "keys_after_reload": [
+    "pic_save"
+   ],
+   "max_before": 45,
+   "max_after": 45,
+   "parent_store_keys": [
+    "pic_save"
+   ],
+   "save_json_valid": {
+    "pic_save": true
+   }
+  },
+  "turbo-airport-manager-steampunk-edition": {
+   "keys_before": [
+    "ta_save"
+   ],
+   "keys_after_reload": [
+    "ta_save"
+   ],
+   "max_before": 322,
+   "max_after": 322,
+   "parent_store_keys": [
+    "ta_save"
+   ],
+   "save_json_valid": {
+    "ta_save": true
+   }
+  },
+  "retro-8-bit-school-simulator-rush": {
+   "keys_before": [
+    "rsr_save"
+   ],
+   "keys_after_reload": [
+    "rsr_save"
+   ],
+   "max_before": 111,
+   "max_after": 111,
+   "parent_store_keys": [
+    "rsr_save"
+   ],
+   "save_json_valid": {
+    "rsr_save": true
+   }
+  },
+  "mega-halloween-airport-manager": {
+   "keys_before": [
+    "mh_save"
+   ],
+   "keys_after_reload": [
+    "mh_save"
+   ],
+   "max_before": 458,
+   "max_after": 458,
+   "parent_store_keys": [
+    "mh_save"
+   ],
+   "save_json_valid": {
+    "mh_save": true
+   }
+  },
+  "watercolor-physics-sandbox": {
+   "keys_before": [
+    "wp2_save"
+   ],
+   "keys_after_reload": [
+    "wp2_save"
+   ],
+   "max_before": 3952,
+   "max_after": 3952,
+   "parent_store_keys": [
+    "wp2_save"
+   ],
+   "save_json_valid": {
+    "wp2_save": true
+   }
+  },
+  "rune-tree-idle-197": {
+   "keys_before": [
+    "eni_save"
+   ],
+   "keys_after_reload": [
+    "eni_save"
+   ],
+   "max_before": 45,
+   "max_after": 45,
+   "parent_store_keys": [
+    "eni_save"
+   ],
+   "save_json_valid": {
+    "eni_save": true
+   }
+  },
+  "music-sequence-builder-249": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "robot-world": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "egyptian-wrap-pipes-231": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  },
+  "haunted-chime-order-0489": {
+   "keys_before": [
+    "hco"
+   ],
+   "keys_after_reload": [
+    "hco"
+   ],
+   "max_before": 1,
+   "max_after": 1,
+   "parent_store_keys": [
+    "hco"
+   ],
+   "save_json_valid": {}
+  },
+  "royal-pipe-connect-257": {
+   "keys_before": [],
+   "keys_after_reload": [],
+   "max_before": 0,
+   "max_after": 0,
+   "parent_store_keys": [],
+   "save_json_valid": {}
+  }
+ }
+}

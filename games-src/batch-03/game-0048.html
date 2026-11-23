@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Isometric Mystic City</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1e1b4b,#312e81);font-family:Georgia,serif;color:#e0e7ff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#a5b4fc;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#1e1b4b;border-radius:10px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#a5b4fc;min-height:1.5em;margin-top:6px;max-width:460px}
+#ov{position:fixed;inset:0;background:rgba(30,27,75,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0e7ff;padding:20px;z-index:5}
+button{background:#818cf8;border:none;color:#1e1b4b;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏙️ ISOMETRIC MYSTIC CITY</h1>
+<div id="hud"><span>Day <b id="d">1</b></span><span>🔮 Energy <b id="e">3</b></span><span>🏛️ Buildings <b id="n">0</b></span><span>⭐ Harmony <b id="h">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">The council shows a vision — rebuild it from memory!</div>
+<div id="ov"><h2 style="color:#a5b4fc">MYSTIC CITY</h2><p id="od">Each day the mystic council reveals a building pattern… then hides it! Place buildings from memory to match the vision. Correct = +harmony. Wrong placements cost energy. Run out and the city fades.</p><button id="btn">FOUND THE CITY</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+const W=460,H=380;cvs.width=W;cvs.height=H;
+const N=5,TS=40;
+let grid,vision,day,energy,harmony,placed,phase,playing,timer,best=+localStorage.getItem('ic_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function iso(x,y){return{x:W/2+(x-y)*TS*0.9,y:60+(x+y)*TS*0.45};}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+const BUILDS=['🏛️','🗼','⛲','🕌','🏯'];
+function newDay(){grid=[];vision=[];
+const count=Math.min(2+day,6);
+const cells=[...Array(N*N).keys()].sort(()=>Math.random()-.5).slice(0,count);
+for(let i=0;i<N*N;i++){grid.push(null);
+vision.push(cells.includes(i)?BUILDS[(Math.random()*BUILDS.length)|0]:null);}
+placed=0;phase='show';
+document.getElementById('d').textContent=day;document.getElementById('e').textContent=energy;document.getElementById('h').textContent=harmony;
+document.getElementById('msg').textContent='Memorize the vision…';
+let t=2+Math.min(day,4);clearInterval(timer);
+timer=setInterval(()=>{t--;if(t<=0){phase='build';document.getElementById('msg').textContent='Rebuild it! Tap cells to place buildings.';clearInterval(timer);render();}},1000);
+render();}
+function render(){ctx.fillStyle='#1e1b4b';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const a=iso(c,r);
+const show=phase==='show';
+const v=vision[r*N+c],g2=grid[r*N+c];
+ctx.fillStyle=(r+c)%2?'#312e81':'#3730a3';
+ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(a.x+TS*0.9,a.y+TS*0.45);ctx.lineTo(a.x,a.y+TS*0.9);ctx.lineTo(a.x-TS*0.9,a.y+TS*0.45);ctx.fill();
+ctx.strokeStyle='#4f46e5';ctx.stroke();
+if(show&&v){ctx.font='20px serif';ctx.textAlign='center';ctx.fillText(v,a.x,a.y+TS*0.55);}
+else if(!show&&g2){ctx.font='20px serif';ctx.textAlign='center';ctx.fillText(g2,a.x,a.y+TS*0.55);}}}
+let kx2=0,ky2=0;
+window.addEventListener('keydown',e=>{if(!playing||phase!=='build')return;const k=e.key;
+if(k==='ArrowLeft')kx2=Math.max(0,kx2-1);else if(k==='ArrowRight')kx2=Math.min(N-1,kx2+1);
+else if(k==='ArrowUp')ky2=Math.max(0,ky2-1);else if(k==='ArrowDown')ky2=Math.min(N-1,ky2+1);
+else if(k==='Enter'||k===' '){e.preventDefault();const i=ky2*N+kx2;
+if(grid[i])return;const correct=vision[i];
+if(correct){grid[i]=correct;placed++;harmony++;beep(660+placed*40,.09,'triangle');document.getElementById('h').textContent=harmony;
+if(vision.every((v,i2)=>!v||grid[i2])){day++;energy=Math.min(5,energy+1);beep(880,.15,'triangle');setTimeout(newDay,900);}}
+else{energy--;beep(150,.2,'sawtooth');document.getElementById('e').textContent=energy;document.getElementById('msg').textContent='💥 The vision rejects that placement! -1 🔮';
+if(energy<=0){playing=false;clearInterval(timer);beep(110,.5,'sawtooth');document.getElementById('od').innerHTML='🌫️ The city fades into legend…<br>Final harmony: <b style="color:#fde047">'+harmony+'</b>';document.getElementById('btn').textContent='REFOUND';document.getElementById('ov').style.display='flex';}}render();return;}else return;
+render();});
+cvs.addEventListener('pointerdown',e=>{if(!playing||phase!=='build')return;audio.resume();const r=cvs.getBoundingClientRect();
+const mx=(e.clientX-r.left)/r.width*W,my=(e.clientY-r.top)/r.height*H;
+let hit=-1,hd=1e9;
+for(let i=0;i<N*N;i++){const a=iso(i%N,(i/N)|0);const d=Math.hypot(a.x-mx,a.y+TS*0.45-my);if(d<28&&d<hd){hd=d;hit=i;}}
+if(hit<0||grid[hit])return;
+const correct=vision[hit];
+if(correct){grid[hit]=correct;placed++;harmony++;beep(660+placed*40,.09,'triangle');
+document.getElementById('h').textContent=harmony;
+if(vision.every((v,i)=>!v||grid[i])){day++;energy=Math.min(5,energy+1);beep(880,.15,'triangle');
+document.getElementById('msg').textContent='✨ The city remembers! Day '+(day)+' begins.';
+setTimeout(newDay,900);}}
+else{energy--;beep(150,.2,'sawtooth');document.getElementById('e').textContent=energy;
+document.getElementById('msg').textContent='💥 The vision rejects that placement! -1 🔮';
+if(energy<=0){playing=false;clearInterval(timer);beep(110,.5,'sawtooth');
+if(harmony>best){best=harmony;localStorage.setItem('ic_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='🌫️ The city fades into legend…<br>Final harmony: <b style="color:#fde047">'+harmony+'</b>';
+document.getElementById('btn').textContent='REFOUND';document.getElementById('ov').style.display='flex';}}
+render();});
+document.getElementById('btn').onclick=()=>{audio.resume();day=1;energy=3;harmony=0;playing=true;newDay();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

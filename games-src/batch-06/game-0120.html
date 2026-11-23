@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Super Halloween Farming Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#0c0a09);font-family:Georgia,serif;color:#fdba74;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#f97316;padding:6px}
+#stats{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#stats span{background:#292524;border:1px solid #44403c;border-radius:10px;padding:4px 10px}
+#farm{display:grid;grid-template-columns:repeat(4,66px);gap:8px;margin:6px 0}
+.plot{width:66px;height:66px;border-radius:10px;background:#292524;border:2px solid #44403c;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.5rem;transition:transform .1s}
+.plot:active{transform:scale(.93)}
+.plot.ready{border-color:#f97316;box-shadow:0 0 12px #f9731655}
+#msg{text-align:center;font-size:.85rem;color:#a8a29e;min-height:1.5em;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(28,25,23,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fdba74;padding:20px;z-index:5}
+button{background:#f97316;border:none;color:#0c0a09;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+#shop{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+#shop button{background:#292524;color:#fdba74;border:1px solid #44403c;border-radius:8px;padding:6px 12px;font-size:.75rem;cursor:pointer}
+#shop button:disabled{opacity:.4}
+@media(max-width:360px){#farm{grid-template-columns:repeat(4,54px)}.plot{width:54px;height:54px}}
+</style>
+</head>
+<body>
+<h1>🎃 SUPER HALLOWEEN FARM</h1>
+<div id="stats"><span>🍬 Candy <b id="c">20</b></span><span>🌙 Night <b id="n">1</b>/10</span><span>🏆 Best night <b id="b">0</b></span></div>
+<div id="farm"></div>
+<div id="shop"></div>
+<div id="msg">Tap a plot to plant (1🍬). Harvest glowing crops before dawn!</div>
+<div id="ov"><h2 style="color:#f97316">HALLOWEEN HARVEST</h2><p id="od">Farm the spooky fields! Plant crops, harvest them when they glow, survive 10 nights. Each night is shorter — buy seeds of greater value!</p><button id="btn">PLANT AT DUSK</button></div>
+<script>
+"use strict";
+const CROPS=[['🎃',3,3000],['🍄',5,5000],['🕷️',8,8000],['💀',15,13000]]; // emoji,value,grow ms
+let plots,seed,candy,night,playing,timer,best=+localStorage.getItem('hf_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){plots=[];for(let i=0;i<12;i++)plots.push(null);candy=20;night=1;seed=0;playing=true;
+document.getElementById('c').textContent=20;document.getElementById('n').textContent=1;render();startNight();}
+function render(){const f=document.getElementById('farm');f.innerHTML='';
+plots.forEach((p,i)=>{const d=document.createElement('div');
+d.className='plot'+(p&&Date.now()>p.t?' ready':'');
+if(!p)d.textContent='▫️';else if(Date.now()>p.t)d.textContent=CROPS[p.k][0];else d.textContent='🌱';
+d.onclick=()=>{audio.resume();
+if(!p){if(candy<1){beep(160,.08,'sawtooth');return;}
+candy--;const k=Math.min(seed,CROPS.length-1);plots[i]={k,t:Date.now()+CROPS[k][2]/(1+night*0.06)};beep(440,.06);}
+else if(Date.now()>p.t){candy+=CROPS[p.k][1];beep(700,.09,'triangle');plots[i]=null;}
+else{beep(300,.05);}
+document.getElementById('c').textContent=candy;render();};
+f.appendChild(d);});
+const sh=document.getElementById('shop');sh.innerHTML='';
+CROPS.forEach((cr,i)=>{const b=document.createElement('button');
+b.textContent=cr[0]+' seed '+cr[1]+'🍬';
+if(seed===i)b.style.borderColor='#f97316';
+b.onclick=()=>{seed=i;render();};
+sh.appendChild(b);});}
+function startNight(){const len=Math.max(12000,30000-night*1500);
+document.getElementById('msg').textContent='🌙 Night '+night+' — '+Math.round(len/1000)+'s to harvest!';
+clearInterval(timer);timer=setInterval(render,500);
+setTimeout(()=>{if(!playing)return;
+if(night>=10){win();return;}
+// harvest remaining auto? they rot
+night++;candy+=5;
+document.getElementById('n').textContent=night;document.getElementById('c').textContent=candy;
+beep(500,.12,'triangle');startNight();},len);}
+function win(){playing=false;clearInterval(timer);
+if(night>best){best=night;localStorage.setItem('hf_best',best);document.getElementById('b').textContent=best;}
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);
+document.getElementById('od').innerHTML='🌅 <b style="color:#fde047">HARVEST OF LEGENDS!</b><br>10 nights survived with '+candy+' candy stockpiled!';
+document.getElementById('btn').textContent='NEXT OCTOBER';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const i=+e.key-1;const t=document.querySelectorAll('.plot')[i];if(t)t.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

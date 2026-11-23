@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Phantom Glassmorphism Hotseat Strategy</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#1e1b4b,#4c1d95,#831843);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#e9d5ff;padding:6px;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+#hud{display:flex;gap:14px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center;color:#e9d5ff}
+#hud span{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border-radius:10px;padding:4px 12px;border:1px solid rgba(255,255,255,.25)}
+#board{display:grid;gap:4px;background:rgba(255,255,255,.1);backdrop-filter:blur(12px);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,.25);touch-action:none}
+.cell{width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer}
+@media(max-width:380px){.cell{width:34px;height:34px;font-size:.85rem}}
+.cell.p1{background:rgba(244,63,94,.5)}.cell.p2{background:rgba(59,130,246,.5)}
+.cell.sel{box-shadow:inset 0 0 0 3px #fde047}
+#tip{text-align:center;font-size:.82rem;color:rgba(233,213,255,.8);margin-top:8px;min-height:2.2em;padding:0 8px}
+#ov{position:fixed;inset:0;background:rgba(30,27,75,.95);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e9d5ff;padding:20px;z-index:5}
+button{background:rgba(255,255,255,.85);color:#4c1d95;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>👻 PHANTOM GLASS HOTSEAT</h1>
+<div id="hud"><span style="color:#fda4af">PHANTOM <b id="a1">0</b></span><span>Turn <b id="t">1</b></span><span style="color:#93c5fd">SPECTER <b id="a2">0</b></span></div>
+<div id="board"></div>
+<div id="tip"></div>
+<div id="ov"><h2>PHANTOM VS SPECTER</h2><p id="od">2 players behind frosted glass! Tap your 👻, then an adjacent tile to send phantoms. Haunted tiles 👁️ double your send. Absorb the rival's haunt to win!</p><button id="btn">HAUNT</button></div>
+<script>
+"use strict";
+const S=7;let grid,cur,sel,turn,playing,ap=3;let pf6=+localStorage.getItem('pf_w1')||0,pf62=+localStorage.getItem('pf_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=[];for(let i=0;i<S*S;i++)grid.push({o:0,haunt:Math.random()<0.12});
+[[0,0],[1,0],[0,1],[S-1,S-1],[S-2,S-1],[S-1,S-2]].forEach(([c,r])=>grid[r*S+c].haunt=false);
+grid[0]={o:1,n:14,haunt:false};grid[1]={o:1,n:9,haunt:false};grid[S]={o:1,n:9,haunt:false};
+grid[S*S-1]={o:2,n:14,haunt:false};grid[S*S-2]={o:2,n:9,haunt:false};grid[S*S-1-S]={o:2,n:9,haunt:false};
+cur=1;turn=1;sel=null;ap=3;playing=true;document.getElementById('t').textContent=1;render();}
+function neigh(i){const r=(i/S)|0,c=i%S,o=[];if(r>0)o.push(i-S);if(r<S-1)o.push(i+S);if(c>0)o.push(i-1);if(c<S-1)o.push(i+1);return o;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+S+',42px)';b.innerHTML='';
+grid.forEach((g,i)=>{const c=document.createElement('div');c.className='cell'+(g.o===1?' p1':g.o===2?' p2':'')+(sel===i?' sel':'');
+c.textContent=g.o?('👻'+g.n):(g.haunt?'👁️':g.n||'');
+c.onclick=()=>tap(i);b.appendChild(c);});
+document.getElementById('a1').textContent=grid.filter(g=>g.o===1).reduce((a,g)=>a+g.n,0);
+document.getElementById('a2').textContent=grid.filter(g=>g.o===2).reduce((a,g)=>a+g.n,0);
+document.getElementById('tip').textContent=playing?('AP '+ap+'/3 — '+(cur===1?'👻 PHANTOM':'👻 SPECTER')+' — haunt an adjacent tile!'):'The glass clears.';}
+function tap(i){if(!playing)return;const g=grid[i];
+if(g.o===cur){sel=i;beep(600,.05);render();return;}
+if(sel!==null&&neigh(sel).includes(i)){const send=Math.floor(grid[sel].n/2);
+if(send<1){render();return;}
+const bonus=g.haunt?2:1;
+grid[sel].n-=send;
+if(g.o===cur){g.n+=send*bonus;}
+else if(g.n<send*bonus){g.o=cur;g.n=send*bonus-g.n;g.haunt=false;beep(500,.1,'triangle');}
+else{g.n-=send*bonus;}
+sel=null;ap--;render();check();if(playing&&ap<=0){ap=3;cur=cur===1?2:1;if(cur===1){turn++;document.getElementById('t').textContent=turn;
+grid.forEach((c,j)=>{if(c.o)grid[j].n+=1;});render();}}}
+else{sel=null;render();}}
+function check(){const a=grid.some(g=>g.o===1),b=grid.some(g=>g.o===2);
+if(!a||!b){playing=false;
+localStorage.setItem('pf_w'+(a?1:2),(a?pf6:pf62)+1);
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">'+(a?'PHANTOM':'SPECTER')+' HAUNTS EVERYTHING!</b><br>in '+turn+' turns';
+document.getElementById('btn').textContent='REHAUNT';document.getElementById('ov').style.display='flex';beep(880,.3,'triangle');}}
+window.addEventListener('keydown',e=>{if(!playing)return;const own=grid.map((g,i)=>g.o===cur?i:-1).filter(i=>i>=0);if(!own.length)return;
+if(e.key==='Enter'||e.key===' '){e.preventDefault();if(sel===null){sel=own[0];render();}else{const nb=neigh(sel).find(j=>grid[j].o!==cur);if(nb!==undefined)tap(nb);else{sel=null;render();}}}
+if(e.key==='ArrowRight'){sel=own[(own.indexOf(sel)+1+own.length)%own.length]||own[0];render();}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

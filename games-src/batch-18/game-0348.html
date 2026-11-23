@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Clock Tower #348</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+canvas{background:#27272a;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🕐 Haunted Clock Tower</h1><div class="sub">Drag the clock hands to match the target time before the bell tolls!</div>
+<div id="hud"><span>Target <b id="tg">?:00</b></span><span>Level <b id="l">1</b></span><span>⏱️ <b id="t">15</b>s</span></div>
+<canvas id="cv" width="360" height="360"></canvas>
+<div id="msg"></div>
+<button id="btn">🔔 New Round</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=360,CX=W/2,CY=W/2;
+let hourA=0,minA=0,targetH=3,targetM=0,level=1,playing=false,time=15,timer=null,dragHand=null;
+function newRound(){targetH=1+((Math.random()*12)|0);
+targetM=[0,15,30,45][(Math.random()*4)|0];
+document.getElementById('tg').textContent=targetH+':'+(targetM<10?'0':'')+targetM;
+document.getElementById('l').textContent=level;
+hourA=Math.random()*Math.PI*2;minA=Math.random()*Math.PI*2;
+time=Math.max(8,15-level);document.getElementById('t').textContent=time;
+playing=true;draw();
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);beep(130,.35,'sawtooth');
+msg('🔔 Time up! It was '+targetH+':'+(targetM<10?'0':'')+targetM);}},1000);}
+function angDiff(a,b){let d=Math.abs(a-b)%(Math.PI*2);return Math.min(d,Math.PI*2-d);}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+const dH=Math.hypot(x-CX,y-CY);
+// determine which hand by distance from center + angle
+const a=Math.atan2(y-CY,x-CX);
+dragHand=dH<60?'hour':'min';});
+cvs.addEventListener('pointermove',e=>{if(!dragHand||!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+const a=Math.atan2(y-CY,x-CX); /* FIX (PLAYNOVA repair): the original added +PI/2, so the hand was drawn 90 degrees away from the pointer; the hands (drawn in canvas angles) now follow the pointer */
+if(dragHand==='hour')hourA=a;else minA=a;
+draw();check();});
+cvs.addEventListener('pointerup',()=>{dragHand=null;});
+function check(){const tH=((targetH%12)/12)*Math.PI*2-Math.PI/2;
+const tM=(targetM/60)*Math.PI*2-Math.PI/2;
+// normalize both
+const norm=a=>((a+Math.PI*2)%(Math.PI*2));
+const dH=Math.abs(norm(norm(hourA)-norm(tH)));
+const dM=Math.abs(norm(norm(minA)-norm(tM)));
+if(dH<0.15&&dM<0.15){playing=false;clearInterval(timer);beep(880,.3,'triangle');
+msg('🎉 The clock strikes true! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(newRound,1200);}}
+function draw(){ctx.fillStyle='#27272a';ctx.fillRect(0,0,W,W);
+// clock face
+ctx.beginPath();ctx.arc(CX,CY,140,0,7);ctx.fillStyle='#3f3f46';ctx.fill();
+ctx.strokeStyle='#71717a';ctx.lineWidth=3;ctx.stroke();
+// numbers
+ctx.fillStyle='#e4e4e7';ctx.font='16px serif';ctx.textAlign='center';
+for(let i=1;i<=12;i++){const a=i/12*Math.PI*2-Math.PI/2;
+ctx.fillText(i,CX+Math.cos(a)*115,CY+Math.sin(a)*115+5);}
+// target indicator
+const tH=((targetH%12)/12)*Math.PI*2-Math.PI/2;
+const tM=(targetM/60)*Math.PI*2-Math.PI/2;
+ctx.strokeStyle='#fbbf2444';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos(tH)*60,CY+Math.sin(tH)*60);ctx.stroke();
+ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos(tM)*100,CY+Math.sin(tM)*100);ctx.stroke();
+// hands
+ctx.strokeStyle='#a78bfa';ctx.lineWidth=5;
+ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos(hourA)*70,CY+Math.sin(hourA)*70);ctx.stroke();
+ctx.strokeStyle='#fbbf24';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+Math.cos(minA)*110,CY+Math.sin(minA)*110);ctx.stroke();
+ctx.beginPath();ctx.arc(CX,CY,6,0,7);ctx.fillStyle='#fbbf24';ctx.fill();}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+</script></body></html>

@@ -1,0 +1,92 @@
+{
+ "method": "scripted: real game code path checkEnd() invoked in the live game after setting score via console; NOT a human full playthrough",
+ "after_level1": {
+  "xp": 20,
+  "bal": 30,
+  "g": {
+   "plays": 0,
+   "wins": 0,
+   "losses": 0,
+   "best": 600,
+   "ms": 0,
+   "last": 0,
+   "done": [
+    1
+   ],
+   "unlocked": 2
+  },
+  "lv": 1
+ },
+ "after_replay_level1": {
+  "xp": 20,
+  "bal": 30,
+  "g": {
+   "plays": 0,
+   "wins": 0,
+   "losses": 0,
+   "best": 600,
+   "ms": 0,
+   "last": 0,
+   "done": [
+    1
+   ],
+   "unlocked": 2
+  },
+  "lv": 1
+ },
+ "after_level2": {
+  "xp": 40,
+  "bal": 40,
+  "g": {
+   "plays": 0,
+   "wins": 0,
+   "losses": 0,
+   "best": 1200,
+   "ms": 0,
+   "last": 0,
+   "done": [
+    1,
+    2
+   ],
+   "unlocked": 3
+  },
+  "lv": 2
+ },
+ "after_loss": {
+  "xp": 40,
+  "bal": 40,
+  "g": {
+   "plays": 0,
+   "wins": 0,
+   "losses": 1,
+   "best": 1200,
+   "ms": 0,
+   "last": 0,
+   "done": [
+    1,
+    2
+   ],
+   "unlocked": 3
+  },
+  "lv": 2
+ },
+ "after_reload": {
+  "xp": 40,
+  "bal": 40,
+  "g": {
+   "plays": 0,
+   "wins": 0,
+   "losses": 1,
+   "best": 1200,
+   "ms": 0,
+   "last": 0,
+   "done": [
+    1,
+    2
+   ],
+   "unlocked": 3
+  },
+  "lv": 2
+ },
+ "page_errors": []
+}

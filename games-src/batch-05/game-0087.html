@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pirate Fruit Ninja Farm</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#052e16,#14532d);font-family:Georgia,serif;color:#dcfce7;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#166534;border-radius:12px;touch-action:none;cursor:crosshair}
+#ov{position:fixed;inset:0;background:rgba(5,46,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#dcfce7;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#052e16;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🏴‍☠️ PIRATE FRUIT NINJA</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>❤️ <b id="h">3</b></span><span>Wave <b id="w">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#4ade80">FRUIT NINJA FARM</h2><p id="od">Slice the flying fruit with your finger or mouse — swipe across them! But never slice the skull bombs 💣. Miss 3 fruits and the farm is ransacked. Waves get wild!</p><button id="btn">SHARPEN THE BLADE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=480;cvs.width=W;cvs.height=H;
+const FRUITS=['🍉','🍊','🍎','🍍','🍌','🥥','🍇'];
+let items,trail,playing,score,hp,wave,frame,kb={x:220,y:240},best=+localStorage.getItem('fn_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){items=[];trail=[];score=0;hp=3;wave=1;frame=0;playing=true;
+document.getElementById('s').textContent=0;document.getElementById('h').textContent=3;document.getElementById('w').textContent=1;}
+function spawn(){const bomb=Math.random()<0.14;
+items.push({x:40+Math.random()*(W-80),y:H+20,vx:(Math.random()-.5)*3,vy:-(9+Math.random()*3+wave*0.4),
+r:bomb?22:20,e:bomb?'💣':FRUITS[(Math.random()*FRUITS.length)|0],bomb});}
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;const st=18;
+if(k==='ArrowLeft'||k==='a')kb.x-=st;else if(k==='ArrowRight'||k==='d')kb.x+=st;
+else if(k==='ArrowUp'||k==='w')kb.y-=st;else if(k==='ArrowDown'||k==='s')kb.y+=st;
+else if(k===' '){e.preventDefault();trail=[{x:kb.x-30,y:kb.y},{x:kb.x+30,y:kb.y}];slice();return;}else return;
+kb.x=Math.max(10,Math.min(W-10,kb.x));kb.y=Math.max(10,Math.min(H-10,kb.y));trail=[{x:kb.x,y:kb.y}];});
+function slice(){if(trail.length<2)return;
+for(let i=1;i<trail.length;i++){const[a,b]=[trail[i-1],trail[i]];
+items.forEach(it=>{if(it.dead)return;
+// distance point-segment
+const dx=b.x-a.x,dy=b.y-a.y;const L2=dx*dx+dy*dy||1;
+let t=((it.x-a.x)*dx+(it.y-a.y)*dy)/L2;t=Math.max(0,Math.min(1,t));
+const px=a.x+t*dx,py=a.y+t*dy;
+if(Math.hypot(it.x-px,it.y-py)<it.r){it.dead=true;
+if(it.bomb){hp--;document.getElementById('h').textContent=hp;beep(120,.3,'sawtooth');
+if(hp<=0)die();}
+else{score+=10+wave;document.getElementById('s').textContent=score;beep(600+Math.random()*300,.06,'triangle');}}});}}
+function step(){frame++;
+if(frame%Math.max(24,50-wave*3)===0)spawn();
+items.forEach(it=>{it.vy+=0.28;it.x+=it.vx;it.y+=it.vy;
+if(it.y>H+30&&it.vy>0&&!it.dead){it.dead=true;if(!it.bomb){hp--;document.getElementById('h').textContent=hp;beep(160,.15,'sawtooth');
+if(hp<=0)die();}}});
+if(frame%400===0){wave++;document.getElementById('w').textContent=wave;beep(500,.12,'triangle');}
+items=items.filter(it=>!it.dead);
+slice();trail.shift();}
+let down=false;
+function pos(e){const r=cvs.getBoundingClientRect();const p=e.touches?e.touches[0]:e;
+return{x:(p.clientX-r.left)/r.width*W,y:(p.clientY-r.top)/r.height*H};}
+cvs.addEventListener('pointerdown',e=>{audio.resume();down=true;trail=[pos(e)];});
+cvs.addEventListener('pointermove',e=>{if(down){trail.push(pos(e));if(trail.length>8)trail.shift();}});
+window.addEventListener('pointerup',()=>{down=false;trail=[];});
+function die(){playing=false;const sc=score;if(sc>best){best=sc;localStorage.setItem('fn_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The farm is ransacked on wave <b>'+wave+'</b>!<br>Score: <b style="color:#fde047">'+sc+'</b>';
+document.getElementById('btn').textContent='REPLANT & SLASH';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#166534';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#14532d';for(let i=0;i<W;i+=36)ctx.fillRect(i,0,2,H);
+items.forEach(it=>{ctx.font=(it.r*1.5)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.save();ctx.translate(it.x,it.y);ctx.rotate(it.x/60);ctx.fillText(it.e,0,0);ctx.restore();});
+// blade trail
+if(trail.length>1){ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();
+ctx.moveTo(trail[0].x,trail[0].y);for(const p of trail)ctx.lineTo(p.x,p.y);ctx.stroke();}}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

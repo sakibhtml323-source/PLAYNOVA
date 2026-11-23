@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Rhythm Grid #263</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(8,40px);gap:3px;margin:12px}
+.cell{width:40px;height:40px;background:#1e293b;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.cell.on{background:#7c3aed}
+.cell.beat{background:#4338ca;box-shadow:0 0 10px #7c3aed}
+.cell.tgt{background:#14532d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:6px}
+#msg{min-height:1.3em;font-weight:600}
+</style></head><body>
+<h1>💎 Crystal Rhythm Grid</h1><div class="sub">Build a beat, then the glowing playhead tests your pattern — match the target cells!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Matches <b id="m">0</b>/<b id="t">0</b></span><span>BPM <b id="b">100</b></span></div>
+<div id="grid"></div>
+<div id="msg"></div>
+<div>
+<button id="play">▶ Test Beat</button>
+<button id="clear">🗑 Clear</button>
+<button id="new">🎯 New Target</button>
+</div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function tone(f,d=.15){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();os.type='triangle';os.frequency.value=f;
+g.gain.setValueAtTime(.14,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const R=4,C=8;const NOTES=[262,330,392,523];
+let grid=Array.from({length:R},()=>Array(C).fill(false));
+let target=Array.from({length:R},()=>Array(C).fill(false));
+let playing=false,level=1,beat=0;
+function genTarget(){target=Array.from({length:R},()=>Array(C).fill(false));
+const n=3+level;for(let i=0;i<n;i++){const r=(Math.random()*R)|0,c=(Math.random()*C)|0;target[r][c]=true;}
+document.getElementById('t').textContent=target.flat().filter(x=>x).length;
+render();msg('Toggle cells to match the 🟩 target, then ▶ Test!');}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<R;r++)for(let c=0;c<C;c++){const d=document.createElement('div');d.className='cell';
+if(target[r][c])d.classList.add('tgt');
+if(grid[r][c])d.classList.add('on');
+if(beat===c&&playing)d.classList.add('beat');
+d.textContent=grid[r][c]?'♪':'';
+d.onclick=()=>{grid[r][c]=!grid[r][c];AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();
+if(grid[r][c])tone(NOTES[r]);render();};
+g.appendChild(d);}}
+function play(){if(playing)return;playing=true;beat=0;
+const bpm=100+level*6;document.getElementById('b').textContent=bpm;
+const interval=60000/bpm/2;
+const seq=setInterval(()=>{render();
+for(let r=0;r<R;r++)if(grid[r][beat])tone(NOTES[r],.12);
+beat++;
+if(beat>=C){clearInterval(seq);playing=false;
+// score match
+let match=0,need=0;for(let r=0;r<R;r++)for(let c=0;c<C;c++){
+if(target[r][c]){need++;if(grid[r][c])match++;}}
+document.getElementById('m').textContent=match;
+if(match===need){level++;document.getElementById('l').textContent=level;
+msg('🎵 Perfect pattern! Level '+level);genTarget();}
+else{msg('🎯 Matched '+match+'/'+need+' — adjust and retry!');}
+render();}},interval);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('play').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();play();};
+document.getElementById('clear').onclick=()=>{grid=Array.from({length:R},()=>Array(C).fill(false));render();};
+document.getElementById('new').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();genTarget();};
+genTarget();
+</script></body></html>

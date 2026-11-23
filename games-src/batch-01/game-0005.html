@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Cosmic Medieval War</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0b1026,#1e1b4b);font-family:Georgia,serif;color:#e0e7ff;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{padding:8px;font-size:1.15rem;color:#c084fc;letter-spacing:1px}
+#hud{display:flex;gap:16px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0f172a;border-radius:10px;border:2px solid #6d28d9;box-shadow:0 0 30px #6d28d955;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(2,6,23,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+button{background:#c084fc;border:none;color:#1e1b4b;font-weight:700;padding:12px 32px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+#p1,#p1i{color:#f87171}#p2,#p2i{color:#60a5fa}
+</style>
+</head>
+<body>
+<h1>⚔️ COSMIC MEDIEVAL WAR</h1>
+<div id="hud"><span id="p1">RED <b id="h1">100</b></span><span>Round <b id="r">1</b></span><span id="p2">BLUE <b id="h2">100</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#c084fc">COSMIC MEDIEVAL WAR</h2><p>2 players, one keyboard!<br><span id="p1i">RED: W A D move, F attack, G block</span><br><span id="p2i">BLUE: ↑ ← → move, K attack, L block</span><br><br>On touch screens: tap LEFT half = RED, RIGHT half = BLUE (buttons appear).</p><button id="btn">TO BATTLE!</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=640,H=300;cvs.width=W;cvs.height=H;const G=H-40;
+let knights,keys,playing,round,particles;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.1;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mk(x,dir,col){return{x,y:G,w:22,h:34,vx:0,vy:0,dir,hp:100,col,cd:0,block:false,onG:true,score:0};}
+function init(r){knights=[mk(120,1,'#ef4444'),mk(W-120,-1,'#3b82f6')];knights[0].score=+localStorage.getItem('cmw_s1')||0;knights[1].score=+localStorage.getItem('cmw_s2')||0;keys={};playing=true;round=r;particles=[];document.getElementById('r').textContent=r;updHp();}
+function updHp(){document.getElementById('h1').textContent=Math.max(0,knights[0].hp);document.getElementById('h2').textContent=Math.max(0,knights[1].hp);}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+// touch halves
+let t1={},t2={};
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();const x=(e.clientX-r.left)/r.width*W;const k=x<W/2?t1:t2;
+const y=(e.clientY-r.top)/r.height*H;if(y<r.height*0.35)k.jump=true;else if(y<r.height*0.7)k.atk=true;else k.block=true;});
+cvs.addEventListener('pointerup',()=>{t1={};t2={};});
+function ctl(k,left,right,jump,atk,blk){const o={l:keys[left]||t1.l&&false,r:keys[right]};return{l:!!keys[left],r:!!keys[right],j:!!keys[jump],a:!!keys[atk],b:!!keys[blk]};}
+function step(){
+const c=[ctl(0,'a','d','w','f','g'),ctl(1,'arrowleft','arrowright','arrowup','k','l')];
+// apply touch
+if(t1.l||t1.r||t1.jump||t1.atk||t1.block)c[0]={l:!!t1.l,r:!!t1.r,j:!!t1.jump,a:!!t1.atk,b:!!t1.block};
+if(t2.l||t2.r||t2.jump||t2.atk||t2.block)c[1]={l:!!t2.l,r:!!t2.r,j:!!t2.jump,a:!!t2.atk,b:!!t2.block};
+knights.forEach((kn,i)=>{const ct=c[i];kn.cd--;kn.block=ct.b;
+if(ct.l){kn.vx=-3.4;kn.dir=-1;}else if(ct.r){kn.vx=3.4;kn.dir=1;}else kn.vx*=0.7;
+if(ct.j&&kn.onG){kn.vy=-11;kn.onG=false;beep(500,.06,'sine');}
+kn.vy+=0.55;kn.x+=kn.vx;kn.y+=kn.vy;
+if(kn.y>=G){kn.y=G;kn.vy=0;kn.onG=true;}
+kn.x=Math.max(20,Math.min(W-20,kn.x));
+if(ct.a&&kn.cd<=0){kn.cd=22;beep(180,.1,'sawtooth');
+const other=knights[1-i];
+if(Math.abs(other.x-kn.x)<52&&Math.abs(other.y-kn.y)<40&&!other.block){other.hp-=12;particles.push({x:other.x,y:other.y-20,t:8});beep(90,.15,'sawtooth');updHp();if(other.hp<=0)win(i);}}});
+// face each other auto for touch
+if(t1.atk)t1={};if(t2.atk)t2={};
+}
+let winner=-1;
+function win(i){playing=false;winner=i;knights[i].score++;localStorage.setItem('cmw_s'+(i+1),knights[i].score);const names=['RED','BLUE'];
+document.querySelector('#ov h2').textContent=names[i]+' WINS ROUND '+round+'!';
+document.querySelector('#ov h2').style.color=knights[i].col;
+document.querySelector('#ov p').innerHTML='Round score — RED '+knights[0].score+' : '+knights[1].score+' BLUE<br>First to 3 rounds wins the war.';
+document.getElementById('btn').textContent=knights[0].score>=3||knights[1].score>=3?'NEW WAR':'NEXT ROUND';
+document.getElementById('ov').style.display='flex';beep(880,.4,'triangle');}
+function draw(){ctx.clearRect(0,0,W,H);
+// cosmic sky
+const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#1e1b4b');g2.addColorStop(1,'#0f172a');ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#fff';for(let i=0;i<40;i++)ctx.fillRect((i*97)%W,(i*53)%H,2,2);
+ctx.fillStyle='#334155';ctx.fillRect(0,G+18,W,H-G-18);ctx.fillStyle='#475569';ctx.fillRect(0,G+18,W,4);
+knights.forEach(kn=>{ctx.fillStyle=kn.block?'#9ca3af':kn.col;ctx.fillRect(kn.x-kn.w/2,kn.y-kn.h,kn.w,kn.h);
+ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(kn.x+kn.dir*6,kn.y-kn.h+6,6,0,7);ctx.fill();
+if(kn.block){ctx.strokeStyle='#e5e7eb';ctx.lineWidth=3;ctx.strokeRect(kn.x+kn.dir*8-8,kn.y-kn.h+4,16,20);}
+if(kn.cd>14){ctx.strokeStyle='#fff';ctx.beginPath();ctx.moveTo(kn.x+kn.dir*8,kn.y-kn.h+10);ctx.lineTo(kn.x+kn.dir*30,kn.y-kn.h+16);ctx.stroke();}});
+particles.forEach(p=>{ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(p.x,p.y,4,0,7);ctx.fill();p.t--;});particles=particles.filter(p=>p.t>0);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(knights&&knights[0].score>=3||knights&&knights[1].score>=3){localStorage.removeItem('cmw_s1');localStorage.removeItem('cmw_s2');init(1);knights[0].score=0;knights[1].score=0;}
+else init(round+ (knights?0:0));
+document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+{
+ "method": "headless Chromium; CPU throttle 4x and network 1.6 Mbps / 150 ms latency emulate a slow phone; numbers are from this machine and are NOT measurements on real devices",
+ "pages": {
+  "home": {
+   "normal": {
+    "load_s": 0.34,
+    "ready_s": null,
+    "requests": 114,
+    "kb": 789,
+    "js_heap_mb": 1.6,
+    "dom_nodes": 2574
+   },
+   "throttled_slow_phone": {
+    "load_s": 5.61,
+    "ready_s": null,
+    "requests": 41,
+    "kb": 745,
+    "js_heap_mb": 2.0,
+    "dom_nodes": 3014
+   }
+  },
+  "games list": {
+   "normal": {
+    "load_s": 0.23,
+    "ready_s": null,
+    "requests": 58,
+    "kb": 747,
+    "js_heap_mb": 2.1,
+    "dom_nodes": 1739
+   },
+   "throttled_slow_phone": {
+    "load_s": 5.58,
+    "ready_s": null,
+    "requests": 34,
+    "kb": 750,
+    "js_heap_mb": 2.1,
+    "dom_nodes": 1739
+   }
+  },
+  "profile": {
+   "normal": {
+    "load_s": 0.22,
+    "ready_s": null,
+    "requests": 11,
+    "kb": 678,
+    "js_heap_mb": 2.1,
+    "dom_nodes": 332
+   },
+   "throttled_slow_phone": {
+    "load_s": 5.65,
+    "ready_s": null,
+    "requests": 11,
+    "kb": 705,
+    "js_heap_mb": 2.1,
+    "dom_nodes": 332
+   }
+  },
+  "game page (isolated game)": {
+   "normal": {
+    "load_s": 0.33,
+    "ready_s": 0.35,
+    "requests": 16,
+    "kb": 718,
+    "js_heap_mb": 3.2,
+    "dom_nodes": 1055
+   },
+   "throttled_slow_phone": {
+    "load_s": 6.53,
+    "ready_s": 6.62,
+    "requests": 16,
+    "kb": 728,
+    "js_heap_mb": 3.2,
+    "dom_nodes": 1053
+   }
+  },
+  "game page (heavy idle game)": {
+   "normal": {
+    "load_s": 0.34,
+    "ready_s": 0.36,
+    "requests": 16,
+    "kb": 707,
+    "js_heap_mb": 3.2,
+    "dom_nodes": 981
+   },
+   "throttled_slow_phone": {
+    "load_s": 6.39,
+    "ready_s": 6.49,
+    "requests": 16,
+    "kb": 729,
+    "js_heap_mb": 3.2,
+    "dom_nodes": 1065
+   }
+  }
+ },
+ "restart_memory_test": {
+  "heap_mb_nodes_listeners_after_each_of_8_restarts": [
+   [
+    1.8,
+    958,
+    118
+   ],
+   [
+    2.6,
+    951,
+    326
+   ],
+   [
+    2.6,
+    955,
+    326
+   ],
+   [
+    2.6,
+    954,
+    326
+   ],
+   [
+    2.6,
+    955,
+    326
+   ],
+   [
+    2.6,
+    948,
+    326
+   ],
+   [
+    2.6,
+    955,
+    326
+   ],
+   [
+    2.6,
+    953,
+    326
+   ],
+   [
+    2.7,
+    954,
+    326
+   ]
+  ],
+  "note": "JS heap (MB), DOM nodes and event listeners of the platform page; the game iframe is replaced, not stacked"
+ }
+}

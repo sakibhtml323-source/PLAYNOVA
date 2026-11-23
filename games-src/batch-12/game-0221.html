@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Dress Up #221</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.2rem;margin:12px 0 4px}.sub{color:#9ca3af;font-size:.8rem;margin-bottom:10px}
+#stage{font-size:96px;line-height:1;margin:8px 0}
+.row{display:flex;gap:8px;margin:6px;flex-wrap:wrap;justify-content:center}
+.slot{display:flex;flex-direction:column;align-items:center}
+.slot button{font-size:26px;width:52px;height:52px;border-radius:12px;border:2px solid #374151;background:#1f2937;cursor:pointer}
+.slot button:hover{border-color:#8b5cf6}
+.lbl{font-size:.7rem;color:#9ca3af;margin-top:2px}
+#score{font-size:1.4rem;font-weight:700;color:#fbbf24;margin:8px}
+#best{color:#9ca3af;font-size:.8rem}
+#btn{padding:10px 22px;border-radius:999px;border:none;background:#8b5cf6;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+.tag{font-size:.75rem;padding:2px 8px;border-radius:999px;background:#1f2937;border:1px solid #374151;margin:2px;cursor:pointer}
+.tag.on{background:#8b5cf6;border-color:#a78bfa}
+</style></head><body>
+<h1>🥷 Ninja Dress Up</h1><div class="sub">Spin the outfit slots → match the mission's style tags for bonus!</div>
+<div id="stage">🥷</div>
+<div class="row">
+<div class="slot"><button id="b0">▶</button><div class="lbl" id="l0">Mask</div></div>
+<div class="slot"><button id="b1">▶</button><div class="lbl" id="l1">Suit</div></div>
+<div class="slot"><button id="b2">▶</button><div class="lbl" id="l2">Belt</div></div>
+<div class="slot"><button id="b3">▶</button><div class="lbl" id="l3">Weapon</div></div>
+</div>
+<div class="row" id="tags"></div>
+<div id="score">Score: 0</div><div id="best"></div>
+<button id="btn">🎲 New Mission</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.08,t='sine'){if(!AU)return;try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.12,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const SLOTS=[['🎭','👺','🦊','🐱'],['🥷','🧥','🎽','👘'],['🟣','🟥','🟦','⬛'],['🗡️','🍥','🏹','🪃']];
+const NAMES=[['Oni Mask','Kabuki','Kitsune','Lucky Cat'],['Shadow Suit','Street Hood','Training Gi','Silk Robe'],['Violet Belt','Crimson Belt','Azure Belt','Night Belt'],['Katana','Ramen Toss','Longbow','Boomerang']];
+const TAGPOOL=[{n:'Stealth',c:['#1f2937','#111827']},{n:'Flashy',c:['#7c3aed','#dc2626']},{n:'Agile',c:['#0ea5e9','#22c55e']},{n:'Mystic',c:['#a855f7','#eab308']}];
+let cur=[0,0,0,0],score=0,best=+localStorage.getItem('du_best')||0,tags=[];
+document.getElementById('best').textContent='Best: '+best;
+function render(){
+ const em=['','','',''];
+ document.getElementById('l0').textContent=NAMES[0][cur[0]];
+ document.getElementById('l1').textContent=NAMES[1][cur[1]];
+ document.getElementById('l2').textContent=NAMES[2][cur[2]];
+ document.getElementById('l3').textContent=NAMES[3][cur[3]];
+ document.getElementById('stage').textContent='🥷';
+}
+for(let s=0;s<4;s++){document.getElementById('b'+s).onclick=()=>{cur[s]=(cur[s]+1)%4;beep(400+s*80,.06);render();scoreOutfit(false);};}
+function scoreOutfit(final){
+ let s=cur[0]+cur[1]+cur[2]+cur[3]+4;
+ const uniq=new Set(cur).size; if(uniq===4)s+=8; if(uniq===1)s+=15;
+ let matched=0; tags.forEach((tg,i)=>{const tagC=TAGPOOL.find(t=>t.n===tg.n).c; if(cur.some(c=>tagC.includes(['#1f2937','#7c3aed','#0ea5e9','#a855f7'][c])) || (i%2===cur[i]%2))matched++;});
+ s+=matched*10;
+ if(final){score=s;document.getElementById('score').textContent='Score: '+s;
+  if(s>best){best=s;localStorage.setItem('du_best',best);document.getElementById('best').textContent='Best: '+best;}
+  beep(s>=40?880:520,.15,'triangle');}
+ return s;
+}
+function newMission(){
+ tags=[];const pool=TAGPOOL.slice();for(let i=0;i<2;i++){tags.push(pool.splice((Math.random()*pool.length)|0,1)[0]);}
+ const tg=document.getElementById('tags');tg.innerHTML='';
+ tags.forEach(t=>{const d=document.createElement('span');d.className='tag';d.textContent='🎯 '+t.n;tg.appendChild(d);});
+ document.getElementById('score').textContent='Score: ? — style for the tags!';
+}
+document.getElementById('btn').onclick=()=>{newMission();scoreOutfit(true);};
+newMission();render();
+</script></body></html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Stack Sort #308</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+#stacks{max-width:94vw;flex-wrap:wrap;display:flex;gap:12px;margin:12px;align-items:flex-end}
+.stk{display:flex;flex-direction:column-reverse;width:60px;min-height:36px;background:#1f2937;border-radius:0 0 12px 12px;padding:3px;cursor:pointer;border-bottom:4px solid #374151}
+.bk{width:52px;height:26px;border-radius:6px;margin:1px auto}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🥷 Ninja Stack Sort</h1><div class="sub">Sort the scrolls by color — one stack per color. Each stack holds only 4!</div>
+<div id="hud"><span>Moves <b id="m">0</b></span><span>Best <b id="b">—</b></span><span>Level <b id="l">1</b></span></div>
+<div id="stacks"></div>
+<div id="msg"></div>
+<button id="btn">🎴 New Sort</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const COLS=['#ef4444','#3b82f6','#22c55e','#fbbf24','#a855f7'];
+const CAP=4;let stacks=[],moves=0,best=+localStorage.getItem('nss_best')||Infinity,level=1;
+document.getElementById('b').textContent=best<Infinity?best:'—';
+function gen(){const nc=Math.min(3+level,COLS.length);
+stacks=[];const all=[];for(let c=0;c<nc;c++)for(let k=0;k<CAP;k++)all.push(c);
+for(let i=all.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[all[i],all[j]]=[all[j],all[i]];}
+for(let t=0;t<nc;t++)stacks.push(all.slice(t*CAP,(t+1)*CAP));
+stacks.push([],[]);
+moves=0;document.getElementById('m').textContent=0;
+document.getElementById('l').textContent=level;
+render();msg('Sort each color into its own stack!');}
+let sel=null;
+function tap(i){if(sel===null){if(!stacks[i].length){beep(160,.06,'sawtooth');return;}
+sel=i;render();return;}
+if(sel===i){sel=null;render();return;}
+const from=stacks[sel];
+if(stacks[i].length>=CAP){beep(160,.06,'sawtooth');return;}
+const b=from[from.length-1];
+if(stacks[i].length&&stacks[i][stacks[i].length-1]!==b){beep(160,.06,'sawtooth');msg('Only place on matching color or empty!');return;}
+stacks[i].push(from.pop());sel=null;moves++;document.getElementById('m').textContent=moves;
+beep(400+moves*15,.06);render();check();}
+function check(){if(stacks.every(s=>!s.length||s.every(b=>b===s[0]))){beep(880,.3,'triangle');
+if(moves<best){best=moves;localStorage.setItem('nss_best',best);document.getElementById('b').textContent=best;}
+msg('🎉 Sorted in '+moves+' moves! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(gen,1200);}}
+function render(){const w=document.getElementById('stacks');w.innerHTML='';
+stacks.forEach((st,i)=>{const d=document.createElement('div');d.className='stk';
+if(sel===i)d.style.borderColor='#facc15';
+st.forEach(b=>{const blk=document.createElement('div');blk.className='bk';
+blk.style.background=COLS[b];d.appendChild(blk);});
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+w.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

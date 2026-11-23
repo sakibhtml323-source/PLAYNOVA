@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense Brain Puzzle Saga (Daily Seed)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0f0f0f,#1c1917);font-family:Georgia,serif;color:#e7e5e4;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.1rem;color:#f87171;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#q{font-size:1.3rem;text-align:center;margin:16px 0;min-height:2.2em}
+#opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:min(480px,94vw)}
+#opts button{background:#1c1917;border:3px solid #44403c;border-radius:14px;padding:14px;font-family:inherit;font-size:1rem;cursor:pointer;color:#e7e5e4}
+#opts button:hover{background:#292524}
+#opts button.ok{background:#14532d;border-color:#4ade80}
+#opts button.bad{background:#7f1d1d;border-color:#f87171}
+#fb{text-align:center;min-height:1.6em;margin-top:12px;font-weight:700}
+#prog{height:10px;background:#292524;border:1px solid #44403c;border-radius:6px;overflow:hidden;margin-bottom:12px}
+#prog i{display:block;height:100%;background:#f87171;width:0}
+#ov{position:fixed;inset:0;background:rgba(15,15,15,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e7e5e4;padding:20px;z-index:5}
+button.big{background:#f87171;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:420px){#opts button{padding:10px 6px;font-size:.85rem}}
+</style>
+</head>
+<body>
+<h1>🧠 INTENSE BRAIN SAGA</h1>
+<div id="hud"><span>Saga <b id="n">1</b>/12</span><span>Score <b id="sc">0</b></span><span>Pressure <b id="p">100</b>%</span><span>Best <b id="b">0</b></span></div>
+<div id="prog"><i id="pb"></i></div>
+<div id="q">Press START!</div>
+<div id="opts"></div>
+<div id="fb"></div>
+<div id="ov"><h2 style="color:#f87171">THE INTENSE SAGA</h2><p id="od">12 stages of INTENSE brain teasers! The pressure bar drains while you think — answer fast for bonuses. Wrong answers cost pressure. Survive all 12 to become the Brain Sage!</p><button class="big" id="btn">ENTER THE SAGA</button></div>
+<script>
+"use strict";
+let QS=[
+{q:'A farmer has 17 sheep. All but 9 die. How many left?',o:['8','9','17','0'],a:1},
+{q:'Which is heavier: a kg of steel or a kg of feathers?',o:['Steel','Feathers','Same','Steel*2'],a:2},
+{q:'2, 4, 8, 16, … next?',o:['24','30','32','64'],a:2},
+{q:'How many months have 28 days?',o:['1','2','12','None'],a:2},
+{q:'If you drop a yellow hat in the Red Sea, what happens?',o:['It sinks','Floats','Gets wet','Turns red'],a:2},
+{q:'Spell "silk" — what do cows drink?',o:['Milk','Water','Silk','Juice'],a:1},
+{q:'How many letters in "the alphabet"?',o:['11','12','26','9'],a:0},
+{q:'Divide 30 by half, add 10. Result?',o:['25','70','40','20'],a:1},
+{q:'What has hands but cannot clap?',o:['Clock','Baby','Glove','Tree'],a:0},
+{q:'Mary\'s father has 5 daughters: Nana, Nene, Nini, Nono…?',o:['Nunu','Momo','Mary','Nena'],a:2},
+{q:'0.999… (repeating) equals?',o:['0.99','1','0.9','Undefined'],a:1},
+{q:'You\'re running a race and pass the person in 2nd. Position?',o:['1st','2nd','3rd','Last'],a:1}];
+let idx,score,pressure,timer,playing,best=+localStorage.getItem('ibs_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const _today=new Date().toISOString().slice(0,10);
+let _seed=0;for(const ch of _today)_seed=(_seed*31+ch.charCodeAt(0))>>>0;
+function _rng(){_seed=(_seed*1664525+1013904223)>>>0;return _seed/4294967296;}
+QS=QS.slice().sort(()=>_rng()-.5);
+function ask(){if(idx>=12)return end();
+const q=QS[idx];document.getElementById('n').textContent=idx+1;
+document.getElementById('q').textContent=q.q;
+const o=document.getElementById('opts');o.innerHTML='';
+q.o.forEach((opt,i)=>{const b=document.createElement('button');b.textContent=opt;
+b.onclick=()=>pick(i);o.appendChild(b);});
+document.getElementById('fb').textContent='';clearInterval(timer);
+pressure=100;updBar();
+timer=setInterval(()=>{pressure-=2;updBar();if(pressure<=0){clearInterval(timer);hurt('⏳ Pressure maxed!');}},140);}
+function updBar(){document.getElementById('pb').style.width=Math.max(0,pressure)+'%';document.getElementById('p').textContent=Math.max(0,Math.round(pressure));}
+function pick(i){clearInterval(timer);
+const q=QS[idx];
+[...document.getElementById('opts').children].forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('ok');else if(j===i)b.classList.add('bad');});
+if(i===q.a){score+=Math.round(pressure/8)+12;document.getElementById('sc').textContent=score;beep(700,.1,'triangle');
+document.getElementById('fb').textContent='✓ +'+(Math.round(pressure/8)+12);document.getElementById('fb').style.color='#4ade80';}
+else hurt('✗ WRONG! It was: '+q.o[q.a]);}
+function hurt(msg){pressure-=30;updBar();beep(150,.2,'sawtooth');
+document.getElementById('fb').textContent=msg;document.getElementById('fb').style.color='#f87171';
+if(pressure<=0){playing=false;setTimeout(end,700);return;}
+idx++;setTimeout(ask,900);}
+function end(){playing=false;clearInterval(timer);if(score>best){best=score;localStorage.setItem('ibs_best',best);document.getElementById('b').textContent=best;}
+const r=score>=150?'🧠 BRAIN SAGE':score>=100?'🔥 INTENSE MIND':score>=50?'🗿 THINKER':'🫠 MELTED';
+document.getElementById('od').innerHTML=r+'<br>Score: <b style="font-size:1.5rem;color:#f87171">'+score+'</b>';
+document.getElementById('btn').textContent='RE-ENTER';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(document.getElementById('ov').style.display==='flex')return;
+const k=e.key;if(k>='1'&&k<='4'){const b=document.querySelectorAll('#opts button')[+k-1];if(b&&!b.disabled)b.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();idx=0;score=0;pressure=100;playing=true;
+document.getElementById('sc').textContent=0;document.getElementById('p').textContent=100;
+document.getElementById('ov').style.display='none';ask();};
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Time Killer: Pirates</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#082f49,#0c4a6e);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0ea5e9;border-radius:12px;touch-action:none;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#082f49;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🏴‍☠️ TIME KILLER: PIRATES</h1>
+<div id="hud"><span>⏱ Survived <b id="t">0</b>s</span><span>💰 Loot <b id="l">0</b></span><span>Best <b id="b">0</b>s</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#fbbf24">TIME KILLER</h2><p id="od">The perfect time killer! Catch coins 💰 falling from the pirate ship — tap or move the chest (← → / drag). Miss 5 coins and the tide takes your treasure. Last as long as you can!</p><button id="btn">HOIST THE CHEST</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=480;cvs.width=W;cvs.height=H;
+let chest,coins2,playing,missed,time,spd,keys,best=+localStorage.getItem('tk_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){chest={x:W/2,w:64};coins2=[];missed=0;time=0;spd=1;keys={};playing=true;
+document.getElementById('t').textContent=0;document.getElementById('l').textContent=0;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+window.addEventListener('pointerup',()=>dragX=null);
+function step(){time+=1/60;spd=1+time/20;
+document.getElementById('t').textContent=time.toFixed(1);
+if(keys['arrowleft']||keys['a'])chest.x-=5.6;if(keys['arrowright']||keys['d'])chest.x+=5.6;
+if(dragX!==null)chest.x=dragX;
+chest.x=Math.max(chest.w/2,Math.min(W-chest.w/2,chest.x));
+if(Math.random()<0.02+time/1200)coins2.push({x:14+Math.random()*(W-28),y:-12,vy:2+spd+Math.random(),r:8});
+coins2.forEach(cn=>{cn.y+=cn.vy;
+if(cn.y>H-60&&Math.abs(cn.x-chest.x)<chest.w/2+8){coins2.splice(coins2.indexOf(cn),1);
+const l=+document.getElementById('l').textContent+1;document.getElementById('l').textContent=l;beep(600+l*20,.06,'triangle');}
+else if(cn.y>H+10){coins2.splice(coins2.indexOf(cn),1);missed++;beep(150,.12,'sawtooth');
+if(missed>=5)die();}});
+// skulls occasionally
+if(Math.random()<0.004+time/3000)coins2.push({x:14+Math.random()*(W-28),y:-12,vy:2.4+spd,skull:true});
+coins2.forEach(cn=>{if(cn.skull&&cn.y>H-64&&Math.abs(cn.x-chest.x)<chest.w/2+8){die();}});}
+function die(){playing=false;const t=+document.getElementById('t').textContent;
+if(t>best){best=t;localStorage.setItem('tk_best',best.toFixed(1));document.getElementById('b').textContent=best.toFixed(1);}
+document.getElementById('od').innerHTML='The tide takes the chest after <b style="color:#fde047">'+t.toFixed(1)+'s</b>!<br>Loot: '+document.getElementById('l').textContent;
+document.getElementById('btn').textContent='DIVE AGAIN';document.getElementById('ov').style.display='flex';beep(120,.5,'sawtooth');}
+function draw(){const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#38bdf8');g2.addColorStop(1,'#0c4a6e');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#082f49';ctx.fillRect(0,H-48,W,48);
+ctx.fillStyle='#fbbf2466';for(let i=0;i<4;i++)ctx.fillRect(0,H-48+i*12,W,2);
+coins2.forEach(cn=>{if(cn.skull){ctx.font='18px serif';ctx.textAlign='center';ctx.fillText('💀',cn.x,cn.y+6);}
+else{ctx.fillStyle='#fde047';ctx.beginPath();ctx.arc(cn.x,cn.y,8,0,7);ctx.fill();
+ctx.fillStyle='#b45309';ctx.font='bold 9px Georgia';ctx.fillText('$',cn.x,cn.y+3);}});
+ctx.fillStyle='#78350f';ctx.fillRect(chest.x-chest.w/2,H-52,chest.w,36);
+ctx.fillStyle='#92400e';ctx.fillRect(chest.x-chest.w/2,H-52,chest.w,8);
+ctx.fillStyle='#fde047';ctx.fillRect(chest.x-6,H-40,12,10);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

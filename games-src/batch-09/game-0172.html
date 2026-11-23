@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dress Up: Glassmorphism Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#667eea,#764ba2,#f093fb);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#fff;padding:6px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px;color:#fff}
+#stage{width:min(380px,94vw);background:rgba(255,255,255,.15);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.35);border-radius:22px;padding:16px;text-align:center}
+#doll{font-size:5.5rem;margin:10px 0}
+#doll .outfit{font-size:2.6rem;display:block;margin-top:-12px}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.row button{background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);border-radius:12px;padding:8px 14px;cursor:pointer;font-size:.85rem;color:#fff;font-family:inherit}
+.row button:hover{background:rgba(255,255,255,.45)}
+.row button:disabled{opacity:.4}
+#theme{font-size:.85rem;color:rgba(255,255,255,.85);margin:8px 0}
+#score{font-size:1.1rem;color:#fff;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(102,126,234,.95);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px;z-index:5}
+button.big{background:rgba(255,255,255,.92);color:#667eea;border:none;font-weight:700;padding:12px 36px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>👗 GLASS DRESS UP</h1>
+<div id="hud"><span>Look <b id="l">1</b>/5</span><span>Style <b id="sc">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="stage">
+<div id="doll"><span id="face">👧</span><span class="outfit" id="outfit">👗</span></div>
+<div id="theme">Theme: —</div>
+<div class="row" id="opts"></div>
+<div id="score"></div>
+</div>
+<div id="ov"><h2>FROSTED FASHION</h2><p id="od">Style the doll for each theme! Pick hair, outfit and accessory that match the theme — the style judge scores your taste. 5 themes, can you top them all?</p><button class="big" id="btn">OPEN THE WARDROBE</button></div>
+<script>
+"use strict";
+const ITEMS={
+hair:['🧑','👱‍♀️','👩‍🦰','👩‍🦳','👩‍🦱','🧕'],
+outfit:['👗','👘','🧥','👚','🩱','🥻'],
+acc:['👑','🕶️','👜','💍','🧣','🎀']};
+const THEMES=[['Royal Gala','👑','👗','👱‍♀️'],['Beach Day','🕶️','🩱','👩‍🦱'],['Winter Chic','🧣','🧥','👩‍🦳'],['Street Style','🎀','👚','👩‍🦰'],['Red Carpet','💍','🥻','🧑']];
+let look,score,playing,sel,curTheme,best=+localStorage.getItem('du_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function newLook(){curTheme=THEMES[(look-1)%THEMES.length];
+document.getElementById('theme').textContent='Theme: '+curTheme[0];
+sel={hair:0,outfit:0,acc:0};render();}
+function render(){
+document.getElementById('face').textContent=ITEMS.hair[sel.hair];
+document.getElementById('outfit').textContent=ITEMS.outfit[sel.outfit];
+const o=document.getElementById('opts');o.innerHTML='';
+Object.keys(ITEMS).forEach(cat=>{const row=document.createElement('div');row.className='row';
+ITEMS[cat].forEach((it,i)=>{const b=document.createElement('button');b.textContent=it;
+if(sel[cat]===i)b.style.background='rgba(255,255,255,.55)';
+b.onclick=()=>{audio.resume();sel[cat]=i;beep(500+i*60,.06);render();};
+row.appendChild(b);});
+o.appendChild(row);});
+const sub=document.createElement('button');sub.className='big';sub.textContent='✨ SERVE THE LOOK';
+sub.style.cssText='background:rgba(255,255,255,.85);color:#764ba2;border:none;border-radius:20px;padding:10px 24px;cursor:pointer;font-weight:700;margin-top:6px';
+sub.onclick=judge;o.appendChild(sub);}
+function judge(){if(!playing)return;audio.resume();
+const ideal={hair:ITEMS.hair.indexOf(curTheme[3]),outfit:ITEMS.outfit.indexOf(curTheme[2]),acc:ITEMS.acc.indexOf(curTheme[1])};
+let pts=0;
+if(sel.hair===ideal.hair)pts+=34;if(sel.outfit===ideal.outfit)pts+=40;if(sel.acc===ideal.acc)pts+=26;
+// partial credit for non-matching but coherent (same index)
+if(sel.hair===sel.outfit)pts+=5;if(sel.outfit===sel.acc)pts+=5;
+score+=pts;document.getElementById('sc').textContent=score;
+beep(pts>=90?880:pts>=60?660:400,.15,'triangle');
+document.getElementById('score').textContent='+'+pts+' style points!';
+if(look>=5)return finale();
+look++;document.getElementById('l').textContent=look;setTimeout(newLook,900);}
+function finale(){playing=false;if(score>best){best=score;localStorage.setItem('du_best',best);document.getElementById('b').textContent=best;}
+const r=score>=400?'👑 FASHION ICON':score>=300?'✨ RUNWAY READY':score>=200?'🎀 STYLISH':'🧦 MISMATCHED';
+beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);
+document.getElementById('od').innerHTML=r+'<br>Total style: <b style="font-size:1.4rem">'+score+'</b>/500';
+document.getElementById('btn').textContent='NEW COLLECTION';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;
+if(k==='1'||k==='2'||k==='3'){sel[['hair','outfit','acc'][+k-1]]=(sel[['hair','outfit','acc'][+k-1]]+1)%6;render();}
+if(k==='Enter')judge();});
+document.getElementById('btn').onclick=()=>{audio.resume();look=1;score=0;playing=true;
+document.getElementById('l').textContent=1;document.getElementById('sc').textContent=0;document.getElementById('score').textContent='';
+document.getElementById('ov').style.display='none';newLook();};
+</script>
+</body>
+</html>

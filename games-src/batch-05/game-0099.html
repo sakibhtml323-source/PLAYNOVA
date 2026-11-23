@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Endless Hotseat Strategy #########</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0f0f0f;font-family:Georgia,serif;color:#d4d4d8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#facc15;padding:6px;letter-spacing:1px;text-align:center}
+#hud{display:flex;gap:14px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#board{display:grid;gap:3px;background:#1c1c1c;padding:8px;border-radius:12px;border:2px solid #3f3f46;touch-action:none}
+.cell{width:40px;height:40px;border-radius:6px;background:#1c1c1c;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:.95rem;cursor:pointer}
+@media(max-width:400px){.cell{width:33px;height:33px;font-size:.8rem}}
+.cell.sel{outline:3px dashed #facc15}
+#tip{text-align:center;font-size:.82rem;color:#71717a;margin-top:8px;min-height:2.2em;padding:0 8px}
+#ov{position:fixed;inset:0;background:rgba(15,15,15,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#facc15;border:none;color:#0f0f0f;font-family:inherit;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⚔️ ENDLESS HOTSEAT WARFARE</h1>
+<div id="hud"><span style="color:#f87171">LEGION <b id="a1">0</b></span><span>Era <b id="t">1</b></span><span style="color:#60a5fa">PHALANX <b id="a2">0</b></span></div>
+<div id="board"></div>
+<div id="tip"></div>
+<div id="ov"><h2 style="color:#facc15">ENDLESS WAR</h2><p id="od">A war without end — 2 players, one grid, eternal conquest! Tap your banner, then an adjacent tile to send half your force. Every era both sides regrow. Play for glory: whoever holds the most tiles at the end of era 15 wins!</p><button id="btn">DECLARE ETERNAL WAR</button></div>
+<script>
+"use strict";
+const S=8,MAXERA=15;let grid,cur,sel,era,playing;let be99=+localStorage.getItem('ew_best')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=[];for(let i=0;i<S*S;i++)grid.push({o:0,n:2+((Math.random()*3)|0)});
+grid[0]={o:1,n:12};grid[1]={o:1,n:8};grid[S]={o:1,n:8};
+grid[S*S-1]={o:2,n:12};grid[S*S-2]={o:2,n:8};grid[S*S-1-S]={o:2,n:8};
+cur=1;era=1;sel=null;playing=true;document.getElementById('t').textContent=1;render();}
+function neigh(i){const r=(i/S)|0,c=i%S,o=[];if(r>0)o.push(i-S);if(r<S-1)o.push(i+S);if(c>0)o.push(i-1);if(c<S-1)o.push(i+1);return o;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+S+',40px)';b.innerHTML='';
+grid.forEach((g,i)=>{const c=document.createElement('div');c.className='cell'+(sel===i?' sel':'');
+c.style.background=g.o===1?'#3b0713':g.o===2?'#082038':'#1c1c1c';
+c.textContent=g.o?('⚑'+g.n):g.n;
+c.onclick=()=>tap(i);b.appendChild(c);});
+document.getElementById('a1').textContent=grid.filter(g=>g.o===1).reduce((a,g)=>a+g.n,0);
+document.getElementById('a2').textContent=grid.filter(g=>g.o===2).reduce((a,g)=>a+g.n,0);
+document.getElementById('tip').textContent=playing?(cur===1?'🔴 LEGION':'🔵 PHALANX')+' — era '+era+'/'+MAXERA+'. Conquer!':'The endless war pauses.';}
+function tap(i){if(!playing)return;const g=grid[i];
+if(g.o===cur){sel=i;beep(600,.05);render();return;}
+if(sel!==null&&neigh(sel).includes(i)){const send=Math.floor(grid[sel].n/2);
+if(send<1){render();return;}
+grid[sel].n-=send;
+if(g.o===cur){g.n+=send;}
+else if(g.n<send){g.o=cur;g.n=send-g.n;beep(500,.1,'triangle');}
+else{g.n-=send;}
+sel=null;render();check();if(playing){cur=cur===1?2:1;if(cur===1){era++;
+if(era>MAXERA)return final();
+document.getElementById('t').textContent=era;
+grid.forEach((c,j)=>{if(c.o)grid[j].n+=1;});render();}}}
+else{sel=null;render();}}
+function check(){const a=grid.some(g=>g.o===1),b=grid.some(g=>g.o===2);
+if(!a||!b){playing=false;
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">'+(a?'LEGION':'PHALANX')+' ACHIEVES TOTAL DOMINATION</b> in era '+era+'!';
+document.getElementById('btn').textContent='NEW ETERNAL WAR';document.getElementById('ov').style.display='flex';beep(880,.3,'triangle');}}
+function final(){playing=false;
+if(era>be99){be99=era;localStorage.setItem('ew_best',be99);}
+const t1=grid.filter(g=>g.o===1).length,t2=grid.filter(g=>g.o===2).length;
+document.getElementById('od').innerHTML='⏳ <b style="color:#fde047">ERA 15 — THE WAR IS WEIGHED.</b><br>Territory: LEGION '+t1+' : '+t2+' PHALANX<br>'+(t1===t2?'An eternal stalemate.':('🏆 '+(t1>t2?'LEGION':'PHALANX')+' HOLDS THE WORLD!'));
+document.getElementById('btn').textContent='REIGNITE';document.getElementById('ov').style.display='flex';
+beep(t1===t2?440:880,.3,'triangle');}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;const own=grid.map((g,i)=>g.o===cur?i:-1).filter(i=>i>=0);if(!own.length)return;
+if(e.key==='Enter'||e.key===' '){e.preventDefault();if(sel===null){sel=own[0];render();}else{const nb=neigh(sel).find(j=>grid[j].o!==cur);if(nb!==undefined)tap(nb);else{sel=null;render();}}}
+if(e.key==='ArrowRight'){sel=own[(own.indexOf(sel)+1+own.length)%own.length]||own[0];render();}});
+</script>
+</body>
+</html>

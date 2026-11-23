@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Music Sequence Builder #249</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem;max-width:320px;text-align:center}
+#seq{display:flex;gap:6px;margin:12px;flex-wrap:wrap;justify-content:center;min-height:52px}
+.note{width:44px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;border:2px solid #334155;background:#1e293b;font-weight:800}
+.note.on{border-color:#facc15;background:#4338ca}
+#keys{display:flex;gap:6px;margin:8px;flex-wrap:wrap;justify-content:center}
+.key{width:52px;height:64px;border-radius:0 0 8px 8px;border:2px solid #475569;background:#f8fafc;color:#0f172a;font-weight:800;font-size:.9rem;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px}
+.key:active{background:#fbbf24}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🎼 Music Sequence Builder</h1>
+<div class="sub">Tap the piano to build a sequence, then play it back. Save your masterpiece!</div>
+<div id="hud"><span>Notes <b id="n">0</b>/16</span><span>Tempo <b id="tp">120</b> BPM</span></div>
+<div id="seq"></div>
+<div id="keys">
+<button class="key" data-f="262">C</button><button class="key" data-f="294">D</button>
+<button class="key" data-f="330">E</button><button class="key" data-f="349">F</button>
+<button class="key" data-f="392">G</button><button class="key" data-f="440">A</button>
+<button class="key" data-f="494">B</button><button class="key" data-f="523">C5</button>
+</div>
+<div>
+<button id="play">▶ Play</button>
+<button id="save">💾 Save</button>
+<button id="load">📂 Load</button>
+<button id="clear">🗑 Clear</button>
+</div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function tone(f,d=.22){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();os.type='triangle';os.frequency.value=f;
+g.gain.setValueAtTime(.16,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const NAMES=['C','D','E','F','G','A','B','C5'];
+const FREQS=[262,294,330,349,392,440,494,523];
+let seq=[],bpm=120;
+function render(){const el=document.getElementById('seq');el.innerHTML='';
+seq.forEach((f,i)=>{const d=document.createElement('div');d.className='note';
+d.textContent=NAMES[FREQS.indexOf(f)]||'♪';
+d.onclick=()=>{seq.splice(i,1);render();};el.appendChild(d);});
+document.getElementById('n').textContent=seq.length;}
+document.querySelectorAll('.key').forEach(k=>{
+k.addEventListener('pointerdown',()=>{const f=+k.dataset.f;tone(f);
+if(seq.length<16){seq.push(f);render();}});});
+document.getElementById('play').onclick=()=>{if(!seq.length)return;
+const beat=60/bpm*1000;let t=0;
+document.querySelectorAll('.note').forEach(n=>n.classList.remove('on'));
+seq.forEach((f,i)=>{setTimeout(()=>{tone(f,beat/1000*.9);
+const el=document.querySelectorAll('.note')[i];if(el)el.classList.add('on');
+setTimeout(()=>el&&el.classList.remove('on'),beat*.8);},t);t+=beat;});};
+document.getElementById('save').onclick=()=>{localStorage.setItem('msb_seq',JSON.stringify(seq));tone(880,.15);};
+document.getElementById('load').onclick=()=>{const s=localStorage.getItem('msb_seq');if(s){seq=JSON.parse(s);render();tone(660,.15);}};
+document.getElementById('clear').onclick=()=>{seq=[];render();};
+render();
+</script></body></html>

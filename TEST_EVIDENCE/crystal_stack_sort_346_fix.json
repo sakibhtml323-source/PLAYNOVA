@@ -1,0 +1,12 @@
+{
+ "before_fix": "396 of 400 random level-1 boards proven unsolvable by exhaustive search (original generator)",
+ "after_fix": {
+  "method": "exhaustive/A* search over the game's own rules on boards produced by the repaired generator + real clicks completing level 1",
+  "level1_completed": true,
+  "xp": 20,
+  "fresh_level1_boards_solvable": "20/20",
+  "levels_2_3_boards_solvable": "10/10",
+  "errors": [],
+  "note": "real clicks following a plan found by search; rewards enabled via test capability override (production status is set in game-capabilities.json after this test)"
+ }
+}

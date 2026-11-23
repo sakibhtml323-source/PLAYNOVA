@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Feast Balance #394</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+canvas{background:#312e81;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🍽️ Royal Feast Balance</h1><div class="sub">Carry the royal tray — dishes slide as you move. Deliver all of them!</div>
+<div id="hud"><span>Delivered <b id="d">0</b>/5</span><span>Time <b id="t">0</b>s</span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="ov"><div style="font-size:3rem">👑</div><p>Move with mouse/keys.<br>Keep the dishes on the tray!</p><button id="btn">Serve</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let tray={x:W/2,y:H-80,vx:0,vy:0},dishes=[],goal={x:W/2,y:50},playing=false,delivered=0,startT=0,target=null,best=0;
+document.getElementById('b').textContent=best;
+const ITEMS=['🍗','🍰','🍷','🧀','🍇'];
+cvs.addEventListener('pointermove',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+target={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};});
+document.addEventListener('keydown',e=>{if(!playing)return;
+if(e.key==='ArrowLeft')tray.vx-=0.8;if(e.key==='ArrowRight')tray.vx+=0.8;
+if(e.key==='ArrowUp')tray.vy-=0.8;if(e.key==='ArrowDown')tray.vy+=0.8;});
+function gen(){tray={x:W/2,y:H-80,vx:0,vy:0};dishes=[];delivered=0;playing=true;target=null;startT=Date.now();
+for(let i=0;i<5;i++){dishes.push({x:tray.x+(Math.random()*60-30),y:tray.y-14,
+vx:0,vy:0,e:ITEMS[i]});}
+document.getElementById('d').textContent=0;document.getElementById('t').textContent=0;}
+function step(){// tray physics
+if(target){tray.vx+=(target.x-tray.x)*0.02;tray.vy+=(target.y-tray.y)*0.02;}
+tray.vx*=0.9;tray.vy*=0.9;
+tray.x+=tray.vx;tray.y+=tray.vy;
+tray.x=Math.max(60,Math.min(W-60,tray.x));
+tray.y=Math.max(60,Math.min(H-40,tray.y));
+// dishes slide with inertia + fall off if tray tilts too fast
+dishes.forEach(d=>{d.vx+=(tray.x-d.x)*0.02-tray.vx*0.05;
+d.vy+=(tray.y-14-d.y)*0.02-tray.vy*0.05;
+d.vx*=0.94;d.vy*=0.94;
+d.x+=d.vx;d.y+=d.vy;});
+// dish lost
+const lost=dishes.find(d=>Math.hypot(d.x-tray.x,d.y-tray.y)>44);
+if(lost){playing=false;beep(130,.35,'sawtooth');
+const t=((Date.now()-startT)/1000).toFixed(1);
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='💥 A dish crashed!<br>Lasted '+t+'s · Delivered '+delivered+'/5';
+if(delivered>best){best=delivered;document.getElementById('b').textContent=best;}
+return;}
+// deliver
+if(Math.hypot(tray.x-goal.x,tray.y-goal.y)<40){dishes.forEach(d=>{delivered++;});
+document.getElementById('d').textContent=delivered;
+beep(880,.3,'triangle');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='👑 Feast delivered!<br>All 5 dishes in '+((Date.now()-startT)/1000).toFixed(1)+'s';
+if(delivered>best){best=delivered;document.getElementById('b').textContent=best;}
+playing=false;return;}
+document.getElementById('t').textContent=((Date.now()-startT)/1000).toFixed(1);}
+function draw(){ctx.fillStyle='#312e81';ctx.fillRect(0,0,W,H);
+// goal
+ctx.font='28px serif';ctx.textAlign='center';ctx.fillText('🏰',goal.x,goal.y+10);
+ctx.strokeStyle='#fbbf2455';ctx.setLineDash([5,5]);
+ctx.beginPath();ctx.arc(goal.x,goal.y,38,0,7);ctx.stroke();ctx.setLineDash([]);
+// tray
+ctx.fillStyle='#4338ca';ctx.fillRect(tray.x-50,tray.y-6,100,12);
+dishes.forEach(d=>{ctx.font='20px serif';ctx.fillText(d.e,d.x,d.y);});
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('ov').style.display='none';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();};
+</script></body></html>

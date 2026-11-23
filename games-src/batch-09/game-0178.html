@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dark Mode Sport Hero</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0a0a0a;font-family:'Segoe UI',Arial,sans-serif;color:#4ade80;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#22d3ee;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#grid{display:grid;grid-template-columns:repeat(3,88px);gap:12px;touch-action:none}
+.cell{width:88px;height:88px;border-radius:14px;background:#111;border:2px solid #14532d;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;transition:all .2s}
+.cell.lit{background:#14532d;border-color:#22d3ee;transform:scale(1.05);box-shadow:0 0 16px #22d3ee66}
+#msg{text-align:center;font-size:.9rem;color:#86efac;margin:14px 0;min-height:1.6em}
+#ov{position:fixed;inset:0;background:rgba(10,10,10,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#4ade80;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#0a0a0a;font-weight:800;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:320px){#grid{grid-template-columns:repeat(3,72px)}.cell{width:72px;height:72px;font-size:1.6rem}}
+</style>
+</head>
+<body>
+<h1>🏆 DARK SPORT HERO</h1>
+<div id="hud"><span>Play <b id="l">1</b></span><span>Streak <b id="st">0</b></span><span>Best <b id="b">1</b></span></div>
+<div id="grid"></div>
+<div id="msg">Watch the plays light up… then call them in order!</div>
+<div id="ov"><h2 style="color:#22d3ee">COACH'S BOARD</h2><p id="od">A memory sequence of sports plays! Watch the coach's board light up, then tap the plays back in order. Each level adds one more play. Don't fumble!</p><button id="btn">TAKE THE CLIPBOARD</button></div>
+<script>
+"use strict";
+const PLAYS=['🏈','🏀','⚽','🎾','🏐','🏉','⚾','🏓','🏸'];
+let seq,inp,playing,level,streak,best=+localStorage.getItem('dsh_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function buildSeq(){seq=[];for(let i=0;i<level+2;i++)seq.push((Math.random()*9)|0);}
+function render(litIdx){const g=document.getElementById('grid');g.innerHTML='';
+PLAYS.forEach((pl,i)=>{const d=document.createElement('div');d.className='cell'+(litIdx===i?' lit':'');
+d.textContent=pl;d.onclick=()=>pick(i);g.appendChild(d);});
+document.getElementById('l').textContent=level;document.getElementById('st').textContent=streak;}
+function show(){buildSeq();inp=[];playing=false;
+document.getElementById('msg').textContent='Watch the coach…';
+let i=0;const iv=setInterval(()=>{
+if(i>=seq.length){clearInterval(iv);render(-1);playing=true;
+document.getElementById('msg').textContent='Your call!';return;}
+{const k=i;setTimeout(()=>{render(seq[k]);beep(400+seq[k]*60,.15,'triangle');},60);} i++; /* FIX (PLAYNOVA repair): i was already incremented when the timer fired, so the wrong item was shown and the last one was undefined */},640);}
+function pick(i){if(!playing)return;audio.resume();
+const idx=inp.length;
+if(seq[idx]!==i){streak=0;beep(150,.2,'sawtooth');
+document.getElementById('msg').textContent='✗ FUMBLED at play '+level+'!';
+if(level>best){best=level;localStorage.setItem('dsh_best',best);document.getElementById('b').textContent=best;}
+playing=false;
+document.getElementById('od').innerHTML='💔 <b>You fumble at play '+level+'.</b>';
+document.getElementById('btn').textContent='RUN IT BACK';document.getElementById('ov').style.display='flex';return;}
+inp.push(i);beep(600+i*50,.09,'triangle');render(-1);
+if(inp.length>=seq.length){streak++;if(level+1>best){best=level+1;localStorage.setItem('dsh_best',best);document.getElementById('b').textContent=best;}
+level++;document.getElementById('msg').textContent='✓ Perfect drive! Play '+level+'…';
+setTimeout(show,800);}}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9')pick(+e.key-1);});
+document.getElementById('btn').onclick=()=>{audio.resume();level=1;streak=0;document.getElementById('ov').style.display='none';show();};
+</script>
+</body>
+</html>

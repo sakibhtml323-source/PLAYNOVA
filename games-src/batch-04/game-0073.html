@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Cosmic Jungle Hero</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#052e16,#022c22);font-family:Georgia,serif;color:#bbf7d0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#052e16;border-radius:10px;border:2px solid #166534;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#86efac;min-height:1.6em;margin-top:6px;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(5,46,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#bbf7d0;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#052e16;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🌿 COSMIC JUNGLE HERO</h1>
+<div id="hud"><span>Stars <b id="st">0</b>/3</span><span>Level <b id="l">1</b></span><span>Moves <b id="m">0</b></span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Slide through the jungle — collect all 3 stars ✦, avoid the void, reach the portal 🌀.</div>
+<div id="ov"><h2 style="color:#4ade80">COSMIC JUNGLE</h2><p id="od">A slide-puzzle adventure! Your hero slides in straight lines until something stops him. Collect every star, then enter the portal. Plan each move — the jungle punishes waste.</p><button id="btn">GROW</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+const W=440,H=440;cvs.width=W;cvs.height=H;
+const N=7,TS=62;
+let grid,hero,stars,portal,playing,level,moves,best=+localStorage.getItem('cj2_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){grid=[];for(let r=0;r<N;r++){grid[r]=[];for(let c=0;c<N;c++)grid[r][c]=Math.random()<0.18?1:0;}
+// clear some space
+for(let r=1;r<4;r++)for(let c=1;c<4;c++)grid[r][c]=0;
+hero={r:3,c:3};
+stars=[{r:1,c:1},{r:1,c:5},{r:5,c:5}].filter(s=>!grid[s.r][s.c]);
+while(stars.length<3){const r=1+((Math.random()*(N-2))|0),c=1+((Math.random()*(N-2))|0);if(!grid[r][c]&&!(r===3&&c===3))stars.push({r,c});}
+portal={r:5,c:1};
+moves=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=level;draw();}
+function slide(dr,dc){if(!playing)return;
+let r=hero.r,c=hero.c,moved=false;
+while(true){const nr=r+dr,nc=c+dc;
+if(nr<0||nc<0||nr>=N||nc>=N||grid[nr][nc])break;
+r=nr;c=nc;moved=true;}
+if(!moved){beep(180,.08,'square');return;}
+hero={r,c};moves++;document.getElementById('m').textContent=moves;beep(440,.05);
+stars=stars.filter(s=>{if(s.r===r&&s.c===c){beep(800,.1,'triangle');document.getElementById('st').textContent=3-stars.length+1;return false;}return true;});
+draw();
+if(r===portal.r&&c===portal.c){if(!stars.length)win();
+else{document.getElementById('msg').textContent='🌀 The portal needs all 3 stars!';beep(200,.12,'square');}}}
+function win(){playing=false;if(level+1>best){best=level+1;localStorage.setItem('cj2_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🌀 Level '+level+' cleared in '+moves+' moves!<br>The jungle deepens…';
+document.getElementById('btn').textContent='DESCEND';level++;document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#052e16';ctx.fillRect(0,0,W,H);
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=c*TS,y=r*TS;
+ctx.fillStyle=(r+c)%2?'#064e3b':'#065f46';ctx.fillRect(x+2,y+2,TS-4,TS-4);
+if(grid[r][c]){ctx.fillStyle='#1c1917';ctx.fillRect(x+8,y+8,TS-16,TS-16);ctx.fillStyle='#000';ctx.fillRect(x+12,y+12,TS-24,TS-24);}}
+stars.forEach(s=>{ctx.fillStyle='#fde047';ctx.font='24px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText('✦',s.c*TS+TS/2,s.r*TS+TS/2+2);});
+ctx.fillStyle='#4ade80';ctx.font='26px serif';ctx.fillText('🌀',portal.c*TS+TS/2,portal.r*TS+TS/2+2);
+ctx.fillStyle='#f9a8d4';ctx.beginPath();ctx.arc(hero.c*TS+TS/2,hero.r*TS+TS/2,16,0,7);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(hero.c*TS+TS/2-4,hero.r*TS+TS/2-3,3,4);ctx.fillRect(hero.c*TS+TS/2+2,hero.r*TS+TS/2-3,3,4);}
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowUp'||k==='w')slide(-1,0);else if(k==='ArrowDown'||k==='s')slide(1,0);
+else if(k==='ArrowLeft'||k==='a')slide(0,-1);else if(k==='ArrowRight'||k==='d')slide(0,1);});
+let t0=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();t0={x:e.clientX,y:e.clientY};});
+cvs.addEventListener('pointerup',e=>{if(!t0)return;const dx=e.clientX-t0.x,dy=e.clientY-t0.y;
+if(Math.abs(dx)<14&&Math.abs(dy)<14){const r=cvs.getBoundingClientRect();
+const tx=Math.floor((e.clientX-r.left)/r.width*N),ty=Math.floor((e.clientY-r.top)/r.height*N);
+slide(Math.sign(tx-hero.c),Math.sign(ty-hero.r));}
+else if(Math.abs(dx)>Math.abs(dy))slide(0,Math.sign(dx));else slide(Math.sign(dy),0);t0=null;});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

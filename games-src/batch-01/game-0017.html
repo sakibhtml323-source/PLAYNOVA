@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Swift Watercolor Typing Speed</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#fdf4ff,#f0f9ff);font-family:Georgia,serif;color:#3b0764;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#7e22ce;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px;flex-wrap:wrap;justify-content:center}
+#card{width:min(620px,96vw);background:#fff;border-radius:16px;padding:18px;box-shadow:0 8px 30px rgba(126,34,206,.15)}
+#target{font-size:1.35rem;line-height:2;letter-spacing:1px;text-align:center;margin-bottom:14px;min-height:2.4em}
+#target span{color:#d8b4fe}
+#target span.cur{border-left:3px solid #7e22ce;animation:bl 1s infinite}
+@keyframes bl{50%{border-color:transparent}}
+#type{width:100%;padding:12px;border:2px solid #d8b4fe;border-radius:10px;font-size:1.1rem;font-family:inherit;outline:none;color:#3b0764}
+#type:focus{border-color:#7e22ce}
+#res{text-align:center;margin-top:12px;min-height:1.6em}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button{background:#7e22ce;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🎨 SWIFT WATERCOLOR TYPING</h1>
+<div id="hud"><span>⏱ <b id="t">60</b>s</span><span>WPM <b id="w">0</b></span><span>Accuracy <b id="a">100</b>%</span><span>Best WPM <b id="b">0</b></span></div>
+<div id="card"><div id="target"></div><input id="type" placeholder="Start typing here…" autocomplete="off" autocapitalize="off" spellcheck="false"><div id="res"></div><div style="text-align:center"><button id="restart" style="margin-top:8px;background:#f3e8ff;color:#7e22ce;padding:8px 22px;border-radius:18px;font-size:.85rem;border:none;cursor:pointer">↺ Restart</button></div></div>
+<div id="ov"><h2 style="color:#7e22ce">SWIFT WATERCOLOR TYPING</h2><p id="od">Type the verse before the paint dries — 60 seconds. Watercolor words flow faster the better you do!</p><button id="btn">DIP BRUSH</button></div>
+<script>
+"use strict";
+const VERSES=["the quick brown fox paints over the lazy dog","watercolor skies bleed softly into morning","swift fingers dance across the paper","every stroke of light becomes a story","violet rivers carry songs to the sea","gentle hands shape worlds from blank pages","mist and amber fold into quiet valleys","brushes sing when colors learn to fly"];
+let vi,chars,typed,correct,time,playing,interval,best=+localStorage.getItem('sw_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.05){const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.06;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const inp=document.getElementById('type');
+function start(){vi=0;typed=0;correct=0;time=60;playing=true;loadVerse();upd();
+clearInterval(interval);interval=setInterval(()=>{time--;document.getElementById('t').textContent=time;if(time<=0)finish();},1000);
+inp.value='';inp.focus();}
+function loadVerse(){chars=VERSES[vi%VERSES.length];render('');}
+function render(cur){const done=inp.value;let html='';for(let i=0;i<chars.length;i++){let cls='';if(i<done.length)cls=done[i]===chars[i]?'style="color:#16a34a"':'style="color:#dc2626;text-decoration:underline"';else if(i===done.length)cls='class="cur"';html+='<span '+cls+'>'+(chars[i]===' '?'&nbsp;':chars[i])+'</span>';}
+document.getElementById('target').innerHTML=html||'<span class="cur">✦</span>';}
+function upd(){const mins=(60-time)/60;const wpm=mins>0?Math.round((correct/5)/mins):0;const acc=typed?Math.round(correct/typed*100):100;
+document.getElementById('w').textContent=wpm;document.getElementById('a').textContent=acc;}
+inp.addEventListener('input',()=>{if(!playing)return;audio.resume();
+const v=inp.value;
+if(v.length>chars.length)v=v.slice(0,chars.length);
+// count new correct chars
+for(let i=0;i<v.length;i++){if(i>=typed){typed++;if(v[i]===chars[i]){correct++;}}}
+inp.value=v;render();upd();
+if(v===chars){beep(700,.1,'triangle');vi++;typed=0;inp.value='';loadVerse();}});
+function finish(){playing=false;clearInterval(interval);const mins=Math.max(0.1,(60-time)/60);const wpm=Math.round((correct/5)/mins);const acc=typed?Math.round(correct/typed*100):100;
+if(wpm>best){best=wpm;localStorage.setItem('sw_best',best);document.getElementById('b').textContent=best;}
+const r=wpm>=60?'🌊 PAINTSTORM':wpm>=40?'🎨 FLOWING ARTIST':wpm>=25?'🖌️ STEADY HAND':'✏️ WARMING UP';
+document.getElementById('od').innerHTML=r+'<br><b style="font-size:1.4rem">'+wpm+' WPM</b> · '+acc+'% accuracy';
+document.getElementById('btn').textContent='PAINT AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('restart').onclick=()=>{audio.resume();if(playing)finish();else start();};
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('ov').style.display='none';document.getElementById('res').textContent='';start();};
+</script>
+</body>
+</html>

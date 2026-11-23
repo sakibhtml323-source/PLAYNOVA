@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Lantern Toss #428</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+canvas{background:#1f2937;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#facc15}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🏮 Ninja Lantern Toss</h1><div class="sub">Drag to toss a lantern — land it on the moving hook to light the festival!</div>
+<div id="hud"><span>Lit <b id="l">0</b>/5</span><span>Lanterns <b id="n">8</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="ov"><div style="font-size:3rem">🎏</div><p>Drag back and release — arc your lantern onto the swinging hook!</p><button id="btn">Toss</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let toss={x:60,y:H-40},hooks=[],lanterns=[],lit=0,lanternsLeft=8,playing=false,drag=null,hookSpeed=1,best=+localStorage.getItem('nlt_best')||0;
+document.getElementById('b').textContent=best;
+function gen(){hooks=[];for(let i=0;i<5;i++){hooks.push({x:W/2,y:60+i*60,ph:i*1.3,hit:false});}
+lanterns=[];lit=0;lanternsLeft=8;playing=true;hookSpeed=1;
+document.getElementById('l').textContent=0;document.getElementById('n').textContent=8;draw();}
+cvs.addEventListener('pointerdown',e=>{if(!playing||lanternsLeft<=0)return;const r=cvs.getBoundingClientRect();
+drag={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};});
+cvs.addEventListener('pointerup',e=>{if(!drag||!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+lanterns.push({x:toss.x,y:toss.y,vx:(drag.x-x)*0.1,vy:(drag.y-y)*0.1});
+lanternsLeft--;document.getElementById('n').textContent=lanternsLeft;
+beep(500,.08);drag=null;
+if(lanternsLeft<=0)setTimeout(endGame,3000);});
+function endGame(){if(!playing)return;playing=false;
+if(lit>best){best=lit;localStorage.setItem('nlt_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🎏 Festival '+(lit>=5?'complete!':'over')+'<br>Lit: <b style="color:#facc15">'+lit+'</b>/5';}
+function step(){hooks.forEach(h=>{h.ph+=0.03*hookSpeed;h.x=W/2+Math.sin(h.ph)*150;});
+lanterns.forEach(l=>{l.vy+=0.18;l.x+=l.vx;l.y+=l.vy;
+hooks.forEach(h=>{if(!h.hit&&Math.hypot(h.x-l.x,h.y-l.y)<20){h.hit=true;lit++;
+document.getElementById('l').textContent=lit;beep(700,.12,'triangle');
+hookSpeed+=0.15;
+if(lit>=5){playing=false;beep(880,.3,'triangle');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🏮 All lanterns lit!';}}});});
+lanterns=lanterns.filter(l=>l.y<H+30&&l.x>-30&&l.x<W+30);}
+function draw(){ctx.fillStyle='#1f2937';ctx.fillRect(0,0,W,H);
+hooks.forEach(h=>{ctx.font='20px serif';ctx.textAlign='center';
+ctx.fillText(h.hit?'🏮':'🪝',h.x,h.y+6);});
+lanterns.forEach(l=>{ctx.fillText('🏮',l.x,l.y);});
+ctx.fillText('🥷',toss.x,toss.y+4);
+if(drag){ctx.strokeStyle='#facc1555';ctx.setLineDash([4,4]);
+ctx.beginPath();ctx.moveTo(toss.x,toss.y);ctx.lineTo(drag.x,drag.y);ctx.stroke();ctx.setLineDash([]);}
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('ov').style.display='none';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();};
+</script></body></html>

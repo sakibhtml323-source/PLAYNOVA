@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Versus Puzzle: Horror Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+body{background:#0a0a0a;font-family:Georgia,serif;color:#d4d4d8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#ef4444;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:16px;font-size:.85rem;margin-bottom:6px}
+#boards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.pb{background:#141414;border:1px solid #27272a;border-radius:12px;padding:10px}
+.pb h3{font-size:.75rem;margin-bottom:6px;text-align:center}
+.pb.p1 h3{color:#f87171}.pb.p2 h3{color:#93c5fd}
+.grid{display:grid;gap:3px;touch-action:none}
+.cell{width:26px;height:26px;border-radius:5px;background:#1f1f22;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+@media(max-width:560px){.cell{width:20px;height:20px}}
+.cell.f1{background:#7f1d1d;color:#fca5a5}
+.cell.f2{background:#1e3a8a;color:#93c5fd}
+.cell.tgt{box-shadow:inset 0 0 0 2px #fbbf24}
+.cell.done{opacity:.55}
+#ov{position:fixed;inset:0;background:rgba(10,10,10,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#ef4444;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🩸 VERSUS PUZZLE: HORROR EDITION</h1>
+<div id="hud"><span>🩸 <b id="s1">0</b></span><span>Round <b id="r">1</b> — first to find 6 targets</span><span>🔷 <b id="s2">0</b></span></div>
+<div id="boards">
+<div class="pb p1"><h3>PLAYER 1 — keys Q W E A S D F… tap grid</h3><div class="grid" id="g1"></div></div>
+<div class="pb p2"><h3>PLAYER 2 — keys U I O J K L… tap grid</h3><div class="grid" id="g2"></div></div>
+</div>
+<div id="ov"><h2 style="color:#ef4444">BLOOD RACE</h2><p id="od">2 players race on identical haunted grids! Find the 6 golden-marked targets before your rival. P1 taps the left grid (or uses QWE/ASD row keys). P2 taps the right grid (or UIO/JKL). First to 6 wins the round — best of 3!</p><button id="btn">BEGIN THE HUNT</button></div>
+<script>
+"use strict";
+const N=7,TGT=6;
+let boards,scores,round,wins,playing;let dw=+localStorage.getItem('vp_w1')||0,dw2=+localStorage.getItem('vp_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function mk(){const t=new Set();while(t.size<TGT)t.add((Math.random()*N*N)|0);
+return{t:[...t],found:[],wrong:0};}
+function buildRound(){boards=[mk(),mk()];render();}
+function render(){boards.forEach((bd,p)=>{const g=document.getElementById('g'+(p+1));
+g.style.gridTemplateColumns='repeat('+N+',26px)';g.innerHTML='';
+for(let i=0;i<N*N;i++){const c=document.createElement('div');c.className='cell';
+const isT=bd.t.includes(i),isF=bd.found.includes(i);
+if(isF)c.classList.add('done');
+if(isT&&(isF||bd.reveal))c.classList.add('tgt'),c.textContent='🩸';
+if(isT&&isF)c.classList.add(p===0?'f1':'f2');
+c.onclick=()=>tap(p,i);g.appendChild(c);}});
+document.getElementById('s1').textContent=boards[0].found.length;
+document.getElementById('s2').textContent=boards[1].found.length;}
+function tap(p,i){if(!playing)return;audio.resume();const bd=boards[p];
+if(bd.found.includes(i))return;
+if(bd.t.includes(i)){bd.found.push(i);beep(p===0?520:700,.08,'triangle');
+if(bd.found.length>=TGT)return roundEnd(p);}
+else{bd.wrong++;beep(140,.1,'sawtooth');}
+render();}
+function roundEnd(p){playing=false;wins[p]++;
+if(wins[p]>=2){if(p===0){dw++;localStorage.setItem('vp_w1',dw);}else{dw2++;localStorage.setItem('vp_w2',dw2);}
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">PLAYER '+(p+1)+' WINS THE DUEL '+wins[0]+'—'+wins[1]+'!</b>';
+document.getElementById('btn').textContent='REMATCH';wins=[0,0];round=0;}
+else{document.getElementById('od').innerHTML='🩸 Player '+(p+1)+' takes round '+round+'!<br>Score: '+wins[0]+' — '+wins[1];
+document.getElementById('btn').textContent='NEXT ROUND';}
+document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+const map1={q:0,w:1,e:2,a:7,s:8,d:9,z:14,x:15,c:16},map2={u:0,i:1,o:2,j:7,k:8,l:9,m:14,',':15,'.':16};
+const KEYS=Object.keys(map1);
+if(KEYS.includes(k)){const idx=map1[k];const el=document.querySelectorAll('#g1 .cell')[idx];if(el)el.click();}
+if(k in map2&&map2[k]!==undefined){const idx=map2[k];const el=document.querySelectorAll('#g2 .cell')[idx];if(el)el.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();if(!wins)wins=[0,0];round=(round||0)+1;document.getElementById('r').textContent=round;playing=true;buildRound();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

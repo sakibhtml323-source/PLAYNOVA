@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Crystal Ball #358</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#ball{font-size:4rem;margin:12px}
+#opts{display:grid;grid-template-columns:repeat(4,74px);gap:8px;margin:10px}
+.opt{width:74px;height:74px;background:#27272a;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:2rem;cursor:pointer;border:3px solid #3f3f46}
+.opt.hot{border-color:#ef4444;background:#7f1d1d44}
+.opt.warm{border-color:#eab308;background:#713f1244}
+.opt.cold{border-color:#38bdf8;background:#0c4a6e44}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔮 Haunted Crystal Ball</h1><div class="sub">The ball hides a symbol — the crystal glows 🔴 hot, 🟡 warm, 🔵 cold!</div>
+<div id="hud"><span>Guesses <b id="g">5</b></span><span>Score <b id="s">0</b></span></div>
+<div id="ball">🔮</div>
+<div id="opts"></div>
+<div id="msg"></div>
+<button id="btn">✨ New Vision</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const SYM=['👻','🎃','🦇','🕷️','💀','🧛','⚰️','🌙'];
+let target=0,guesses=5,score=0;
+function newVision(){target=(Math.random()*SYM.length)|0;guesses=5;
+document.getElementById('g').textContent=5;document.getElementById('s').textContent=score;
+document.getElementById('ball').textContent='🔮';
+const o=document.getElementById('opts');o.innerHTML='';
+SYM.forEach((s,i)=>{const d=document.createElement('div');d.className='opt';
+d.textContent=s;
+d.onclick=()=>pick(i,d);o.appendChild(d);});
+msg('Guess the hidden symbol!');}
+function pick(i,el){if(guesses<=0)return;
+if(i===target){score+=guesses*20;document.getElementById('s').textContent=score;
+document.getElementById('ball').textContent=SYM[target];
+beep(880,.3,'triangle');msg('🔮 The ball reveals: '+SYM[target]+'! +'+guesses*20);
+setTimeout(newVision,1500);return;}
+guesses--;document.getElementById('g').textContent=guesses;
+const diff=Math.abs(i-target);
+el.classList.add(diff===1?'hot':diff<=2?'warm':'cold');
+beep(200,.1,'sawtooth');
+if(guesses<=0){msg('💨 The vision fades… it was '+SYM[target]);
+setTimeout(newVision,1500);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{score=0;AU.__c=new (window.AudioContext||window.webkitAudioContext)();newVision();};
+newVision();
+</script></body></html>

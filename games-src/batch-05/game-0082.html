@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Watercolor Quantum Dash</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fdf4ff,#f5f3ff);font-family:Georgia,serif;color:#5b21b6;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+h1{font-size:1.15rem;color:#7c3aed;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#q{font-size:1.3rem;text-align:center;margin:16px 0;min-height:1.8em}
+#ans{width:min(420px,92vw);padding:14px;border:2px solid #c4b5fd;border-radius:14px;font-size:1.3rem;text-align:center;font-family:inherit;color:#5b21b6;outline:none;background:#fff}
+#ans:focus{border-color:#7c3aed}
+#fb{text-align:center;min-height:1.6em;margin-top:10px;font-weight:700}
+#streak{text-align:center;color:#8b5cf6;font-size:.85rem;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(253,244,255,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#5b21b6;padding:20px;z-index:5}
+button{background:#7c3aed;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⚛️ WATERCOLOR QUANTUM DASH</h1>
+<div id="hud"><span>Round <b id="n">1</b></span><span>Score <b id="sc">0</b></span><span>Streak <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="q">Press START</div>
+<input id="ans" placeholder="Your answer…" autocomplete="off" inputmode="numeric">
+<div id="fb"></div>
+<div id="streak"></div>
+<div id="ov"><h2 style="color:#7c3aed">QUANTUM DASH</h2><p id="od">60 seconds of pure arithmetic at quantum speed! Solve as many expressions as you can — type the answer and press Enter. Streaks multiply your points.</p><button id="btn">COLLAPSE THE WAVEFUNCTION</button></div>
+<script>
+"use strict";
+let n,score,streak,time,playing,timer,best=+localStorage.getItem('qd_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const ans=document.getElementById('ans');
+function mk(){const lv=Math.min(4,1+(n/5|0));
+const a=1+((Math.random()*9*lv)|0),b=1+((Math.random()*9*lv)|0);
+const t=(Math.random()*4)|0;
+if(t===0)return{q:a+' + '+b+' =',a:a+b};
+if(t===1)return{q:Math.max(a,b)+' − '+Math.min(a,b)+' =',a:Math.max(a,b)-Math.min(a,b)};
+if(t===2)return{q:a+' × '+b+' =',a:a*b};
+return{q:a*b+' ÷ '+b+' =',a:a};}
+let cur;
+function ask(){cur=mk();document.getElementById('q').textContent=cur.q;ans.value='';ans.focus();}
+function start(){n=1;score=0;streak=0;time=60;playing=true;
+document.getElementById('sc').textContent=0;document.getElementById('st').textContent=0;document.getElementById('n').textContent=1;
+ask();clearInterval(timer);
+timer=setInterval(()=>{time--;if(time<=0)end();},1000);}
+ans.addEventListener('keydown',e=>{if(e.key==='Enter'&&playing){audio.resume();
+if(+ans.value===cur.a){streak++;const pts=10+streak*2;score+=pts;
+document.getElementById('sc').textContent=score;document.getElementById('st').textContent=streak;
+document.getElementById('fb').textContent='✓ +'+pts;document.getElementById('fb').style.color='#16a34a';
+beep(600+streak*40,.07,'triangle');n++;document.getElementById('n').textContent=n;}
+else{streak=0;document.getElementById('st').textContent=0;
+document.getElementById('fb').textContent='✗ '+cur.q+' '+cur.a;document.getElementById('fb').style.color='#dc2626';
+beep(150,.15,'sawtooth');}
+ask();}});
+function end(){playing=false;clearInterval(timer);
+if(score>best){best=score;localStorage.setItem('qd_best',best);document.getElementById('b').textContent=best;}
+const r=score>=200?'⚛️ QUANTUM':score>=120?'🌀 RELATIVISTIC':score>=60?'🎨 NEWTONian':'🐢 CLASSICAL';
+document.getElementById('od').innerHTML=r+'<br>Score: <b style="font-size:1.5rem;color:#7c3aed">'+score+'</b> in 60s';
+document.getElementById('btn').textContent='SUPERPOSE AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();document.getElementById('fb').textContent='';start();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

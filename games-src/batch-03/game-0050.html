@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wild Desert Storm</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fbbf24,#d97706);font-family:'Segoe UI',Arial,sans-serif;color:#451a03;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#7c2d12;padding:6px}
+#hud{display:flex;gap:16px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#fde68a;border-radius:10px;border:3px solid #b45309;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(253,230,138,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#451a03;padding:20px;z-index:5}
+button{background:#7c2d12;color:#fff;border:none;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+#ctrl{position:fixed;bottom:8px;width:100%;display:flex;justify-content:space-between;padding:0 12px;z-index:4}
+.cb{width:58px;height:58px;border-radius:50%;background:#b45309cc;color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;user-select:none;touch-action:none}
+</style>
+</head>
+<body>
+<h1>🏜️ WILD DESERT STORM</h1>
+<div id="hud"><span>🟤 <b id="h1">3</b></span><span>First to 3 knockouts</span><span>🟡 <b id="h2">3</b></span></div>
+<canvas id="c"></canvas>
+<div id="ctrl"><div style="display:flex;gap:8px"><div class="cb" id="a1">⬅</div><div class="cb" id="d1">➡</div><div class="cb" id="p1">💨</div></div>
+<div style="display:flex;gap:8px"><div class="cb" id="p2">💨</div><div class="cb" id="a2">⬅</div><div class="cb" id="d2">➡</div></div></div>
+<div id="ov"><h2 style="color:#7c2d12">SANDSTORM SUMO</h2><p id="od">2 players shove each other in a shrinking sand arena! 🟤 moves A/D + W dash · 🟡 moves ←/→ + ↑ dash. Push your rival out of the ring or into the storm wall!</p><button id="btn">STORM BREWING</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=300;cvs.width=W;cvs.height=H;
+const CX=W/2,CY=H/2;
+let ps,playing,keys,stormR,wins,round;let sw=+localStorage.getItem('ws_w1')||0,sw2=+localStorage.getItem('ws_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mk(x,c2){return{x,y:CY+40,vx:0,vy:0,c:c2,r:14,dash:0};}
+function init(r){ps=[mk(CX-60,'#78350f'),mk(CX+60,'#a16207')];keys={};playing=true;stormR=210;round=r;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+const tch={};
+[['a1'],['d1'],['p1'],['a2'],['d2'],['p2']].forEach(([id])=>{const el=document.getElementById(id);
+el.addEventListener('pointerdown',e=>{e.preventDefault();audio.resume();tch[id]=1;});
+['pointerup','pointerleave'].forEach(ev=>el.addEventListener(ev,()=>tch[id]=0));});
+function step(){stormR-=0.12;
+ps.forEach((p,i)=>{const ct=i===0?{l:keys['a']||tch.a1,r:keys['d']||tch.d1,d:keys['w']||tch.p1}:{l:keys['arrowleft']||tch.a2,r:keys['arrowright']||tch.d2,d:keys['arrowup']||tch.p2};
+if(ct.l)p.vx-=0.55;if(ct.r)p.vx+=0.55;
+if(ct.d&&p.dash<=0){p.vx=(i===0?1:-1)*9;p.dash=40;beep(300,.06);}
+p.dash=Math.max(0,p.dash-1);
+p.vy+=0.25;p.vx*=0.94;p.vy*=0.96;p.x+=p.vx;p.y+=p.vy;});
+// collision
+const[a,b]=ps;const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;
+if(d<a.r+b.r){const ov=(a.r+b.r-d)/2;const nx=dx/d,ny=dy/d;
+a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+a.vx-=nx*1.6;a.vy-=ny*1.6;b.vx+=nx*1.6;b.vy+=ny*1.6;beep(200,.04);}
+ps.forEach(p=>{if(Math.hypot(p.x-CX,p.y-CY)>stormR||p.y>H+30||p.y<-30||p.x<-30||p.x>W+30)ko(p===a?1:0);});}
+function ko(w){playing=false;wins[w]++;
+beep(w===0?660:440,.2,'triangle');
+if(wins[w]>=3){if(w===0){sw++;localStorage.setItem('ws_w1',sw);}else{sw2++;localStorage.setItem('ws_w2',sw2);}
+document.getElementById('od').innerHTML='🏆 <b>PLAYER '+(w+1)+' TAMES THE STORM '+wins[w]+'—'+wins[1-w]+'!</b>';
+document.getElementById('btn').textContent='REMATCH';wins=[0,0];}
+else{document.getElementById('od').innerHTML='💨 Player '+(w+1)+' wins round '+round+'!<br>'+wins[0]+' — '+wins[1];
+document.getElementById('btn').textContent='NEXT ROUND';}
+document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#fde68a';ctx.fillRect(0,0,W,H);
+// storm outside
+ctx.fillStyle='rgba(217,119,6,.55)';ctx.beginPath();ctx.rect(0,0,W,H);ctx.arc(CX,CY,stormR,0,7,true);ctx.fill();
+ctx.strokeStyle='#b45309';ctx.setLineDash([6,6]);ctx.beginPath();ctx.arc(CX,CY,stormR,0,7);ctx.stroke();ctx.setLineDash([]);
+ps.forEach(p=>{ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(p.x+p.r*0.4,p.y-3,3.5,0,7);ctx.fill();});}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();if(!wins)wins=[0,0];init((round||0)+1);document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

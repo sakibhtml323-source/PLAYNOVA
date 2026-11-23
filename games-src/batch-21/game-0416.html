@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Clock Hands #416</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#clocks{display:flex;gap:16px;margin:14px;flex-wrap:wrap;justify-content:center}
+.clock{width:110px;height:110px;background:#27272a;border:3px solid #3f3f46;border-radius:50%;position:relative;cursor:pointer}
+.clock .h{position:absolute;left:50%;bottom:50%;width:4px;height:26px;background:#a78bfa;transform-origin:bottom center}
+.clock .m{position:absolute;left:50%;bottom:50%;width:2px;height:36px;background:#fbbf24;transform-origin:bottom center}
+.clock .pin{position:absolute;left:50%;top:50%;width:8px;height:8px;background:#fbbf24;border-radius:50%;transform:translate(-50%,-50%)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🕰️ Haunted Clock Hands</h1><div class="sub">The manor's clocks are cursed — set them all to strike the same hour!</div>
+<div id="hud"><span>Sync'd <b id="s">0</b>/<b id="st">3</b></span><span>Moves <b id="m">0</b></span><span>Level <b id="l">1</b></span></div>
+<div id="clocks"></div>
+<div id="msg"></div>
+<button id="btn">🌒 New Curse</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let clocks=[],goal=0,moves=0,level=1;
+function gen(){const n=Math.min(3+level,5);goal=(Math.random()*12)|0;
+clocks=[];for(let i=0;i<n;i++){clocks.push({h:(Math.random()*12)|0,moves:0});}
+moves=0;document.getElementById('l').textContent=level;
+document.getElementById('s').textContent=0;document.getElementById('st').textContent=n;
+document.getElementById('m').textContent=0;
+render();msg('Set all clocks to '+goal+':00!');}
+function tap(i){const c=clocks[i];
+c.h=(c.h+1)%12;moves++;document.getElementById('m').textContent=moves;
+beep(300+c.h*30,.06);render();check();}
+function check(){const n=clocks.filter(c=>c.h===goal).length;
+document.getElementById('s').textContent=n;
+if(n>=clocks.length){beep(880,.3,'triangle');msg('🕛 The clocks chime as one! Level '+(level+1));level++;
+setTimeout(gen,1200);}}
+function render(){const cc=document.getElementById('clocks');cc.innerHTML='';
+clocks.forEach((c,i)=>{const d=document.createElement('div');d.className='clock';
+const ha=c.h/12*360;
+d.innerHTML='<div class="h" style="transform:translateX(-50%) rotate('+ha+'deg)"></div>'
++'<div class="m" style="transform:translateX(-50%) rotate('+c.h*30+'deg)"></div><div class="pin"></div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+cc.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

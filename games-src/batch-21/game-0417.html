@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Frog Leap #417</title><style>
+body{margin:0;font-family:system-ui;background:#14532d;color:#f0fdf4;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#bbf7d0;font-size:.78rem}
+canvas{background:#166534;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#14532d;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🐸 Desert Frog Leap</h1><div class="sub">Tap a frog, then tap a lily in its jump range — every frog needs a lily!</div>
+<div id="hud"><span>Frogs placed <b id="f">0</b>/<b id="ft">0</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">🪷 New Pond</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let frogs=[],lilies=[],sel=null,level=1,placed=0;
+const RANGE=95;
+function gen(){const n=Math.min(3+level,6);
+frogs=[];lilies=[];sel=null;placed=0;
+for(let i=0;i<n;i++){
+let x,y,tries=0;do{x=30+Math.random()*(W-60);y=30+Math.random()*(H-60);tries++;}
+while(tries<50&&(frogs.some(f=>Math.hypot(f.x-x,f.y-y)<50)||lilies.some(l=>Math.hypot(l.x-x,l.y-y)<40)));
+frogs.push({x,y,home:{x,y},placed:false});}
+for(let i=0;i<n;i++){
+let x,y,tries=0;
+do{x=30+Math.random()*(W-60);y=30+Math.random()*(H-60);tries++;}
+while(tries<50&&(frogs.some(f=>Math.hypot(f.x-x,f.y-y)<50)||lilies.some(l=>Math.hypot(l.x-x,l.y-y)<40)));
+lilies.push({x,y,used:false});}
+// ensure solvable: move each lily near its frog
+lilies.forEach((l,i)=>{const f=frogs[i];
+l.x=Math.max(30,Math.min(W-30,f.x+(Math.random()*120-60)));
+l.y=Math.max(30,Math.min(H-30,f.y+(Math.random()*120-60)));});
+document.getElementById('f').textContent=0;document.getElementById('ft').textContent=n;
+document.getElementById('l').textContent=level;
+draw();msg('Tap frog → tap lily (in range)!');}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();
+// select frog
+const f=frogs.find(fr=>!fr.placed&&Math.hypot(fr.x-x,fr.y-y)<22);
+if(f){sel=f;beep(400,.06);draw();return;}
+// place on lily
+if(sel){const l=lilies.find(li=>!li.used&&Math.hypot(li.x-x,li.y-y)<24);
+if(l&&Math.hypot(l.x-sel.home.x,l.y-sel.home.y)<RANGE){
+sel.x=l.x;sel.y=l.y;sel.placed=true;l.used=true;sel=null;placed++;
+document.getElementById('f').textContent=placed;
+beep(600,.1);draw();
+if(placed>=frogs.length){beep(880,.3,'triangle');
+msg('🐸 All frogs settled! Level '+(level+1));level++;
+setTimeout(gen,1200);}
+return;}
+beep(160,.06,'sawtooth');}});
+function draw(){ctx.fillStyle='#166534';ctx.fillRect(0,0,W,H);
+// range of selected
+if(sel){ctx.fillStyle='#fbbf2418';
+ctx.beginPath();ctx.arc(sel.home.x,sel.home.y,RANGE,0,7);ctx.fill();}
+lilies.forEach(l=>{ctx.beginPath();ctx.ellipse(l.x,l.y,22,13,0,0,7);
+ctx.fillStyle=l.used?'#15803d':'#22c55e';ctx.fill();
+ctx.strokeStyle='#86efac';ctx.lineWidth=2;ctx.stroke();ctx.lineWidth=1;});
+frogs.forEach(f=>{ctx.font='24px serif';ctx.textAlign='center';
+ctx.globalAlpha=f.placed?0.9:1;
+ctx.fillText('🐸',f.x,f.y+8);ctx.globalAlpha=1;
+if(f===sel){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+ctx.beginPath();ctx.arc(f.x,f.y,16,0,7);ctx.stroke();ctx.lineWidth=1;}});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

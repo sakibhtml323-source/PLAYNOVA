@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Draw Path #268</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:800;cursor:pointer;font-size:1rem;margin:4px}
+</style></head><body>
+<h1>🐪 Desert Draw Path</h1><div class="sub">Draw a path from oasis to temple — then watch the caravan follow it. Longer path = more gold!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Gold <b id="g">0</b></span><span>Obstacles <b id="o">0</b></span></div>
+<canvas id="cv" width="440" height="440"></canvas>
+<div id="ov"><div style="font-size:3rem">🗺️</div><p>Drag to draw a path from 💧 oasis to 🏛️ temple.<br>Avoid the rocks!</p><button id="btn">Start Journey</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440;
+let drawing=false,path=[],start={x:60,y:380},end={x:380,y:60},rocks=[],level=1,gold=0,travelling=false,travProg=0;
+function gen(){rocks=[];const nr=2+level;
+for(let i=0;i<nr;i++){rocks.push({x:80+Math.random()*280,y:80+Math.random()*280,r:26+Math.random()*16});}
+document.getElementById('o').textContent=nr;draw();}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,W);
+// grid dots
+ctx.fillStyle='#44403c';
+for(let x=20;x<W;x+=40)for(let y=20;y<W;y+=40)ctx.fillRect(x,y,2,2);
+rocks.forEach(r=>{ctx.font='28px serif';ctx.textAlign='center';ctx.fillText('🪨',r.x,r.y+10);});
+ctx.font='30px serif';ctx.fillText('💧',start.x,start.y+10);
+ctx.fillText('🏛️',end.x,end.y+10);
+// drawn path
+if(path.length>1){ctx.strokeStyle='#fbbf24';ctx.lineWidth=4;ctx.lineCap='round';
+ctx.beginPath();ctx.moveTo(path[0].x,path[0].y);path.forEach(p=>ctx.lineTo(p.x,p.y));ctx.stroke();}
+if(travelling&&path.length){travProg+=0.006;
+const i=Math.min(path.length-1,Math.floor(travProg*path.length));
+const p=path[i];ctx.font='24px serif';ctx.fillText('🐪',p.x,p.y+8);
+if(travProg>=1){travelling=false;
+const dist=pathLength();const gained=Math.floor(dist/4);
+gold+=gained;document.getElementById('g').textContent=gold;
+beep(880,.25,'triangle');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🏛️ Arrived! +<b style="color:#fbbf24">'+gained+'</b> gold (path: '+Math.floor(dist)+'px)<br>Draw a longer, rock-free route for more!';
+level++;document.getElementById('l').textContent=level;gen();}
+else requestAnimationFrame(draw);}}
+function pathLength(){let d=0;for(let i=1;i<path.length;i++){d+=Math.hypot(path[i].x-path[i-1].x,path[i].y-path[i-1].y);}return d;}
+cvs.addEventListener('pointerdown',e=>{if(travelling)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+if(Math.hypot(x-start.x,y-start.y)<34){drawing=true;path=[{x:start.x,y:start.y}];}
+else if(path.length){ // restart if clicking near start of drawn path
+path=[];drawing=false;}});
+cvs.addEventListener('pointermove',e=>{if(!drawing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+const last=path[path.length-1];
+if(Math.hypot(x-last.x,y-last.y)>8){
+// rock collision aborts
+if(rocks.some(rc=>Math.hypot(x-rc.x,y-rc.y)<rc.r)){beep(150,.2,'sawtooth');drawing=false;msgHit();return;}
+path.push({x,y});draw();}});
+cvs.addEventListener('pointerup',e=>{if(!drawing)return;drawing=false;
+if(Math.hypot(path[path.length-1].x-end.x,path[path.length-1].y-end.y)<40){travelling=true;travProg=0;draw();}
+else{beep(160,.1,'sawtooth');}});
+function msgHit(){document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='💥 Path hit a rock! Draw around them.';}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();
+document.getElementById('ov').style.display='none';path=[];travelling=false;draw();};
+gen();
+</script></body></html>

@@ -1,0 +1,31 @@
+{
+ "crystal-dot-link-276": {
+  "level1_completed": true,
+  "xp": 20,
+  "errors": [],
+  "method": "search-computed paths dragged with the real mouse",
+  "fresh_level1_boards_solvable": "25/25",
+  "note": "first run FAILED: the drag could never extend the path (per-cell \"down\" flag); after repairing the drag handlers and the generator the real-mouse run passed"
+ },
+ "crystal-shift-puzzle-306": {
+  "level1_completed": true,
+  "xp": 20,
+  "real_clicks": 1,
+  "errors": []
+ },
+ "crystal-dot-pop-292": {
+  "level1_completed": true,
+  "xp": 20,
+  "real_clicks": 4,
+  "restarts_used": 0,
+  "errors": [],
+  "method": "greedy: always click the largest group"
+ },
+ "haunted-clock-tower-348": {
+  "level1_completed": true,
+  "xp": 20,
+  "target": "3:30",
+  "errors": [],
+  "method": "real mouse drags: hour hand to the target mark, minute hand to the target mark"
+ }
+}

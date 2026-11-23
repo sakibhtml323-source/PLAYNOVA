@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Harmony #377</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#contour{display:flex;gap:6px;margin:12px;font-size:1.4rem;align-items:center;min-height:40px}
+#keys{display:flex;gap:5px;margin:10px;flex-wrap:wrap;justify-content:center;max-width:94vw}
+.key{width:46px;height:80px;background:#1e293b;border:2px solid #334155;border-radius:0 0 8px 8px;cursor:pointer;color:#e2e8f0;font-weight:800;font-size:.8rem}
+.key:active{background:#7c3aed}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:6px}
+</style></head><body>
+<h1>🎼 Crystal Harmony</h1><div class="sub">The crystals show a melody shape — play notes matching UP/DOWN/SAME!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Score <b id="s">0</b></span></div>
+<div id="contour"></div>
+<div id="keys"></div>
+<div id="msg"></div>
+<button id="btn">🎵 New Melody</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function tone(f){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());
+const os=o.createOscillator(),g=o.createGain();
+os.type='sine';os.frequency.value=f;
+g.gain.setValueAtTime(.15,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+.4);
+os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+.4);}catch(e){}}
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const NOTES=[262,294,330,349,392,440,494];
+const NAMES=['Do','Re','Mi','Fa','Sol','La','Ti'];
+let contour=[],played=[],round=1,score=0;
+function newMelody(){const n=Math.min(4+round,8);contour=[];
+let prev=(Math.random()*NOTES.length)|0;
+contour.push(prev);
+for(let i=1;i<n;i++){const r=Math.random();
+let nx=prev;
+if(r<0.4)nx=Math.min(6,prev+1);
+else if(r<0.8)nx=Math.max(0,prev-1);
+contour.push(nx);prev=nx;}
+played=[];document.getElementById('r').textContent=round;
+// show contour as shapes (hide first note value)
+const cd=document.getElementById('contour');cd.innerHTML='';
+contour.forEach((v,i)=>{const s=document.createElement('span');
+if(i===0)s.textContent='🎵';
+else{const d=v-contour[i-1];
+s.textContent=d>0?'⬆️':d<0?'⬇️':'➡️';}
+cd.appendChild(s);});
+msg('Play the melody following the arrows!');}
+function buildKeys(){const k=document.getElementById('keys');k.innerHTML='';
+NOTES.forEach((f,i)=>{const b=document.createElement('button');b.className='key';
+b.textContent=NAMES[i];
+b.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();playNote(i);};
+k.appendChild(b);});}
+function playNote(i){tone(NOTES[i]);played.push(i);
+const idx=played.length-1;
+if(idx===0){if(i!==contour[0]){wrong();return;}
+msg('✅ First note!');return;}
+// check direction
+const d=i-contour[idx-1];
+const cd=contour[idx]-contour[idx-1];
+const okD=(d>0&&cd>0)||(d<0&&cd<0)||(d===0&&cd===0);
+if(!okD){wrong();return;}
+if(idx>=contour.length-1){score+=contour.length*10;document.getElementById('s').textContent=score;
+beep(880,.3,'triangle');msg('🎵 Harmony achieved! Round '+(round+1));round++;
+setTimeout(newMelody,1000);return;}
+beep(500+idx*60,.08,'triangle');msg('✅ '+idx+'/'+contour.length);}
+function wrong(){beep(150,.2,'sawtooth');msg('❌ Off-key! Restarting melody.');
+played=[];}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;score=0;document.getElementById('s').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();buildKeys();newMelody();};
+buildKeys();newMelody();
+</script></body></html>

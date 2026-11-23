@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Archer Range #437</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+canvas{background:#312e81;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🏹 Royal Archer Range</h1><div class="sub">Drag to draw the bow — the WIND bends your arrow. Compensate and hit the bullseye!</div>
+<div id="hud"><span>Arrows <b id="a">5</b></span><span>Hits <b id="h">0</b></span><span>Wind <b id="w">0</b></span></div>
+<canvas id="cv" width="440" height="340"></canvas>
+<div id="msg"></div>
+<button id="btn">🎯 New Range</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=340,GY=H-36;let archer={x:50,y:GY},arrow=null,target={},arrows=5,hits=0,wind=0,drag=null;
+function msg(t){document.getElementById('msg').textContent=t;}
+function gen(){target={x:320+Math.random()*90,y:GY-30-Math.random()*60,r:16};
+wind=(Math.random()*2-1)*0.6;
+document.getElementById('w').textContent=wind.toFixed(2);
+arrows=5;hits=0;document.getElementById('a').textContent=5;
+draw();msg('Compensate for the wind!');}
+cvs.addEventListener('pointerdown',e=>{if(arrows<=0||arrow)return;const r=cvs.getBoundingClientRect();
+drag={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};});
+cvs.addEventListener('pointerup',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+arrow={x:archer.x,y:archer.y-16,vx:(drag.x-x)*0.1,vy:(drag.y-y)*0.1};
+arrows--;document.getElementById('a').textContent=arrows;
+beep(500,.07);drag=null;
+if(arrows<=0)setTimeout(()=>{if(hits<3)end(false);},2500);});
+function step(){arrow.vy+=0.14;arrow.vx+=wind*0.03;
+arrow.x+=arrow.vx;arrow.y+=arrow.vy;
+if(Math.hypot(arrow.x-target.x,arrow.y-target.y)<target.r){hits++;
+document.getElementById('h').textContent=hits;
+beep(700,.15,'triangle');
+if(hits>=3){end(true);return;}
+gen();arrow=null;return;}
+if(arrow.y>GY||arrow.x>W+20){beep(200,.08,'sawtooth');arrow=null;}}
+function end(won){document.getElementById('msg').textContent=won?'🏹 Marksman!':'💨 Out of arrows!';
+if(won)setTimeout(gen,1200);}
+function draw(){ctx.fillStyle='#312e81';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#4338ca';ctx.fillRect(0,GY,W,H-GY);
+// wind
+ctx.fillStyle='#93c5fd44';
+for(let i=0;i<6;i++)ctx.fillRect((Date.now()/8+i*70)%W,40+i*40,wind*20,2);
+// target
+ctx.beginPath();ctx.arc(target.x,target.y,target.r,0,7);ctx.fillStyle='#dc2626';ctx.fill();
+ctx.beginPath();ctx.arc(target.x,target.y,target.r*0.55,0,7);ctx.fillStyle='#f8fafc';ctx.fill();
+ctx.beginPath();ctx.arc(target.x,target.y,target.r*0.2,0,7);ctx.fillStyle='#fbbf24';ctx.fill();
+// archer
+ctx.font='26px serif';ctx.textAlign='center';ctx.fillText('🏹',archer.x,archer.y+2);
+if(drag){ctx.strokeStyle='#fbbf2455';ctx.setLineDash([4,4]);
+ctx.beginPath();ctx.moveTo(archer.x,archer.y-16);ctx.lineTo(drag.x,drag.y);ctx.stroke();ctx.setLineDash([]);}
+if(arrow){ctx.fillStyle='#fbbf24';ctx.fillRect(arrow.x-6,arrow.y-1,12,2);}
+if(arrow){step();}
+requestAnimationFrame(draw);}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Forge Idle #226</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#c{font-size:2rem;font-weight:800;color:#fbbf24;margin:8px}
+#r{color:#a8a29e;font-size:.85rem}
+#forge{font-size:80px;cursor:pointer;user-select:none;margin:14px;transition:transform .08s}
+#forge:active{transform:scale(.9)}
+#shop{display:flex;flex-direction:column;gap:6px;width:300px;max-width:92vw;margin:8px}
+.row{display:flex;justify-content:space-between;align-items:center;background:#292524;border-radius:10px;padding:8px 12px}
+.row button{padding:6px 14px;border-radius:8px;border:none;background:#57534e;color:#fff;font-weight:700;cursor:pointer}
+.row button:disabled{opacity:.4}
+.row small{color:#a8a29e;display:block}
+</style></head><body>
+<h1>⚒️ Desert Forge Idle</h1><div class="sub">Hammer the anvil — auto-workers keep earning while you rest!</div>
+<div id="c">0</div><div id="r">0 per second</div>
+<div id="forge">🔨</div>
+<div id="shop"></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.1,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let S={c:0,own:[0,0,0,0],pc:1};
+const IT=[{n:'⛏️ Apprentice',r:.5,c:15,d:'A learner hammers slowly'},{n:'🏜️ Miner',r:3,c:60,d:'Mines ore for the forge'},{n:'🐪 Caravan',r:12,c:250,d:'Trades forged goods'},{n:'🏛️ Guild Hall',r:55,c:1200,d:'Master smiths unite'}];
+function rate(){return IT.reduce((a,v,i)=>a+v.r*S.own[i],0);}
+function render(){document.getElementById('c').textContent=Math.floor(S.c);
+document.getElementById('r').textContent=rate().toFixed(1)+' per second';
+const sh=document.getElementById('shop');sh.innerHTML='';
+IT.forEach((it,i)=>{const row=document.createElement('div');row.className='row';
+const info=document.createElement('div');info.innerHTML='<b>'+it.n+'</b> <small>'+it.d+'</small>';
+const b=document.createElement('button');const cost=Math.round(it.c*Math.pow(1.15,S.own[i]));
+b.textContent=cost+' 🔨';b.disabled=S.c<cost;
+b.onclick=()=>{if(S.c>=cost){S.c-=cost;S.own[i]++;beep(660,.09);render();}};
+row.appendChild(info);row.appendChild(b);sh.appendChild(row);});}
+document.getElementById('forge').addEventListener('pointerdown',()=>{S.c+=S.pc;beep(500+Math.random()*200,.05);render();});
+setInterval(()=>{S.c+=rate()/10;render();},100);
+render();
+</script></body></html>

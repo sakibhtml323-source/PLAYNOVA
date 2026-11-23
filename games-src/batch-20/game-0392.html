@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Sand Storm #392</title><style>
+body{margin:0;font-family:system-ui;background:#451a03;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+canvas{background:#78350f;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#451a03;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🌪️ Desert Sand Storm</h1><div class="sub">Draw barriers with your finger — block the sand blasts from hitting the tent!</div>
+<div id="hud"><span>Wave <b id="w">1</b></span><span>Tent HP <b id="h">10</b></span><span>Score <b id="s">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="ov"><div style="font-size:3rem">⛺</div><p>Drag to draw sand barriers.<br>Blasts bounce off them!</p><button id="btn">Defend</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let tent={x:W/2,y:H-60},walls=[],blasts=[],hp=10,wave=1,score=0,playing=false,spawnT=0,drawing=false,ink=100;
+function spawn(){blasts.push({x:20+Math.random()*(W-40),y:-16,
+vx:(Math.random()*2-1)*0.6,vy:2+wave*0.3,r:10});}
+cvs.addEventListener('pointerdown',e=>{drawing=true;ink=100;addWall(e);});
+cvs.addEventListener('pointermove',e=>{if(drawing&&ink>0)addWall(e);});
+cvs.addEventListener('pointerup',()=>{drawing=false;});
+function addWall(e){const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+walls.push({x,y,life:180});ink-=0.7;}
+function step(){spawnT++;if(spawnT>Math.max(40,80-wave*5)){spawnT=0;spawn();}
+blasts.forEach(b=>{b.x+=b.vx;b.y+=b.vy;
+// wall bounce
+walls.forEach(w=>{if(Math.hypot(w.x-b.x,w.y-b.y)<14){
+const a=Math.atan2(b.y-w.y,b.x-w.x);
+b.vx=Math.cos(a)*2.2;b.vy=Math.sin(a)*2.2;
+w.life-=8;}});
+// hit tent
+if(Math.hypot(b.x-tent.x,b.y-tent.y)<34){hp--;document.getElementById('h').textContent=hp;
+beep(150,.2,'sawtooth');b.dead=true;
+if(hp<=0){playing=false;beep(130,.35,'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='⛺ Tent buried!<br>Survived to wave '+wave+' · Score: '+score;}}});
+blasts=blasts.filter(b=>!b.dead&&b.y<H+20);
+walls=walls.filter(w=>{w.life--;return w.life>0;});
+if(!blasts.length&&spawnT>30){wave++;document.getElementById('w').textContent=wave;
+score+=50;document.getElementById('s').textContent=score;}}
+function draw(){ctx.fillStyle='#78350f';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#92400e';
+for(let i=0;i<15;i++)ctx.fillRect((i*97)%W,(i*61)%H,5,3);
+// tent
+ctx.font='34px serif';ctx.textAlign='center';ctx.fillText('⛺',tent.x,tent.y+10);
+// walls
+walls.forEach(w=>{ctx.globalAlpha=Math.min(1,w.life/60);
+ctx.fillStyle='#fbbf24';ctx.fillRect(w.x-4,w.y-4,8,8);ctx.globalAlpha=1;});
+// blasts
+blasts.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,7);
+ctx.fillStyle='#fde68a';ctx.fill();ctx.globalAlpha=0.4;
+ctx.beginPath();ctx.arc(b.x,b.y,b.r+6,0,7);ctx.fill();ctx.globalAlpha=1;});
+// ink bar
+ctx.fillStyle='#1f2937';ctx.fillRect(10,10,100,10);
+ctx.fillStyle='#fbbf24';ctx.fillRect(10,10,Math.max(0,ink),10);
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{walls=[];blasts=[];hp=10;wave=1;score=0;spawnT=0;ink=100;
+document.getElementById('h').textContent=10;document.getElementById('w').textContent=1;
+document.getElementById('s').textContent=0;document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();};
+</script></body></html>

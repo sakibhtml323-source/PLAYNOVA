@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Card Count #314</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#card{font-size:4rem;min-height:6rem;margin:14px;display:flex;align-items:center;justify-content:center}
+#ans{display:flex;gap:8px;margin:10px;flex-wrap:wrap;justify-content:center}
+.ans{padding:12px 20px;border-radius:10px;border:2px solid #4f46e5;background:#312e81;color:#eef2ff;font-size:1.1rem;font-weight:800;cursor:pointer}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🃏 Royal Card Count</h1><div class="sub">Cards flash by with numbers — how many did you see? Pick the right count!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Score <b id="s">0</b></span><span>Lives <b id="l">3</b></span></div>
+<div id="card">?</div>
+<div id="ans"></div>
+<div id="msg"></div>
+<button id="btn">👑 Begin</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+let count=0,round=1,score=0,lives=3,playing=false;
+function newRound(){const n=3+round;
+count=n;
+document.getElementById('r').textContent=round;
+document.getElementById('card').textContent='👀';
+// flash cards
+const cards=Array.from({length:n},()=>1+((Math.random()*9)|0));
+cards.forEach((v,i)=>{setTimeout(()=>{
+document.getElementById('card').textContent=v;
+beep(400+v*40,.08);},600+i*550);});
+setTimeout(()=>{document.getElementById('card').textContent='❓';
+showAnswers(n);},600+n*550+200);}
+function showAnswers(n){const opts=new Set([n]);
+while(opts.size<4){const d=n+((Math.random()*5)|0)-2;if(d>=1)opts.add(d);}
+const box=document.getElementById('ans');box.innerHTML='';
+[...opts].sort(()=>Math.random()-.5).forEach(v=>{
+const b=document.createElement('button');b.className='ans';b.textContent=v;
+b.onclick=()=>{if(!playing)return;
+if(v===n){score+=n*10;document.getElementById('s').textContent=score;
+beep(700,.15,'triangle');msg('✅ Correct — '+n+' cards!');}
+else{lives--;document.getElementById('l').textContent=lives;
+beep(150,.2,'sawtooth');msg('❌ It was '+n+'!');
+if(lives<=0){playing=false;msg('💔 Out of lives! Score: '+score);return;}}
+round++;setTimeout(newRound,900);};
+box.appendChild(b);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;score=0;lives=3;playing=true;
+document.getElementById('r').textContent=1;document.getElementById('s').textContent=0;
+document.getElementById('l').textContent=3;msg('');
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();newRound();};
+</script></body></html>

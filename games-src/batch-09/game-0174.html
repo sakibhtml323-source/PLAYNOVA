@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Retro 8-bit School Simulator Rush</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#000;font-family:'Courier New',monospace;color:#4ade80;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#facc15;padding:6px;letter-spacing:2px;text-shadow:2px 2px #7c3aed}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#0a0a1a;border:1px solid #7c3aed;border-radius:4px;padding:4px 10px}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#0a0a1a;border:2px solid #7c3aed;border-radius:6px;padding:12px}
+.card h3{color:#67e8f9;font-size:.85rem;margin-bottom:8px}
+.stu{display:flex;align-items:center;gap:8px;background:#1a1a2e;border:1px solid #334155;border-radius:4px;padding:8px;margin-bottom:6px;font-size:.8rem}
+.stu .bar{flex:1;height:8px;background:#1e293b;border-radius:2px;overflow:hidden}
+.stu .bar i{display:block;height:100%;background:#4ade80}
+.stu button{background:#7c3aed;color:#fff;border:none;border-radius:4px;padding:6px 12px;font-size:.7rem;cursor:pointer;font-family:inherit}
+.stu button:disabled{opacity:.4}
+#log{font-size:.78rem;color:#94a3b8;min-height:2.4em;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#4ade80;padding:20px;z-index:5}
+button.big{background:#7c3aed;color:#fff;border:none;font-family:inherit;font-weight:800;padding:12px 34px;font-size:1rem;cursor:pointer;margin-top:14px;box-shadow:4px 4px #4c1d95}
+</style>
+</head>
+<body>
+<h1>🏫 RETRO SCHOOL RUSH</h1>
+<div id="hud"><span>DAY <b id="day">1</b>/7</span><span>GRADE <b id="gr">10</b></span><span>STUDENTS <b id="ns">4</b></span><span>BEST <b id="b">0</b></span></div>
+<main>
+<div class="card"><h3>CLASS ROSTER</h3><div id="class"></div></div>
+<div class="card"><h3>LOG</h3><div id="log">Survive 7 days of 8-bit school! Teach fast — grades decay every day.</div></div>
+</main>
+<div id="ov"><h2 style="color:#facc15">8-BIT HOMEROOM</h2><p id="od">A rushed school sim! Students' grades decay daily — tap TEACH to boost them. Failing students drop out. Keep the class alive for 7 days!</p><button class="big" id="btn">START SEMESTER</button></div>
+<script>
+"use strict";
+const NAMES=['PIXEL','BYTE','SPRITE','PIXIE','DOT','VECTOR','SHADE','GLITCH'];
+let S,playing,timer;
+let best=+localStorage.getItem('rsr_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function load(){try{const d=JSON.parse(localStorage.getItem('rsr_save'));if(d){S=d;return;}}catch(e){}
+S={day:1,gr:10,stu:NAMES.slice(0,4).map(n=>({n,g:55}))};}
+function save(){localStorage.setItem('rsr_save',JSON.stringify(S));}
+load();
+function render(){document.getElementById('day').textContent=S.day;document.getElementById('gr').textContent=Math.floor(S.gr);
+document.getElementById('ns').textContent=S.stu.length;
+const c=document.getElementById('class');c.innerHTML='';
+S.stu.forEach((s,i)=>{const row=document.createElement('div');row.className='stu';
+row.innerHTML='<span>🧑‍🎓</span><b>'+s.n+'</b><div class="bar"><i style="width:'+s.g+'%;background:'+(s.g>60?'#4ade80':s.g>30?'#facc15':'#f87171')+'"></i></div><small>'+Math.floor(s.g)+'</small>';
+const b=document.createElement('button');b.textContent='TEACH';
+b.onclick=()=>{audio.resume();s.g=Math.min(100,s.g+18);S.gr=Math.min(100,S.gr+2);
+beep(560,.08);log('You teach '+s.n+' (+18 grade).');render();save();};
+row.appendChild(b);c.appendChild(row);});}
+function log(t){document.getElementById('log').textContent='» '+t;}
+function nextDay(){S.day++;
+S.stu.forEach(s=>{s.g-=14+S.day;});
+const drop=S.stu.filter(s=>s.g<=0);drop.forEach(s=>{S.gr-=8;S.stu.splice(S.stu.indexOf(s),1);
+log('📉 '+s.n+' dropped out (grade 0, school grade -8).');});
+if(S.stu.length<4&&S.day<7){const nn=NAMES.find(n=>!S.stu.some(s=>s.n===n));if(nn){S.stu.push({n:nn,g:55});log('🎒 New student enrolled: '+nn+'!');}}
+// school grade drifts toward avg
+const avg=S.stu.length?S.stu.reduce((a,s)=>a+s.g,0)/S.stu.length:0;
+S.gr+=(avg-S.gr)*0.3;
+if(S.gr<=0)return end(false,'The school loses its accreditation…');
+if(S.day>7)return end(true,'');
+render();save();beep(440,.05);}
+function end(win,why){playing=false;clearInterval(timer);S.over=true;
+if(S.gr>best){best=Math.floor(S.gr);localStorage.setItem('rsr_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=win?'🏆 <b style="color:#facc15">SEMESTER SURVIVED!</b><br>Final school grade: '+Math.floor(S.gr):'💾 '+why;
+document.getElementById('btn').textContent='NEW SEMESTER';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW SEMESTER'){S={day:1,gr:10,stu:NAMES.slice(0,4).map(n=>({n,g:55}))};}
+playing=true;render();clearInterval(timer);timer=setInterval(nextDay,8000);
+document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='9'){const b=document.querySelectorAll('.stu button')[+e.key-1];if(b)b.click();}});
+</script>
+</body>
+</html>

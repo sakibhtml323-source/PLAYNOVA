@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Epic Time Management: Infinity</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1e293b,#0f172a);font-family:Georgia,serif;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.05rem;color:#93c5fd;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:4px 10px}
+#bench{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px 0;min-height:56px}
+.task{background:linear-gradient(135deg,#334155,#1e293b);border:2px solid #475569;border-radius:12px;padding:8px 14px;text-align:center;cursor:pointer;color:#e2e8f0;transition:transform .1s}
+.task:hover{transform:translateY(-2px)}
+.task .e{font-size:1.6rem}
+.task small{display:block;font-size:.62rem;color:#94a3b8}
+.task.done{border-color:#22c55e;opacity:.5}
+#msg{text-align:center;font-size:.82rem;color:#94a3b8;min-height:1.6em}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e2e8f0;padding:20px;z-index:5}
+button.big{background:#3b82f6;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⏱ EPIC TIME MANAGEMENT: INFINITY</h1>
+<div id="hud"><span>⚡ Energy <b id="e">100</b></span><span>✅ Done <b id="d">0</b></span><span>📈 Level <b id="l">1</b></span><span>Best <b id="b">0</b></span></div>
+<div id="bench"></div>
+<div id="msg">Complete tasks before their timers expire — each finished task restores energy!</div>
+<div id="ov"><h2 style="color:#93c5fd">INFINITE TASKBENCH</h2><p id="od">An endless task-management rush! Tap a task to complete it (each costs time by its difficulty). Tasks expire — letting them rot drains energy. Survive as long as you can!</p><button class="big" id="btn">CLOCK IN</button></div>
+<script>
+"use strict";
+const TASKS=[['📧','Email',2],['📞','Call',3],['📊','Report',5],['🔧','Fix',4],['📦','Ship',3],['🎨','Design',6],['💻','Code',7],['🧹','Clean',2],['📝','Draft',4],['☎️','Support',3]];
+let bench,playing,energy,done,level,spawnT,timer,frame,best=+localStorage.getItem('tm_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){bench=[];playing=true;energy=100;done=0;level=1;frame=0;spawnT=0;
+document.getElementById('e').textContent=100;document.getElementById('d').textContent=0;document.getElementById('l').textContent=1;
+clearInterval(timer);timer=setInterval(tick,1000);}
+function spawn(){const t=TASKS[(Math.random()*TASKS.length)|0];
+bench.push({e:t[0],n:t[1],cost:t[2],ttl:12+((Math.random()*8)|0)-level});render();}
+function render(){const b=document.getElementById('bench');b.innerHTML='';
+bench.forEach((t,i)=>{const d=document.createElement('div');d.className='task';
+d.innerHTML='<span class="e">'+t.e+'</span><small>'+t.n+' · ⏱'+t.ttl+'s · ⚡'+t.cost+'</small>';
+d.onclick=()=>{if(!playing)return;audio.resume();
+if(energy<t.cost){beep(160,.12,'sawtooth');return;}
+energy-=t.cost;done++;energy=Math.min(100,energy+4);
+document.getElementById('e').textContent=Math.round(energy);document.getElementById('d').textContent=done;
+level=1+Math.floor(done/6);document.getElementById('l').textContent=level;
+beep(600+done*10,.08,'triangle');bench.splice(i,1);render();};
+b.appendChild(d);});}
+function tick(){if(!playing)return;frame++;
+bench.forEach(t=>t.ttl--);
+const expired=bench.filter(t=>t.ttl<=0);
+expired.forEach(t=>{energy-=8;beep(150,.15,'sawtooth');document.getElementById('msg').textContent='⚠️ "'+t.n+'" expired! Energy -8.';});
+bench=bench.filter(t=>t.ttl>0);
+spawnT--;if(spawnT<=0){spawnT=Math.max(2,5-level*0.4);spawn();}
+document.getElementById('e').textContent=Math.max(0,Math.round(energy));
+render();
+if(energy<=0)end();}
+function end(){playing=false;clearInterval(timer);
+if(done>best){best=done;localStorage.setItem('tm_best',best);document.getElementById('b').textContent=best;}
+const r=done>=40?'🏆 TIME LORD':done>=25?'⚡ EFFICIENCY MACHINE':done>=12?'📋 ORGANIZED':'🌀 SCATTERED';
+document.getElementById('od').innerHTML=r+'<br>Completed: <b style="color:#fde047">'+done+'</b> tasks';
+document.getElementById('btn').textContent='CLOCK BACK IN';document.getElementById('ov').style.display='flex';beep(120,.5,'sawtooth');}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='9'){const t=document.querySelectorAll('.task')[+e.key-1];if(t)t.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();init();
+document.getElementById('msg').textContent='Tap tasks before they expire!';document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Pool Shot #433</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+canvas{background:#14532d;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🎱 Crystal Pool Shot</h1><div class="sub">Drag to aim — bounce the orb off the cushions into the pocket!</div>
+<div id="hud"><span>Shots <b id="s">3</b></span><span>Potted <b id="p">0</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="280"></canvas>
+<div id="msg"></div>
+<button id="btn">✨ New Table</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,H=280,BD=60;let cue={x:100,y:H/2},ball={x:0,y:0,vx:0,vy:0},pocket={},shots=3,potted=0,level=1,playing=true,drag=null;
+function msg(t){document.getElementById('msg').textContent=t;}
+function gen(){cue={x:100,y:H/2};ball={x:0,y:0,vx:0,vy:0};
+ball.x=W-120;ball.y=H/2+(Math.random()*80-40);
+pocket={x:BD+20,y:Math.random()<0.5?BD+10:H-BD-10,r:16};
+shots=3+level;playing=true;
+document.getElementById('s').textContent=shots;
+document.getElementById('l').textContent=level;
+draw();msg('Pot the orb!');}
+cvs.addEventListener('pointerdown',e=>{if(!playing||Math.hypot(ball.vx,ball.vy)>0.1)return;const r=cvs.getBoundingClientRect();
+drag={x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height};});
+cvs.addEventListener('pointerup',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+ball.vx=(drag.x-x)*0.09;ball.vy=(drag.y-y)*0.09;
+shots--;document.getElementById('s').textContent=shots;
+beep(500,.08);drag=null;
+if(shots<=0)setTimeout(()=>{if(potted<1)end(false);},3000);});
+function step(){ball.x+=ball.vx;ball.y+=ball.vy;
+ball.vx*=0.99;ball.vy*=0.99;
+if(ball.x<BD){ball.x=BD;ball.vx*=-0.85;beep(300,.04);}
+if(ball.x>W-BD){ball.x=W-BD;ball.vx*=-0.85;beep(300,.04);}
+if(ball.y<BD){ball.y=BD;ball.vy*=-0.85;beep(300,.04);}
+if(ball.y>H-BD){ball.y=H-BD;ball.vy*=-0.85;beep(300,.04);}
+if(Math.hypot(ball.x-pocket.x,ball.y-pocket.y)<pocket.r+6){potted++;
+document.getElementById('p').textContent=potted;
+beep(880,.3,'triangle');end(true);return;}}
+function end(won){playing=false;
+document.getElementById('msg').textContent=won?'🎉 Potted! Level '+(level+1):'💨 Out of shots!';
+if(won){level++;setTimeout(gen,1000);}}
+function draw(){ctx.fillStyle='#14532d';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#78350f';ctx.lineWidth=BD;
+ctx.strokeRect(BD/2,BD/2,W-BD,H-BD);ctx.lineWidth=1;
+// pocket
+ctx.beginPath();ctx.arc(pocket.x,pocket.y,pocket.r,0,7);
+ctx.fillStyle='#000';ctx.fill();
+// ball
+ctx.beginPath();ctx.arc(ball.x,ball.y,8,0,7);
+ctx.fillStyle='#7c3aed';ctx.fill();
+// cue line
+if(drag){ctx.strokeStyle='#fbbf2455';ctx.setLineDash([4,4]);
+ctx.beginPath();ctx.moveTo(ball.x,ball.y);ctx.lineTo(drag.x,drag.y);ctx.stroke();ctx.setLineDash([]);}
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{level=1;potted=0;document.getElementById('p').textContent=0;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

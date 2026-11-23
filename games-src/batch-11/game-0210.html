@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Robot Rush</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0f172a;font-family:'Courier New',monospace;color:#67e8f9;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#22d3ee;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px;flex-wrap:wrap;justify-content:center}
+canvas{background:#1e293b;border-radius:12px;touch-action:none}
+#build{display:flex;gap:8px;margin:8px;flex-wrap:wrap;justify-content:center}
+#build button{background:#0c4a6e;border:1px solid #22d3ee;color:#a5f3fc;border-radius:8px;padding:8px 14px;font-size:.78rem;cursor:pointer;font-family:inherit}
+#msg{text-align:center;font-size:.82rem;color:#7dd3fc;min-height:1.6em}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button.big{background:#22d3ee;color:#0f172a;border:none;font-family:inherit;font-weight:800;padding:12px 34px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🤖 ROBOT RUSH</h1>
+<div id="hud"><span>⚙️ Scrap <b id="sc">40</b></span><span>Wave <b id="w">1</b></span><span>🛡️ Core <b id="h">15</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="build">
+<button data-t="gun">🔫 Blaster 15</button><button data-t="tesla">⚡ Tesla 30</button><button data-t="bomb">💣 Bomb 45</button>
+<button id="go">▶ WAVE</button>
+</div>
+<div id="msg">Build defenses on the grid before starting each wave!</div>
+<div id="ov"><h2 style="color:#22d3ee">ROBOT RUSH</h2><p id="od">DUAL-LANE DEFENSE: enemies attack BOTH rows simultaneously — split your towers! Malfunctioning bots rush your core! Build blasters, teslas and bombs on the defense grid between waves. The rush intensifies every wave — survive as long as you can!</p><button class="big" id="btn">BOOT DEFENSES</button></div>
+<script>
+
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=380;cvs.width=W;cvs.height=H;
+const GRID=11,TS=36;
+let grid,bots,scrap,core,playing,wave,waveOn,selT,best=+localStorage.getItem('rr_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const DEFS={gun:{c:15,r:3,dmg:2,rate:12,e:'🔫'},tesla:{c:30,r:2.4,dmg:4,rate:20,e:'⚡',chain:true},bomb:{c:45,r:3,dmg:12,rate:50,e:'💣',splash:true}};
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+// path across middle
+const PATH=[];for(let c=0;c<GRID;c++)PATH.push([c,5]);
+function init(){grid=[];for(let r=0;r<GRID;r++){grid[r]=[];for(let c=0;c<GRID;c++)grid[r][c]=PATH.some(p=>p[0]===c&&p[1]===r)?'path':null;}
+bots=[];scrap=40;core=15;wave=0;selT='gun';playing=true;waveOn=false;}
+function startWave(){wave++;document.getElementById('w').textContent=wave;waveOn=true;
+const n=4+wave*2;for(let i=0;i<n;i++)bots.push({pi:0,off:-i*24,hp:14+wave*5,sp:0.9+wave*0.06,slowT:0});
+beep(500,.12,'triangle');}
+function step(){bots.forEach(b=>{const sp=b.slowT>0?b.sp*0.5:b.sp;b.slowT=Math.max(0,b.slowT-1);
+b.off+=sp;if(b.off<0)return; /* FIX (PLAYNOVA repair): enemies spawn with a negative offset (staggered entry); seg became -1 and path[-1] threw every tick */ const seg=Math.floor(b.off/24);
+const LP=b.lane?PATH2:PATH;
+if(seg>=LP.length-1){bots.splice(bots.indexOf(b),1);core--;document.getElementById('h').textContent=core;beep(130,.2,'sawtooth');
+if(core<=0)over();return;}
+b.sx=LP[seg][0]+(LP[seg+1][0]-LP[seg][0])*((b.off%24)/24);
+b.sy=LP[seg][1]+(LP[seg+1][1]-LP[seg][1])*((b.off%24)/24);});
+for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){const cell=grid[r][c];
+if(!cell||cell==='path')continue;cell.cd--;
+if(cell.cd>0)continue;const d=DEFS[cell.t];
+let nb=null,nd2=1e9;bots.forEach(b=>{const dd=Math.hypot(b.sx-c,b.sy-r);if(dd<d.r&&dd<nd2){nd2=dd;nb=b;}});
+if(nb){cell.cd=d.rate;nb.hp-=d.dmg;beep(d.splash?180:560,.04,d.splash?'sawtooth':'square');
+if(d.splash)bots.forEach(b2=>{if(b2!==nb&&Math.hypot(b2.sx-nb.sx,b2.sy-nb.sy)<1.2)b2.hp-=6;});
+if(nb.hp<=0){bots.splice(bots.indexOf(nb),1);scrap+=5;}}}
+if(waveOn&&!bots.length){waveOn=false;scrap+=18+wave*3;
+if(wave>best){best=wave;localStorage.setItem('rr_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('msg').textContent='✅ Wave '+wave+' clear! +scrap.';beep(700,.14,'triangle');}
+document.getElementById('sc').textContent=scrap;}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*GRID),rw=Math.floor((e.clientY-r.top)/r.height*GRID);
+if(c<0||rw<0||c>=GRID||rw>=GRID)return;
+if(grid[rw][c]==='path'||grid[rw][c])return;
+const d=DEFS[selT]||{c:Infinity};/* FIX (PLAYNOVA repair): no tower selected yet -> DEFS[...] was undefined and clicking a build spot threw */if(scrap<d.c){beep(160,.08,'sawtooth');return;}
+scrap-=d.c;grid[rw][c]={t:selT,cd:0};beep(620,.08);});
+document.querySelectorAll('#build [data-t]').forEach(b=>b.onclick=()=>{selT=b.dataset.t;});
+document.getElementById('go').onclick=()=>{audio.resume();if(playing&&!waveOn)startWave();};
+window.addEventListener('keydown',e=>{const k=e.key;if(k>='1'&&k<='3')document.querySelectorAll('#build [data-t]')[+k-1].click();if(k==='Enter'&&playing&&!waveOn)startWave();});
+function draw(){ctx.fillStyle='#1e293b';ctx.fillRect(0,0,W,H);
+for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){const x=c*TS,y=r*TS;
+if(grid[r][c]==='path'){ctx.fillStyle='#0f172a';ctx.fillRect(x+2,y+2,TS-4,TS-4);
+ctx.fillStyle='#334155';ctx.fillRect(x+2,y+2,TS-4,4);}
+else if(grid[r][c]){ctx.font='17px serif';ctx.textAlign='center';ctx.fillText(DEFS[grid[r][c].t].e,x+TS/2,y+TS/2+6);}
+else{ctx.fillStyle='#293548';ctx.fillRect(x+2,y+2,TS-4,TS-4);}}
+bots.forEach(b=>{ctx.fillStyle=b.slowT>0?'#7dd3fc':'#f87171';
+ctx.beginPath();ctx.arc(b.sx*TS+TS/2,b.sy*TS+TS/2,9,0,7);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(b.sx*TS+TS/2-4,b.sy*TS+TS/2-3,3,3);ctx.fillRect(b.sx*TS+TS/2+2,b.sy*TS+TS/2-3,3,3);});
+// core
+ctx.fillStyle='#22d3ee';ctx.font='20px serif';ctx.fillText('🛡️',GRID*TS-20,5.5*TS+6);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+function over(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='💥 Core breached on wave <b>'+wave+'</b>!';
+document.getElementById('btn').textContent='REBOOT';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();init();
+document.getElementById('h').textContent=15;document.getElementById('w').textContent=0;
+document.getElementById('msg').textContent='Build on the grid, then press WAVE.';
+document.getElementById('ov').style.display='none';};
+loop();
+
+</script>
+</body>
+</html>

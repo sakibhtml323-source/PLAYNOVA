@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense School Simulator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#450a0a,#7f1d1d);font-family:Georgia,serif;color:#fecaca;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#fca5a5;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#450a0a;border:1px solid #7f1d1d;border-radius:10px;padding:4px 10px}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#450a0a;border:1px solid #7f1d1d;border-radius:14px;padding:12px}
+.card h3{color:#fca5a5;font-size:.9rem;margin-bottom:8px}
+.stu{display:flex;align-items:center;gap:8px;background:#7f1d1d33;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.stu .bar{flex:1;height:8px;background:#7f1d1d;border-radius:4px;overflow:hidden}
+.stu .bar i{display:block;height:100%;background:#4ade80}
+.stu button{background:#dc2626;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:.75rem;cursor:pointer;white-space:nowrap}
+.stu button:disabled{opacity:.4}
+#log{font-size:.8rem;color:#fca5a5;min-height:2.4em;padding:4px}
+#ov{position:fixed;inset:0;background:rgba(69,10,10,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fecaca;padding:20px;z-index:5}
+button.big{background:#dc2626;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🥷 INTENSE SCHOOL SIMULATOR</h1>
+<div id="hud"><span>📅 Day <b id="day">1</b>/7</span><span>⚔️ Honor <b id="hn">10</b></span><span>👥 Students <b id="ns">4</b></span><span>Best <b id="b">0</b></span></div>
+<main>
+<div class="card"><h3>🎎 YOUR DOJO</h3><div id="class"></div></div>
+<div class="card"><h3>📜 TRAINING LOG</h3><div id="log">Train your ninja students for 7 days! Drill them before discipline fades — a dishonored dojo closes its doors.</div></div>
+</main>
+<div id="ov"><h2 style="color:#fca5a5">INTENSE DOJO</h2><p id="od">Run the most intense ninja school! Students drill themselves each day but lose discipline — tap Drill to focus them (costs honor). Keep honor above zero for 7 days and graduate a legendary class!</p><button class="big" id="btn">OPEN THE DOJO</button></div>
+<script>
+"use strict";
+const NAMES=['Kaze','Yami','Hikari','Raiden','Sakura','Kuro','Aki','Ryu'];
+let S,playing,timer;
+let best=+localStorage.getItem('is_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function load(){try{const d=JSON.parse(localStorage.getItem('iss_save'));if(d){S=d;return;}}catch(e){}
+S={day:1,hn:10,stu:NAMES.slice(0,4).map(n=>({n,d:60}))};}
+function save(){localStorage.setItem('iss_save',JSON.stringify(S));}
+load();
+function render(){document.getElementById('day').textContent=S.day;document.getElementById('hn').textContent=Math.floor(S.hn);
+document.getElementById('ns').textContent=S.stu.length;
+const c=document.getElementById('class');c.innerHTML='';
+S.stu.forEach((s,i)=>{const row=document.createElement('div');row.className='stu';
+row.innerHTML='<span>🥷</span><b>'+s.n+'</b><div class="bar"><i style="width:'+s.d+'%;background:'+(s.d>60?'#4ade80':s.d>30?'#eab308':'#ef4444')+'"></i></div><small>'+Math.floor(s.d)+'</small>';
+const b=document.createElement('button');b.textContent='Drill (-2 ⚔️)';
+b.disabled=S.hn<2;b.onclick=()=>{audio.resume();S.hn-=2;s.d+=14;beep(560,.08);log('You drill '+s.n+' (+14 discipline).');render();save();};
+row.appendChild(b);c.appendChild(row);});}
+function log(t){document.getElementById('log').textContent='» '+t;}
+function nextDay(){S.day++;
+S.stu.forEach(s=>{s.d-=10+S.day;});
+const drop=S.stu.filter(s=>s.d<=0);drop.forEach(s=>{S.hn-=5;S.stu.splice(S.stu.indexOf(s),1);
+log('🥀 '+s.n+' abandoned the way (discipline 0, honor -5).');});
+if(S.stu.length<4&&S.day<7){const nn=NAMES.find(n=>!S.stu.some(s=>s.n===n));if(nn){S.stu.push({n:nn,d:60});log('🎉 New student: '+nn+'!');}}
+// daily honor gain from average discipline
+const avg=S.stu.length?S.stu.reduce((a,s)=>a+s.d,0)/S.stu.length:0;
+S.hn+=Math.floor(avg/25);log('📯 Daily honor +'+Math.floor(avg/25)+' from discipline.');
+if(S.hn<=0)return end(false,'Your dojo loses all honor and closes.');
+if(S.day>7)return end(true,'');
+render();save();beep(440,.05);}
+function end(win,why){playing=false;clearInterval(timer);S.over=true;
+if(S.hn>best){best=Math.floor(S.hn);localStorage.setItem('is_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=win?'⚔️ <b style="color:#fde047">LEGENDARY CLASS GRADUATED!</b><br>7 days with '+Math.floor(S.hn)+' honor!':'🥀 '+why;
+document.getElementById('btn').textContent='NEW CLASS';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW CLASS'){S={day:1,hn:10,stu:NAMES.slice(0,4).map(n=>({n,d:60}))};}
+playing=true;render();clearInterval(timer);timer=setInterval(nextDay,8000);
+document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='9'){const b=document.querySelectorAll('.stu button')[+e.key-1];if(b&&!b.disabled)b.click();}});
+</script>
+</body>
+</html>

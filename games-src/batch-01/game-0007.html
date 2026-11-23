@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Quantum Samurai Coloring Book</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#fdf2f8;font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px}
+h1{font-size:1.15rem;color:#be185d;padding:4px}
+#tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:6px}
+.sw{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
+.sw.sel{border-color:#111}
+#act button{background:#fff;border:1px solid #f9a8d4;border-radius:8px;padding:6px 12px;cursor:pointer;margin-left:6px;font-size:.85rem}
+canvas{background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(190,24,93,.2);touch-action:none}
+#pages{display:flex;gap:6px;margin-top:6px}
+#pages button{border:1px solid #f9a8d4;background:#fff;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:.8rem}
+</style>
+</head>
+<body>
+<h1>🎨 QUANTUM SAMURAI COLORING BOOK</h1>
+<div id="tools"></div>
+<div id="act"><button id="clear">↺ Clear</button><button id="save">💾 Save</button><button id="prev">◀ Page</button><button id="next">Page ▶</button><span id="pinfo" style="font-size:.8rem;color:#9d174d;margin-left:6px"></span></div>
+<canvas id="c"></canvas>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+const W=480,H=420;cvs.width=W;cvs.height=H;
+const COLORS=['#111827','#dc2626','#f97316','#facc15','#22c55e','#0ea5e9','#8b5cf6','#ec4899','#a16207','#ffffff'];
+let color=COLORS[0],page=0,drawing=false,art=[];
+const PAGES=[{n:'Samurai',d:'🗡️'},{n:'Katana',d:'⚔️'},{n:'Cherry Blossom',d:'🌸'},{n:'Helmet',d:'🎌'}];
+function resize(){const s=Math.min((window.innerWidth-16)/W,(window.innerHeight-200)/H,1);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.06;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.06);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+.06);}
+// build tools
+const tl=document.getElementById('tools');
+COLORS.forEach((c2,i)=>{const d=document.createElement('div');d.className='sw'+(i===0?' sel':'');d.style.background=c2;
+d.onclick=()=>{color=c2;document.querySelectorAll('.sw').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');audio.resume();beep(440+i*40);};tl.appendChild(d);});
+function base(){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#111';ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';
+if(page===0){ // samurai head
+ctx.beginPath();ctx.arc(W/2,H/2+20,90,0,7);stroke();
+ctx.beginPath();ctx.moveTo(W/2-90,H/2-10);ctx.lineTo(W/2+90,H/2-10);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2-60,H/2+10);ctx.lineTo(W/2-40,H/2+40);ctx.lineTo(W/2+60,H/2+40);ctx.stroke();
+ctx.beginPath();ctx.arc(W/2-30,H/2-15,10,0,7);ctx.stroke();ctx.beginPath();ctx.arc(W/2+30,H/2-15,10,0,7);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2,H/2-70);ctx.lineTo(W/2,H/2-160);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2,H/2-160);ctx.quadraticCurveTo(W/2+50,H/2-140,W/2+20,H/2-100);ctx.stroke();
+}else if(page===1){ // katana
+ctx.beginPath();ctx.moveTo(80,H/2);ctx.quadraticCurveTo(W/2,H/2-60,W-120,H/2-10);ctx.lineTo(W-100,H/2+8);ctx.quadraticCurveTo(W/2,H/2-30,90,H/2+16);ctx.closePath();ctx.stroke();
+ctx.beginPath();ctx.moveTo(W-120,H/2-4);ctx.lineTo(W-70,H/2-24);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W-70,H/2-24);ctx.lineTo(W-40,H/2-14);ctx.stroke();
+for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(W-85+i*10,H/2-24+i*2,7,0,7);ctx.stroke();}
+}else if(page===2){ // blossom
+ctx.beginPath();ctx.moveTo(60,H-60);ctx.quadraticCurveTo(W/2,H/2,W-60,80);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2,H/2+20);ctx.quadraticCurveTo(W/2+60,H/2+10,W/2+70,H/2-40);ctx.stroke();
+for(let i=0;i<6;i++){const a=i/6*Math.PI*2;ctx.beginPath();ctx.ellipse(W/2+70+Math.cos(a)*28,H/2-40+Math.sin(a)*28,16,10,a,0,7);ctx.stroke();}
+ctx.beginPath();ctx.arc(W/2+70,H/2-40,10,0,7);ctx.stroke();
+for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(100+i*70,80+((i*53)%60),12,0,7);ctx.stroke();}
+}else{ // kabuto helmet
+ctx.beginPath();ctx.arc(W/2,H/2+30,100,Math.PI,0);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2-100,H/2+30);ctx.lineTo(W/2+100,H/2+30);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2,H/2-70);ctx.lineTo(W/2,H/2-150);ctx.stroke();
+for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(W/2,H/2-155-i*12,14-i*2,0,7);ctx.stroke();}
+ctx.beginPath();ctx.moveTo(W/2-60,H/2+30);ctx.quadraticCurveTo(W/2-70,H/2+90,W/2-50,H/2+120);ctx.stroke();
+ctx.beginPath();ctx.moveTo(W/2+60,H/2+30);ctx.quadraticCurveTo(W/2+70,H/2+90,W/2+50,H/2+120);ctx.stroke();}}
+function stroke(){ctx.stroke();}
+function restore(){base();const img=localStorage.getItem('cb_'+page);if(img){const i2=new Image();i2.onload=()=>ctx.drawImage(i2,0,0);i2.src=img;}}
+function pos(e){const r=cvs.getBoundingClientRect();const p=e.touches?e.touches[0]:e;return{x:(p.clientX-r.left)/r.width*W,y:(p.clientY-r.top)/r.height*H};}
+function startD(e){audio.resume();drawing=true;const p=pos(e);ctx.strokeStyle=color;ctx.lineWidth=color==='#ffffff'?30:7;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x+.1,p.y+.1);ctx.stroke();e.preventDefault();}
+function moveD(e){if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();e.preventDefault();}
+function endD(){drawing=false;}
+cvs.addEventListener('pointerdown',startD);cvs.addEventListener('pointermove',moveD);
+window.addEventListener('pointerup',endD);
+document.getElementById('clear').onclick=()=>{base();localStorage.removeItem('cb_'+page);beep(220);};
+document.getElementById('save').onclick=()=>{localStorage.setItem('cb_'+page,cvs.toDataURL());beep(880);document.getElementById('pinfo').textContent='Saved ✓';setTimeout(()=>document.getElementById('pinfo').textContent='',1500);};
+function setPage(p2){page=(p2+PAGES.length)%PAGES.length;restore();document.getElementById('pinfo').textContent='Page '+(page+1)+'/'+PAGES.length+' — '+PAGES[page].n+' '+PAGES[page].d;}
+document.getElementById('prev').onclick=()=>setPage(page-1);
+document.getElementById('next').onclick=()=>setPage(page+1);
+window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k>='0'&&k<='9'){const i=(k==='0')?9:+k-1;document.querySelectorAll('.sw')[i].click();}if(k==='c')document.getElementById('clear').click();if(k==='s')document.getElementById('save').click();if(k==='arrowleft')document.getElementById('prev').click();if(k==='arrowright')document.getElementById('next').click();});
+setPage(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Solar Align #409</title><style>
+body{margin:0;font-family:system-ui;background:#451a03;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+canvas{background:#78350f;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#451a03;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>☀️ Desert Solar Align</h1><div class="sub">Rotate the sun discs — focus all beams onto the crystal to charge it!</div>
+<div id="hud"><span>Charge <b id="c">0</b>%</span><span>Discs <b id="d">3</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">🔆 New Alignment</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=400,CX=W/2,CY=W/2;let discs=[],gem={x:CX,y:CY},charge=0,level=1,dragDisc=null;
+function gen(){const nd=Math.min(3+level,5);discs=[];
+for(let i=0;i<nd;i++){const a=i/nd*Math.PI*2;
+discs.push({x:CX+Math.cos(a)*140,y:CY+Math.sin(a)*140,a:Math.random()*Math.PI*2,locked:false});}
+charge=0;document.getElementById('d').textContent=nd;
+document.getElementById('l').textContent=level;
+document.getElementById('c').textContent=0;
+draw();msg('Aim every beam at the crystal!');}
+cvs.addEventListener('pointerdown',e=>{const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+dragDisc=discs.find(d=>Math.hypot(d.x-x,d.y-y)<28&&!d.locked);
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();});
+cvs.addEventListener('pointermove',e=>{if(!dragDisc)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+dragDisc.a=Math.atan2(y-dragDisc.y,x-dragDisc.x);
+draw();check();});
+cvs.addEventListener('pointerup',()=>{dragDisc=null;});
+function beamHits(d){const bx=d.x+Math.cos(d.a)*1000,by=d.y+Math.sin(d.a)*1000;
+// distance from gem to beam line
+const dx=bx-d.x,dy=by-d.y;
+const t=Math.max(0,Math.min(1,((gem.x-d.x)*dx+(gem.y-d.y)*dy)/(dx*dx+dy*dy)));
+const px=d.x+dx*t,py=d.y+dy*t;
+return Math.hypot(gem.x-px,gem.y-py)<24;}
+function check(){const hits=discs.filter(beamHits).length;
+charge=Math.round(hits/discs.length*100);
+document.getElementById('c').textContent=charge;
+if(hits===discs.length){discs.forEach(d=>d.locked=true);
+beep(880,.3,'triangle');msg('💎 Fully charged! Level '+(level+1));level++;
+setTimeout(gen,1200);}}
+function draw(){ctx.fillStyle='#78350f';ctx.fillRect(0,0,W,W);
+// beams
+discs.forEach(d=>{ctx.strokeStyle=beamHits(d)?'#fbbf24':'#fde68a44';
+ctx.lineWidth=beamHits(d)?3:2;
+ctx.beginPath();ctx.moveTo(d.x,d.y);
+ctx.lineTo(d.x+Math.cos(d.a)*400,d.y+Math.sin(d.a)*400);ctx.stroke();});
+ctx.lineWidth=1;
+// discs
+discs.forEach(d=>{ctx.beginPath();ctx.arc(d.x,d.y,22,0,7);
+ctx.fillStyle=d.locked?'#22c55e':'#fbbf24';ctx.fill();
+ctx.strokeStyle='#a16207';ctx.stroke();
+// pointer
+ctx.strokeStyle='#451a03';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(d.x,d.y);
+ctx.lineTo(d.x+Math.cos(d.a)*18,d.y+Math.sin(d.a)*18);ctx.stroke();ctx.lineWidth=1;});
+// gem
+ctx.font='30px serif';ctx.textAlign='center';ctx.fillText('💎',gem.x,gem.y+10);}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

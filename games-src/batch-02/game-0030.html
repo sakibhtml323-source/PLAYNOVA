@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Minimalist Intense Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0a0a0a;font-family:'Helvetica Neue',Arial,sans-serif;color:#eee;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-weight:200;letter-spacing:6px;font-size:1rem;color:#888;padding:10px}
+#hud{display:flex;gap:18px;font-size:.85rem;color:#aaa;margin-bottom:4px}
+canvas{background:#0a0a0a;border:1px solid #222;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(10,10,10,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#ddd;padding:20px;z-index:5}
+button{background:#eee;color:#0a0a0a;border:none;font-weight:200;letter-spacing:3px;padding:12px 38px;font-size:.95rem;cursor:pointer;margin-top:16px}
+</style>
+</head>
+<body>
+<h1>MINIMAL · INTENSE</h1>
+<div id="hud"><span>TIME <b id="t">0.0</b></span><span>WAVE <b id="w">1</b></span><span>BEST <b id="b">0.0</b>s</span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="font-weight:200;letter-spacing:4px">SURVIVE THE GEOMETRY</h2><p id="od">You are the white dot. Everything that moves is not your friend. WASD/arrows or drag. No weapons. Just geometry.</p><button id="btn">BEGIN</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+let me,foes,playing,time,frame,wave,best=+localStorage.getItem('mi_best')||0;
+document.getElementById('b').textContent=best.toFixed(1);
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.07;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-150)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+let keys={};window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+window.addEventListener('pointerup',()=>drag=null);
+function init(){me={x:W/2,y:H/2,r:5};foes=[];time=0;frame=0;wave=1;keys={};playing=true;}
+function spawnWave(){const n=wave+2;for(let i=0;i<n;i++){const side=(Math.random()*4)|0;let x,y;
+if(side===0){x=Math.random()*W;y=-20;}else if(side===1){x=W+20;y=Math.random()*H;}
+else if(side===2){x=Math.random()*W;y=H+20;}else{x=-20;y=Math.random()*H;}
+const sp=0.8+wave*0.15+Math.random()*0.6;
+foes.push({x,y,vx:0,vy:0,sp,r:6+Math.random()*8,t:Math.random()<0.3?'chaser':'drift',a:Math.random()*7});}}
+function step(){frame++;time+=1/60;document.getElementById('t').textContent=time.toFixed(1);
+const nw=1+Math.floor(time/8);if(nw>wave){wave=nw;document.getElementById('w').textContent=wave;spawnWave();beep(440,.12,'triangle');}
+const sp=3.4;
+if(keys['w']||keys['arrowup'])me.y-=sp;if(keys['s']||keys['arrowdown'])me.y+=sp;
+if(keys['a']||keys['arrowleft'])me.x-=sp;if(keys['d']||keys['arrowright'])me.x+=sp;
+if(drag){const dx=drag.x-me.x,dy=drag.y-me.y,d=Math.hypot(dx,dy);if(d>4){me.x+=dx/d*sp;me.y+=dy/d*sp;}}
+me.x=Math.max(me.r,Math.min(W-me.r,me.x));me.y=Math.max(me.r,Math.min(H-me.r,me.y));
+foes.forEach(f=>{f.a+=(Math.random()-.5)*0.2;
+if(f.t==='chaser'){const ang=Math.atan2(me.y-f.y,me.x-f.x);f.x+=Math.cos(ang)*f.sp;f.y+=Math.sin(ang)*f.sp;}
+else{f.x+=Math.cos(f.a)*f.sp;f.y+=Math.sin(f.a)*f.sp;}
+if(f.x<f.r||f.x>W-f.r)f.a=Math.PI-f.a;if(f.y<f.r||f.y>H-f.r)f.a=-f.a;
+f.x=Math.max(f.r,Math.min(W-f.r,f.x));f.y=Math.max(f.r,Math.min(H-f.r,f.y));
+if(Math.hypot(f.x-me.x,f.y-me.y)<f.r+me.r-1)die();});}
+function die(){playing=false;if(time>best){best=time;localStorage.setItem('mi_best',best);document.getElementById('b').textContent=best.toFixed(1);}
+document.getElementById('od').innerHTML='you lasted <b style="font-size:1.6rem">'+time.toFixed(1)+'s</b><br>wave '+wave+' · '+(time>30?'FLAWLESS':time>15?'COMPOSED':time>7?'STEADY':'FRAGILE');
+document.getElementById('btn').textContent='AGAIN';document.getElementById('ov').style.display='flex';beep(120,.4,'sawtooth');}
+function draw(){ctx.fillStyle='#0a0a0a';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#151515';ctx.beginPath();ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
+foes.forEach(f=>{ctx.strokeStyle=f.t==='chaser'?'#ff5555':'#888';ctx.lineWidth=1.5;
+ctx.strokeRect(f.x-f.r,f.y-f.r,f.r*2,f.r*2);
+if(f.t==='chaser'){ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(me.x,me.y);ctx.stroke();}});
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();
+ctx.strokeStyle='#fff3';ctx.beginPath();ctx.arc(me.x,me.y,me.r+6,0,7);ctx.stroke();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();spawnWave();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

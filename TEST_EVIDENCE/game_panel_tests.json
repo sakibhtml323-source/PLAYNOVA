@@ -1,0 +1,74 @@
+{
+ "tests": [
+  {
+   "test": "drawer is closed by default (nothing over the game)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "Progress button exists in the control bar",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "drawer opens and shows progress + related games visibly",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "no horizontal overflow at 320px",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "Escape closes the drawer",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "challenge locked before requirement",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "challenge claimable once after 3 verified sessions (+30 XP)",
+   "result": "PASS",
+   "detail": "30"
+  },
+  {
+   "test": "invalid challenge id / slug rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "2 KB game save reaches platform storage",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "downloaded save is valid JSON for this game",
+   "result": "PASS",
+   "detail": "first run FAILED (stale data captured at render time); fixed to read storage at click time and refresh the drawer on open; rechecked: 2000-char value present in the downloaded file"
+  },
+  {
+   "test": "reset removes the game save",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "valid save imports",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "save for a different game is rejected",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "no page errors",
+   "result": "PASS",
+   "detail": "[]"
+  }
+ ]
+}

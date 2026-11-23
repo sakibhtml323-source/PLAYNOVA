@@ -1,0 +1,9 @@
+VALIDATOR EVIDENCE — 2026-11-05 02:18
+$ python3 tools/validate_game.py --check iron-gunner
+OK
+
+$ python3 tools/validate_game.py new-entry.json   (test entry with deliberate errors)
+FAIL
+ - path traversal risk: gameUrl
+ - missing file: ../etc/passwd
+ - unknown category: Nope

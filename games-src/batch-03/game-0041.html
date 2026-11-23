@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wild Glassmorphism Nonogram</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#fff;padding:6px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:8px;color:#fff}
+@media(max-width:400px){.cell{width:22px;height:22px;font-size:.9rem}.hd{font-size:.5rem;min-width:18px;min-height:18px}}
+#wrap{display:grid;gap:3px;background:rgba(255,255,255,.2);backdrop-filter:blur(12px);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,.4);touch-action:none}
+.hd{background:rgba(255,255,255,.25);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#fff;min-width:24px;min-height:24px;flex-direction:column;line-height:1.1}
+.cl{background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;border-radius:6px;min-width:28px;min-height:28px;color:#fff;transition:background .1s}
+.cl.fill{background:#312e81}
+cl.mark{}.cl.mark{background:transparent;box-shadow:inset 0 0 0 2px #fff}
+.cl.err{background:#ef4444}
+#ov{position:fixed;inset:0;background:rgba(99,102,241,.92);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px;z-index:5}
+button{background:rgba(255,255,255,.9);color:#4f46e5;border:none;font-weight:800;padding:12px 36px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:14px}
+#tools{display:flex;gap:8px;margin:8px}
+#tools button{font-size:.8rem;padding:8px 16px}
+</style>
+</head>
+<body>
+<h1>🔢 WILD GLASS NONOGRAM</h1>
+<div id="hud"><span>Puzzle <b id="l">1</b></span><span>Mistakes <b id="m">0</b>/3</span><span>Best <b id="b">1</b></span></div>
+<div id="tools"><button id="mode">✏️ Fill mode</button><button id="hint">💡 Hint</button></div>
+<div id="wrap"></div>
+<div id="ov"><h2>WILD NONOGRAM</h2><p id="od">Reveal the hidden picture! Tap cells to fill them — the numbers show the runs of filled cells in each row and column. 3 mistakes and the glass shatters.</p><button id="btn">SOLVE</button></div>
+<script>
+"use strict";
+let N,sol,grid,mistakes,level,fillMode,playing,best=+localStorage.getItem('ng_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function runs(arr){const out=[];let c=0;for(const v of arr){if(v)c++;else if(c){out.push(c);c=0;}}if(c)out.push(c);return out.length?out:[0];}
+function build(){N=Math.min(5+level,10);sol=[];grid=[];
+for(let r=0;r<N;r++){sol[r]=[];grid[r]=[];for(let c=0;c<N;c++){sol[r][c]=Math.random()<0.55?1:0;grid[r][c]=0;}}
+// ensure solvable shape: guarantee at least N filled and no empty rows
+let filled=sol.flat().reduce((a,b)=>a+b,0);
+while(filled<N){const r=(Math.random()*N)|0,c=(Math.random()*N)|0;if(!sol[r][c]){sol[r][c]=1;filled++;}}
+sol.forEach((row,r)=>{if(!row.some(Boolean))sol[r][(Math.random()*N)|0]=1;});
+mistakes=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=level;render();}
+function render(){const w=document.getElementById('wrap');
+w.style.gridTemplateColumns='repeat('+(N+1)+',28px)';w.innerHTML='';
+const corner=document.createElement('div');corner.className='hd';w.appendChild(corner);
+for(let c=0;c<N;c++){const d=document.createElement('div');d.className='hd';d.textContent=runs(sol.map(row=>row[c])).join(' ');w.appendChild(d);}
+for(let r=0;r<N;r++){const hd=document.createElement('div');hd.className='hd';hd.textContent=runs(sol[r]).join(' ');w.appendChild(hd);
+for(let c=0;c<N;c++){const d=document.createElement('div');d.className='cl'+(grid[r][c]===1?' fill':grid[r][c]===2?' mark':'');
+d.onclick=()=>tap(r,c,d);w.appendChild(d);}}}
+function tap(r,c,d){if(!playing)return;audio.resume();
+if(sol[r][c]){grid[r][c]=grid[r][c]===1?0:1;beep(grid[r][c]?600:300,.05);}
+else if(fillMode){grid[r][c]=0;mistakes++;document.getElementById('m').textContent=mistakes;d.classList.add('err');beep(140,.2,'sawtooth');
+if(mistakes>=3)return shatter();}
+else{grid[r][c]=grid[r][c]===2?0:2;beep(440,.05);}
+render();check();}
+function check(){for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(sol[r][c]&&grid[r][c]!==1)return;
+win();}
+function win(){playing=false;if(level+1>best){best=level+1;localStorage.setItem('ng_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🎨 Picture revealed! Puzzle <b>'+level+'</b> solved.<br>Next: '+(N<10?N+1:N)+'×'+(N<10?N+1:N)+' grid.';
+document.getElementById('btn').textContent='NEXT PUZZLE';level++;document.getElementById('ov').style.display='flex';}
+function shatter(){playing=false;beep(120,.5,'sawtooth');
+document.getElementById('od').innerHTML='💔 The glass shattered on puzzle '+level+'.';
+document.getElementById('btn').textContent='REBUILD';document.getElementById('ov').style.display='flex';}
+document.getElementById('mode').onclick=function(){fillMode=!fillMode;this.textContent=fillMode?'✏️ Fill mode':'✖️ Mark mode';};
+document.getElementById('hint').onclick=()=>{if(!playing)return;
+outer:for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(sol[r][c]&&grid[r][c]!==1){grid[r][c]=1;beep(760,.08,'triangle');render();break outer;}};
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;if(k==='f'||k==='F')document.getElementById('mode').click();if(k==='h'||k==='H')document.getElementById('hint').click();});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

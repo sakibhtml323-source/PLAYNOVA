@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Scarab Rush #337</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🪲 Desert Scarab Rush</h1><div class="sub">Tap the scarabs before they burrow away — they get faster!</div>
+<div id="hud"><span>Caught <b id="c">0</b></span><span>⏱️ <b id="t">30</b>s</span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="ov"><div style="font-size:3rem">🪲</div><p>Scarabs dash across the sand.<br>Tap them before they vanish!</p><button id="btn">Rush</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let bugs=[],caught=0,playing=false,spawnT=0,time=30,timer=null,best=+localStorage.getItem('dsr_best')||0;
+document.getElementById('b').textContent=best;
+function spawn(){const a=Math.random()*Math.PI*2;
+bugs.push({x:W/2+Math.cos(a)*200,y:H/2+Math.sin(a)*180,
+dx:-Math.cos(a)*(2+Math.random()*2+caught*0.03),dy:-Math.sin(a)*(2+Math.random()*2+caught*0.03),life:120});}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+let bi=-1,bd=1e9;
+bugs.forEach((b,i)=>{const d=Math.hypot(b.x-x,b.y-y);if(d<bd){bd=d;bi=i;}});
+if(bi>=0&&bd<26){caught++;document.getElementById('c').textContent=caught;
+beep(500+caught*15,.08);bugs.splice(bi,1);
+if(caught>best){best=caught;localStorage.setItem('dsr_best',best);document.getElementById('b').textContent=best;}}
+else beep(180,.06,'sawtooth');});
+function step(){spawnT++;if(spawnT>Math.max(25,60-caught*0.8)){spawnT=0;spawn();}
+bugs.forEach(b=>{b.x+=b.dx;b.y+=b.dy;b.life--;});
+bugs=bugs.filter(b=>b.life>0&&b.x>-30&&b.x<W+30&&b.y>-30&&b.y<H+30);}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,W,H);
+// sand dots
+ctx.fillStyle='#44403c';
+for(let i=0;i<30;i++)ctx.fillRect((i*83)%W,(i*47)%H,3,3);
+bugs.forEach(b=>{ctx.font='24px serif';ctx.textAlign='center';
+ctx.globalAlpha=Math.min(1,b.life/40);
+ctx.fillText('🪲',b.x,b.y);ctx.globalAlpha=1;});
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{bugs=[];caught=0;spawnT=0;time=30;
+document.getElementById('c').textContent=0;document.getElementById('t').textContent=30;
+document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='⏰ Time!<br>Caught: <b style="color:#fbbf14">'+caught+'</b>';}},1000);};
+</script></body></html>

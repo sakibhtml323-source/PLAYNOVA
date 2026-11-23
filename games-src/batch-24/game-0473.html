@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Garden Tend #473</title><style>
+body{margin:0;font-family:system-ui;background:#14532d;color:#f0fdf4;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#bbf7d0;font-size:.78rem}
+#modes{display:flex;gap:8px;margin:8px}
+.mode{padding:9px 18px;border-radius:10px;border:2px solid #166534;background:#14532d;color:#f0fdf4;font-weight:700;cursor:pointer}
+.mode.sel{border-color:#fbbf24;background:#166534}
+#grid{display:grid;grid-template-columns:repeat(5,60px);gap:5px;margin:10px}
+.p{width:60px;height:60px;background:#166534;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#14532d;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🌿 Haunted Garden Tend</h1><div class="sub">🌱 Water the sprouts, ✋ pull the weeds — but weeds multiply if you water them!</div>
+<div id="hud"><span>Watered <b id="w">0</b></span><span>Weeds <b id="we">0</b></span><span>⏱️ <b id="t">45</b>s</span></div>
+<div id="modes">
+<button class="mode sel" data-m="water">💧 Water</button>
+<button class="mode" data-m="pull">✋ Pull</button>
+</div>
+<div id="grid"></div>
+<div id="msg"></div>
+<button id="btn">🌱 New Garden</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5;let cells=[],mode='water',watered=0,playing=false,time=45,timer=null,spawnT=0;
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.mode').forEach(x=>x.classList.remove('sel'));
+b.classList.add('sel');mode=b.dataset.m;beep(400,.05);});
+function gen(){cells=[];watered=0;playing=true;time=45;spawnT=0;
+document.getElementById('w').textContent=0;document.getElementById('t').textContent=45;
+for(let i=0;i<N*N;i++)cells.push({type:Math.random()<0.5?'sprout':'weed'});
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);beep(880,.3,'triangle');
+document.getElementById('ov2')&&document.getElementById('ov2').remove();
+const d=document.createElement('div');d.id='ov2';
+d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5';
+d.innerHTML='<div style="font-size:3rem">🌅</div><p>Day ends!<br>Watered: <b style="color:#fbbf24">'+watered+'</b></p>';
+document.body.appendChild(d);}},1000);render();msg('Tend the garden!');}
+function tap(i){if(!playing)return;
+const c=cells[i];
+if(mode==='water'){if(c.type==='sprout'){c.type='done';watered++;
+document.getElementById('w').textContent=watered;beep(600,.09,'triangle');}
+else if(c.type==='weed'){// watering weeds multiplies!
+beep(200,.12,'sawtooth');
+cells.forEach(x=>{if(x.type==='empty'&&Math.random()<0.2)x.type='weed';});
+msg('🌿 Watered a weed — it spreads!');}
+else{beep(300,.04);}}
+else{if(c.type==='weed'){c.type='empty';beep(500,.07);
+document.getElementById('we').textContent=cells.filter(x=>x.type==='weed').length;}
+else{beep(200,.08,'sawtooth');msg('✋ Nothing to pull there!');}}
+render();}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+cells.forEach((c,i)=>{const d=document.createElement('div');d.className='p';
+d.textContent=c.type==='sprout'?'🌱':c.type==='weed'?'🌿':c.type==='done'?'🌳':'';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});
+document.getElementById('we').textContent=cells.filter(x=>x.type==='weed').length;}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{gen();};
+</script><div id="ov2" style="display:none"></div>
+</body></html>

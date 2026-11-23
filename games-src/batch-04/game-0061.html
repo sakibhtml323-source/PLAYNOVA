@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Shadow Christmas 2-Player Battle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#052e16,#022c22);font-family:Georgia,serif;color:#dcfce7;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:16px;font-size:.85rem;margin-bottom:4px}
+canvas{background:#022c22;border-radius:10px;border:2px solid #166534;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(2,44,34,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#dcfce7;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#022c22;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+#ctrl{position:fixed;bottom:8px;width:100%;display:flex;justify-content:space-between;padding:0 12px;z-index:4}
+.cb{width:58px;height:58px;border-radius:50%;background:#14532dcc;border:1px solid #166534;color:#fff;font-size:1.1rem;display:flex;align-items:center;justify-content:center;user-select:none;touch-action:none}
+</style>
+</head>
+<body>
+<h1>🎄 SHADOW CHRISTMAS BATTLE</h1>
+<div id="hud"><span>🟢 <b id="h1">5</b></span><span>Round <b id="r">1</b></span><span>🔴 <b id="h2">5</b></span></div>
+<canvas id="c"></canvas>
+<div id="ctrl"><div style="display:flex;gap:8px"><div class="cb" id="l1">◀</div><div class="cb" id="r1">▶</div><div class="cb" id="j1">⤴</div><div class="cb" id="a1">🎁</div></div>
+<div style="display:flex;gap:8px"><div class="cb" id="a2">🎁</div><div class="cb" id="j2">⤴</div><div class="cb" id="l2">◀</div><div class="cb" id="r2">▶</div></div></div>
+<div id="ov"><h2 style="color:#4ade80">SHADOW DUEL</h2><p id="od">2 players, one keyboard! 🟢 P1: A/D move, W jump, F throw. 🔴 P2: ←/→ move, ↑ jump, K throw. Hurl gift-bombs — explosions hurt everyone. First to 3 rounds!</p><button id="btn">LIGHT THE TREE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=520,H=280;cvs.width=W;cvs.height=H;const G=H-40;
+let ps,bombs,playing,keys,round,wins,frame;let xw=+localStorage.getItem('sc_w1')||0,xw2=+localStorage.getItem('sc_w2')||0;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mkP(x,c2,dir){return{x,y:G,vx:0,vy:0,hp:5,c:c2,dir,cd:0,onG:true};}
+function init(r){ps=[mkP(80,'#22c55e',1),mkP(W-80,'#ef4444',-1)];bombs=[];keys={};playing=true;frame=0;round=r;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+const tch={};
+[['l1'],['r1'],['j1'],['a1'],['l2'],['r2'],['j2'],['a2']].forEach(([id])=>{const el=document.getElementById(id);
+el.addEventListener('pointerdown',e=>{e.preventDefault();audio.resume();tch[id]=1;});
+['pointerup','pointerleave'].forEach(ev=>el.addEventListener(ev,()=>tch[id]=0));});
+function throwB(p,i){if(p.cd>0)return;p.cd=30;bombs.push({x:p.x+p.dir*14,y:p.y-18,vx:p.dir*4.5,vy:-4,own:i,fuse:70});beep(400,.06);}
+function step(){frame++;ps.forEach((p,i)=>{p.cd--;
+const ct=i===0?{l:keys['a']||tch.l1,r:keys['d']||tch.r1,j:keys['w']||tch.j1,a:keys['f']||tch.a1}:{l:keys['arrowleft']||tch.l2,r:keys['arrowright']||tch.r2,j:keys['arrowup']||tch.j2,a:keys['k']||tch.a2};
+if(ct.l){p.vx=-3;p.dir=-1;}else if(ct.r){p.vx=3;p.dir=1;}else p.vx*=0.8;
+if(ct.j&&p.onG){p.vy=-10;p.onG=false;}
+if(ct.a)throwB(p,i);
+p.vy+=0.5;p.x+=p.vx;p.y+=p.vy;
+if(p.y>=G){p.y=G;p.vy=0;p.onG=true;}p.x=Math.max(20,Math.min(W-20,p.x));});
+bombs.forEach(b=>{b.vy+=0.35;b.x+=b.vx;b.y+=b.vy;b.fuse--;
+if(b.y>=G-4){b.y=G-4;b.vy*=-0.4;b.vx*=0.9;}
+if(b.fuse<=0){explode(b);}});
+bombs=bombs.filter(b=>b.fuse>0);}
+function explode(b){beep(120,.25,'sawtooth');beep(60,.3,'sawtooth');
+ps.forEach((p,i)=>{if(Math.hypot(p.x-b.x,p.y-b.y)<62){p.hp--;beep(150,.12,'sawtooth');upd();
+if(p.hp<=0)roundEnd(1-i);}});}
+function upd(){document.getElementById('h1').textContent=ps[0].hp;document.getElementById('h2').textContent=ps[1].hp;}
+function roundEnd(w){playing=false;wins[w]++;beep(w===0?660:440,.2,'triangle');
+if(wins[w]>=3){if(w===0){xw++;localStorage.setItem('sc_w1',xw);}else{xw2++;localStorage.setItem('sc_w2',xw2);}
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">PLAYER '+(w+1)+' RULES THE NIGHT '+wins[w]+'—'+wins[1-w]+'!</b>';
+document.getElementById('btn').textContent='REMATCH';wins=[0,0];}
+else{document.getElementById('od').innerHTML='🎁 Player '+(w+1)+' takes round '+round+'!<br>'+wins[0]+' — '+wins[1];
+document.getElementById('btn').textContent='NEXT ROUND';}
+document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#022c22';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#14532d';ctx.fillRect(0,G+10,W,H-G-10);
+// tree + lights
+ctx.font='24px serif';ctx.textAlign='center';ctx.fillText('🎄',W/2,G-10);
+const tw=Math.sin(frame/10)*2;
+ctx.fillStyle='#fde047';ctx.beginPath();ctx.arc(W/2,G-44+tw,4,0,7);ctx.fill();
+ps.forEach(p=>{ctx.fillStyle=p.c;ctx.fillRect(p.x-12,p.y-28,24,28);
+ctx.fillStyle='#fff';ctx.fillRect(p.x+p.dir*4,p.y-22,4,4);});
+bombs.forEach(b=>{ctx.fillStyle=b.fuse<20&&Math.floor(b.fuse/4)%2?'#ef4444':'#fbbf24';
+ctx.beginPath();ctx.arc(b.x,b.y,6,0,7);ctx.fill();});}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();if(!wins)wins=[0,0];init(round||1);upd();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

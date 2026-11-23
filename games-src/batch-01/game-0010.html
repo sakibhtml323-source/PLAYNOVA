@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Eternal Halloween Tycoon</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1c1917,#0c0a09);font-family:'Segoe UI',Arial,sans-serif;color:#f5f5f4;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px;overflow-x:hidden}
+h1{font-size:1.2rem;color:#f97316;padding:6px;letter-spacing:1px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.9rem}
+#stats span{background:#292524;border:1px solid #44403c;border-radius:12px;padding:4px 12px}
+#pumpkin{font-size:4.2rem;cursor:pointer;user-select:none;display:inline-block;transition:transform .08s;margin:8px 0}
+#pumpkin:active{transform:scale(.88)}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#1c1917;border:1px solid #44403c;border-radius:14px;padding:12px}
+.card h3{color:#fb923c;font-size:.95rem;margin-bottom:8px}
+.shop{display:flex;justify-content:space-between;align-items:center;background:#0c0a09;border-radius:10px;padding:8px;margin-bottom:6px;gap:8px}
+.shop .info{flex:1}.shop .info small{color:#a8a29e}
+.shop button{background:#ea580c;border:none;color:#fff;font-weight:700;border-radius:8px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.shop button:disabled{opacity:.35}
+#floats{position:fixed;pointer-events:none;z-index:5}
+.f{position:fixed;color:#fb923c;font-weight:800;pointer-events:none;transition:all .8s;text-shadow:0 2px 6px #000}
+</style>
+</head>
+<body>
+<h1>🎃 ETERNAL HALLOWEEN TYCOON</h1>
+<div id="stats"><span>🍬 Candy <b id="c">0</b></span><span>📈 /s <b id="r">0</b></span><span>🎃 Per click <b id="pc">1</b></span><span>👻 Haunts <b id="n">0</b></span></div>
+<div style="text-align:center"><span id="pumpkin">🎃</span></div>
+<main>
+<div class="card"><h3>🛒 Haunt Shop (auto candy)</h3><div id="shop"></div></div>
+<div class="card"><h3>🖐️ Upgrades</h3><div id="ups"></div><div style="display:flex;gap:8px;margin-top:8px"><button id="save" style="background:#44403c;color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">💾 Save</button><button id="reset" style="background:#44403c;color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">🗑️ Reset</button></div></div>
+</main>
+<div id="floats"></div>
+<script>
+"use strict";
+const DEFS=[{n:'Spooky Spider',e:'🕷️',c:15,r:0.3},{n:'Ghost Servant',e:'👻',c:80,r:1.4},{n:'Witch Hut',e:'🧙',c:350,r:5},{n:'Vampire Castle',e:'🧛',c:1500,r:18},{n:'Eternal Night',e:'🌑',c:6000,r:65}];
+const UPG=[{n:'Sharper Knives',d:'+1 per click',c:50,f:S=>S.pc+=1},{n:'Cauldron Stirrer',d:'+4 per click',c:400,f:S=>S.pc+=4},{n:'Candy Magnet',d:'+15 per click',c:2500,f:S=>S.pc+=15}];
+let S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0]};
+function load(){try{const d=JSON.parse(localStorage.getItem('hwn_save'));if(d)Object.assign(S,d);}catch(e){}}
+function save(){localStorage.setItem('hwn_save',JSON.stringify(S));}
+load();
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function rate(){return DEFS.reduce((a,d,i)=>a+d.r*S.own[i],0);}
+function fl(x,y,t){const s=document.createElement('div');s.className='f';s.textContent=t;s.style.left=x+'px';s.style.top=y+'px';document.body.appendChild(s);requestAnimationFrame(()=>{s.style.top=(y-70)+'px';s.style.opacity=0;});setTimeout(()=>s.remove(),850);}
+document.getElementById('pumpkin').addEventListener('pointerdown',e=>{audio.resume();S.c+=S.pc;beep(250+Math.random()*150);fl(e.clientX,e.clientY,'+'+S.pc+' 🍬');render();});
+function render(){document.getElementById('c').textContent=Math.floor(S.c);document.getElementById('r').textContent=rate().toFixed(1);
+document.getElementById('pc').textContent=S.pc;document.getElementById('n').textContent=S.own.reduce((a,b)=>a+b,0);
+const sh=document.getElementById('shop');sh.innerHTML='';
+DEFS.forEach((d,i)=>{const row=document.createElement('div');row.className='shop';
+row.innerHTML='<div class="info"><b>'+d.e+' '+d.n+'</b> <small>×'+S.own[i]+' · '+d.r+'/s</small></div>';
+const b=document.createElement('button');b.textContent=d.c+' 🍬';b.disabled=S.c<d.c;
+b.onclick=()=>{if(S.c>=d.c){S.c-=d.c;S.own[i]++;beep(500+i*70,.1);render();save();}};
+row.appendChild(b);sh.appendChild(row);});
+const up=document.getElementById('ups');up.innerHTML='';
+UPG.forEach((u,i)=>{const row=document.createElement('div');row.className='shop';
+row.innerHTML='<div class="info"><b>'+u.n+'</b> <small>'+u.d+(S.up[i]?' · owned ×'+S.up[i]:'')+'</small></div>';
+const b=document.createElement('button');b.textContent=u.c+' 🍬';b.disabled=S.c<u.c;
+b.onclick=()=>{if(S.c>=u.c){S.c-=u.c;S.up[i]++;u.f(S);beep(700,.12);render();save();}};
+row.appendChild(b);up.appendChild(row);});}
+window.addEventListener('keydown',e=>{const k=e.key;if(k===' '){e.preventDefault();document.getElementById('pumpkin').dispatchEvent(new PointerEvent('pointerdown',{clientX:innerWidth/2,clientY:innerHeight/2}));}if(k>='1'&&k<='5'){const b=document.querySelectorAll('#shop button')[+k-1];if(b&&!b.disabled)b.click();}});
+setInterval(()=>{S.c+=rate()/10;render();},100);
+document.getElementById('save').onclick=()=>{save();beep(880);};
+document.getElementById('reset').onclick=()=>{if(confirm('Reset tycoon?')){S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0]};localStorage.removeItem('hwn_save');render();}};
+window.addEventListener('beforeunload',save);
+render();
+</script>
+</body>
+</html>

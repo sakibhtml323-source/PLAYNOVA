@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Whack-A-Ghost #265</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#field{display:grid;grid-template-columns:repeat(3,96px);gap:10px;margin:12px}
+.hole{width:96px;height:96px;background:#27272a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;cursor:pointer;user-select:none;border:3px solid #3f3f46}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>👻 Haunted Whack-A-Ghost</h1><div class="sub">Whack the ghosts — but DON'T touch the 👼 decoys! Combos multiply your score.</div>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Combo <b id="c">×1</b></span><span>Time <b id="t">45</b>s</span><span>Best <b id="b">0</b></span></div>
+<div id="field"></div>
+<div id="ov"><div style="font-size:3rem">🔨</div><p>Ghosts = points. 👼 Angel = penalty!<br>Build combos by consecutive hits.</p><button id="btn">Start Haunting</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=9;let holes=[],score=0,combo=1,time=45,playing=false,timer=null,spawnT=0,best=+localStorage.getItem('wg_best')||0;
+document.getElementById('b').textContent=best;
+function build(){const f=document.getElementById('field');f.innerHTML='';
+holes=[];for(let i=0;i<N;i++){const d=document.createElement('div');d.className='hole';
+d.onclick=()=>whack(i);f.appendChild(d);holes.push({el:d,cur:null,ttl:0});}}
+function pop(i){const ghost=Math.random()<0.82;const e=ghost?'👻':'👼';
+holes[i].cur={e,ghost};holes[i].ttl=1300;holes[i].el.textContent=e;}
+function whack(i){if(!playing||!holes[i].cur)return;
+if(holes[i].cur.ghost){score+=10*combo;combo=Math.min(combo+1,10);
+document.getElementById('c').textContent='×'+combo;
+beep(500+combo*50,.08,'triangle');}
+else{combo=1;score=Math.max(0,score-25);
+document.getElementById('c').textContent='×1';beep(150,.2,'sawtooth');}
+document.getElementById('s').textContent=score;holes[i].cur=null;holes[i].el.textContent='';holes[i].ttl=0;}
+function tick(){if(!playing)return;
+spawnT++;if(spawnT>22){spawnT=0;const empty=holes.map((h,i)=>i).filter(i=>!holes[i].cur);
+if(empty.length)pop(empty[(Math.random()*empty.length)|0]);}
+holes.forEach(h=>{if(h.cur){h.ttl-=16.6;if(h.ttl<=0){h.cur=null;h.el.textContent='';}}});
+if(score>best){best=score;localStorage.setItem('wg_best',best);document.getElementById('b').textContent=best;}
+requestAnimationFrame(tick);}
+document.getElementById('btn').onclick=()=>{build();score=0;combo=1;time=45;
+document.getElementById('s').textContent=0;document.getElementById('c').textContent='×1';document.getElementById('t').textContent=45;
+document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();tick();
+clearInterval(timer);timer=setInterval(()=>{time--;document.getElementById('t').textContent=time;
+if(time<=0){playing=false;clearInterval(timer);
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🔨 Haunting over!<br>Final score: <b style="color:#facc15">'+score+'</b> · Max combo ×'+combo;}},1000);};
+build();
+</script></body></html>

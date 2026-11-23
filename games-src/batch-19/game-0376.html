@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Scorpion Sting #376</title><style>
+body{margin:0;font-family:system-ui;background:#451a03;color:#fef3c7;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#fde68a;font-size:.78rem}
+canvas{background:#78350f;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5}
+button{padding:11px 26px;border-radius:999px;border:none;background:#fbbf24;color:#451a03;font-weight:800;cursor:pointer;font-size:1rem}
+</style></head><body>
+<h1>🦂 Desert Scorpion Sting</h1><div class="sub">Scorpions charge when their tail rises — tap them before the sting lands!</div>
+<div id="hud"><span>Stung <b id="s">0</b>/3</span><span>Squashed <b id="q">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="cv" width="440" height="400"></canvas>
+<div id="ov"><div style="font-size:3rem">🦂</div><p>Scorpions flash ⚡ before charging.<br>Squash 3 stings and you're out!</p><button id="btn">Hunt</button></div>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=440,H=400;let scorps=[],stung=0,squashed=0,playing=false,spawnT=0,best=+localStorage.getItem('dss_best')||0;
+document.getElementById('b').textContent=best;
+function spawn(){scorps.push({x:40+Math.random()*(W-80),y:40+Math.random()*(H-80),
+ph:'idle',t:0,ang:Math.random()*Math.PI*2,sp:0.5+Math.random()*0.5+squashed*0.02});}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;
+let bi=-1,bd=1e9;
+scorps.forEach((s,i)=>{const d=Math.hypot(s.x-x,s.y-y);if(d<bd){bd=d;bi=i;}});
+if(bi<0||bd>24)return;
+const s=scorps[bi];
+if(s.ph==='idle'){squashed++;document.getElementById('q').textContent=squashed;
+scorps.splice(bi,1);beep(600+squashed*20,.08);
+if(squashed>best){best=squashed;localStorage.setItem('dss_best',best);document.getElementById('b').textContent=best;}}
+else if(s.ph==='warn'){squashed++;document.getElementById('q').textContent=squashed;
+scorps.splice(bi,1);beep(700,.1,'triangle');}});
+function step(){spawnT++;if(spawnT>Math.max(60,110-squashed*3)){spawnT=0;spawn();}
+scorps.forEach(s=>{s.t++;
+if(s.ph==='idle'){s.x+=Math.cos(s.ang)*s.sp;s.y+=Math.sin(s.ang)*s.sp;
+if(s.x<30||s.x>W-30)s.ang=Math.PI-s.ang;
+if(s.y<30||s.y>H-30)s.ang=-s.ang;
+if(s.t>100+Math.random()*100){s.ph='warn';s.t=0;}}
+else if(s.ph==='warn'){if(s.t>45){s.ph='charge';s.t=0;
+const a=Math.atan2(H/2-s.y,W/2-s.x);s.ang=a;s.sp=5+squashed*0.1;beep(200,.1,'sawtooth');}}
+else if(s.ph==='charge'){s.x+=Math.cos(s.ang)*s.sp;s.y+=Math.sin(s.ang)*s.sp;
+if(Math.hypot(s.x-W/2,s.y-H/2)<30){stung++;document.getElementById('s').textContent=stung;
+beep(150,.25,'sawtooth');scorps.splice(scorps.indexOf(s),1);
+if(stung>=3){playing=false;beep(130,.35,'sawtooth');
+document.getElementById('ov').style.display='flex';
+document.getElementById('ov').querySelector('p').innerHTML='🦂 Stung three times!<br>Squashed: <b style="color:#fbbf14">'+squashed+'</b>';}}}});}
+function draw(){ctx.fillStyle='#78350f';ctx.fillRect(0,0,W,H);
+ctx.fillStyle='#92400e';
+for(let i=0;i<20;i++)ctx.fillRect((i*97)%W,(i*53)%H,4,3);
+scorps.forEach(s=>{ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.ang);
+ctx.font='26px serif';ctx.textAlign='center';
+ctx.fillText(s.ph==='warn'?'⚡🦂':'🦂',0,0);ctx.restore();});
+if(playing){step();requestAnimationFrame(draw);}}
+document.getElementById('btn').onclick=()=>{scorps=[];stung=0;squashed=0;spawnT=0;
+document.getElementById('s').textContent=0;document.getElementById('q').textContent=0;
+document.getElementById('ov').style.display='none';playing=true;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();draw();};
+</script></body></html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Glassmorphism Golden Adventure</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(135deg,#f59e0b,#fbbf24,#fde68a);font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#78350f;padding:8px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px;color:#78350f}
+canvas{background:rgba(255,255,255,.3);backdrop-filter:blur(8px);border-radius:12px;border:1px solid rgba(255,255,255,.5);touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(253,230,138,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#78350f;padding:20px;z-index:5}
+button{background:#b45309;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🏆 GOLDEN GLASS ADVENTURE</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Lives <b id="l">3</b></span><span>Combo <b id="cb">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2>GOLDEN HOUR</h2><p id="od">Glide through the golden glass canyon! Steer with ← → / A D or drag. Collect sun-orbs ☀️ for points, avoid the grey static. Chain orbs for combo multipliers!</p><button id="btn">SHINE</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let me,orbs,foes,playing,keys,score,lives,combo,frame,speed,best=+localStorage.getItem('gga_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H-70,r:12};orbs=[];foes=[];playing=true;keys={};score=0;lives=3;combo=0;frame=0;speed=2.6;
+document.getElementById('s').textContent=0;document.getElementById('l').textContent=3;document.getElementById('cb').textContent=0;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let dragX=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+cvs.addEventListener('pointermove',e=>{if(dragX===null)return;const r=cvs.getBoundingClientRect();dragX=(e.clientX-r.left)/r.width*W;});
+window.addEventListener('pointerup',()=>dragX=null);
+function step(){frame++;
+if(keys['arrowleft']||keys['a'])me.x-=4.6;if(keys['arrowright']||keys['d'])me.x+=4.6;
+if(dragX!==null)me.x=dragX;
+me.x=Math.max(16,Math.min(W-16,me.x));
+if(frame%20===0){const r=Math.random();
+if(r<0.55)orbs.push({x:20+Math.random()*(W-40),y:-14,got:false});
+else foes.push({x:20+Math.random()*(W-40),y:-16,wob:Math.random()*7,r:9});}
+orbs.forEach(o=>o.y+=2.6);foes.forEach(f=>{f.y+=2.8;f.x+=Math.sin(f.y/28+f.wob)*1.1;});
+orbs=orbs.filter(o=>o.y<H+20&&!o.got);foes=foes.filter(f=>f.y<H+20);
+orbs.forEach(o=>{if(!o.got&&Math.hypot(o.x-me.x,o.y-me.y)<24){o.got=true;combo++;
+score+=10+combo*3;document.getElementById('s').textContent=score;document.getElementById('cb').textContent=combo;
+beep(600+combo*25,.07,'triangle');}});
+foes.forEach(f=>{if(Math.hypot(f.x-me.x,f.y-me.y)<f.r+me.r-2){lives--;combo=0;
+document.getElementById('l').textContent=lives;document.getElementById('cb').textContent=0;
+foes.splice(foes.indexOf(f),1);beep(140,.2,'sawtooth');
+if(lives<=0)die();}});}
+function die(){playing=false;if(score>best){best=score;localStorage.setItem('gga_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The static consumes the glow…<br>Score: <b style="color:#b45309">'+score+'</b>';
+document.getElementById('btn').textContent='RELIGHT';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.clearRect(0,0,W,H);
+// glass streaks
+for(let i=0;i<5;i++){const y=(i*120+frame*3)%(H+120)-60;
+ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y+30);ctx.stroke();ctx.lineWidth=1;}
+orbs.forEach(o=>{const g2=ctx.createRadialGradient(o.x,o.y,2,o.x,o.y,14);
+g2.addColorStop(0,'#fde047');g2.addColorStop(1,'rgba(253,224,71,0)');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(o.x,o.y,14,0,7);ctx.fill();
+ctx.fillStyle='#f59e0b';ctx.beginPath();ctx.arc(o.x,o.y,6,0,7);ctx.fill();});
+foes.forEach(f=>{ctx.fillStyle='#78716c';ctx.fillRect(f.x-7,f.y-7,14,14);
+ctx.strokeStyle='#44403c';ctx.strokeRect(f.x-7,f.y-7,14,14);});
+// golden orb player
+const g3=ctx.createRadialGradient(me.x,me.y,2,me.x,me.y,me.r*2.4);
+g3.addColorStop(0,'rgba(253,224,71,.9)');g3.addColorStop(1,'rgba(253,224,71,0)');
+ctx.fillStyle=g3;ctx.beginPath();ctx.arc(me.x,me.y,me.r*2.4,0,7);ctx.fill();
+ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();
+ctx.fillStyle='#fff';ctx.fillRect(me.x-3,me.y-4,3,3);ctx.fillRect(me.x+2,me.y-4,3,3);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

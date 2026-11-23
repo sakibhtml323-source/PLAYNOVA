@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Arctic Crazy Universe</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0c4a6e,#082f49);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#7dd3fc;padding:6px}
+#hud{display:flex;gap:12px;font-size:.85rem;margin-bottom:6px;flex-wrap:wrap;justify-content:center}
+#field{position:relative;width:min(560px,96vw);height:360px;background:#e0f2fe22;border:2px solid #38bdf8;border-radius:12px;touch-action:none}
+.piece{position:absolute;width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer;transition:left .12s linear,top .12s linear}
+#build{display:flex;gap:8px;margin:8px;flex-wrap:wrap;justify-content:center}
+#build button{background:#0c4a6e;border:1px solid #38bdf8;color:#e0f2fe;border-radius:10px;padding:7px 13px;font-size:.78rem;cursor:pointer}
+#build button:disabled{opacity:.4}
+#msg{text-align:center;font-size:.82rem;color:#bae6fd;min-height:1.5em}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button.big{background:#38bdf8;color:#082f49;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>❄️ ARCTIC CRAZY UNIVERSE</h1>
+<div id="hud"><span>🧊 Heat <b id="h">20</b></span><span>Wave <b id="w">1</b></span><span>🧊 <b id="ic">60</b></span><span>Best <b id="b">0</b></span></div>
+<div id="field"></div>
+<div id="build">
+<button data-t="seal">🧊 Ice Seal 20</button><button data-t="tower">🏹 Frost Tower 35</button>
+<button data-t="melt">🔥 Melter 50</button><button id="go">▶ START WAVE</button>
+</div>
+<div id="msg">The aurora melts your glacier! Build defenses, then start the wave.</div>
+<div id="ov"><h2 style="color:#7dd3fc">ARCTIC UNIVERSE</h2><p id="od">Defend the last glacier of a crazy universe! 🔥 Heat-beings march toward your core 🧊. Build ice seals (slow), frost towers (shoot) and melters (splash). Survive waves, spend ice wisely.</p><button class="big" id="btn">FREEZE TIME</button></div>
+<script>
+"use strict";
+const F=document.getElementById('field');const W=560,H=360;
+let pieces,playing,wave,heat,ice,selT,timer,best=+localStorage.getItem('ac_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const DEFS={seal:{c:20,e:'🧊',r:44,dmg:0,slow:true},tower:{c:35,e:'🏹',r:80,dmg:8,rate:16},melt:{c:50,e:'🔥',r:96,dmg:18,rate:50,splash:true}};
+function init(){pieces=[];playing=true;wave=0;heat=20;ice=60;selT='seal';
+document.getElementById('h').textContent=heat;document.getElementById('ic').textContent=ice;document.getElementById('w').textContent=0;}
+function startWave(){wave++;document.getElementById('w').textContent=wave;
+const n=3+wave*2;for(let i=0;i<n;i++){const el=document.createElement('div');el.className='piece';
+el.textContent='🔥';el.dataset.k='foe';
+const startY=30+Math.random()*(H-60);
+pieces.push({el,x:-20-i*40,y:startY,hp:25+wave*8,sp:0.7+wave*0.12,side:1,slowT:0});
+F.appendChild(el);beep(400,.06);}
+clearInterval(timer);timer=setInterval(tick,80);}
+document.getElementById('go').onclick=()=>{audio.resume();if(playing)startWave();};
+document.querySelectorAll('#build [data-t]').forEach(b=>b.onclick=()=>{selT=b.dataset.t;});
+window.addEventListener('keydown',e=>{const k=e.key;if(k>='1'&&k<='3')document.querySelectorAll('#build [data-t]')[+k-1].click();if(k==='Enter'&&playing)startWave();});
+F.addEventListener('pointerdown',e=>{if(!playing)return;audio.resume();const r=F.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+const d=DEFS[selT]||{c:Infinity};/* FIX (PLAYNOVA repair): no tower selected yet -> DEFS[...] was undefined and clicking a build spot threw */if(ice<d.c){beep(160,.08,'sawtooth');return;}
+ice-=d.c;document.getElementById('ic').textContent=ice;
+const el=document.createElement('div');el.className='piece';el.textContent=d.e;
+const p2={el,x,y,hp:1,side:0,type:selT,cd:0,slowT:0};
+pieces.push(p2);F.appendChild(el);beep(600,.08);});
+function tick(){let foesAlive=0;
+pieces.forEach(p=>{if(p.side===1){foesAlive++;
+p.slowT=Math.max(0,p.slowT-1);
+// seek core at (W-40,H/2)
+const tx=W-40,ty=H/2;const a=Math.atan2(ty-p.y,tx-p.x);
+const sp=p.sp*(p.slowT>0?0.4:1);
+p.x+=Math.cos(a)*sp*3;p.y+=Math.sin(a)*sp*3;
+if(Math.hypot(p.x-tx,p.y-ty)<30){heat-=2;document.getElementById('h').textContent=heat;beep(120,.15,'sawtooth');
+pieces.splice(pieces.indexOf(p),1);F.removeChild(p.el);
+if(heat<=0)return gameOver();}
+}else{const d=DEFS[p.type];p.cd--;
+if(p.cd<=0){let nf=null,nd2=1e9;
+pieces.forEach(q=>{if(q.side===1){const dd=Math.hypot(q.x-p.x,q.y-p.y);if(dd<d.r&&dd<nd2){nd2=dd;nf=q;}}});
+if(nf){p.cd=d.rate;nf.hp-=d.dmg;if(d.slow)nf.slowT=40;
+beep(d.splash?200:540,.04,d.splash?'sawtooth':'square');
+if(nf.hp<=0){pieces.splice(pieces.indexOf(nf),1);F.removeChild(nf.el);ice+=10;document.getElementById('ic').textContent=ice;}}}}
+p.el.style.left=p.x+'px';p.el.style.top=p.y+'px';});
+if(!pieces.some(p=>p.side===1)&&wave>0){ice+=30+wave*5;document.getElementById('ic').textContent=ice;
+if(wave>best){best=wave;localStorage.setItem('ac_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('msg').textContent='✅ Wave '+wave+' frozen! +ice. Build and start the next.';beep(720,.12,'triangle');}}
+function gameOver(){playing=false;clearInterval(timer);
+if(wave>best){best=wave;localStorage.setItem('ac_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='🌊 The glacier drowned on wave <b style="color:#fde047">'+wave+'</b>.';
+document.getElementById('btn').textContent='REFREEZE';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+document.getElementById('btn').onclick=()=>{audio.resume();init();
+document.getElementById('msg').textContent='Tap the field to build. START WAVE when ready.';
+document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

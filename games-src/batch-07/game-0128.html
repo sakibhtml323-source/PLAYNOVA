@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pirate Idle Clicker Fury</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#082f49,#0c4a6e);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.15rem;color:#fbbf24;padding:6px;letter-spacing:1px}
+#stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;font-size:.9rem}
+#stats span{background:#0c4a6e;border:1px solid #164e63;border-radius:12px;padding:4px 12px}
+#chest{font-size:4rem;cursor:pointer;user-select:none;display:inline-block;margin:10px 0;transition:transform .08s}
+#chest:active{transform:scale(.85) rotate(-6deg)}
+main{width:min(560px,96vw);display:grid;gap:10px;padding-bottom:24px}
+.card{background:#0c4a6e;border:1px solid #164e63;border-radius:14px;padding:12px}
+.card h3{color:#7dd3fc;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#082f49;border-radius:10px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row small{color:#7dd3fc;display:block}
+.row button{background:#0369a1;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.row button:disabled{opacity:.35}
+.f{position:fixed;color:#fbbf24;font-weight:800;pointer-events:none;transition:all .8s;z-index:9;text-shadow:0 2px 6px #000}
+</style>
+</head>
+<body>
+<h1>🏴‍☠️ PIRATE IDLE FURY</h1>
+<div id="stats"><span>💰 Doubloons <b id="c">0</b></span><span>📈 /s <b id="r">0</b></span><span>🗡 Per tap <b id="pc">1</b></span><span>🏴 Crew <b id="n">0</b></span></div>
+<div style="text-align:center"><span id="chest">🗝️</span><div style="font-size:.75rem;color:#7dd3fc">pry the chest — or press SPACE</div></div>
+<main>
+<div class="card"><h3>🚢 CREW (auto loot)</h3><div id="shop"></div></div>
+<div class="card"><h3>🗺 PLUNDER MAPS</h3><div id="ups"></div>
+<div style="display:flex;gap:8px;margin-top:8px"><button id="save" style="background:#164e63;color:#e0f2fe;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">💾 Save</button><button id="reset" style="background:#164e63;color:#e0f2fe;border:none;border-radius:8px;padding:8px 16px;cursor:pointer">🗑️ Reset</button></div></div>
+</main>
+<script>
+"use strict";
+const CRW=[{n:'Deckhand',e:'⛵',c:15,r:0.4},{n:'Cannoneer',e:'💣',c:80,r:1.7},{n:'Navigator',e:'🧭',c:350,r:6},{n:'Sea Witch',e:'🧙',c:1500,r:22},{n:'Kraken Ally',e:'🐙',c:6500,r:85}];
+const UPS=[{n:'Sharper Cutlasses',d:'+2 per tap',c:60,f:S=>S.pc+=2},{n:'Powder Monkeys',d:'+10 per tap',c:500,f:S=>S.pc+=10},{n:'Fury of the Tide',d:'+40 per tap',c:3500,f:S=>S.pc+=40}];
+let S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0]};
+function load(){try{const d=JSON.parse(localStorage.getItem('pic_save'));if(d)Object.assign(S,d);}catch(e){}}
+function save(){localStorage.setItem('pic_save',JSON.stringify(S));}
+load();
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06){const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function rate(){return CRW.reduce((a,c2,i)=>a+c2.r*S.own[i],0);}
+function fl(x,y,t){const s=document.createElement('div');s.className='f';s.textContent=t;s.style.cssText='left:'+x+'px;top:'+y+'px';document.body.appendChild(s);
+requestAnimationFrame(()=>{s.style.top=(y-70)+'px';s.style.opacity=0;});setTimeout(()=>s.remove(),850);}
+document.getElementById('chest').addEventListener('pointerdown',e=>{audio.resume();S.c+=S.pc;beep(240+Math.random()*160);fl(e.clientX,e.clientY,'+'+S.pc+' 💰');render();});
+window.addEventListener('keydown',e=>{const k=e.key;if(k===' '){e.preventDefault();document.getElementById('chest').dispatchEvent(new PointerEvent('pointerdown',{clientX:innerWidth/2,clientY:innerHeight/2}));}if(k>='1'&&k<='5'){const b=document.querySelectorAll('#shop button')[+k-1];if(b&&!b.disabled)b.click();}});
+function render(){document.getElementById('c').textContent=Math.floor(S.c);document.getElementById('r').textContent=rate().toFixed(1);
+document.getElementById('pc').textContent=S.pc;document.getElementById('n').textContent=S.own.reduce((a,b)=>a+b,0);
+const sh=document.getElementById('shop');sh.innerHTML='';
+CRW.forEach((c2,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+c2.e+' '+c2.n+'</b> <small>×'+S.own[i]+' · '+c2.r+'/s</small></div>';
+const b=document.createElement('button');b.textContent=c2.c+' 💰';b.disabled=S.c<c2.c;
+b.onclick=()=>{if(S.c>=c2.c){S.c-=c2.c;S.own[i]++;beep(480+i*70,.09);render();save();}};row.appendChild(b);sh.appendChild(row);});
+const gRow=document.createElement('div');gRow.className='row';gRow.style.border='2px dashed #f59e0b';
+const gInfo=document.createElement('div');gInfo.innerHTML='<b>🎲 Gambler</b> <small>wager 100 → 55% win 200 / 45% lose all</small>';
+const gBtn=document.createElement('button');gBtn.textContent='100 💰';gBtn.disabled=S.c<100;
+gBtn.onclick=()=>{if(S.c<100)return;S.c-=100;if(Math.random()<0.55){S.c+=200;beep(900,.15,'triangle');}else{beep(150,.25,'sawtooth');}render();save();};
+gRow.appendChild(gInfo);gRow.appendChild(gBtn);sh.appendChild(gRow);
+const up=document.getElementById('ups');up.innerHTML='';
+UPS.forEach((u,i)=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+u.n+'</b> <small>'+u.d+(S.up[i]?' · ✓':'')+'</small></div>';
+const b=document.createElement('button');b.textContent=S.up[i]?'OWNED':u.c+' 💰';b.disabled=S.up[i]||S.c<u.c;
+b.onclick=()=>{if(!S.up[i]&&S.c>=u.c){S.c-=u.c;S.up[i]=1;u.f(S);beep(700,.12);render();save();}};row.appendChild(b);up.appendChild(row);});}
+setInterval(()=>{S.c+=rate()/10;render();},100);
+document.getElementById('save').onclick=()=>{save();beep(880);};
+document.getElementById('reset').onclick=()=>{if(confirm('Scuttle the fleet?')){S={c:0,own:[0,0,0,0,0],pc:1,up:[0,0,0]};localStorage.removeItem('pic_save');render();}};
+window.addEventListener('beforeunload',save);
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+ "haunted-pattern-shift-284": {
+  "method": "real mouse clicks on grid cells following a solver computed from the game's own state",
+  "clicks_or_moves": 6,
+  "level1_completed": true,
+  "result": {
+   "done": [
+    1
+   ],
+   "xp": 20
+  },
+  "errors": []
+ },
+ "crystal-puzzle-grid-355": {
+  "method": "real mouse clicks on grid cells following a solver computed from the game's own state",
+  "clicks_or_moves": 22,
+  "level1_completed": true,
+  "result": {
+   "done": [
+    1
+   ],
+   "xp": 20
+  },
+  "errors": []
+ }
+}

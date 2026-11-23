@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Mirror Path #315</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+canvas{background:#292524;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🪞 Desert Mirror Path</h1><div class="sub">Place up to 5 mirrors to guide the sunbeam to the crystal!</div>
+<div id="hud"><span>Mirrors <b id="m">5</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">☀️ New Chamber</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=8,CELL=50;
+let mirrors=[],laser={r:0,c:0,d:0},goal={},maxMirrors=5,level=1,playing=true;
+function gen(){mirrors=[];maxMirrors=Math.max(3,6-level);
+laser={r:0,c:0,d:0};
+// random goal on right/bottom edge
+goal=Math.random()<0.5?{r:(Math.random()*N)|0,c:N-1,d:2}:{r:N-1,c:(Math.random()*N)|0,d:3};
+playing=true;
+document.getElementById('m').textContent=maxMirrors;
+document.getElementById('l').textContent=level;
+draw();msg('Place mirrors (tap cells)!');}
+function trace(){let r=laser.r,c=laser.c,d=laser.d;const path=[[r,c]];
+for(let s=0;s<80;s++){const dr=[0,1,0,-1][d],dc=[1,0,-1,0][d];
+r+=dr;c+=dc;
+if(r<0||r>=N||c<0||c>=N)break;
+path.push([r,c]);
+const m=mirrors.find(mm=>mm.r===r&&mm.c===c);
+if(m){d=m.t===0?(d===0?3:d===3?0:d===1?2:1):(d===0?1:d===1?0:d===2?3:2);}
+if(r===goal.r&&c===goal.c)return{path,hit:true};}
+return{path,hit:false};}
+function tap(r,c){if(!playing)return;
+const i=mirrors.findIndex(m=>m.r===r&&m.c===c);
+if(i>=0){mirrors.splice(i,1);beep(300,.06);draw();return;}
+if(mirrors.length>=maxMirrors){beep(160,.06,'sawtooth');return;}
+if((r===laser.r&&c===laser.c)||(r===goal.r&&c===goal.c))return;
+mirrors.push({r,c,t:Math.random()<0.5?0:1});beep(500,.07);draw();check();}
+function check(){const t=trace();
+if(t.hit){playing=false;beep(880,.3,'triangle');
+msg('💎 Crystal charged! Level '+(level+1));level++;
+setTimeout(gen,1000);}}
+function draw(){ctx.fillStyle='#292524';ctx.fillRect(0,0,N*CELL,N*CELL);
+const t=trace();
+ctx.strokeStyle='#334155';
+for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,N*CELL);ctx.stroke();
+ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(N*CELL,i*CELL);ctx.stroke();}
+// path
+if(t.path.length>1){ctx.strokeStyle=t.hit?'#22c55e':'#fbbf24';ctx.lineWidth=3;
+ctx.beginPath();ctx.moveTo(t.path[0][1]*CELL+CELL/2,t.path[0][0]*CELL+CELL/2);
+t.path.forEach(([r,c])=>ctx.lineTo(c*CELL+CELL/2,r*CELL+CELL/2));ctx.stroke();ctx.lineWidth=1;}
+// laser
+ctx.fillStyle='#f59e0b';ctx.fillRect(0,0,CELL/2,CELL/2);
+// goal
+ctx.font='24px serif';ctx.textAlign='center';
+ctx.fillText(t.hit?'💎':'🔘',goal.c*CELL+CELL/2,goal.r*CELL+CELL/2+8);
+// mirrors
+mirrors.forEach(m=>{ctx.save();ctx.translate(m.c*CELL+CELL/2,m.r*CELL+CELL/2);
+ctx.rotate(m.t===0?-Math.PI/4:Math.PI/4);
+ctx.fillStyle='#94a3b8';ctx.fillRect(-16,-4,32,8);
+ctx.restore();
+ctx.font='10px serif';ctx.fillText(m.t===0?'/':'B',m.c*CELL+CELL/2,m.r*CELL+CELL/2+3);});}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*N),rr=Math.floor((e.clientY-r.top)/r.height*N);
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(rr,c);});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

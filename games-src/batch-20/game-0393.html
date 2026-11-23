@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Torch Trail #393</title><style>
+body{margin:0;font-family:system-ui;background:#111827;color:#f9fafb;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#9ca3af;font-size:.78rem}
+canvas{background:#1f2937;border-radius:12px;touch-action:none;max-width:96vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:6px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#facc15;color:#111827;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🔥 Ninja Torch Trail</h1><div class="sub">Light every torch in ONE unbroken trail — you can't revisit a tile!</div>
+<div id="hud"><span>Torches <b id="t">0</b></span><span>Moves <b id="m">0</b></span><span>Level <b id="l">1</b></span></div>
+<canvas id="cv" width="400" height="400"></canvas>
+<div id="msg"></div>
+<button id="btn">🏮 New Trail</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const cvs=document.getElementById('cv'),ctx=cvs.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=6,CELL=400/N;let torches=[],trail=[],moves=0,level=1,playing=true;
+function gen(){torches=[];trail=[];moves=0;playing=true;
+const nt=Math.min(6+level,12);
+const cells=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)cells.push([r,c]);
+cells.sort(()=>Math.random()-.5);
+for(let i=0;i<nt;i++)torches.push({r:cells[i][0],c:cells[i][1],lit:false});
+document.getElementById('t').textContent=nt;
+document.getElementById('l').textContent=level;
+draw();msg('Light all torches in one trail!');}
+cvs.addEventListener('pointerdown',e=>{if(!playing)return;const r=cvs.getBoundingClientRect();
+const c=Math.floor((e.clientX-r.left)/r.width*N),rr=Math.floor((e.clientY-r.top)/r.height*N);
+tap(rr,c);});
+function tap(r,c){const t=torches.find(x=>x.r===r&&x.c===c);
+const last=trail[trail.length-1];
+if(!t||t.lit){// maybe backtrack
+if(last&&last.r===r&&last.c===c&&trail.length>1){trail.pop();last.lit=false;
+beep(300,.06);draw();}return;}
+if(last&&Math.abs(last.r-r)+Math.abs(last.c-c)!==1){beep(160,.06,'sawtooth');return;}
+if(trail.some(x=>x===t)){beep(160,.06,'sawtooth');return;}
+t.lit=true;trail.push(t);moves++;
+document.getElementById('m').textContent=moves;
+beep(400+trail.length*30,.07);draw();
+if(torches.every(x=>x.lit)){playing=false;beep(880,.3,'triangle');
+msg('🏮 Trail complete! Level '+(level+1));level++;
+setTimeout(gen,1000);}}
+function draw(){ctx.fillStyle='#1f2937';ctx.fillRect(0,0,400,400);
+// trail line
+if(trail.length>1){ctx.strokeStyle='#f59e0b';ctx.lineWidth=4;ctx.lineCap='round';
+ctx.beginPath();ctx.moveTo(trail[0].c*CELL+CELL/2,trail[0].r*CELL+CELL/2);
+trail.forEach(t=>ctx.lineTo(t.c*CELL+CELL/2,t.r*CELL+CELL/2));ctx.stroke();}
+torches.forEach(t=>{ctx.font='22px serif';ctx.textAlign='center';
+ctx.fillText(t.lit?'🔥':'🕯️',t.c*CELL+CELL/2,t.r*CELL+CELL/2+8);});
+// grid hint
+ctx.strokeStyle='#374151';
+for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(i*CELL,0);ctx.lineTo(i*CELL,400);ctx.stroke();
+ctx.beginPath();ctx.moveTo(0,i*CELL);ctx.lineTo(400,i*CELL);ctx.stroke();}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{level=1;AU.__c=new (window.AudioContext||window.webkitAudioContext)();gen();};
+gen();
+</script></body></html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Magic Rise</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#2e1065,#0f172a);font-family:Georgia,serif;color:#e9d5ff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#c084fc;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+@media(max-width:420px){.ring{width:120px;height:32px;font-size:.95rem}}
+#tower{display:flex;flex-direction:column-reverse;gap:4px;align-items:center;margin-top:4px;min-height:300px}
+.ring{width:150px;height:38px;border-radius:19px;border:2px solid #7c3aed;background:#1e1b4b;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;transition:transform .12s}
+.ring:active{transform:scale(.96)}
+.ring.merge{border-color:#fbbf24;box-shadow:0 0 14px #fbbf24aa}
+#hand{margin-top:14px;font-size:1rem;color:#a78bfa}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e9d5ff;padding:20px;z-index:5}
+button{background:#7c3aed;border:none;color:#fff;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🪄 MAGIC RISE</h1>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Tower <b id="t">0</b>/10</span><span>Mana <b id="m">50</b></span><span>Best <b id="b">1</b></span></div>
+<div id="tower"></div>
+<div id="hand">Tap a scroll in your hand to cast it onto the tower…</div>
+<div id="ov"><h2 style="color:#c084fc">MAGIC RISE</h2><p id="od">Build the wizard tower! You hold three random spell-scrolls — tap one to add it to the tower. Two identical adjacent scrolls MERGE into the next tier. Reach tier 8 to complete the ritual. Mana buys new hands!</p><button id="btn">BEGIN THE RITUAL</button></div>
+<script>
+"use strict";
+const TIERS=['🕯️','📜','✨','🔮','🧪','⚗️','🌙','🔥'];
+let tower,hand,mana,playing,level,best=+localStorage.getItem('mr_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){tower=[];mana=50;playing=true;render();}
+function newHand(){hand=[ri(),ri(),ri()];}
+function ri(){return Math.min((Math.random()*3)|0,TIERS.length-1);}
+function render(){const t=document.getElementById('tower');t.innerHTML='';
+tower.forEach((v,i)=>{const r=document.createElement('div');r.className='ring';
+r.textContent=TIERS[v];
+if(tower[i+1]===v||tower[i-1]===v)r.classList.add('merge');
+r.onclick=()=>{audio.resume();if(mana<5){beep(160,.1,'sawtooth');return;}
+mana-=5;tower[i]=Math.min(v+1,TIERS.length-1);beep(600+v*60,.09);
+render();check();};
+t.appendChild(r);});
+document.getElementById('t').textContent=tower.length;
+document.getElementById('m').textContent=mana;document.getElementById('l').textContent=level;
+// hand buttons
+const hd=document.getElementById('hand');hd.innerHTML='';
+hand.forEach((v,i)=>{const b=document.createElement('button');
+b.style.cssText='margin:0 6px;padding:8px 16px;border-radius:10px;background:#1e1b4b;color:#e9d5ff;border:2px solid #7c3aed;cursor:pointer;font-size:1.1rem';
+b.textContent=TIERS[v];
+b.onclick=()=>{audio.resume();tower.push(v);hand.splice(i,1);if(!hand.length)newHand();
+beep(440+tower.length*30,.07);render();check();};
+hd.appendChild(b);});
+const nb=document.createElement('button');nb.textContent='🎲 New hand (10 mana)';
+nb.style.cssText='margin-left:10px;padding:8px 14px;border-radius:10px;background:#4c1d95;color:#fff;border:none;cursor:pointer;font-size:.8rem';
+nb.onclick=()=>{audio.resume();if(mana>=10){mana-=10;newHand();beep(700,.08);render();}};
+hd.appendChild(nb);}
+function check(){ // merge pass
+let changed=true;
+while(changed){changed=false;
+for(let i=0;i<tower.length-1;i++){if(tower[i]===tower[i+1]&&tower[i]<TIERS.length-1){tower.splice(i,2,tower[i]+1);changed=true;break;}}}
+render();
+if(tower.includes(TIERS.length-1)){win();}
+if(tower.length>=14){lose();}}
+function win(){playing=false;if(level+1>best){best=level+1;localStorage.setItem('mr_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🔥 <b style="color:#fde047">THE 8TH TIER IGNITES!</b><br>Ritual '+level+' complete in a tower of '+tower.length+'.';
+document.getElementById('btn').textContent='NEXT RITUAL';level++;mana=50;document.getElementById('ov').style.display='flex';}
+function lose(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🏚️ <b>The tower topples at '+tower.length+' scrolls!</b><br>Too tall to stand.';
+document.getElementById('btn').textContent='REBUILD';document.getElementById('ov').style.display='flex';}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key>='1'&&e.key<='3'){const b=document.querySelectorAll('#hand button')[+e.key-1];if(b)b.click();}});
+document.getElementById('btn').onclick=()=>{audio.resume();tower=[];if(!hand)newHand();playing=true;render();document.getElementById('ov').style.display='none';};
+newHand();
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Haunted Mirror Match #338</title><style>
+body{margin:0;font-family:system-ui;background:#18181b;color:#fafafa;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a1a1aa;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(4,80px);gap:10px;margin:12px}
+.card{width:80px;height:100px;background:#27272a;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2rem;transition:transform .2s;position:relative;overflow:hidden}
+.card.open{transform:rotateY(180deg)}
+.card .face{backface-visibility:hidden;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.card .front{background:#3f3f46;font-size:1.6rem}
+.card.done{background:#14532d;cursor:default}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🪞 Haunted Mirror Match</h1><div class="sub">Match the mirror-pairs — some cards show the flipped (mirrored) version!</div>
+<div id="hud"><span>Pairs <b id="p">0</b>/6</span><span>Flips <b id="f">0</b></span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">🎭 New Mirrors</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const PAIRS=[['🐱','🐱'],['🐶','🐶'],['🦊','🦊'],['🐻','🐻'],['🐰','🐰'],['🐼','🐼']];
+const MIR={'🐱':'🐈','🐶':'🐕','🦊':'🦊','🐻':'🐻','🐰':'🐇','🐼':'🐼'};
+let cards=[],open=[],pairs=0,flips=0,lock=false;
+function deal(){const deck=[];
+PAIRS.forEach(([a,b],pi)=>{deck.push({pi,e:a,m:false});deck.push({pi,e:b,m:Math.random()<0.4});});
+deck.sort(()=>Math.random()-.5);
+cards=deck.map((c,i)=>({...c,i,open:false,done:false}));open=[];pairs=0;flips=0;lock=false;
+document.getElementById('p').textContent=0;document.getElementById('f').textContent=0;msg('');render();}
+function tap(i){if(lock||cards[i].open||cards[i].done)return;
+cards[i].open=true;open.push(i);flips++;document.getElementById('f').textContent=flips;beep(400+i*30,.06);render();
+if(open.length===2){lock=true;const[a,b]=open;
+const A=cards[a],B=cards[b];
+const match=A.pi===B.pi&&((A.m&&B.m)||(!A.m&&!B.m));
+if(match){A.done=B.done=true;pairs++;document.getElementById('p').textContent=pairs;
+beep(700,.12,'triangle');open=[];lock=false;
+if(pairs>=6)msg('🎉 All mirror-pairs matched!');}
+else{setTimeout(()=>{A.open=B.open=false;open=[];lock=false;
+beep(180,.1,'sawtooth');render();},700);}}}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+cards.forEach((c,i)=>{const d=document.createElement('div');
+d.className='card'+(c.open||c.done?' open':'')+(c.done?' done':'');
+const show=c.open||c.done;
+const e=c.m&&show?MIR[c.e]:c.e;
+d.innerHTML=show?'<div class="face front" style="transform:rotateY(180deg)">'+e+'</div>':'<div class="face front">🪞</div>';
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(i);};
+g.appendChild(d);});}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();deal();};
+deal();
+</script></body></html>

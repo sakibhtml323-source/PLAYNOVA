@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Decoy Spotter #140</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#18181b,#27272a);font-family:Georgia,serif;color:#d4d4d8;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#facc15;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+#wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+canvas{background:#1c1c1f;border-radius:10px;touch-action:none;border:1px solid #3f3f46}
+#hint{text-align:center;font-size:.85rem;color:#a1a1aa;margin-top:6px;min-height:1.4em}
+#ov{position:fixed;inset:0;background:rgba(24,24,27,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#facc15;border:none;color:#18181b;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:760px){h1{font-size:.95rem}}
+</style>
+</head>
+<body>
+<h1>🥷 SPOT THE DIFFERENCE: NINJA</h1>
+<div id="hud"><span>Scroll <b id="l">1</b></span><span>Found <b id="f">0</b>/<b id="t">0</b></span><span>⏱ <b id="tm">0</b>s</span><span>Best <b id="b">1</b></span></div>
+<div id="wrap"><canvas id="left"></canvas><canvas id="right"></canvas></div>
+<div id="hint">Tap the differences on EITHER scroll.</div>
+<div id="ov"><h2 style="color:#facc15">NINJA SCROLLS</h2><p id="od">Two identical-looking ninja scrolls… but they differ! Find all differences before time runs out. Each scroll adds more secrets and less time.</p><button id="btn">UNROLL</button></div>
+<script>
+"use strict";
+const L=document.getElementById('left'),R=document.getElementById('right');
+const W=340,H=300;L.width=R.width=W;L.height=R.height=H;
+const lctx=L.getContext('2d'),rctx=R.getContext('2d');
+let level,found,diffs,timer,timeLeft,playing,best=+localStorage.getItem('sd2_best')||1,decoys;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+const SPOTS=[[60,240,'shuriken'],[150,260,'katana'],[260,230,'scroll'],[90,120,'mask'],[220,90,'lantern'],[300,160,'star'],[40,60,'plant'],[180,200,'fan'],[290,50,'bell'],[130,40,'rope'],[250,190,'smoke'],[70,170,'knot']];
+function drawScene(ctx,alt){ctx.fillStyle='#1c1c1f';ctx.fillRect(0,0,W,H);
+// dojo background
+ctx.fillStyle='#27272a';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#3f3f46';for(let i=0;i<W;i+=40)ctx.strokeRect(i,0,40,40);
+ctx.fillStyle='#7f1d1d88';ctx.fillRect(W/2-70,0,140,26);
+ctx.fillStyle='#facc15';ctx.font='12px Georgia';ctx.textAlign='center';ctx.fillText('道場',W/2,18);
+SPOTS.forEach((s,i)=>{if(alt&&diffs.includes(i))return;
+const[x,y,t]=s;ctx.font='20px serif';ctx.textAlign='center';
+if(t==='shuriken')ctx.fillText('✦',x,y);
+if(t==='katana'){ctx.fillText('🗡️',x,y);}
+if(t==='scroll')ctx.fillText('📜',x,y);
+if(t==='mask')ctx.fillText('👺',x,y);
+if(t==='lantern'){ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(x,y,9,0,7);ctx.stroke();}
+if(t==='star'){ctx.fillText('⭐',x,y);}
+if(t==='plant'){ctx.fillText('🌿',x,y);}
+if(t==='fan'){ctx.fillText('🪭',x,y);}
+if(t==='bell'){ctx.fillText('🔔',x,y);}
+if(t==='rope'){ctx.strokeStyle='#a16207';ctx.beginPath();ctx.moveTo(x,y-20);ctx.lineTo(x,y+20);ctx.stroke();}
+if(t==='smoke'){ctx.strokeStyle='#71717a';ctx.beginPath();ctx.arc(x,y,8,0,7);ctx.stroke();}
+if(t==='knot'){ctx.strokeStyle='#fbbf24';ctx.strokeRect(x-8,y-8,16,16);}});}
+function setup(){const n=Math.min(3+level,SPOTS.length-3);const idx=[...SPOTS.keys()].sort(()=>Math.random()-.5).slice(0,n);
+diffs=idx;decoys=[...SPOTS.keys()].filter(k=>!idx.includes(k)).sort(()=>Math.random()-.5).slice(0,2);found=[];timeLeft=Math.max(14,40-level*3);
+document.getElementById('t').textContent=n;document.getElementById('f').textContent=0;document.getElementById('tm').textContent=timeLeft;document.getElementById('l').textContent=level;
+drawScene(lctx,false);drawScene(rctx,true);
+clearInterval(timer);timer=setInterval(()=>{timeLeft--;document.getElementById('tm').textContent=timeLeft;
+if(timeLeft<=0)lose();},1000);}
+function check(e,ctx,cvs){if(!playing)return;const r=cvs.getBoundingClientRect();
+const x=(e.clientX-r.left)/r.width*W,y=(e.clientY-r.top)/r.height*H;
+for(const i of diffs){if(found.includes(i))continue;const s=SPOTS[i];
+if(Math.hypot(s[0]-x,s[1]-y)<26){found.push(i);
+document.getElementById('f').textContent=found.length;beep(700+found.length*40,.1,'triangle');
+ctx.strokeStyle='#facc15';ctx.lineWidth=3;ctx.beginPath();ctx.arc(s[0],s[1],22,0,7);ctx.stroke();
+if(found.length>=diffs.length)win();return;}}
+for(const i of decoys){const s=SPOTS[i];if(Math.hypot(s[0]-x,s[1]-y)<26){
+beep(130,.2,'sawtooth');timeLeft=Math.max(0,timeLeft-5);document.getElementById('tm').textContent=timeLeft+' ⚠️ DECOY!';
+setTimeout(()=>document.getElementById('tm').textContent=timeLeft,700);return;}}
+beep(160,.1,'sawtooth');}
+[L,R].forEach(c=>c.addEventListener('pointerdown',e=>{audio.resume();check(e,c===L?lctx:rctx,c);}));
+window.addEventListener('keydown',e=>{if(e.key==='h'||e.key==='H'){if(playing){const rem=diffs.filter(i=>!found.includes(i));
+if(rem.length){const s=SPOTS[rem[0]];lctx.strokeStyle='#f87171';lctx.setLineDash([4,4]);
+lctx.beginPath();lctx.arc(s[0],s[1],26,0,7);lctx.stroke();lctx.setLineDash([]);}}}});
+function win(){playing=false;clearInterval(timer);
+if(level+1>best){best=level+1;localStorage.setItem('sd2_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🥷 Scroll cleared with <b style="color:#fde047">'+timeLeft+'s</b> left!<br>Next scroll: '+(Math.min(3+level+1,SPOTS.length-1))+' differences.';
+document.getElementById('btn').textContent='NEXT SCROLL';level++;document.getElementById('ov').style.display='flex';}
+function lose(){playing=false;clearInterval(timer);beep(140,.4,'sawtooth');
+document.getElementById('od').innerHTML='⏰ The scroll burns! You found '+found.length+'/'+diffs.length+'.<br>Scroll reached: <b>'+level+'</b>';
+document.getElementById('btn').textContent='TRY AGAIN';document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();if(document.getElementById('btn').textContent==='TRY AGAIN')level=1;playing=true;setup();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

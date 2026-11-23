@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Mega Hotseat Strategy</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#1e293b,#0f172a);font-family:Georgia,serif;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#fbbf24;padding:6px;letter-spacing:1px;text-align:center}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#board{display:grid;gap:3px;background:#0f172a;padding:8px;border-radius:12px;border:2px solid #334155;touch-action:none;max-width:96vw}
+.cell{width:44px;height:44px;border-radius:6px;background:#1e293b;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer}
+@media(max-width:420px){.cell{width:36px;height:36px;font-size:.95rem}}
+#tip{text-align:center;font-size:.85rem;color:#94a3b8;margin-top:8px;min-height:2.2em;padding:0 10px}
+#ov{position:fixed;inset:0;background:rgba(15,23,42,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button{background:#fbbf24;border:none;color:#1e293b;font-weight:800;padding:12px 32px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🏺 MEGA HOTSEAT STRATEGY</h1>
+<div id="hud"><span id="p1c" style="color:#f87171">ARES <b id="a1">0</b></span><span>Turn <b id="t">1</b></span><span id="p2c" style="color:#60a5fa">ATHENA <b id="a2">0</b></span></div>
+<div id="board"></div>
+<div id="tip"></div>
+<div id="ov"><h2 style="color:#fbbf24">HOTSEAT CONQUEST</h2><p id="od">2 players, one screen, pure strategy! Tap one of your 🏛️ temples, then an adjacent enemy or neutral tile to send reinforcements. Capture the map to win!</p><button id="btn">BEGIN CONQUEST</button></div>
+<script>
+"use strict";
+const S=8;let grid,cur,sel,turn,playing;let kcur=0,wins=[+localStorage.getItem('mh_w1')||0,+localStorage.getItem('mh_w2')||0];
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function init(){grid=[];for(let i=0;i<S*S;i++)grid.push({o:0,n:0});
+grid[0]={o:1,n:12};grid[1]={o:1,n:8};grid[S]={o:1,n:8};
+grid[S*S-1]={o:2,n:12};grid[S*S-2]={o:2,n:8};grid[S*S-1-S]={o:2,n:8};
+for(let i=0;i<S*S;i++){if(grid[i].o===0)grid[i].n=2+((Math.random()*4)|0);}
+cur=1;turn=1;sel=null;playing=true;document.getElementById('t').textContent=1;render();}
+function neigh(i){const r=(i/S)|0,c=i%S,o=[];if(r>0)o.push(i-S);if(r<S-1)o.push(i+S);if(c>0)o.push(i-1);if(c<S-1)o.push(i+1);return o;}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+S+',minmax(0,1fr))';b.style.width='min('+(S*44+22)+'px,94vw)';b.innerHTML='';
+grid.forEach((g,i)=>{const c=document.createElement('div');c.className='cell';
+c.style.background=g.o===1?'#450a0a':g.o===2?'#082f49':'#1e293b';
+c.style.border=sel===i?'2px solid #fde047':'2px solid transparent';
+c.textContent=g.o?('🏛'+g.n):g.n;
+if(kcur===i)c.style.boxShadow='inset 0 0 0 3px #fbbf24';
+c.onclick=()=>tap(i);b.appendChild(c);});
+document.getElementById('a1').textContent=grid.filter(g=>g.o===1).reduce((a,g)=>a+g.n,0);
+document.getElementById('a2').textContent=grid.filter(g=>g.o===2).reduce((a,g)=>a+g.n,0);
+const me=cur===1?'🔴 ARES':'🔵 ATHENA';
+document.getElementById('tip').textContent=playing?me+' — tap a temple, then an adjacent target.':'Game over.';}
+function tap(i){if(!playing)return;const g=grid[i];
+if(g.o===cur){sel=i;beep(600,.05);render();return;}
+if(sel!==null&&neigh(sel).includes(i)){const send=Math.floor(grid[sel].n/2);
+if(send<1){render();return;}
+grid[sel].n-=send;
+if(g.o===cur){g.n+=send;}
+else if(g.n<send){g.o=cur;g.n=send-g.n;beep(500,.1,'triangle');}
+else{g.n-=send;}
+sel=null;render();check();if(playing){cur=cur===1?2:1;if(cur===1){turn++;document.getElementById('t').textContent=turn;
+grid.forEach((c,j)=>{if(c.o)grid[j].n+=1;}); // growth per full round
+render();}}}
+else{sel=null;render();}}
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;const r=(kcur/S)|0,c=kcur%S;
+if(k==='ArrowUp'&&r>0)kcur-=S;else if(k==='ArrowDown'&&r<S-1)kcur+=S;else if(k==='ArrowLeft'&&c>0)kcur--;else if(k==='ArrowRight'&&c<S-1)kcur++;
+else if(k==='Enter'||k===' '){e.preventDefault();tap(kcur);return;}else return;render();});
+function check(){const a=grid.some(g=>g.o===1),b=grid.some(g=>g.o===2);if(!a||!b){playing=false;
+localStorage.setItem('mh_w'+(a?1:2),(a?wins[0]:wins[1])+1);
+document.getElementById('od').innerHTML='🏆 <b style="color:#fde047">'+(a?'ARES':'ATHENA')+' CONQUERS OLYMPUS!</b><br>in '+turn+' turns';
+document.getElementById('btn').textContent='REMATCH';document.getElementById('ov').style.display='flex';beep(880,.3,'triangle');}}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+</script>
+</body>
+</html>

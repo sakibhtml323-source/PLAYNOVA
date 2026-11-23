@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Desert Reflection #232</title><style>
+body{margin:0;font-family:system-ui;background:#1c1917;color:#fafaf9;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a8a29e;font-size:.78rem}
+#wrap{display:flex;gap:10px;margin:10px;flex-wrap:wrap;justify-content:center}
+canvas{background:#292524;border-radius:10px;touch-action:none;max-width:45vw}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1c1917;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🏜️ Desert Reflection</h1><div class="sub">Find the 4 differences. Beware — 2 DECOY spots look odd but cost 5s!</div>
+<div id="hud"><span>⏱️ <b id="tm">40</b>s</span><span>Found <b id="f">0</b>/4</span><span>Level <b id="l">1</b></span></div>
+<div id="wrap"><canvas id="L" width="300" height="300"></canvas><canvas id="R" width="300" height="300"></canvas></div>
+<div id="msg"></div><button id="btn">🔍 New Mirage</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const LC=document.getElementById('L'),RC=document.getElementById('R'),lx=LC.getContext('2d'),rx=RC.getContext('2d'),AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const W=300;
+let spots=[],decoys=[],found=[],timeLeft=40,timer=null,level=1;
+function scene(ctx,alt){
+ctx.fillStyle='#fef3c7';ctx.fillRect(0,0,W,W);
+ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(alt?60:80,alt?70:80,30,0,7);ctx.fill();
+ctx.fillStyle='#92400e';
+for(let i=0;i<5;i++){const x=40+i*55,y=200+(i%2)*20;ctx.fillRect(x,y,14,60);ctx.fillRect(x-8,y-10,30,14);}
+ctx.fillStyle='#b45309';ctx.fillRect(0,260,W,40);
+if(!alt){spots.forEach(s=>{if(!found.includes(s.id)){ctx.fillStyle=s.c;ctx.fillRect(s.x,s.y,s.w,s.h);}});}
+else{spots.forEach(s=>{if(!found.includes(s.id)){ctx.fillStyle=s.c2;ctx.fillRect(s.x,s.y,s.w,s.h);}});}
+decoys.forEach(d=>{ctx.fillStyle=d.c;ctx.fillRect(d.x,d.y,d.w,d.h);});}
+function setup(){const pool=[
+{x:150,y:40,w:20,h:20,c:'#dc2626',c2:'#2563eb'},
+{x:250,y:150,w:16,h:16,c:'#16a34a',c2:'#f59e0b'},
+{x:90,y:120,w:24,h:12,c:'#7c3aed',c2:'#7c3aed'},
+{x:200,y:230,w:18,h:18,c:'#0891b2',c2:'#dc2626'}];
+spots=pool.slice(0,4).map((s,i)=>({...s,id:i}));
+const dp=[{x:30,y:200,w:22,h:10,c:'#a16207'},{x:170,y:120,w:12,h:22,c:'#a16207'}];
+decoys=dp;found=[];timeLeft=Math.max(20,40-level*3);
+document.getElementById('tm').textContent=timeLeft;document.getElementById('f').textContent=0;
+scene(lx,false);scene(rx,true);
+clearInterval(timer);timer=setInterval(()=>{timeLeft--;document.getElementById('tm').textContent=timeLeft;
+if(timeLeft<=0){clearInterval(timer);beep(130,.3,'sawtooth');msg('⏰ Mirage faded! Level reset.');level=1;document.getElementById('l').textContent=1;}},1000);}
+function check(e,ctx,alt){const r=(alt?RC:LC).getBoundingClientRect();
+const x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*W/r.height;
+for(const s of spots){if(found.includes(s.id))continue;
+if(x>s.x-8&&x<s.x+s.w+8&&y>s.y-8&&y<s.y+s.h+8){found.push(s.id);
+document.getElementById('f').textContent=found.length;
+ctx.strokeStyle='#facc15';ctx.lineWidth=3;ctx.strokeRect(s.x-4,s.y-4,s.w+8,s.h+8);
+beep(700+found.length*40,.1,'triangle');msg('');
+if(found.length>=4){clearInterval(timer);beep(880,.2,'triangle');msg('🎉 All differences found! Next level…');pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;document.getElementById('l').textContent=level;setTimeout(setup,1000);}return;}}
+for(const d of decoys){if(x>d.x-8&&x<d.x+d.w+8&&y>d.y-8&&y<d.y+d.h+8){
+beep(130,.2,'sawtooth');timeLeft=Math.max(0,timeLeft-5);document.getElementById('tm').textContent=timeLeft;msg('⚠️ Decoy! −5s');return;}}
+beep(160,.08,'sawtooth');}
+function msg(t){document.getElementById('msg').textContent=t;}
+[LC,RC].forEach((c,i)=>c.addEventListener('pointerdown',e=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();check(e,i?rx:lx,i===1);}));
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();setup();};
+setup();
+</script></body></html>

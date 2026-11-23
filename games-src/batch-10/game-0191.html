@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Epic Vehicle Combat: Horror Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0c0a09;font-family:Georgia,serif;color:#fecaca;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#dc2626;padding:6px;letter-spacing:1px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#1c1917;border-radius:10px;border:1px solid #7f1d1d;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(12,10,9,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fecaca;padding:20px;z-index:5}
+button{background:#dc2626;border:none;color:#fff;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🚗 EPIC VEHICLE COMBAT</h1>
+<div id="hud"><span>Kills <b id="k">0</b></span><span>❤️ <b id="h">100</b></span><span>Wave <b id="w">1</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#dc2626">HEARSE COMBAT</h2><p id="od">Combat on wheels in the horror night! Your hearse auto-fires bone-shards at the nearest rival. Move with WASD/arrows or drag. Grab 🦇 for score and ❤️ for repairs. Survive the waves!</p><button id="btn">START THE ENGINE</button></div>
+<script>
+
+
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=480,H=440;cvs.width=W;cvs.height=H;
+let me,foes,shots,pickups,hp,kills,wave,playing,keys,frame,best=+localStorage.getItem('evc_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H/2,r:14,cd:0};foes=[];shots=[];pickups=[];hp=100;kills=0;wave=1;keys={};frame=0;playing=true;
+document.getElementById('k').textContent=0;document.getElementById('h').textContent=100;document.getElementById('w').textContent=1;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+window.addEventListener('pointerup',()=>drag=null);
+function spawnWave(){const n=3+wave;for(let i=0;i<n;i++){const a=Math.random()*7;
+foes.push({x:W/2+Math.cos(a)*290,y:H/2+Math.sin(a)*290,hp:1+((wave/3)|0),sp:0.85+wave*0.1,e:['🚓','🛺','👻'][(Math.random()*3)|0],hot:0});}}
+function step(){frame++;const sp=3.4;
+if(keys['w']||keys['arrowup'])me.y-=sp;if(keys['s']||keys['arrowdown'])me.y+=sp;
+if(keys['a']||keys['arrowleft'])me.x-=sp;if(keys['d']||keys['arrowright'])me.x+=sp;
+if(drag){const dx=drag.x-me.x,dy=drag.y-me.y,d=Math.hypot(dx,dy);if(d>5){me.x+=dx/d*sp;me.y+=dy/d*sp;}}
+me.x=Math.max(16,Math.min(W-16,me.x));me.y=Math.max(16,Math.min(H-16,me.y));
+me.cd--;
+if(me.cd<=0){let nf=null,nd=1e9;foes.forEach(f=>{const d=Math.hypot(f.x-me.x,f.y-me.y);if(d<nd){nd=d;nf=f;}});
+if(nf&&nd<220){me.cd=16;const a=Math.atan2(nf.y-me.y,nf.x-me.x);
+shots.push({x:me.x,y:me.y,vx:Math.cos(a)*5.6,vy:Math.sin(a)*5.6});beep(600,.04);}}
+shots.forEach(s=>{s.x+=s.vx;s.y+=s.vy;foes.forEach(f=>{if(Math.hypot(f.x-s.x,f.y-s.y)<f.r+4){f.hp--;f.hot=6;shots.splice(shots.indexOf(s),1);beep(300,.07,'triangle');
+if(f.hp<=0){foes.splice(foes.indexOf(f),1);kills++;document.getElementById('k').textContent=kills;
+if(Math.random()<0.2)pickups.push({x:f.x,y:f.y,t:Math.random()<0.5?'❤':'🦇'});}}});});
+shots=shots.filter(s=>s.x>-10&&s.x<W+10&&s.y>-10&&s.y<H+10);
+foes.forEach(f=>{const a=Math.atan2(me.y-f.y,me.x-f.x);f.x+=Math.cos(a)*f.sp;f.y+=Math.sin(a)*f.sp;if(f.hot>0)f.hot--;
+if(Math.hypot(f.x-me.x,f.y-me.y)<f.r+me.r-2){hp-=0.8;document.getElementById('h').textContent=Math.max(0,Math.round(hp));if(hp<=0)die();}});
+pickups.forEach(p=>{if(Math.hypot(p.x-me.x,p.y-me.y)<22){if(p.t==='❤')hp=Math.min(100,hp+25);else kills+=2;
+document.getElementById('h').textContent=Math.round(hp);document.getElementById('k').textContent=kills;
+pickups.splice(pickups.indexOf(p),1);beep(880,.07);}});
+if(!foes.length){wave++;document.getElementById('w').textContent=wave;hp=Math.min(100,hp+10);spawnWave();beep(440,.13,'triangle');}}
+function die(){playing=false;if(kills>best){best=kills;localStorage.setItem('evc_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='Your hearse crashes on wave <b>'+wave+'</b>.<br>Kills: <b style="color:#fde047">'+kills+'</b>';
+document.getElementById('btn').textContent='REBUILD';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#1c1917';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#292524';for(let x=0;x<W;x+=40)ctx.strokeRect(x,0,40,40);
+// moon
+ctx.fillStyle='#fde68a';ctx.beginPath();ctx.arc(W-60,50,24,0,7);ctx.globalAlpha=.7;ctx.fill();ctx.globalAlpha=1;
+pickups.forEach(p=>{ctx.font='15px serif';ctx.textAlign='center';ctx.fillText(p.t,p.x,p.y+5);});
+shots.forEach(s=>{ctx.fillStyle='#e2e8f0';ctx.fillRect(s.x-5,s.y-1.5,10,3);});
+foes.forEach(f=>{ctx.font='20px serif';ctx.globalAlpha=f.hot>0?0.6:1;ctx.fillText(f.e,f.x,f.y+7);ctx.globalAlpha=1;});
+// hearse
+ctx.fillStyle='#111';ctx.fillRect(me.x-18,me.y-10,36,20);
+ctx.fillStyle='#7f1d1d';ctx.fillRect(me.x-18,me.y-14,36,6);
+ctx.fillStyle='#333';ctx.fillRect(me.x-22,me.y-8,5,16);ctx.fillRect(me.x+17,me.y-8,5,16);
+ctx.fillStyle='#fde047';ctx.fillRect(me.x+8,me.y-8,5,4);dark();}
+function dark(){const g=ctx.createRadialGradient(me.x,me.y,70,me.x,me.y,150);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0.93)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();spawnWave();document.getElementById('ov').style.display='none';};
+loop();
+
+
+</script>
+</body>
+</html>

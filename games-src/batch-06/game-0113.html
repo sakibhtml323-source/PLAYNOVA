@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Retro Lives Arena #113</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#000;font-family:'Courier New',monospace;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#f87171;padding:6px;letter-spacing:2px;text-shadow:2px 2px #7f1d1d}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{image-rendering:pixelated;background:#1a1a2e;border:4px solid #e94560;border-radius:4px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:20px;z-index:5}
+button{background:#e94560;border:none;color:#fff;font-weight:800;padding:12px 34px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit;box-shadow:4px 4px #7f1d1d}
+</style>
+</head>
+<body>
+<h1>⚔ MEGA 8-BIT BATTLE</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>HP <b id="h">100</b></span><span>Wave <b id="w">1</b></span><span>❤️ <b id="lv">3</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#e94560">8-BIT ARENA</h2><p id="od">Classic arena survival! WASD/arrows or drag to move. Your sword auto-swings at nearby slimes. Grab hearts ❤ and gems 💎. 8-bit glory awaits!</p><button id="btn">START GAME</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=400;cvs.width=W;cvs.height=H;
+let me,foes,shots,pickups,score,hp,wave,playing,keys,frame,best=+localStorage.getItem('rb_best')||0,lives=3;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-16)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){me={x:W/2,y:H/2,cd:0};foes=[];shots=[];pickups=[];score=0;hp=100;lives=3;document.getElementById('lv').textContent=3;;wave=1;keys={};frame=0;playing=true;
+document.getElementById('s').textContent=0;document.getElementById('h').textContent=100;document.getElementById('w').textContent=1;}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+let drag=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;const r=cvs.getBoundingClientRect();drag={x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};});
+window.addEventListener('pointerup',()=>drag=null);
+function spawnWave(){const n=3+wave;for(let i=0;i<n;i++){const a=Math.random()*7;
+foes.push({x:W/2+Math.cos(a)*270,y:H/2+Math.sin(a)*270,hp:1+((wave/3)|0),sp:0.8+wave*0.1,e:['🟢','🟣','🟠'][(Math.random()*3)|0],r:11});}}
+function step(){frame++;const sp=3.2;
+if(keys['w']||keys['arrowup'])me.y-=sp;if(keys['s']||keys['arrowdown'])me.y+=sp;
+if(keys['a']||keys['arrowleft'])me.x-=sp;if(keys['d']||keys['arrowright'])me.x+=sp;
+if(drag){const dx=drag.x-me.x,dy=drag.y-me.y,d=Math.hypot(dx,dy);if(d>5){me.x+=dx/d*sp;me.y+=dy/d*sp;}}
+me.x=Math.max(14,Math.min(W-14,me.x));me.y=Math.max(14,Math.min(H-14,me.y));
+me.cd--;
+if(me.cd<=0){let nf=null,nd=1e9;foes.forEach(f=>{const d=Math.hypot(f.x-me.x,f.y-me.y);if(d<nd){nd=d;nf=f;}});
+if(nf&&nd<48){me.cd=18;nf.hp--;beep(260,.07,'sawtooth');
+if(nf.hp<=0){foes.splice(foes.indexOf(nf),1);score+=20;document.getElementById('s').textContent=score;
+if(Math.random()<0.24)pickups.push({x:nf.x,y:nf.y,t:Math.random()<0.35?'❤':'💎'});}}}
+foes.forEach(f=>{const a=Math.atan2(me.y-f.y,me.x-f.x);f.x+=Math.cos(a)*f.sp;f.y+=Math.sin(a)*f.sp;
+if(Math.hypot(f.x-me.x,f.y-me.y)<f.r+11){hp-=0.7;document.getElementById('h').textContent=Math.max(0,Math.round(hp));if(hp<=0){lives--;document.getElementById('lv').textContent=lives;
+if(lives<=0){die();}else{hp=100;document.getElementById('h').textContent=100;beep(500,.2,'triangle');
+me.x=W/2;me.y=H/2;foes=[];}}}});
+pickups.forEach(p=>{if(Math.hypot(p.x-me.x,p.y-me.y)<20){if(p.t==='❤')hp=Math.min(100,hp+25);else score+=25;
+document.getElementById('s').textContent=score;document.getElementById('h').textContent=Math.round(hp);
+pickups.splice(pickups.indexOf(p),1);beep(880,.07);}});
+if(!foes.length){wave++;document.getElementById('w').textContent=wave;spawnWave();beep(440,.12,'triangle');}}
+function die(){playing=false;if(score>best){best=score;localStorage.setItem('rb_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='CONTINUE?<br>You fell on wave <b style="color:#e94560">'+wave+'</b> · Score '+score;
+document.getElementById('btn').textContent='YES! FIGHT AGAIN';document.getElementById('ov').style.display='flex';beep(110,.5,'sawtooth');}
+function draw(){ctx.fillStyle='#1a1a2e';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#16213e';for(let x=0;x<W;x+=22)ctx.strokeRect(x,0,22,22);
+pickups.forEach(p=>{ctx.font='15px serif';ctx.textAlign='center';ctx.fillText(p.t,p.x,p.y+5);});
+foes.forEach(f=>{ctx.fillStyle=f.e;ctx.fillRect(f.x-10,f.y-10,20,20);ctx.fillStyle='#111';ctx.fillRect(f.x-4,f.y-3,3,4);ctx.fillRect(f.x+2,f.y-3,3,4);});
+ctx.fillStyle='#0f3460';ctx.fillRect(me.x-12,me.y-14,24,24);
+ctx.fillStyle='#e94560';ctx.fillRect(me.x-12,me.y-14,24,6);
+ctx.fillStyle='#fff';ctx.fillRect(me.x+3,me.y-6,4,4);
+if(me.cd>12){ctx.strokeStyle='#fff';ctx.beginPath();ctx.arc(me.x,me.y,20,0,7);ctx.stroke();}}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();spawnWave();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

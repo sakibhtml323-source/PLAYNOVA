@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Arctic Flappy: Universe Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0c4a6e,#082f49);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#7dd3fc;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#e0f2fe;border-radius:12px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button{background:#38bdf8;border:none;color:#082f49;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🐧 ARCTIC FLAPPY UNIVERSE</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#7dd3fc">FROZEN FLIGHT</h2><p id="od">Guide the penguin through the ice spires of the frozen universe! Tap/Space to flap. Each gate is one point. The cold remembers your mistakes…</p><button id="btn">TAKE WING</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=400,H=520;cvs.width=W;cvs.height=H;
+let bird,pipes,score,playing,frame,best=+localStorage.getItem('af_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-130)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){bird={x:90,y:H/2,vy:0,r:11};pipes=[];score=0;frame=0;playing=true;document.getElementById('s').textContent=0;}
+function flap(){if(!playing)return;bird.vy=-7.4;beep(600,.05);}
+window.addEventListener('keydown',e=>{if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();flap();}});
+cvs.addEventListener('pointerdown',()=>{audio.resume();flap();});
+function step(){frame++;bird.vy+=0.52;bird.y+=bird.vy;
+if(frame%95===0){const gap=135+Math.random()*40;const gy=70+Math.random()*(H-220);
+pipes.push({x:W+20,w:52,gy,gap,passed:false});}
+pipes.forEach(p=>{p.x-=2.6;
+if(!p.passed&&p.x+p.w<bird.x){p.passed=true;score++;document.getElementById('s').textContent=score;beep(880,.08,'triangle');}
+const inX=bird.x+bird.r>p.x&&bird.x-bird.r<p.x+p.w;
+const inTop=bird.y-bird.r<p.gy,inBot=bird.y+bird.r>p.gy+p.gap;
+if(inX&&(inTop||inBot))die();});
+pipes=pipes.filter(p=>p.x>-70);
+if(bird.y>H-8||bird.y<8)die();}
+function die(){if(!playing)return;playing=false;if(score>best){best=score;localStorage.setItem('af_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML='The ice remembers…<br>Score: <b style="color:#38bdf8">'+score+'</b>';
+document.getElementById('btn').textContent='REFREEZE';document.getElementById('ov').style.display='flex';beep(120,.5,'sawtooth');}
+function draw(){const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#bae6fd');g2.addColorStop(1,'#e0f2fe');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+// aurora
+const ag=ctx.createLinearGradient(0,0,W,0);
+ag.addColorStop(0,'rgba(74,222,128,0)');ag.addColorStop(0.5,'rgba(74,222,128,.18)');ag.addColorStop(1,'rgba(167,139,250,0)');
+ctx.fillStyle=ag;ctx.fillRect(0,0,W,90);
+pipes.forEach(p=>{ctx.fillStyle='#7dd3fc';ctx.fillRect(p.x,0,p.w,p.gy);ctx.fillRect(p.x,p.gy+p.gap,p.w,H-p.gy-p.gap);
+ctx.fillStyle='#38bdf8';ctx.fillRect(p.x,0,6,p.gy);ctx.fillRect(p.x,p.gy+p.gap,6,H-p.gy-p.gap);
+ctx.fillStyle='#e0f2fe';ctx.beginPath();ctx.moveTo(p.x,p.gy);ctx.lineTo(p.x+p.w/2,p.gy-12);ctx.lineTo(p.x+p.w,p.gy);ctx.fill();
+ctx.beginPath();ctx.moveTo(p.x,p.gy+p.gap);ctx.lineTo(p.x+p.w/2,p.gy+p.gap+12);ctx.lineTo(p.x+p.w,p.gy+p.gap);ctx.fill();});
+// penguin
+ctx.fillStyle='#1e293b';ctx.beginPath();ctx.ellipse(bird.x,bird.y,10,12,0,0,7);ctx.fill();
+ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(bird.x+3,bird.y-2,5,7,0,0,7);ctx.fill();
+ctx.fillStyle='#111';ctx.fillRect(bird.x+4,bird.y-5,3,3);
+ctx.fillStyle='#fb923c';ctx.beginPath();ctx.moveTo(bird.x+8,bird.y-1);ctx.lineTo(bird.x+13,bird.y+1);ctx.lineTo(bird.x+8,bird.y+3);ctx.fill();
+const f=Math.sin(frame/4)*5;
+ctx.fillStyle='#1e293b';
+ctx.beginPath();ctx.moveTo(bird.x-4,bird.y);ctx.lineTo(bird.x-18,bird.y-4+f);ctx.lineTo(bird.x-7,bird.y+5);ctx.fill();}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

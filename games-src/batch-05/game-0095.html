@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wild Rise</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#14532d,#052e16);font-family:Georgia,serif;color:#bbf7d0;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#4ade80;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:6px}
+canvas{background:#166534;border-radius:12px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#86efac;min-height:1.6em;margin-top:6px;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(5,46,22,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#bbf7d0;padding:20px;z-index:5}
+button{background:#4ade80;border:none;color:#052e16;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🌿 WILD RISE</h1>
+<div id="hud"><span>Ridge <b id="r">1</b></span><span>Vines used <b id="v">0</b>/<b id="t">0</b></span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Grow the vine upward! Drag from any green shoot to steer its growth — reach the golden flower ☀ at the top.</div>
+<div id="ov"><h2 style="color:#4ade80">WILD RISE</h2><p id="od">A botanical climbing puzzle! Tap a shoot 🌱 to grow the vine one step (up/left/right — never down). Plan the route: vines are limited, ridges get taller and rockier. Touch the golden flower to bloom!</p><button id="btn">PLANT THE SEED</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=420,H=480;cvs.width=W;cvs.height=H;
+const TS=42;
+let grid,me,flower,vines,playing,ridge,rocks,best=+localStorage.getItem('wr_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing||!isFinite(f)||!isFinite(d)||f<=0||d<=0)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){grid=[];const cols=Math.floor(W/TS),rows=Math.floor(H/TS);
+for(let r=0;r<rows;r++){grid[r]=[];for(let c=0;c<cols;c++)grid[r][c]=Math.random()<(0.1+ridge*0.015)?1:0;}
+const sc=Math.floor(cols/2);
+me={r:rows-2,c:sc};
+grid[rows-2][sc]=0;grid[rows-1][sc]=0;grid[rows-1][sc-1]=0;grid[rows-1][sc+1]=0;
+flower={r:2,c:(Math.random()*cols)|0};
+grid[flower.r][flower.c]=0;grid[flower.r+1][flower.c]=0;
+vines=8+ridge*2;
+document.getElementById('r').textContent=ridge;document.getElementById('v').textContent=vines;document.getElementById('t').textContent=vines;
+document.getElementById('msg').textContent='Grow to the ☀ — '+vines+' vines left. Tap above/left/right of the shoot.';
+draw();}
+function grow(dr,dc){if(!playing)return;
+const nr=me.r+dr,nc=me.c+dc;
+if(nr<0||nc<0||nr>=grid.length||nc>=grid[0].length||grid[nr][nc]||dr===1){beep(180,.08,'square');return;}
+me={r:nr,c:nc};vines--;document.getElementById('v').textContent=vines;
+beep(440+vines*15,.06);draw();
+if(nr===flower.r&&nc===flower.c){win();return;}
+if(vines<=0)wither();}
+function win(){playing=false;if(ridge+1>best){best=ridge+1;localStorage.setItem('wr_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='☀ <b style="color:#fde047">THE FLOWER BLOOMS ON RIDGE '+ridge+'!</b><br>Only '+vines+' vines to spare.';
+document.getElementById('btn').textContent='HIGHER RIDGE';ridge++;document.getElementById('ov').style.display='flex';}
+function wither(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🥀 <b>The vine withers on ridge '+ridge+'…</b><br>So close to the sun.';
+document.getElementById('btn').textContent='RESEED';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#166534';ctx.fillRect(0,0,W,H);
+for(let r=0;r<grid.length;r++)for(let c=0;c<grid[0].length;c++){const x=c*TS,y=r*TS;
+ctx.fillStyle=(r+c)%2?'#15803d':'#16a34a';ctx.fillRect(x+1,y+1,TS-2,TS-2);
+if(grid[r][c]){ctx.fillStyle='#44403c';ctx.fillRect(x+5,y+5,TS-10,TS-10);ctx.fillStyle='#292524';ctx.fillRect(x+9,y+9,TS-18,TS-18);}}
+ctx.font='22px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+ctx.fillText('☀',flower.c*TS+TS/2,flower.r*TS+TS/2+2);
+ctx.fillText('🌱',me.c*TS+TS/2,me.r*TS+TS/2+2);
+// hint arrows
+ctx.globalAlpha=.5;
+if(me.r>0&&!grid[me.r-1][me.c])ctx.fillText('⬆',me.c*TS+TS/2,me.r*TS-TS/2);
+if(me.c>0&&!grid[me.r][me.c-1])ctx.fillText('⬅',me.c*TS-TS/2,me.r*TS+TS/2);
+if(me.c<grid[0].length-1&&!grid[me.r][me.c+1])ctx.fillText('➡',me.c*TS+TS*1.5,me.r*TS+TS/2);
+ctx.globalAlpha=1;}
+let t0=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();t0={x:e.clientX,y:e.clientY};});
+cvs.addEventListener('pointerup',e=>{if(!t0)return;const dx=e.clientX-t0.x,dy=e.clientY-t0.y;
+if(Math.abs(dx)<14&&Math.abs(dy)<14){const r=cvs.getBoundingClientRect();
+const tx=Math.floor((e.clientX-r.left)/r.width*grid[0].length),ty=Math.floor((e.clientY-r.top)/r.height*grid.length);
+grow(Math.sign(ty-me.r)===1?0:Math.sign(ty-me.r),tx===me.c?0:Math.sign(tx-me.c));}
+else if(Math.abs(dx)>Math.abs(dy))grow(0,Math.sign(dx));else grow(Math.sign(dy)<0?-1:0,0);t0=null;});
+window.addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowUp'||k==='w')grow(-1,0);else if(k==='ArrowLeft'||k==='a')grow(0,-1);
+else if(k==='ArrowRight'||k==='d')grow(0,1);});
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+loop();
+function loop(){if(playing)draw();requestAnimationFrame(loop);}
+</script>
+</body>
+</html>

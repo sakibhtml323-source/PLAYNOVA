@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Turbo Airport Manager: Steampunk Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#78350f,#451a03);font-family:Georgia,serif;color:#fde68a;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.05rem;color:#fbbf24;padding:6px}
+#hud{display:flex;gap:10px;font-size:.85rem;margin-bottom:8px;flex-wrap:wrap;justify-content:center}
+#hud span{background:#451a03;border:1px solid #92400e;border-radius:10px;padding:4px 10px}
+#gates{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+.gate{width:92px;height:92px;border-radius:14px;background:#451a03;border:2px solid #d97706;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#fde68a}
+.gate.busy{background:#78350f}
+.gate .p{font-size:1.8rem}
+.gate small{font-size:.65rem;color:#fcd34d}
+#q{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;min-height:68px;margin:8px 0}
+.plane{background:#fef3c7;border:2px solid #d97706;border-radius:12px;padding:8px 12px;text-align:center;cursor:pointer;color:#451a03}
+.plane .e{font-size:1.5rem}
+.plane small{display:block;font-size:.68rem;color:#78350f}
+#log{width:min(540px,94vw);background:#451a03;border-radius:10px;padding:8px 12px;font-size:.8rem;color:#fcd34d;min-height:2.2em;border:1px solid #92400e}
+#ov{position:fixed;inset:0;background:rgba(69,26,3,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fde68a;padding:20px;z-index:5}
+button.big{background:#fbbf24;color:#451a03;border:none;font-family:inherit;font-weight:700;padding:12px 36px;border-radius:26px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>⚙️ TURBO STEAMPUNK AIRPORT</h1>
+<div id="hud"><span>⚙️ Shift <b id="sh">0</b>/10</span><span>🪙 Gears <b id="cr">50</b></span><span>😊 Steam <b id="sat">80</b>%</span><span>🛬 Docked <b id="ld">0</b></span><span>Best <b id="b">0</b></span></div>
+<div id="gates"></div>
+<div id="q"></div>
+<div id="log">Assign airships to docks before their steam runs out!</div>
+<div id="ov"><h2 style="color:#fbbf24">AETHER PORT</h2><p id="od">Manage the brass airship port! Airships queue with pressure meters. Assign each to a dock — clockwork vessels need longer to wind down. 10 shifts, keep steam pressure up!</p><button class="big" id="btn">STOKE THE BOILERS</button></div>
+<script>
+
+"use strict";
+const TYPES=[{e:'🎈',n:'Balloon',p:100,t:12,w:1},{e:'🛩️',n:'Biplane',p:70,t:7,w:2},{e:'🚁',n:'Gyrocopter',p:90,t:9,w:1},{e:'🚀',n:'Rocket',p:160,t:18,w:1}];
+let S,sel,playing;
+let best=+localStorage.getItem('ta_best')||0;document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function fresh(){S={sh:1,cr:50,sat:80,gates:[{p:0},{p:0},{p:0}],q:[],landed:0,over:false};}
+function load(){try{const d=JSON.parse(localStorage.getItem('ta_save'));if(d)S=d;else fresh();}catch(e){fresh();}}
+function save(){localStorage.setItem('ta_save',JSON.stringify(S));}
+load();if(!S||S.over)fresh();
+function render(){document.getElementById('sh').textContent=S.sh;document.getElementById('cr').textContent=Math.floor(S.cr);
+document.getElementById('sat').textContent=Math.max(0,Math.floor(S.sat));document.getElementById('ld').textContent=S.landed;
+const g=document.getElementById('gates');g.innerHTML='';
+S.gates.forEach((gt,i)=>{const d=document.createElement('div');d.className='gate'+(gt.p>0?' busy':'');
+d.innerHTML='<div class="p">'+(gt.p>0?'⚙️':'🛖')+'</div><small>DOCK '+(i+1)+(gt.p>0?' · '+gt.p+'s':'')+'</small>';
+d.onclick=()=>{if(!playing)return;
+if(sel!==null&&S.q[sel]&&gt.p<=0){S.gates[i]={p:S.q[sel].t};S.cr+=S.q[sel].p;S.landed++;S.q.splice(sel,1);sel=null;
+beep(660,.1,'triangle');log('✅ Docked! +gears earned.');render();save();}
+else if(gt.p<=0)log('Select an airship from the queue first.');};
+g.appendChild(d);});
+const q=document.getElementById('q');q.innerHTML='';
+S.q.forEach((p,i)=>{const d=document.createElement('div');d.className='plane';
+if(sel===i)d.style.outline='3px solid #fbbf24';
+d.innerHTML='<span class="e">'+p.e+'</span><small>'+p.n+' · '+p.p+'🪙 · ⏳'+p.patience+'s</small>';
+d.onclick=()=>{if(!playing)return;sel=i;render();};
+q.appendChild(d);});}
+function log(t){document.getElementById('log').textContent='» '+t;}
+function tick(){if(!playing)return;
+S.q.forEach(p=>p.patience--);
+S.q.filter(p=>p.patience<=0).forEach(p=>{S.sat-=12;S.q.splice(S.q.indexOf(p),1);
+if(sel!==null&&sel>=S.q.length)sel=null;log('🌫 '+p.n+' drifted away! Steam -12.');beep(150,.2,'sawtooth');});
+S.gates.forEach((g,i)=>{if(g.p>0){g.p--;if(g.p===0)S.sat=Math.min(100,S.sat+2);}});
+if(Math.random()<0.6){const t=TYPES[(Math.random()*TYPES.length)|0];S.q.push({...t,patience:16+((Math.random()*10)|0)});}
+if(S.sat<=0)return end(false,'The boilers burst! The port shuts down.');
+if(S.landed>=S.sh*4+4){if(S.sh>=10)return end(true,'');S.sh++;S.sat=Math.min(100,S.sat+10);
+log('🌅 Shift '+S.sh+' begins! Steam +10.');beep(520,.12,'triangle');}
+render();save();}
+function end(win,why){playing=false;S.over=true;
+if(S.cr>best){best=Math.floor(S.cr);localStorage.setItem('ta_best',best);document.getElementById('b').textContent=best;}
+document.getElementById('od').innerHTML=win?'🏆 <b>PORTMASTER OF THE AETHER!</b><br>10 shifts survived — the skies are yours.':'💥 '+why;
+document.getElementById('btn').textContent='NEW PORTMASTER';document.getElementById('ov').style.display='flex';
+if(win){beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);}}
+document.getElementById('btn').onclick=()=>{audio.resume();
+if(document.getElementById('btn').textContent==='NEW PORTMASTER')fresh();
+playing=true;render();document.getElementById('ov').style.display='none';};
+setInterval(tick,1000);
+window.addEventListener('keydown',e=>{const k=e.key;if(k>='1'&&k<='3'){const gs=document.querySelectorAll('.gate');if(gs[+k-1])gs[+k-1].click();}});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Tile Rotation: Arctic Edition</title>
+<script>window.__pnNoPad=true;</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:#0a1a2c;font-family:'Segoe UI',system-ui,Arial,sans-serif;color:#e4f6ff;display:flex;flex-direction:column;align-items:center;overflow:hidden;padding:max(6px,env(safe-area-inset-top)) 6px max(6px,env(safe-area-inset-bottom))}
+#hud{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;font-size:.82rem;margin:2px 0 6px}
+#hud span{background:rgba(160,225,255,.09);border:1px solid rgba(160,225,255,.3);border-radius:999px;padding:3px 12px;white-space:nowrap}
+#hud b{color:#ffcf5c;font-variant-numeric:tabular-nums}
+#box{position:relative;touch-action:none}
+canvas{display:block;border-radius:14px;touch-action:none}
+#tools{display:flex;gap:8px;margin-top:9px}
+#tools button{background:rgba(160,225,255,.13);color:#e4f6ff;border:1px solid rgba(160,225,255,.32);border-radius:14px;padding:10px 15px;font-size:.86rem;font-weight:700;cursor:pointer}
+#tools button:disabled{opacity:.4}
+#tip{font-size:.78rem;opacity:.75;margin-top:7px;text-align:center}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,26,44,.94);border-radius:14px;text-align:center;padding:14px;z-index:5;gap:6px}
+.ov.hide{display:none}.ov h2{font-size:1.45rem;color:#8fe3ff}.ov p{font-size:.86rem;line-height:1.45;max-width:320px;opacity:.93}
+.btn{background:linear-gradient(180deg,#8fe3ff,#2a9bd8);color:#052033;border:none;padding:11px 28px;border-radius:24px;font-size:1rem;font-weight:800;cursor:pointer;margin-top:6px;min-width:180px}
+.btn.alt{background:rgba(255,255,255,.14);color:#e4f6ff;font-weight:600;font-size:.84rem;padding:7px 16px;min-width:0}
+.stars{font-size:2.2rem;letter-spacing:6px}
+</style>
+</head>
+<body>
+<div id="hud"><span>Level <b id="lv">1</b></span><span>Moves <b id="mv">0</b></span><span>Par <b id="pr">0</b></span><span>💡 <b id="hn">3</b></span><span>Best L<b id="bs">1</b></span></div>
+<div id="box"><canvas id="c"></canvas><div class="ov" id="ov"></div></div>
+<div id="tools"><button id="undo">↩ Undo</button><button id="rst">⟲ Reset</button><button id="hint">💡 Hint</button></div>
+<div id="tip">Tap a tile to rotate it · connect the 🔥 source to every 💡 outlet</div>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const cvs=$('c'),ctx=cvs.getContext('2d');
+function emit(t,x){try{if(typeof pnEmit==='function')pnEmit(t,x||{})}catch(e){}}
+let SV={lvl:1,best:1,score:0,stars:{}};
+try{Object.assign(SV,JSON.parse(localStorage.getItem('tr_save')||'{}'))}catch(e){}
+function save(){try{localStorage.setItem('tr_save',JSON.stringify(SV))}catch(e){}}
+/* ---------- audio ---------- */
+let AC=null;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended'){try{AC.resume()}catch(e){}}return AC}
+function tone(f,d,type,v,delay,slide){const a=ac();if(!a)return;try{const t=a.currentTime+(delay||0),o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v||.08,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+const sfx={rot(p){tone(380+p*60,.06,'triangle',.06,0,160)},lit(i){tone(700+i*110,.14,'sine',.09);tone(1100+i*110,.12,'triangle',.05,.06)},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,.22,'triangle',.1,i*.08))},hint(){tone(900,.12,'sine',.07,0,300)},undo(){tone(400,.07,'square',.04,0,-150)}};
+/* ---------- puzzle ---------- */
+const U=1,R=2,D=4,L=8,DXY={[U]:[0,-1],[R]:[1,0],[D]:[0,1],[L]:[-1,0]},OPP={[U]:D,[R]:L,[D]:U,[L]:R};
+const rot=(m,k)=>{k=((k%4)+4)%4;for(let i=0;i<k;i++)m=((m<<1)|(m>>3))&15;return m};
+let N=4,tiles,src,par=0,moves=0,hints=3,lvl=1,score=0,state='menu',history=[],powered=new Set(),prevPow=new Set(),cursor={x:0,y:0},kbd=false,time=0,parts=[],floats=[],flow=0,hintTile=null,hintT=0,shake=0,flakes=[],cw=360,cell=60;
+const rnd=(a,b)=>a+Math.random()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1));
+flakes=Array.from({length:40},()=>({x:Math.random()*360,y:Math.random()*360,v:rnd(10,30),r:rnd(.8,2.2),p:Math.random()*6}));
+function gen(l){N=Math.min(8,4+Math.floor((l-1)/3));const nOut=Math.min(7,2+Math.floor((l-1)/2));
+const m=Array.from({length:N},()=>Array(N).fill(0)),seen=Array.from({length:N},()=>Array(N).fill(false));
+const sx=ri(1,N-2),sy=ri(1,N-2),stack=[[sx,sy]];seen[sy][sx]=true;
+while(stack.length){const si=Math.random()<.5?ri(0,stack.length-1):stack.length-1,[x,y]=stack[si];const opts=[U,R,D,L].filter(d=>{const nx=x+DXY[d][0],ny=y+DXY[d][1];return nx>=0&&ny>=0&&nx<N&&ny<N&&!seen[ny][nx]});if(!opts.length){stack.splice(si,1);continue}const d=opts[ri(0,opts.length-1)],nx=x+DXY[d][0],ny=y+DXY[d][1];m[y][x]|=d;m[ny][nx]|=OPP[d];seen[ny][nx]=true;stack.push([nx,ny])}
+const leaves=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++){const mk=m[y][x];if(!(x===sx&&y===sy)&&(mk===U||mk===R||mk===D||mk===L))leaves.push([x,y])}
+leaves.sort(()=>Math.random()-.5);const outs=leaves.slice(0,Math.min(nOut,leaves.length));
+tiles=[];par=0;for(let y=0;y<N;y++){tiles[y]=[];for(let x=0;x<N;x++){const solved=m[y][x],k=ri(0,3),cur=rot(solved,k);let need=0;while(rot(cur,need)!==solved&&need<4)need++;par+=need%4;tiles[y][x]={solved,mask:cur,k:0,vis:0,type:(x===sx&&y===sy)?'src':outs.some(o=>o[0]===x&&o[1]===y)?'out':'pipe',lit:0}}}
+src={x:sx,y:sy};moves=0;history=[];hints=3;compute(false);const oo=outsLit();if(oo[0]===oo[1]&&(gen.retry=(gen.retry||0)+1)<30)return gen(l);gen.retry=0}
+function compute(announce){const p=new Set(),q=[[src.x,src.y]];p.add(src.y*N+src.x);while(q.length){const[x,y]=q.shift();const mk=tiles[y][x].mask;for(const d of [U,R,D,L]){if(!(mk&d))continue;const nx=x+DXY[d][0],ny=y+DXY[d][1];if(nx<0||ny<0||nx>=N||ny>=N)continue;if(!(tiles[ny][nx].mask&OPP[d]))continue;const k=ny*N+nx;if(!p.has(k)){p.add(k);q.push([nx,ny])}}}
+prevPow=powered;powered=p;if(announce){let i=0;for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(tiles[y][x].type==='out'&&p.has(y*N+x)&&!prevPow.has(y*N+x)){sfx.lit(i++);burst(x,y,'#ffe27a',14);floats.push({x:(x+.5)*cell,y:(y+.3)*cell,t:'💡',l:.9})}}}
+function outsLit(){let a=0,b=0;for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(tiles[y][x].type==='out'){b++;if(powered.has(y*N+x))a++}return[a,b]}
+/* ---------- flow ---------- */
+function layout(){const w=Math.min(innerWidth-14,420,innerHeight-250);cw=Math.max(240,w);cell=cw/N;const dpr=Math.min(devicePixelRatio||1,2);cvs.width=Math.round(cw*dpr);cvs.height=Math.round(cw*dpr);cvs.style.width=cw+'px';cvs.style.height=cw+'px';cvs.dpr=dpr}
+addEventListener('resize',()=>{if(tiles)layout()});
+function start(l){ac();lvl=l;SV.lvl=l;gen(l);layout();parts=[];floats=[];state='play';$('ov').classList.add('hide');hud()}
+function hud(){$('lv').textContent=lvl;$('mv').textContent=moves;$('pr').textContent=par;$('hn').textContent=hints;$('bs').textContent=SV.best;$('undo').disabled=!history.length||state!=='play';$('hint').disabled=hints<=0||state!=='play'}
+function rotate(x,y,cw){if(state!=='play')return;const t=tiles[y][x];if(t.mask===15)/* cross still counts as a move */;history.push({x,y});t.mask=rot(t.mask,1);t.k++;moves++;sfx.rot(popc(t.mask));compute(true);hud();check()}
+function popc(m){let n=0;while(m){n+=m&1;m>>=1}return n}
+function undo(){if(state!=='play'||!history.length)return;const h=history.pop(),t=tiles[h.y][h.x];t.mask=rot(t.mask,3);t.k--;moves--;sfx.undo();compute(false);hud()}
+function reset(){if(state!=='play')return;while(history.length){const h=history.pop(),t=tiles[h.y][h.x];t.mask=rot(t.mask,3);t.k--}moves=0;compute(false);hud()}
+function hint(){if(state!=='play'||hints<=0)return;const bad=[];for(let y=0;y<N;y++)for(let x=0;x<N;x++){const t=tiles[y][x];if(t.mask!==t.solved)bad.push([x,y])}if(!bad.length)return;/* prefer a tile adjacent to powered area */bad.sort((a,b)=>{const pa=powered.has(a[1]*N+a[0])?0:1,pb=powered.has(b[1]*N+b[0])?0:1;return pa-pb});hintTile={x:bad[0][0],y:bad[0][1]};hintT=3;hints--;sfx.hint();hud()}
+function check(){const[a,b]=outsLit();if(a===b&&b>0){state='over';const st=moves<=par?3:moves<=par+Math.max(3,Math.ceil(par*.25))?2:1;const pts=lvl*100+st*100+Math.max(0,par*4-moves*2);score+=pts;SV.stars[lvl]=Math.max(SV.stars[lvl]||0,st);if(lvl>=SV.best)SV.best=lvl+1;SV.lvl=lvl+1;save();emit('GAME_SCORE_UPDATED',{score});emit('GAME_LEVEL_COMPLETED',{level:lvl});sfx.win();for(let i=0;i<5;i++)burst(rnd(0,N),rnd(0,N),'#8fe3ff',16);hud();
+setTimeout(()=>{$('ov').innerHTML='<h2>❄ Power restored!</h2><p class="stars">'+'⭐'.repeat(st)+'☆'.repeat(3-st)+'</p><p>'+moves+' moves (par '+par+')<br>+'+pts+' · Score <b>'+score+'</b></p><button class="btn" id="nx">NEXT LEVEL ▶</button><button class="btn alt" id="rp">Replay</button>';$('ov').classList.remove('hide');$('nx').onclick=()=>start(lvl+1);$('rp').onclick=()=>{state='play';$('ov').classList.add('hide');reset()}},900)}}
+function menu(){state='menu';const l=SV.lvl;$('ov').innerHTML='<h2>❄ TILE ROTATION: ARCTIC</h2><p>The igloo village lost power! <b>Tap tiles to rotate</b> the pipes until the 🔥 furnace is connected to <b>every 💡 outlet</b>.</p><p>Boards grow bigger with every level. Beat the <b>par</b> for 3 stars — undo and hints are free to use.</p><button class="btn" id="go">'+(l>1?'CONTINUE — LEVEL '+l:'START')+'</button>'+(l>1?'<button class="btn alt" id="n1">From level 1</button>':'');$('ov').classList.remove('hide');$('go').onclick=()=>{score=0;start(l)};if($('n1'))$('n1').onclick=()=>{score=0;start(1)};tiles=null}
+function burst(gx,gy,c,n){for(let i=0;i<n;i++){const a=Math.random()*6.283,s=rnd(40,160);parts.push({x:(gx+.5)*cell,y:(gy+.5)*cell,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,r:rnd(2,4),c})}}
+/* ---------- draw ---------- */
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function draw(dt){time+=dt;flow=(flow+dt*2.2)%1;const d=cvs.dpr||1;ctx.setTransform(d,0,0,d,0,0);ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
+const g=ctx.createLinearGradient(0,0,0,cw);g.addColorStop(0,'#16405e');g.addColorStop(1,'#0d2a42');ctx.fillStyle=g;rr(0,0,cw,cw,14);ctx.fill();if(!tiles){ctx.restore();return}
+for(let y=0;y<N;y++)for(let x=0;x<N;x++){const t=tiles[y][x],px=x*cell,py=y*cell,pw=powered.has(y*N+x);t.vis+=(t.k-t.vis)*Math.min(1,dt*18);
+ctx.fillStyle=(x+y)%2?'rgba(190,235,255,.10)':'rgba(190,235,255,.16)';rr(px+2,py+2,cell-4,cell-4,9);ctx.fill();ctx.strokeStyle='rgba(220,245,255,.28)';ctx.lineWidth=1.5;ctx.stroke();
+ctx.save();ctx.translate(px+cell/2,py+cell/2);
+const base=t.solved/* orientation drawn from mask rotated visually */;ctx.rotate((t.vis-t.k)*Math.PI/2);
+const mk=t.mask;const lw=cell*.2,col=pw?'#ffcf5c':'#6f93ad',glow=pw?'rgba(255,207,92,.55)':null;ctx.lineCap='round';
+const drawPipe=(c,w)=>{ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();for(const dd of [U,R,D,L]){if(mk&dd){ctx.moveTo(0,0);const v=DXY[dd];ctx.lineTo(v[0]*cell*.5,v[1]*cell*.5)}}ctx.stroke()};
+if(glow){ctx.shadowColor='#ffb52e';ctx.shadowBlur=14}drawPipe(pw?'#a8650a':'#35566e',lw+4);ctx.shadowBlur=0;drawPipe(col,lw);if(pw){ctx.setLineDash([cell*.12,cell*.18]);ctx.lineDashOffset=-flow*cell*.3*4;drawPipe('rgba(255,250,200,.9)',lw*.35);ctx.setLineDash([])}
+ctx.fillStyle=pw?'#ffcf5c':'#6f93ad';ctx.beginPath();ctx.arc(0,0,lw*.62,0,6.283);ctx.fill();ctx.restore();
+if(t.type==='src'){const p=.5+.5*Math.sin(time*5);ctx.save();ctx.translate(px+cell/2,py+cell/2);ctx.fillStyle='rgba(255,140,40,.35)';ctx.beginPath();ctx.arc(0,0,cell*.3+p*3,0,6.283);ctx.fill();ctx.fillStyle='#ff8a2a';ctx.beginPath();ctx.arc(0,0,cell*.22,0,6.283);ctx.fill();ctx.font=Math.floor(cell*.3)+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText('🔥',0,1);ctx.restore()}
+else if(t.type==='out'){ctx.save();ctx.translate(px+cell/2,py+cell/2);ctx.fillStyle=pw?'rgba(255,230,120,.4)':'rgba(120,180,230,.18)';ctx.beginPath();ctx.arc(0,0,cell*.3+(pw?Math.sin(time*6)*2:0),0,6.283);ctx.fill();ctx.fillStyle=pw?'#fff3b0':'#4d7390';ctx.beginPath();ctx.arc(0,0,cell*.2,0,6.283);ctx.fill();ctx.globalAlpha=pw?1:.45;ctx.font=Math.floor(cell*.3)+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText('💡',0,1);ctx.restore()}
+if(hintTile&&hintT>0&&hintTile.x===x&&hintTile.y===y){ctx.strokeStyle='rgba(255,230,90,'+(.5+.5*Math.sin(time*10))+')';ctx.lineWidth=3;rr(px+3,py+3,cell-6,cell-6,9);ctx.stroke()}
+if(kbd&&cursor.x===x&&cursor.y===y){ctx.strokeStyle='#8fe3ff';ctx.lineWidth=3;rr(px+3,py+3,cell-6,cell-6,9);ctx.stroke()}}
+flakes.forEach(f=>{f.y+=f.v*dt;f.x+=Math.sin(time+f.p)*8*dt;if(f.y>cw)f.y=-4;ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.arc(f.x%cw,f.y,f.r,0,6.283);ctx.fill()});
+parts.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*1.8;p.vx*=.97;p.vy*=.97;ctx.globalAlpha=Math.max(0,p.l);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.l+.5,0,6.283);ctx.fill()});ctx.globalAlpha=1;parts=parts.filter(p=>p.l>0);
+floats.forEach(f=>{f.y-=26*dt;f.l-=dt;ctx.globalAlpha=Math.min(1,f.l*2);ctx.font='20px "Apple Color Emoji","Segoe UI Emoji",sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText(f.t,f.x,f.y)});ctx.globalAlpha=1;floats=floats.filter(f=>f.l>0);
+const[a,b]=outsLit();ctx.font='800 12px system-ui';ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,.85)';ctx.fillText('💡 '+a+'/'+b,8,cw-8);
+ctx.restore();hintT-=dt;shake=Math.max(0,shake-dt*20)}
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;draw(dt)}
+/* ---------- input ---------- */
+cvs.addEventListener('pointerdown',e=>{ac();if(state!=='play'||!tiles)return;const b=cvs.getBoundingClientRect(),x=Math.floor((e.clientX-b.left)/b.width*N),y=Math.floor((e.clientY-b.top)/b.height*N);if(x<0||y<0||x>=N||y>=N)return;kbd=false;rotate(x,y)});
+addEventListener('keydown',e=>{const k=e.key;if(state==='play'&&tiles){if(k==='ArrowLeft'){kbd=true;cursor.x=Math.max(0,cursor.x-1);e.preventDefault()}else if(k==='ArrowRight'){kbd=true;cursor.x=Math.min(N-1,cursor.x+1);e.preventDefault()}else if(k==='ArrowUp'){kbd=true;cursor.y=Math.max(0,cursor.y-1);e.preventDefault()}else if(k==='ArrowDown'){kbd=true;cursor.y=Math.min(N-1,cursor.y+1);e.preventDefault()}else if(k===' '||k==='Enter'){e.preventDefault();kbd=true;rotate(cursor.x,cursor.y)}else if(k==='z'||k==='u')undo();else if(k==='h')hint()}else if((k==='Enter'||k===' ')&&!$('ov').classList.contains('hide')){const b=$('go')||$('nx');if(b){e.preventDefault();b.click()}}});
+$('undo').onclick=undo;$('rst').onclick=reset;$('hint').onclick=hint;
+/* ---------- boot ---------- */
+layout();menu();requestAnimationFrame(loop);
+window.__tr={get state(){return state},get tiles(){return tiles},get N(){return N},get par(){return par},get moves(){return moves},get lvl(){return lvl},rotate,start,undo,hint,get powered(){return powered},outsLit,SV,get cell(){return cell}};
+</script>
+</body>
+</html>

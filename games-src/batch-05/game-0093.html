@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ocean Brave Puzzle</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#0c4a6e,#082f49);font-family:Georgia,serif;color:#e0f2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#38bdf8;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+canvas{background:#075985;border-radius:12px;touch-action:none}
+#msg{text-align:center;font-size:.85rem;color:#bae6fd;min-height:1.6em;margin-top:6px;max-width:440px}
+#ov{position:fixed;inset:0;background:rgba(8,47,73,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e0f2fe;padding:20px;z-index:5}
+button{background:#38bdf8;border:none;color:#082f49;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px;font-family:inherit}
+</style>
+</head>
+<body>
+<h1>🌊 OCEAN BRAVE PUZZLE</h1>
+<div id="hud"><span>Dive <b id="d">1</b></span><span>💨 Air <b id="a">100</b>%</span><span>Pearls <b id="p">0</b>/<b id="t">0</b></span><span>Best <b id="b">1</b></span></div>
+<canvas id="c"></canvas>
+<div id="msg">Brave the currents! Steer with taps or arrows — collect every pearl, avoid the jellyfish, reach the surface buoy.</div>
+<div id="ov"><h2 style="color:#38bdf8">BRAVE THE DEEP</h2><p id="od">A physics-lite underwater puzzle! Tap (or arrows) to puff your diver in that direction. Collect all 🦪 pearls before air runs out, dodge the drifting jellyfish 🪼, and surface at the buoy 🛟. Dives get deeper!</p><button id="btn">DIVE IN</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=440;cvs.width=W;cvs.height=H;
+let me,pearls,jellies,buoy,playing,dive,air,best=+localStorage.getItem('ob_best')||1;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-180)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function build(){me={x:W/2,y:H-60,vx:0,vy:0,r:12};pearls=[];jellies=[];
+const nP=3+dive;
+for(let i=0;i<nP;i++)pearls.push({x:30+Math.random()*(W-60),y:40+Math.random()*(H-140)});
+for(let i=0;i<dive;i++)jellies.push({x:30+Math.random()*(W-60),y:60+Math.random()*(H-160),vx:(Math.random()-.5),vy:(Math.random()-.5),ph:Math.random()*7});
+buoy={x:30+Math.random()*(W-60),y:26};
+air=100;document.getElementById('a').textContent=100;document.getElementById('d').textContent=dive;
+document.getElementById('p').textContent=0;document.getElementById('t').textContent=nP;draw();}
+function puff(dx,dy){const d=Math.hypot(dx,dy)||1;me.vx+=dx/d*2.6;me.vy+=dy/d*2.6;beep(400,.05);air-=2;document.getElementById('a').textContent=Math.max(0,Math.round(air));}
+function step(){me.vx*=0.965;me.vy*=0.965;me.vy-=0.02; // slight buoyancy
+me.x+=me.vx;me.y+=me.vy;
+me.x=Math.max(14,Math.min(W-14,me.x));me.y=Math.max(14,Math.min(H-14,me.y));
+air-=0.09;document.getElementById('a').textContent=Math.max(0,Math.round(air));
+if(air<=0)return drown();
+jellies.forEach(j=>{j.ph+=0.04;j.x+=j.vx+Math.sin(j.ph)*0.4;j.y+=j.vy;
+if(j.x<20||j.x>W-20)j.vx*=-1;if(j.y<40||j.y>H-20)j.vy*=-1;
+if(Math.hypot(j.x-me.x,j.y-me.y)<24){air-=8;me.vx=(me.x-j.x);me.vy=(me.y-j.y);beep(150,.15,'sawtooth');}});
+pearls=pearls.filter(p=>{if(Math.hypot(p.x-me.x,p.y-me.y)<20){document.getElementById('p').textContent=+document.getElementById('p').textContent+1;beep(700,.08,'triangle');return false;}return true;});
+if(!pearls.length&&Math.hypot(buoy.x-me.x,buoy.y-me.y)<26)win();
+draw();}
+let t0=null;
+cvs.addEventListener('pointerdown',e=>{audio.resume();t0={x:e.clientX,y:e.clientY};});
+cvs.addEventListener('pointerup',e=>{if(!t0||!playing)return;
+const dx=e.clientX-t0.x,dy=e.clientY-t0.y;
+if(Math.abs(dx)<14&&Math.abs(dy)<14){const r=cvs.getBoundingClientRect();
+puff(((e.clientX-r.left)/r.width*W)-me.x,((e.clientY-r.top)/r.height*H)-me.y);}
+else puff(dx,dy);t0=null;});
+window.addEventListener('keydown',e=>{if(!playing)return;const k=e.key;
+if(k==='ArrowUp'||k==='w')puff(0,-1);else if(k==='ArrowDown'||k==='s')puff(0,1);
+else if(k==='ArrowLeft'||k==='a')puff(-1,0);else if(k==='ArrowRight'||k==='d')puff(1,0);});
+function win(){playing=false;if(dive+1>best){best=dive+1;localStorage.setItem('ob_best',best);document.getElementById('b').textContent=best;}
+beep(880,.2,'triangle');setTimeout(()=>beep(1100,.2,'triangle'),150);
+document.getElementById('od').innerHTML='🛟 Surfaced from dive '+dive+'!<br>The reef grows richer…';
+document.getElementById('btn').textContent='DEEPER DIVE';dive++;document.getElementById('ov').style.display='flex';}
+function drown(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🫧 Out of air on dive '+dive+'…<br>The sea keeps its pearls.';
+document.getElementById('btn').textContent='RESURFACE';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#075985';ctx.fillRect(0,0,W,H);
+const g2=ctx.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#38bdf833');g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#7dd3fc22';for(let i=0;i<6;i++){ctx.beginPath();
+for(let x=0;x<W;x+=10){const y=60+i*60+Math.sin(x/50+Date.now()/400+i)*6;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
+ctx.font='20px serif';ctx.textAlign='center';
+pearls.forEach(p=>ctx.fillText('🦪',p.x,p.y+6));
+jellies.forEach(j=>ctx.fillText('🪼',j.x,j.y+6));
+ctx.fillText('🛟',buoy.x,buoy.y+6);
+// diver
+ctx.fillStyle='#fcd34d';ctx.beginPath();ctx.arc(me.x,me.y,me.r,0,7);ctx.fill();
+ctx.fillStyle='#0c4a6e';ctx.fillRect(me.x-8,me.y-4,16,5);
+// air bubbles
+if(Math.random()<0.1){ctx.strokeStyle='#bae6fd88';ctx.beginPath();ctx.arc(me.x+(Math.random()-.5)*10,me.y-16,2+Math.random()*2,0,7);ctx.stroke();}}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();playing=true;build();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

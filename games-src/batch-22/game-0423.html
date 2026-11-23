@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Goblet Guess #423</title><style>
+body{margin:0;font-family:system-ui;background:#1e1b4b;color:#eef2ff;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#a5b4fc;font-size:.78rem}
+#cups{display:flex;gap:14px;margin:20px}
+.cup{width:84px;height:100px;background:linear-gradient(#6366f1,#4338ca);border-radius:8px 8px 40px 40px;cursor:pointer;position:relative;transition:transform .15s}
+.cup .ball{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-size:1.6rem;opacity:0}
+.cup.up{transform:translateY(-30px)}
+.cup.up .ball{opacity:1}
+.cup.gone{opacity:.3;pointer-events:none}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.4em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#fbbf24;color:#1e1b4b;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>🍷 Royal Goblet Guess</h1><div class="sub">The jester hides the orb — watch closely, the goblets shuffle faster each round!</div>
+<div id="hud"><span>Round <b id="r">1</b></span><span>Lives <b id="h">3</b></span><span>Best <b id="b">0</b></span></div>
+<div id="cups"></div>
+<div id="msg"></div>
+<button id="btn">🃏 New Game</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=3;let ball=0,round=1,lives=3,best=+localStorage.getItem('rgg_best')||0,locked=false;
+document.getElementById('b').textContent=best;
+function build(){const c=document.getElementById('cups');c.innerHTML='';
+for(let i=0;i<N;i++){const d=document.createElement('div');d.className='cup';
+d.innerHTML='<div class="ball">🔮</div>';
+d.onclick=()=>guess(i);c.appendChild(d);}}
+function show(){document.querySelectorAll('.cup')[ball].classList.add('up');
+msg('👀 Watch the orb…');
+setTimeout(()=>{document.querySelectorAll('.cup')[ball].classList.remove('up');
+shuffle();},900+round*120);}
+function shuffle(){locked=false;
+const swaps=Math.min(3+round,12);
+let k=0;
+const iv=setInterval(()=>{
+const a=(Math.random()*N)|0;let b=(Math.random()*N)|0;if(b===a)b=(b+1)%N;
+const cups=document.querySelectorAll('.cup');
+const pa=cups[a].offsetLeft,pb=cups[b].offsetLeft;
+cups[a].style.transform='translateX('+(pb-pa)+'px)';
+cups[b].style.transform='translateX('+(pa-pb)+'px)';
+beep(400+k*30,.04);
+setTimeout(()=>{cups[a].style.transform='';cups[b].style.transform='';
+const tmp=[...cups];
+// swap DOM order
+const parent=cups[a].parentNode;
+parent.insertBefore(cups[b],cups[a]);},160);
+if(++k>=swaps){clearInterval(iv);
+msg('🫵 Where is the orb?');}},Math.max(180,420-round*20));}
+function guess(i){if(locked)return;locked=true;
+const cups=document.querySelectorAll('.cup');
+cups.forEach(c=>c.classList.add('gone'));
+cups[i].classList.remove('gone');cups[i].classList.add('up');
+if(i===ball){beep(880,.25,'triangle');round++;
+document.getElementById('r').textContent=round;
+if(round>best){best=round;localStorage.setItem('rgg_best',best);document.getElementById('b').textContent=best;}
+msg('🔮 Correct! Round '+round);
+setTimeout(()=>{cups.forEach(c=>{c.classList.remove('gone','up');});
+ball=(Math.random()*N)|0;show();},1000);}
+else{cups[ball].classList.remove('gone');cups[ball].classList.add('up');
+lives--;document.getElementById('h').textContent=lives;
+beep(150,.2,'sawtooth');
+if(lives<=0){msg('🃏 The jester wins! Best round: '+best);}
+else{msg('❌ There it was! Lives: '+lives);
+setTimeout(()=>{cups.forEach(c=>{c.classList.remove('gone','up');});
+ball=(Math.random()*N)|0;show();},1200);}}}
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{round=1;lives=3;
+document.getElementById('r').textContent=1;document.getElementById('h').textContent=3;
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();build();
+ball=(Math.random()*N)|0;show();};
+build();ball=(Math.random()*N)|0;show();
+</script></body></html>

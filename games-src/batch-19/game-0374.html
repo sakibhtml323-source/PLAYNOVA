@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ninja Water Drop #374</title><style>
+body{margin:0;font-family:system-ui;background:#0c4a6e;color:#e0f2fe;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#7dd3fc;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,64px);gap:4px;margin:12px}
+.t{width:64px;height:64px;background:#075985;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}#hud b{color:#fbbf24}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#38bdf8;color:#0c4a6e;font-weight:800;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💧 Ninja Water Drop</h1><div class="sub">Rotate the pipe tiles BEFORE the water reaches them — don't let it leak!</div>
+<div id="hud"><span>Water row <b id="r">0</b></span><span>Lives <b id="h">3</b></span><span>Score <b id="s">0</b></span></div>
+<div id="grid"></div>
+<div id="msg"></div>
+<button id="btn">🚰 New Flow</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5;let grid=[],waterRow=0,lives=3,score=0,flowing=false,timer=null;
+function opens(c){const o=[];
+if(c.t==='straight'){o.push(c.r%4);o.push((c.r+2)%4);}
+else if(c.t==='elbow'){o.push(c.r%4);o.push((c.r+1)%4);}
+else if(c.t==='tee'){o.push(c.r%4);o.push((c.r+1)%4);o.push((c.r+3)%4);}
+return o;}
+function gen(){grid=[];for(let r=0;r<N;r++){const row=[];for(let c=0;c<N;c++){
+const t=['straight','elbow','tee'][(Math.random()*3)|0];
+row.push({t,r:(Math.random()*4)|0});}grid.push(row);}
+// ensure top row entry at col 2
+grid[0][2].r=0;
+waterRow=0;lives=3;score=0;flowing=false;
+document.getElementById('r').textContent=0;document.getElementById('h').textContent=3;
+document.getElementById('s').textContent=0;
+render();msg('Rotate pipes, then start the flow!');}
+function tap(r,c){const cell=grid[r][c];
+cell.r=(cell.r+1)%4;beep(400,.05);render();}
+function flowStep(){// water at waterRow, entering from top (or from prev row's exit)
+let entryDir=0; // 0=from top
+let c=2; // entry column
+if(waterRow>0){// find exit column of previous row
+// re-simulate previous row
+const prev=simulateRow(waterRow-1);
+if(prev===null){leak();return;}
+c=prev;}
+document.getElementById('r').textContent=waterRow;
+// simulate current row
+const cell=grid[waterRow][c];
+// must accept from top
+if(!opens(cell).includes(0)){leak();return;}
+// find exit: follow opens
+const exits=opens(cell).filter(d=>d!==0);
+// naive: exit right (1) preferred, else down (2)
+let exitDir=exits.includes(2)?2:exits.includes(1)?1:exits.includes(3)?3:-1;
+if(waterRow===N-1){// last row: exit down = win
+if(exits.includes(2)){win();return;}
+leak();return;}
+if(exitDir===-1){leak();return;}
+// check next row accepts from top at same column... simplified: accept
+score+=10;document.getElementById('s').textContent=score;
+waterRow++;render();}
+function simulateRow(r){// return exit column for row r (simple: rightmost open-right)
+for(let c=N-1;c>=0;c--){const cell=grid[r][c];
+if(opens(cell).includes(1)&&opens(cell).includes(3))return c;}
+return N-1;}
+function leak(){lives--;document.getElementById('h').textContent=lives;
+beep(150,.25,'sawtooth');flowing=false;clearInterval(timer);
+if(lives<=0){msg('🌊 Flooded! Score: '+score);return;}
+msg('💧 Leak! Rotate and try again.');waterRow=0;}
+function win(){flowing=false;clearInterval(timer);beep(880,.3,'triangle');
+msg('🏺 Water delivered! Score: '+score);}
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const cell=grid[r][c];const d=document.createElement('div');
+d.className='t';
+const isWater=flowing&&r===waterRow&&c===2;
+d.style.background=isWater?'#38bdf8':'';
+const sym=cell.t==='straight'?'┃':cell.t==='elbow'?'┗':'┣';
+d.textContent=sym;
+d.onclick=()=>{AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();tap(r,c);};
+g.appendChild(d);}}
+document.getElementById('btn').onclick=()=>{gen();
+document.getElementById('btn').textContent='🚿 Flow!';
+AU.__c=new (window.AudioContext||window.webkitAudioContext)();};
+// auto-flow button behavior: second click starts flow
+let started=false;
+document.getElementById('btn').addEventListener('click',()=>{
+if(!started){started=true;return;}
+if(!flowing&&waterRow===0&&lives>0){flowing=true;
+clearInterval(timer);timer=setInterval(()=>{if(flowing)flowStep();},700);}});
+function msg(t){document.getElementById('msg').textContent=t;}
+</script></body></html>

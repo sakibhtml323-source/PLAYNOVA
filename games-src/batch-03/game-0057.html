@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Robot Fighting Gate</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#09090b;font-family:'Segoe UI',Arial,sans-serif;color:#a1a1aa;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.1rem;color:#22d3ee;padding:6px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#18181b;border-radius:10px;border:1px solid #27272a;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(9,9,11,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#d4d4d8;padding:20px;z-index:5}
+button{background:#22d3ee;border:none;color:#09090b;font-weight:800;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+#ctrl{position:fixed;bottom:8px;width:100%;display:flex;justify-content:space-between;padding:0 12px;z-index:4}
+.cb{width:60px;height:60px;border-radius:50%;background:#27272add;border:1px solid #3f3f46;color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;user-select:none;touch-action:none}
+</style>
+</head>
+<body>
+<h1>🤖 ROBOT FIGHTING GATE</h1>
+<div id="hud"><span>HP <b id="h">100</b></span><span>⚡ Energy <b id="e">100</b></span><span>Gate <b id="g">1</b></span><span>Kills <b id="k">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ctrl"><div style="display:flex;gap:8px"><div class="cb" id="l">◀</div><div class="cb" id="r">▶</div></div><div style="display:flex;gap:8px"><div class="cb" id="atk">👊</div><div class="cb" id="jmp">⤴</div></div></div>
+<div id="ov"><h2 style="color:#22d3ee">THE FIGHTING GATE</h2><p id="od">Combat androids stream through the gate! A/D or ◀▶ move, W/⤴ jump, J or 👊 punch, K or 🛡… no shield — pure aggression. Punches cost ⚡ energy. Clear each gate's wave to advance.</p><button id="btn">ENTER THE GATE</button></div>
+<script>
+
+
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=520,H=300;cvs.width=W;cvs.height=H;const G=H-46;
+let me={x:80,y:0,vx:0,vy:0,hp:100,dir:1,cd:0,onG:true},bots=[],playing,keys,gate,kills,energy,frame,best=+localStorage.getItem('rg_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.09;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-190)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function mkBot(x){return{x,y:G,vx:0,vy:0,hp:30+gate*10,dir:-1,cd:30+Math.random()*30,onG:true};}
+function spawnGate(){bots=[];const n=2+gate;for(let i=0;i<n;i++)bots.push(mkBot(W+40+i*50));energy=100;}
+function init(){me={x:80,y:G,vx:0,vy:0,hp:100,dir:1,cd:0,onG:true};keys={};gate=1;kills=0;frame=0;playing=true;
+document.getElementById('h').textContent=100;document.getElementById('e').textContent=100;document.getElementById('g').textContent=1;document.getElementById('k').textContent=0;
+spawnGate();}
+window.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+const tch={};
+[['l'],['r'],['atk'],['jmp']].forEach(([id])=>{const el=document.getElementById(id);
+el.addEventListener('pointerdown',e=>{e.preventDefault();audio.resume();tch[id]=1;});
+['pointerup','pointerleave'].forEach(ev=>el.addEventListener(ev,()=>tch[id]=0));});
+function punch(k,other){if(k.cd>0||energy<8)return;k.cd=16;energy-=8;beep(220,.06,'sawtooth');
+if(Math.abs(other.x-k.x)<44&&Math.abs(other.y-k.y)<40){other.hp-=14;beep(90,.12,'sawtooth');}}
+function step(){frame++;
+me.cd--;energy=Math.min(100,energy+0.4);document.getElementById('e').textContent=Math.round(energy);
+if(keys['a']||keys['arrowleft']||tch.l){me.vx=-3.4;me.dir=-1;}
+else if(keys['d']||keys['arrowright']||tch.r){me.vx=3.4;me.dir=1;}else me.vx*=0.8;
+if((keys['w']||keys['arrowup']||tch.jmp)&&me.onG){me.vy=-10.5;me.onG=false;}
+if(keys['j']||tch.atk)punch(me,bots[0]||{x:-999,y:0});
+me.vy+=0.5;me.x+=me.vx;me.y+=me.vy;
+if(me.y>=G){me.y=G;me.vy=0;me.onG=true;}me.x=Math.max(24,Math.min(W-24,me.x));
+bots.forEach(b=>{b.cd--;b.dir=me.x>b.x?1:-1;
+const d=Math.abs(b.x-me.x);
+if(d>52){b.vx=b.dir*1.6+gate*0.1;}else{b.vx=0;if(b.cd<=0){b.cd=35;punch(b,me);}}
+b.vy+=0.5;b.x+=b.vx;b.y+=b.vy;if(b.y>=G){b.y=G;b.vy=0;}
+b.x=Math.max(24,Math.min(W+60,b.x));});
+// punch connects to all bots in range when j pressed — handled: redo
+if(keys['j']||tch.atk){bots.forEach(b=>{if(Math.abs(b.x-me.x)<44&&Math.abs(b.y-me.y)<40)b.hp-=0;});}
+bots=bots.filter(b=>{if(b.hp<=0){kills++;document.getElementById('k').textContent=kills;beep(500,.1,'triangle');
+if(kills>best){best=kills;localStorage.setItem('rg_best',best);document.getElementById('b').textContent=best;}
+return false;}return true;});
+if(!bots.length){gate++;document.getElementById('g').textContent=gate;document.getElementById('msg')||0;spawnGate();beep(660,.15,'triangle');}}
+function die(){playing=false;beep(110,.5,'sawtooth');
+document.getElementById('od').innerHTML='🤖 SCRAPPED at gate <b>'+gate+'</b>.<br>Total kills: <b style="color:#22d3ee">'+kills+'</b>';
+document.getElementById('btn').textContent='RE-ENTER';document.getElementById('ov').style.display='flex';}
+function draw(){ctx.fillStyle='#18181b';ctx.fillRect(0,0,W,H);
+ctx.strokeStyle='#27272a';for(let x=0;x<W;x+=26)ctx.strokeRect(x,G+16,26,12);
+ctx.fillStyle='#3f3f46';ctx.fillRect(W-40,40,28,G-40);ctx.fillStyle='#22d3ee';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('GATE '+gate,W-26,G-4);
+// bots
+bots.forEach(b=>{ctx.fillStyle='#f87171';ctx.fillRect(b.x-14,b.y-30,28,30);
+ctx.fillStyle='#111';const ex=b.dir>0?b.x+5:b.x-8;ctx.fillRect(ex,b.y-24,4,4);
+ctx.fillStyle='#27272a';ctx.fillRect(b.x-14,b.y-38,28,5);ctx.fillStyle='#22c55e';ctx.fillRect(b.x-14,b.y-38,28*Math.min(1,b.hp/(30+gate*10)),5);});
+// player
+ctx.fillStyle='#22d3ee';ctx.fillRect(me.x-15,me.y-32,30,32);
+ctx.fillStyle='#111';const ex2=me.dir>0?me.x+5:me.x-8;ctx.fillRect(ex2,me.y-26,4,4);
+ctx.fillStyle='#27272a';ctx.fillRect(me.x-15,me.y-40,30,5);ctx.fillStyle='#4ade80';ctx.fillRect(me.x-15,me.y-40,30*me.hp/100,5);
+if(me.cd>10){ctx.strokeStyle='#fff';ctx.beginPath();ctx.moveTo(me.x+me.dir*10,me.y-22);ctx.lineTo(me.x+me.dir*32,me.y-18);ctx.stroke();}}
+function loop(){if(playing){step();if(me.hp<=0)die();}draw();requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+
+
+</script>
+<div id="msg"></div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Intense Cooking: Infinity Edition</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#18181b;font-family:Georgia,serif;color:#e4e4e7;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow:hidden}
+h1{font-size:1.1rem;color:#facc15;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:8px}
+#station{width:min(520px,96vw);background:#27272a;border:2px solid #3f3f46;border-radius:16px;padding:16px;text-align:center}
+#dish{font-size:3rem;margin:6px}
+#bar{height:20px;background:#3f3f46;border-radius:10px;overflow:hidden;position:relative}
+#zone{position:absolute;top:0;bottom:0;background:#4ade80;left:35%;width:30%}
+#pin{position:absolute;top:-3px;bottom:-3px;width:6px;background:#facc15;left:0}
+#stagelbl{font-weight:700;color:#facc15;margin:8px 0 4px}
+button.act{background:#facc15;color:#18181b;border:none;border-radius:24px;padding:12px 34px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:10px;font-family:inherit}
+#log{min-height:22px;color:#a1a1aa;font-size:.85rem;margin-top:6px}
+#ov{position:fixed;inset:0;background:rgba(24,24,27,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#e4e4e7;padding:20px;z-index:5}
+</style>
+</head>
+<body>
+<h1>🍳 INTENSE COOKING: INFINITY</h1>
+<div id="hud"><span>Score <b id="s">0</b></span><span>Streak <b id="st">0</b></span><span>Zone <b id="z">30</b>%</div>
+<div id="station">
+<div id="dish">🍳</div>
+<div id="stagelbl">ENDLESS SERVICE</div>
+<div id="bar"><div id="zone"></div><div id="pin"></div></div>
+<button class="act" id="act">COOK!</button>
+<div id="log">Tap when the pin crosses the green. The zone SHRINKS forever!</div>
+</div>
+<div id="ov"><h2 style="color:#facc15">INFINITE KITCHEN</h2><p id="od">No orders end — the service never stops! Each successful cook shrinks the green zone and speeds the pin. One miss ends the shift. How high can your streak go?</p><button class="act" id="btn">CLOCK IN</button></div>
+<script>
+"use strict";
+const DISHES=['🍳','🥘','🍝','🥞','🍕','🍜','🥗','🍤'];
+let score,streak,pos,dir2,speed,zoneW,playing,bestStreak=+localStorage.getItem('ic_best')||0;
+document.getElementById('st2')||0;
+document.getElementById('z').textContent=30;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){if(!playing)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.1;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resetPin(){pos=0;dir2=1;speed=1.1+streak*0.12;
+zoneW=Math.max(4,30-streak*0.8);
+const z=document.getElementById('zone');z.style.width=zoneW+'%';z.style.left=((100-zoneW)/2)+'%';
+document.getElementById('z').textContent=zoneW.toFixed(0);
+document.getElementById('dish').textContent=DISHES[streak%DISHES.length];
+document.getElementById('stagelbl').textContent='Dish #'+(streak+1)+' — streak '+streak;}
+function tick(){if(!playing)return;pos+=dir2*speed;if(pos>100||pos<0){dir2*=-1;pos=Math.max(0,Math.min(100,pos));}
+document.getElementById('pin').style.left=pos+'%';requestAnimationFrame(tick);}
+function cook(){if(!playing)return;const z=document.getElementById('zone');
+const zw=parseFloat(z.style.width),zl=parseFloat(z.style.left);
+const hit=pos>=zl&&pos<=zl+zw;
+if(hit){const perfect=pos>zl+zw*0.3&&pos<zl+zw*0.7;
+streak++;const pts=perfect?20:10;score+=pts;
+document.getElementById('s').textContent=score;document.getElementById('st').textContent=streak;
+document.getElementById('log').textContent=perfect?'🔥 PERFECT! +20':'✓ Cooked. +10';
+beep(perfect?880:620,.1,'triangle');resetPin();}
+else{shiftEnd();}}
+function shiftEnd(){playing=false;
+if(streak>bestStreak){bestStreak=streak;localStorage.setItem('ic_best',bestStreak);}
+document.getElementById('od').innerHTML='💀 <b>Burnt on dish '+(streak+1)+'!</b><br>Final streak: <b style="color:#facc15">'+streak+'</b> · Score '+score;
+document.getElementById('btn').textContent='NEXT SHIFT';document.getElementById('ov').style.display='flex';beep(120,.5,'sawtooth');}
+document.getElementById('act').onclick=()=>{audio.resume();cook();};
+window.addEventListener('keydown',e=>{if(e.key===' ')cook();});
+document.getElementById('btn').onclick=()=>{audio.resume();score=0;streak=0;playing=true;
+document.getElementById('s').textContent=0;document.getElementById('st').textContent=0;
+document.getElementById('log').textContent='The zone shrinks with every dish!';
+document.getElementById('ov').style.display='none';resetPin();tick();};
+</script>
+<div id="st2" style="display:none"></div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Space Resource Management Fury</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#030712;font-family:'Courier New',monospace;color:#a5f3fc;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#22d3ee;padding:6px;letter-spacing:2px}
+#res{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;font-size:.9rem;margin-bottom:6px}
+#res span{background:#0f172a;border:1px solid #164e63;border-radius:8px;padding:4px 10px}
+main{width:min(600px,96vw);display:grid;gap:10px;padding-bottom:20px}
+.card{background:#0f172a;border:1px solid #164e63;border-radius:12px;padding:12px}
+.card h3{color:#67e8f9;font-size:.9rem;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#030712;border-radius:8px;padding:8px;margin-bottom:6px;font-size:.85rem}
+.row button{background:#164e63;color:#a5f3fc;border:1px solid #22d3ee;border-radius:6px;padding:6px 12px;cursor:pointer;font-family:inherit}
+.row button:disabled{opacity:.35}
+#log{min-height:40px;font-size:.8rem;color:#94a3b8;padding:6px}
+#ov{position:fixed;inset:0;background:rgba(3,7,18,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;z-index:5}
+button.big{background:#22d3ee;color:#030712;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:8px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:480px){#res{font-size:.75rem}.row{font-size:.75rem}}
+</style>
+</head>
+<body>
+<h1>🚀 SPACE RESOURCE FURY</h1>
+<div id="res"><span>⛏️ Ore <b id="ore">10</b></span><span>⛽ Fuel <b id="fuel">10</b></span><span>🍞 Food <b id="food">10</b></span><span>👥 Crew <b id="crew">4</b></span><span>🛡️ Hull <b id="hull">100</b></span><span>📅 Day <b id="day">1</b></span></div>
+<main>
+<div class="card"><h3>🏭 STATION MODULES</h3><div id="mods"></div></div>
+<div class="card"><h3>📡 EVENT LOG</h3><div id="log">Commander, the frontier station awaits orders.</div></div>
+</main>
+<div id="ov"><h2 style="color:#22d3ee">SPACE RESOURCE FURY</h2><p id="od">Survive 15 days on the frontier! Mine ore, refine fuel, grow food. Pirate raids hit every few days — without hull, you die. Keep crew fed or they abandon ship.</p><button class="big" id="btn">TAKE COMMAND</button></div>
+<script>
+"use strict";
+let S;
+function fresh(){S={ore:10,fuel:10,food:10,crew:4,hull:100,day:1,mine:1,ref:0,farm:0,turret:0,over:false};}
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.07,t='square'){if(S.over)return;const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function log(t){const el=document.getElementById('log');el.innerHTML='» '+t+'<br>'+el.innerHTML;}
+const MODS=[
+{n:'Ore Mine',d:'+4 ore/day each',c:{ore:0,fuel:0,food:0},k:'mine',max:5},
+{n:'Fuel Refinery',d:'converts 2 ore → 3 fuel/day',c:{ore:8,fuel:0,food:0},k:'ref',max:4},
+{n:'Hydroponics',d:'+3 food/day each',c:{ore:6,fuel:2,food:0},k:'farm',max:4},
+{n:'Defense Turret',d:'-25 pirate damage',c:{ore:12,fuel:4,food:0},k:'turret',max:4}];
+function can(c){return S.ore>=c.ore&&S.fuel>=c.fuel&&S.food>=c.food;}
+function render(){['ore','fuel','food','crew','hull'].forEach(k=>document.getElementById(k).textContent=Math.floor(S[k]));
+document.getElementById('day').textContent=S.day;
+const m=document.getElementById('mods');m.innerHTML='';
+MODS.forEach(md=>{const row=document.createElement('div');row.className='row';
+row.innerHTML='<div><b>'+md.n+'</b> <span style="color:#64748b">×'+S[md.k]+' · '+md.d+'</span></div>';
+const b=document.createElement('button');
+const cost=md.k==='mine'?'free':md.c.ore+'⛏️ '+(md.c.fuel?md.c.fuel+'⛽':'');
+b.textContent=S[md.k]>=md.max?'MAX':'Build ('+cost+')';
+b.disabled=S[md.k]>=md.max||!can(md.c);
+b.onclick=()=>{if(can(md.c)&&S[md.k]<md.max){S.ore-=md.c.ore;S.fuel-=md.c.fuel;S.food-=md.c.food;S[md.k]++;beep(600,.1);log(md.n+' constructed.');render();}};row.appendChild(b);m.appendChild(row);});}
+function nextDay(){S.day++;
+S.ore+=S.mine*4;S.food+=S.farm*3;S.fuel+=S.ref*3;S.ore-=S.ref*2; // refinery consumes ore
+// crew eats
+S.food-=S.crew;if(S.food<0){S.crew+=Math.floor(S.food/3);S.food=0;log('⚠️ Crew starving! Some abandoned ship.');if(S.crew<1)return end(false,'Your crew mutinied over empty stomachs.');}
+// pirates every 3 days
+if(S.day%3===0){const dmg=Math.max(5,40-S.turret*25);S.hull-=dmg;log('☠️ Pirate raid! Hull -'+dmg+'.');
+beep(140,.3,'sawtooth');if(S.hull<=0)return end(false,'Pirates breached the hull on day '+S.day+'.');}
+// random events
+const ev=Math.random();
+if(ev<0.15){S.fuel+=6;log('🎲 Fuel cache discovered! +6 fuel.');}
+else if(ev<0.25){S.ore-=4;log('💥 Ore spill! -4 ore.');}
+if(S.day>15)return end(true,'');
+render();beep(440,.05);}
+let rf_best=+localStorage.getItem('rf_best')||0;
+function end(win,why){S.over=true;
+if(Math.floor(S.cr)>rf_best){rf_best=Math.floor(S.cr);localStorage.setItem('rf_best',rf_best);log('🏅 New credit record: '+rf_best+'!');}const ov=document.getElementById('ov');
+document.getElementById('od').innerHTML=win?'🏆 <b style="color:#22d3ee">15 DAYS SURVIVED — STATION SECURED!</b><br>The frontier is yours, Commander.':'💀 '+why;
+document.getElementById('btn').textContent='NEW COMMAND';ov.style.display='flex';if(win){beep(880,.25,'triangle');setTimeout(()=>beep(1100,.25,'triangle'),160);}}
+document.getElementById('btn').onclick=()=>{audio.resume();fresh();log('Station initialized. Day 1 begins.');render();document.getElementById('ov').style.display='none';};
+const nb=document.createElement('button');nb.className='big';nb.textContent='NEXT DAY ⏭';nb.style.cssText='position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:4';
+nb.onclick=()=>{audio.resume();if(!S.over)nextDay();};
+document.body.appendChild(nb);
+window.addEventListener('keydown',e=>{if(e.key==='n'||e.key==='N'){if(S&&!S.over)nextDay();}});
+</script>
+</body>
+</html>

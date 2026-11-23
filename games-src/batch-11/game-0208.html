@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Silent Music Galaxy</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#050510;font-family:Georgia,serif;color:#c7d2fe;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+h1{font-size:1.05rem;color:#a78bfa;padding:8px;letter-spacing:2px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:4px}
+canvas{background:#0a0a14;border-radius:12px;touch-action:none}
+#ov{position:fixed;inset:0;background:rgba(5,5,16,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#c7d2fe;padding:20px;z-index:5}
+button{background:#a78bfa;border:none;color:#0a0a14;font-family:inherit;font-weight:700;padding:12px 32px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>🎵 SILENT MUSIC GALAXY</h1>
+<div id="hud"><span>Harmony <b id="h">0</b></span><span>Stars <b id="st">0</b></span><span>Best <b id="b">0</b></span></div>
+<canvas id="c"></canvas>
+<div id="ov"><h2 style="color:#a78bfa">A SILENT SYMPHONY</h2><p id="od">Conduct the galaxy of silent music! Tap to place stars 🌟 — they sing visual harmonies (colors ripple outward). Drag to trace constellations. More stars, more harmony. A serene audio-visual toy.</p><button id="btn">CONDUCT</button></div>
+<script>
+"use strict";
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');const W=440,H=480;cvs.width=W;cvs.height=H;
+let stars,ripples,playing,harmony,frame,dragging,best=+localStorage.getItem('smg_best')||0;
+document.getElementById('b').textContent=best;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.08,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.07;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function resize(){const s=Math.min((window.innerWidth-12)/W,(window.innerHeight-140)/H);cvs.style.width=W*s+'px';cvs.style.height=H*s+'px';}
+window.addEventListener('resize',resize);resize();
+function init(){stars=[];ripples=[];playing=true;harmony=0;frame=0;dragging=false;
+document.getElementById('h').textContent=0;document.getElementById('st').textContent=0;}
+function pos(e){const r=cvs.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
+function addStar(p){if(stars.length>60)stars.shift();
+stars.push({x:p.x,y:p.y,c:'hsl('+((harmony*37)%360)+',70%,65%)',ph:Math.random()*7});
+ripples.push({x:p.x,y:p.y,r:4,max:60+Math.random()*40});
+harmony+=3;document.getElementById('h').textContent=harmony;document.getElementById('st').textContent=stars.length;
+beep(300+harmony%40*15,.1,'sine');
+if(harmony>best){best=harmony;localStorage.setItem('smg_best',best);document.getElementById('b').textContent=best;}}
+window.addEventListener('keydown',e=>{if(!playing)return;if(e.key===' '){e.preventDefault();addStar({x:Math.random()*W,y:Math.random()*H});}});
+cvs.addEventListener('pointerdown',e=>{audio.resume();dragging=true;addStar(pos(e));});
+cvs.addEventListener('pointermove',e=>{if(dragging)addStar(pos(e));});
+window.addEventListener('pointerup',()=>dragging=false);
+function step(){frame++;
+stars.forEach(s=>{s.ph+=0.02;});
+ripples=ripples.filter(r=>{r.r+=2;return r.r<r.max;});
+// auto ambient
+if(frame%50===0){stars.push({x:Math.random()*W,y:Math.random()*H,c:'hsl('+((frame*7)%360)+',60%,60%)',ph:Math.random()*7});
+if(stars.length>60)stars.shift();}}
+function draw(){ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+// connecting lines
+ctx.strokeStyle='#a78bfa22';ctx.beginPath();
+stars.forEach((s,i)=>{if(i===0)ctx.moveTo(s.x,s.y);else ctx.lineTo(s.x,s.y);});ctx.stroke();
+ripples.forEach(r=>{ctx.strokeStyle='rgba(167,139,250,'+(1-r.r/r.max)*0.6+')';
+ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,7);ctx.stroke();});
+stars.forEach(s=>{const pulse=1+Math.sin(s.ph)*0.15;
+const g2=ctx.createRadialGradient(s.x,s.y,1,s.x,s.y,10*pulse);
+g2.addColorStop(0,s.c);g2.addColorStop(1,'transparent');
+ctx.fillStyle=g2;ctx.beginPath();ctx.arc(s.x,s.y,10*pulse,0,7);ctx.fill();});}
+function loop(){if(playing){step();draw();}requestAnimationFrame(loop);}
+document.getElementById('btn').onclick=()=>{audio.resume();init();document.getElementById('ov').style.display='none';};
+loop();
+</script>
+</body>
+</html>

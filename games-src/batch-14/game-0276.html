@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crystal Dot Link #276</title><style>
+body{margin:0;font-family:system-ui;background:#0f172a;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+h1{font-size:1.1rem;margin:10px 0 2px}.sub{color:#94a3b8;font-size:.78rem}
+#grid{display:grid;grid-template-columns:repeat(5,52px);gap:3px;margin:12px}
+.cell{width:52px;height:52px;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;user-select:none}
+#hud{display:flex;gap:14px;font-size:.9rem;margin:4px}
+#hud b{color:#facc15}
+#msg{min-height:1.3em;font-weight:600}
+button{padding:10px 22px;border-radius:999px;border:none;background:#7c3aed;color:#fff;font-weight:700;cursor:pointer;margin:8px}
+</style></head><body>
+<h1>💠 Crystal Dot Link</h1><div class="sub">Drag between matching crystal pairs to fill the entire board — paths cannot cross!</div>
+<div id="hud"><span>Level <b id="l">1</b></span><span>Filled <b id="f">0</b>%</span></div>
+<div id="grid"></div><div id="msg"></div>
+<button id="btn">✨ New Board</button>
+<audio id="au"></audio>
+<script>
+"use strict";
+const AU=document.getElementById('au');
+function beep(f,d=.07,t='sine'){try{const o=AU.__c||(AU.__c=new (window.AudioContext||window.webkitAudioContext)());const os=o.createOscillator(),g=o.createGain();os.type=t;os.frequency.value=f;g.gain.setValueAtTime(.11,o.currentTime);g.gain.exponentialRampToValueAtTime(.001,o.currentTime+d);os.connect(g);g.connect(o.destination);os.start();os.stop(o.currentTime+d);}catch(e){}}
+const N=5,SIZE=25;
+const PAIRS=[['💜','#7c3aed'],['❤️','#dc2626'],['💙','#2563eb'],['💚','#16a34a']];
+let grid=Array.from({length:N},()=>Array(N).fill(null));
+let paths={},dragging=null,level=1;
+function newBoard(){grid=Array.from({length:N},()=>Array(N).fill(null));paths={};
+/* FIX (PLAYNOVA repair): the original placed the pair endpoints at random cells, but the level only completes when the paths fill EVERY cell; only about 7% of random boards can be solved (checked by exhaustive search on random level 1-3 boards). Boards are now built by cutting a random path that visits every cell into segments, so each board is guaranteed solvable. */
+const k=Math.min(2+level,4);
+function ham(){const start=(Math.random()*SIZE)|0,vis=new Array(SIZE).fill(false),path=[start];vis[start]=true;let steps=0;
+function nb(i){const r=(i/N)|0,c=i%N,o=[];[[1,0],[-1,0],[0,1],[0,-1]].forEach(([dr,dc])=>{const nr=r+dr,nc=c+dc;if(nr>=0&&nr<N&&nc>=0&&nc<N&&!vis[nr*N+nc])o.push(nr*N+nc);});return o.sort(()=>Math.random()-.5);}
+function dfs(i){if(path.length===SIZE)return true;if(++steps>20000)return false;for(const n of nb(i)){vis[n]=true;path.push(n);if(dfs(n))return true;path.pop();vis[n]=false;}return false;}
+return dfs(start)?path:null;}
+let p=null;for(let t=0;t<50&&!p;t++)p=ham();
+if(!p){p=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)p.push(r*N+(r%2?N-1-c:c));}
+const cuts=[];while(cuts.length<k-1){const x=3+((Math.random()*(SIZE-5))|0);if(cuts.every(y=>Math.abs(y-x)>=3)&&SIZE-x>=3)cuts.push(x);}
+cuts.sort((a,b)=>a-b);const bounds=[0,...cuts,SIZE];
+for(let pi=0;pi<k;pi++){const seg=p.slice(bounds[pi],bounds[pi+1]);[seg[0],seg[seg.length-1]].forEach(i=>{grid[(i/N)|0][i%N]={p:pi,e:PAIRS[pi][0]};});}
+document.getElementById('l').textContent=level;render();msg('Link each pair, fill every cell!');}
+function cellAt(r,c){return r>=0&&r<N&&c>=0&&c<N?grid[r][c]:null;}
+function startDrag(r,c){const cell=cellAt(r,c);
+if(!cell||cell.p===undefined)return false;
+dragging={p:cell.p,cells:[[r,c]],e:cell.e};return true;}
+function extendDrag(r,c){if(!dragging)return;
+const last=dragging.cells[dragging.cells.length-1];
+if(last[0]===r&&last[1]===c)return;
+// must be adjacent
+if(Math.abs(r-last[0])+Math.abs(c-last[1])!==1)return;
+// check own path backtrack
+if(dragging.cells.length>1){const prev=dragging.cells[dragging.cells.length-2];
+if(prev[0]===r&&prev[1]===c){dragging.cells.pop();render();return;}}
+const cell=cellAt(r,c);
+if(cell&&cell.p===dragging.p&&!(r===dragging.cells[0][0]&&c===dragging.cells[0][1])){
+// reached matching endpoint
+dragging.cells.push([r,c]);
+paths[dragging.p]=dragging.cells.slice();
+beep(700,.12,'triangle');dragging=null;render();check();return;}
+if(cell&&cell.p!==undefined&&cell.p!==dragging.p){beep(160,.06,'sawtooth');return;}
+// empty cell — check not used by other path
+for(const k in paths){if(paths[k].some(([pr,pc])=>pr===r&&pc===c)){beep(160,.06,'sawtooth');return;}}
+dragging.cells.push([r,c]);render();}
+function check(){const total=Object.values(paths).reduce((a,p)=>a+p.length,0);
+const pct=Math.round(total/SIZE*100);
+document.getElementById('f').textContent=pct;
+const pairsNeeded=Math.min(2+level,4);
+if(total===SIZE&&Object.keys(paths).length===pairsNeeded){
+beep(880,.25,'triangle');msg('🎉 Board complete! Level '+(level+1));pnEmit('GAME_LEVEL_COMPLETED',{level:level});level++;
+setTimeout(newBoard,1000);}}
+let ptrDown=false;
+function render(){const g=document.getElementById('grid');g.innerHTML='';
+const cellColor={};
+for(const k in paths){const col=PAIRS[k][1];paths[k].forEach(([r,c])=>{cellColor[r*N+c]=col;});}
+if(dragging){const col=PAIRS[dragging.p][1];dragging.cells.forEach(([r,c])=>{cellColor[r*N+c]=col;});}
+for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div');d.className='cell';
+const cell=grid[r][c];
+const col=cellColor[r*N+c];
+if(col)d.style.background=col+'44';
+d.textContent=cell?cell.e:'';
+/* FIX (PLAYNOVA repair): each cell had its own private "down" flag, so only the first cell knew a drag had started and the path could never grow; the flag is now shared (ptrDown) and touch drags use pointermove + elementFromPoint (touch pointers are captured by the first cell and never fire pointerenter on the others). */
+d.addEventListener('pointerdown',e=>{e.preventDefault();try{d.releasePointerCapture(e.pointerId);}catch(_){}
+AU.__c=AU.__c||new (window.AudioContext||window.webkitAudioContext)();ptrDown=startDrag(r,c);});
+d.addEventListener('pointerenter',()=>{if(ptrDown)extendDrag(r,c);});
+d.addEventListener('pointerup',()=>{ptrDown=false;if(dragging){dragging=null;render();}});
+g.appendChild(d);}
+g.style.touchAction='none';g.onpointermove=e=>{if(!ptrDown)return;const el=document.elementFromPoint(e.clientX,e.clientY);const i=el?Array.prototype.indexOf.call(g.children,el):-1;if(i>=0)extendDrag((i/N)|0,i%N);};}
+document.addEventListener('pointerup',()=>{ptrDown=false;if(dragging){dragging=null;render();}});
+function msg(t){document.getElementById('msg').textContent=t;}
+document.getElementById('btn').onclick=()=>{AU.__c=new (window.AudioContext||window.webkitAudioContext)();newBoard();};
+newBoard();
+</script></body></html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="../../assets/js/pn-bridge.js"></script><script src="../../assets/js/pn-enhance.js"></script>
+<meta name="robots" content="noindex,follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dual Source Pipes #186</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:linear-gradient(#fdf2f8,#fce7f3);font-family:Georgia,serif;color:#9d174d;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;overflow-x:hidden}
+h1{font-size:1.1rem;color:#ec4899;padding:6px}
+#hud{display:flex;gap:14px;font-size:.9rem;margin-bottom:10px}
+#board{display:grid;gap:5px;background:rgba(255,255,255,.6);border:3px solid #f9a8d4;border-radius:16px;padding:12px;touch-action:none}
+.tile{width:58px;height:58px;border-radius:12px;background:#fff;border:2px solid #f9a8d4;cursor:pointer;position:relative;overflow:hidden}
+.tile svg{position:absolute;inset:0;width:100%;height:100%}
+.tile.src{background:#fce7f3;border-color:#ec4899}
+#ov{position:fixed;inset:0;background:rgba(253,242,248,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#9d174d;padding:20px;z-index:5}
+button{background:#ec4899;color:#fff;border:none;font-family:inherit;font-weight:700;padding:12px 34px;border-radius:24px;font-size:1rem;cursor:pointer;margin-top:14px}
+@media(max-width:420px){.tile{width:46px;height:46px}}
+</style>
+</head>
+<body>
+<h1>🌸 PASTEL TILE SAGA</h1>
+<div id="hud"><span>Saga <b id="l">1</b></span><span>Rotations <b id="m">0</b></span><span>Best <b id="b">—</b></span></div>
+<div id="board"></div>
+<div id="ov"><h2 style="color:#ec4899">PASTEL PIPES</h2><p id="od">A soft pastel pipe puzzle! Rotate the tiles (tap, or arrows + Enter) to connect the cherry-blossom source 🌸 to every pipe. Sagas grow larger!</p><button id="btn">BLOOM</button></div>
+<script>
+
+
+
+
+
+"use strict";
+let size,cells,level,moves,playing,focus,best=Infinity;
+const audio=new (window.AudioContext||window.webkitAudioContext)();
+function beep(f,d=.06,t='sine'){const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=.08;g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+d);}
+function build(){size=Math.min(4+((level-1)/2|0),7);cells=[];const total=size*size;
+const paths=[];const used=new Set();const COLS=2;
+let mixTarget=-1;
+for(let ci=0;ci<COLS;ci++){
+const free=[...Array(total).keys()].filter(x=>!used.has(x));
+const src=free[(Math.random()*free.length)|0];
+const path=[src];used.add(src);
+if(ci===1&&paths.length)mixTarget=paths[0][paths[0].length-1];
+const want=Math.max(4,Math.floor((6+level*2)/COLS));
+while(path.length<want){const last=path[path.length-1];const r=(last/size)|0,c=last%size;const opts=[];
+const allow=i=>(ci===1&&i===mixTarget)||!used.has(i);
+if(r>0&&allow(last-size))opts.push(last-size);if(r<size-1&&allow(last+size))opts.push(last+size);
+if(c>0&&allow(last-1))opts.push(last-1);if(c<size-1&&allow(last+1))opts.push(last+1);
+if(!opts.length)break;const n=opts[(Math.random()*opts.length)|0];used.add(n);path.push(n);
+if(ci===1&&n===mixTarget)break;}
+paths.push(path);}
+for(let i=0;i<total;i++){let type='none',col=-1;
+for(let ci=0;ci<COLS;ci++){const path=paths[ci];const pi=path.indexOf(i);
+if(pi>=0){col=ci;
+if(pi===0)type=dirType(i,path[1]);else if(pi===path.length-1)type=dirType(i,path[pi-1]);
+else type=twoDir(i,path[pi-1],path[pi+1]);break;}}
+if(i===mixTarget)type='mix';
+cells.push({type,r:Math.random()<0.85?((Math.random()*4)|0):0,src:col>=0&&paths[col]&&paths[col].indexOf(i)===0,col:Math.max(0,col),lit:false,colours:new Set()});}
+paths.forEach(path=>{path.forEach((idx,pi)=>{const c=cells[idx];
+if(c.type==='straight'){const n1=pi>0?path[pi-1]:path[pi+1];c.r=vert(idx,n1)?0:1;}
+else if(c.type==='elbow'){c.r=elbRot(idx,pi>0?path[pi-1]:null,pi<path.length-1?path[pi+1]:null);}
+c.r=(c.r+1+((Math.random()*5)|0))%6%4;});});
+focus=paths[0][0];moves=0;document.getElementById('m').textContent=0;document.getElementById('l').textContent=level;
+best=+localStorage.getItem('pt_best_'+size)||Infinity;document.getElementById('b').textContent=isFinite(best)?best:'—';
+light();render();}
+function vert(a,b){return Math.abs(a-b)>=size;}
+function dirOf(a,b){if(b===a-size)return 0;if(b===a+1)return 1;if(b===a+size)return 2;return 3;}
+function dirType(a,b){return dirOf(a,b)%2===0?'straight':'elbow';}
+function twoDir(a,p,n){return (dirOf(a,p)+2)%4===dirOf(a,n)?'straight':'elbow';}
+function elbRot(a,p,n){const d1=p===null?dirOf(a,n):dirOf(a,p);const d2=n===null?dirOf(a,p):dirOf(a,n);
+const pair=[Math.min(d1,d2),Math.max(d1,d2)];return({'0,1':0,'1,2':1,'2,3':2,'0,3':3})[pair.join(',')]||0;}
+function opens(c){const s=new Set();
+if(c.type==='straight'){if(c.r%2===0){s.add(0);s.add(2);}else{s.add(1);s.add(3);}}
+else if(c.type==='elbow'){[[0,1],[1,2],[2,3],[0,3]][c.r].forEach(d=>s.add(d));}
+else if(c.type==='mix'){[0,1,2,3].forEach(d=>s.add(d));}
+return s;}
+function light(){cells.forEach(c=>{c.lit=false;if(!c.colours)c.colours=new Set();});const q=[];
+cells.forEach((c,i)=>{if(c.type==='mix')c.colours=new Set();if(c.src){c.colours=new Set([c.cl]);c.lit=true;q.push(i);}});
+while(q.length){const cur=q.pop();const c=cells[cur];
+opens(c).forEach(d=>{let n=-1;const r=(cur/size)|0,cc=cur%size;
+if(d===0&&r>0)n=cur-size;if(d===1&&cc<size-1)n=cur+1;if(d===2&&r<size-1)n=cur+size;if(d===3&&cc>0)n=cur-1;
+if(n>=0&&cells[n]&&opens(cells[n]).has((d+2)%4)){let ch=false;
+if(!cells[n].colours)cells[n].colours=new Set();
+c.colours.forEach(k=>{if(!cells[n].colours.has(k)){cells[n].colours.add(k);ch=true;}});
+if(ch){cells[n].lit=true;q.push(n);}}});}}
+function render(){const b=document.getElementById('board');b.style.gridTemplateColumns='repeat('+size+',58px)';b.innerHTML='';
+cells.forEach((c,i)=>{const t=document.createElement('div');
+t.className='tile'+(c.src?' src':'');
+const deg=c.r*90;let svg='';
+const LIT=['#ec4899','#06b6d4'],DIM=['#f9a8d4','#a5f3fc'];const cl=c.col||0;
+if(c.type==='straight')svg='<line x1="50%" y1="0" x2="50%" y2="100%" stroke="'+(c.colours&&c.colours.size===2?'#a855f7':(c.lit?LIT[cl]:DIM[cl]))+'" stroke-width="10" stroke-linecap="round"/>';
+else if(c.type==='elbow')svg='<path d="M 29 0 Q 29 29 58 29" fill="none" stroke="'+(c.colours&&c.colours.size===2?'#a855f7':(c.lit?LIT[cl]:DIM[cl]))+'" stroke-width="10" stroke-linecap="round"/>';
+else if(c.src)svg='<circle cx="50%" cy="50%" r="15" fill="'+LIT[cl]+'"/><text x="50%" y="62%" font-size="14" text-anchor="middle">'+(cl===0?'🌸':'❄️')+'</text>';
+t.innerHTML='<svg viewBox="0 0 58 58" style="transform:rotate('+deg+'deg)">'+svg+'</svg>';
+if(focus===i)t.style.boxShadow='0 0 0 3px #ec4899';
+t.onclick=()=>{audio.resume();rot(i);};b.appendChild(t);});}
+function rot(i){if(!playing)return;cells[i].r=(cells[i].r+1)%4;moves++;document.getElementById('m').textContent=moves;
+beep(380+cells[i].r*70,.05);light();render();
+if(cells.every(c=>c.type==='none'||(c.lit&&c.colours&&c.colours.size===2)))win();}
+function win(){playing=false;beep(720,.12,'triangle');setTimeout(()=>beep(920,.15,'triangle'),120);
+if(moves<best){best=moves;localStorage.setItem('pt_best_'+size,best);}
+document.getElementById('od').innerHTML='🌸 The saga flows! Cleared in <b>'+moves+'</b> rotations!'+(size<7?'<br>Next: '+(size+1)+'×'+(size+1)+' saga':'<br>The greatest saga blooms!');
+document.getElementById('btn').textContent=size<7?'NEXT SAGA':'BLOOM AGAIN';if(size>=7)level=0;level++;document.getElementById('ov').style.display='flex';}
+document.getElementById('btn').onclick=()=>{audio.resume();if(level===0)level=1;playing=true;build();document.getElementById('ov').style.display='none';};
+window.addEventListener('keydown',e=>{if(!playing)return;const r=(focus/size)|0,c=focus%size;const k=e.key;
+if(k==='ArrowUp'&&r>0)focus-=size;else if(k==='ArrowDown'&&r<size-1)focus+=size;
+else if(k==='ArrowLeft'&&c>0)focus--;else if(k==='ArrowRight'&&c<size-1)focus++;
+else if(k==='Enter'||k===' '){e.preventDefault();rot(focus);return;}else return;
+render();});
+
+
+
+
+
+</script>
+</body>
+</html>
